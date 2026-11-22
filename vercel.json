@@ -9,6 +9,12 @@
       "includeFiles": "data/**"
     }
   },
+  "redirects": [
+    { "source": "/admin", "destination": "/_not_found", "permanent": false },
+    { "source": "/admin.html", "destination": "/_not_found", "permanent": false },
+    { "source": "/data/(.*)", "destination": "/_not_found", "permanent": false },
+    { "source": "/bpg-cms-data.json", "destination": "/_not_found", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/admin", "destination": "/_not_found" },
     { "source": "/admin/(.*)", "destination": "/_not_found" },
