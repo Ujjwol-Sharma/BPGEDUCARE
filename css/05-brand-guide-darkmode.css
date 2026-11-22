@@ -1,12 +1,4 @@
 /* BPG Academy — Module 05: Brand 3D Rotation, Website Guide & Dark Mode */
-    padding: 38px 48px;
-    text-align: center;
-    background: #FFFFFF;
-    border: 1px solid var(--bpg-line);
-    border-radius: 18px;
-    position: relative;
-    box-shadow: 0 4px 24px rgba(17, 28, 45, 0.05);
-}
 
 .refined-quote-box::before {
     content: '';

@@ -633,7 +633,7 @@ function renderInlineVideoForm(classKey, subjectId, lesson) {
                         </select>
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 180px; gap:12px; align-items:start; margin-top:12px;">
+                <div class="adm-video-thumb-grid" style="display:grid; grid-template-columns:1fr 180px; gap:12px; align-items:start; margin-top:12px;">
                     <div>
                         <label class="adm-label" for="vidThumb_${prefix}">Thumbnail Image</label>
                         <input type="file" id="vidThumb_${prefix}" class="adm-input" accept="image/*" onchange="handleVideoThumbPreview(this, '${prefix}')">
@@ -3218,7 +3218,7 @@ function renderMaintenanceSettings() {
             <span class="adm-status-pill ${enabled ? 'locked' : 'open'}">${enabled ? 'MAINTENANCE ACTIVE' : 'SITE LIVE'}</span>
             <small style="color:var(--adm-text-muted);">${enabled ? 'Public homepage stays visible; all student portals, calculator & checkout are locked.' : 'All open student features are operating normally.'}</small>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 2fr auto; gap:10px; align-items:end;">
+        <div class="adm-maint-form-grid" style="display:grid; grid-template-columns:1fr 2fr auto; gap:10px; align-items:end;">
             <div>
                 <label class="adm-label">Notice Title</label>
                 <input type="text" id="maintTitleInput" class="adm-input" value="${escapeHtml(m.title || 'Scheduled Maintenance')}">

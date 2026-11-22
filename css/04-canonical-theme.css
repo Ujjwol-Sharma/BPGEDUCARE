@@ -1,9 +1,4 @@
 /* BPG Academy — Module 04: Canonical Theme, Editorial Layout & Responsive Grid */
-    --bpg-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --bpg-radius: 14px;
-    --bpg-shadow: 0 1px 2px rgba(17, 28, 45, 0.04), 0 8px 24px rgba(17, 28, 45, 0.06);
-    --bpg-shadow-lg: 0 2px 4px rgba(17, 28, 45, 0.05), 0 20px 48px rgba(17, 28, 45, 0.10);
-}
 
 [data-theme="dark"] {
     --bpg-navy: var(--brand-primary);
@@ -1903,3 +1898,11 @@ body.bpg-premium .course-hero-content h1 {
 .refined-quote-box {
     max-width: 860px;
     margin: 0 auto;
+    padding: 38px 48px;
+    text-align: center;
+    background: #FFFFFF;
+    border: 1px solid var(--bpg-line);
+    border-radius: 18px;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(17, 28, 45, 0.05);
+}
