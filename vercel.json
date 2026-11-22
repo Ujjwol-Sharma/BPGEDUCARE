@@ -10,8 +10,8 @@
     }
   },
   "rewrites": [
-    { "source": "/admin-k9x4m7p2q8z", "destination": "/admin.html" },
-    { "source": "/admin-k9x4m7p2q8z/", "destination": "/admin.html" }
+    { "source": "/admin-k9x4m7p2q8z", "destination": "/admin" },
+    { "source": "/admin-k9x4m7p2q8z/", "destination": "/admin" }
   ],
   "headers": [
     {
