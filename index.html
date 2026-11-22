@@ -10,7 +10,7 @@
     <meta property="og:description" content="Concept-first mathematics for Class 10, 11, 12 and IOE / CEE / KU entrance with Bishnu Prasad Gautam (BPG Sir), Pokhara.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bpg_sir.jpg">
-    <link rel="icon" href="images/logo.png" type="image/png">
+    <link rel="icon" href="images/bpg-educare-logo.jpg" type="image/jpeg">
 
     <!-- Apply saved light/dark theme immediately to prevent flicker -->
     <script>
@@ -34,12 +34,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="./css/01-foundation-header.css?v=20261121v4">
-    <link rel="stylesheet" href="./css/02-workspaces-modals.css?v=20261121v4">
-    <link rel="stylesheet" href="./css/03-modern-extensions.css?v=20261121v4">
-    <link rel="stylesheet" href="./css/04-canonical-theme.css?v=20261121v4">
-    <link rel="stylesheet" href="./css/05-brand-guide-darkmode.css?v=20261121v4">
-    <link rel="stylesheet" href="./css/06-black-minimal.css?v=20261121v4">
+    <link rel="stylesheet" href="./css/01-foundation-header.css?v=20261122v5">
+    <link rel="stylesheet" href="./css/02-workspaces-modals.css?v=20261122v5">
+    <link rel="stylesheet" href="./css/03-modern-extensions.css?v=20261122v5">
+    <link rel="stylesheet" href="./css/04-canonical-theme.css?v=20261122v5">
+    <link rel="stylesheet" href="./css/05-brand-guide-darkmode.css?v=20261122v5">
+    <link rel="stylesheet" href="./css/06-black-minimal.css?v=20261122v5">
 </head>
 <body class="bpg-premium">
 
@@ -53,7 +53,7 @@
         <div class="container bpg-header-inner">
             <a href="#home" class="bpg-brand" onclick="handleHomeClick(); return false;">
                 <span class="bpg-brand-logo-wrap">
-                    <img src="images/logo.png" alt="BPG EDUCARE" onerror="this.style.display='none'">
+                    <img src="images/bpg-educare-logo.jpg" alt="BPG EDUCARE" onerror="this.style.display='none'">
                 </span>
                 <span class="bpg-brand-name">BPG EDUCARE</span>
             </a>
@@ -93,8 +93,12 @@
                 </button>
 
                 <!-- Guest State -->
-                <button type="button" class="btn-google-sign bpg-signin-btn" id="headerGoogleBtn" onclick="openAuthModal('signin')">
-                    <span class="btn-label-span">Sign In</span>
+                <button type="button" class="btn-google-sign bpg-signin-btn" id="headerGoogleBtn" onclick="openAuthModal('signup')">
+                    <span class="btn-label-span">Sign Up</span>
+                </button>
+                <button type="button" class="btn-google-sign bpg-signin-btn" id="headerLoginBtn" onclick="openAuthModal('signin')">
+                    <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+                    <span class="btn-label-span">Log In</span>
                 </button>
 
                 <!-- Authenticated State -->
@@ -133,6 +137,9 @@
                         <button type="button" class="user-dropdown-item" onclick="openLiveClassCalendarEntry(); closeUserDropdown();">
                             Live Class Calendar
                         </button>
+                        <button type="button" class="user-dropdown-item" onclick="openClassSelectionView(); closeUserDropdown();">
+                            Switch Class
+                        </button>
                         <button type="button" class="user-dropdown-item" onclick="openPlanComparisonModal('', ''); closeUserDropdown();">
                             <i class="fa-solid fa-crown" aria-hidden="true" style="margin-right:6px;"></i> Plans
                         </button>
@@ -159,27 +166,46 @@
     <!-- Main Guest Homepage (Clean Single-Screen Hero) -->
     <main class="view-container portal-view active bpg-home" id="view-home" tabindex="-1">
 
+        <!-- Maintenance Mode Notice Banner (Shown only when Maintenance Mode is enabled) -->
+        <div class="maintenance-notice-banner" id="maintenanceNoticeBanner" role="status" style="display:none;">
+            <div class="container maintenance-notice-inner">
+                <div class="maintenance-notice-copy">
+                    <span class="maintenance-pill"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> Maintenance Mode</span>
+                    <strong id="maintenanceNoticeTitle">Scheduled Maintenance</strong>
+                    <span id="maintenanceNoticeMessage">Student dashboards, lessons, mock tests, the calculator, and checkout are temporarily locked.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editable Top Announcement Banner -->
+        <div class="home-editable-banner" id="homeEditableBanner" style="display:none;">
+            <div class="container home-editable-banner-inner">
+                <span id="homeBannerText"></span>
+                <a href="#plans" id="homeBannerLink" class="home-banner-link" style="display:none;"></a>
+            </div>
+        </div>
+
         <!-- Hero Section -->
         <section class="bpg-hero bpg-hero-full" id="bpgSirHero" aria-labelledby="heroHeading">
             <div class="container bpg-hero-grid">
                 <div class="bpg-hero-copy">
                     <div class="hero-location-pill">
                         <span class="hero-live-indicator"></span>
-                        Pokhara, Nepal &middot; NEB &amp; Entrance Mathematics
+                        <span id="heroPillText">Pokhara, Nepal &middot; NEB &amp; Entrance Mathematics</span>
                     </div>
                     <h1 class="bpg-hero-title" id="heroHeading">
-                        Understand Mathematics.
-                        <span class="hero-muted">Master every concept.</span>
+                        <span id="heroTitleMain">Understand Mathematics.</span>
+                        <span class="hero-muted" id="heroTitleMuted">Master every concept.</span>
                     </h1>
-                    <p class="bpg-hero-lead">
+                    <p class="bpg-hero-lead" id="heroLeadText">
                         Structured, concept-first mathematics portals for Class 10, Class 11, Class 12, and IOE / CEE / KU entrance — mentored by <strong>Bishnu Prasad Gautam (BPG Sir)</strong>.
                     </p>
                     <div class="bpg-hero-actions">
                         <button type="button" class="btn-primary btn-lg" id="heroPrimaryCtaBtn" onclick="handleHeroPrimaryCta()">
                             <span id="heroPrimaryCtaLabel">Get Started</span> <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                         </button>
-                        <button type="button" class="btn-secondary btn-lg" onclick="toggleWebsiteGuide()">
-                            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Ask BPG AI
+                        <button type="button" class="btn-secondary btn-lg" id="heroSecondaryCtaBtn" onclick="handleHeroSecondaryCta()">
+                            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> <span id="heroSecondaryCtaLabel">Ask BPG AI</span>
                         </button>
                     </div>
                 </div>
@@ -191,10 +217,10 @@
                         </div>
                         <figcaption class="bpg-portrait-caption-inline">
                             <div>
-                                <strong>Bishnu Prasad Gautam</strong>
-                                <span>Founder &amp; Lead Faculty &middot; BPG Sir</span>
+                                <strong id="heroFacultyName">Bishnu Prasad Gautam</strong>
+                                <span id="heroFacultyRole">Founder &amp; Lead Faculty &middot; BPG Sir</span>
                             </div>
-                            <span class="portrait-tu-tag">TU M.Sc.</span>
+                            <span class="portrait-tu-tag" id="heroFacultyTag">TU M.Sc.</span>
                         </figcaption>
                     </div>
                 </figure>
@@ -205,11 +231,11 @@
         <section class="home-features-section" id="homeFeaturesSection" aria-labelledby="homeFeaturesHeading">
             <div class="container">
                 <div class="home-section-head">
-                    <span class="minimal-section-label">Explore BPG EDUCARE</span>
+                    <span class="minimal-section-label" id="homeFeaturesEyebrow">Explore BPG EDUCARE</span>
                     <h2 class="section-heading-lg" id="homeFeaturesHeading">Everything you need in one place</h2>
                 </div>
 
-                <div class="home-features-grid">
+                <div class="home-features-grid" id="homeFeaturesGrid">
                     <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeLessons" onclick="openMyLessonsView()">
                         <span class="lessons-book-icon" aria-hidden="true">
                             <i class="fa-solid fa-book-open"></i>
@@ -247,9 +273,20 @@
                             <i class="fa-solid fa-crown"></i>
                         </span>
                         <span class="lessons-card-label">Plans</span>
-                        <span class="lessons-card-sub">Compare Free, Gold, and Diamond access</span>
+                        <span class="lessons-card-sub">Compare Gold and Diamond access</span>
                     </button>
                 </div>
+            </div>
+        </section>
+
+        <!-- Homepage Notifications Section (Newest published updates first; sitewide + active class alerts) -->
+        <section class="home-notifications-section" id="homeNotificationsSection" aria-labelledby="homeNotificationsHeading">
+            <div class="container">
+                <div class="home-section-head">
+                    <span class="minimal-section-label" id="homeNotificationsEyebrow">Updates &amp; Alerts</span>
+                    <h2 class="section-heading-lg" id="homeNotificationsHeading">Notifications</h2>
+                </div>
+                <div id="homeNotificationsMount" class="home-notifications-grid"></div>
             </div>
         </section>
 
@@ -257,7 +294,7 @@
         <section class="home-team-section" id="homeTeamSection" aria-labelledby="homeTeamHeading">
             <div class="container">
                 <div class="home-section-head">
-                    <span class="minimal-section-label">Leadership</span>
+                    <span class="minimal-section-label" id="homeTeamEyebrow">Leadership</span>
                     <h2 class="section-heading-lg" id="homeTeamHeading">Our Team</h2>
                 </div>
                 <div id="homeTeamMount"></div>
@@ -323,7 +360,7 @@
                     <button type="button" class="lessons-hero-card" id="btnOpenPlansCard" onclick="openPlanComparisonModal('', '')">
                         <span class="lessons-book-icon" aria-hidden="true"><i class="fa-solid fa-crown"></i></span>
                         <span class="lessons-card-label">Plans</span>
-                        <span class="lessons-card-sub">Compare Free, Gold, and Diamond access</span>
+                        <span class="lessons-card-sub">Compare Gold and Diamond access</span>
                     </button>
                 </div>
             </div>
@@ -337,9 +374,9 @@
     <footer class="site-footer bpg-footer bpg-footer-compact" id="contactSection">
         <div class="container">
             <div class="minimal-footer-row">
-                <span>&copy; 2026 BPG EDUCARE &middot; Pokhara, Nepal</span>
+                <span id="footerCopyrightText">&copy; 2026 BPG EDUCARE &middot; Pokhara, Nepal</span>
                 <div class="minimal-footer-links">
-                    <a href="https://wa.me/9779866064252?text=Namaste%20BPG%20Sir%2C%20I%20have%20an%20academic%20inquiry%20regarding%20BPG%20EDUCARE" target="_blank" rel="noopener">
+                    <a id="footerWhatsappLink" href="https://wa.me/9779866064252?text=Namaste%20BPG%20Sir%2C%20I%20have%20an%20academic%20inquiry%20regarding%20BPG%20EDUCARE" target="_blank" rel="noopener">
                         <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp: 9866064252
                     </a>
                     <a href="#ai" onclick="toggleWebsiteGuide(); return false;">Ask BPG AI</a>
@@ -351,6 +388,9 @@
     <!-- Dynamic Modals Mount -->
     <div id="bpgModalsMount"></div>
 
+    <!-- Google Identity Services (loaded asynchronously; gracefully falls back if Client ID is not configured) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <!-- PDF.js for First-Page PDF Cover Previews -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
@@ -359,13 +399,13 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <!-- Application Scripts -->
-    <script src="./js/ui-templates.js?v=20261121v4"></script>
-    <script src="./js/state-sync.js?v=20261121v4"></script>
-    <script src="./js/portal-renderer.js?v=20261121v4"></script>
-    <script src="./js/mock-tests-student.js?v=20261121v4"></script>
-    <script src="./js/router-access.js?v=20261121v4"></script>
-    <script src="./js/widgets-ai.js?v=20261121v4"></script>
-    <script src="./js/auth-otp.js?v=20261121v4"></script>
-    <script src="./js/app-init.js?v=20261121v4"></script>
+    <script src="./js/ui-templates.js?v=20261122v5"></script>
+    <script src="./js/state-sync.js?v=20261122v5"></script>
+    <script src="./js/portal-renderer.js?v=20261122v5"></script>
+    <script src="./js/mock-tests-student.js?v=20261122v5"></script>
+    <script src="./js/router-access.js?v=20261122v5"></script>
+    <script src="./js/widgets-ai.js?v=20261122v5"></script>
+    <script src="./js/auth-otp.js?v=20261122v5"></script>
+    <script src="./js/app-init.js?v=20261122v5"></script>
 </body>
 </html>

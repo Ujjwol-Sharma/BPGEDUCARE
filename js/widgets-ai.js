@@ -214,20 +214,117 @@ function renderMathInGuide() {
 function toggleKaTexGuideModal() { toggleWebsiteGuide(); }
 function handleKaTexGuideChip(chipKey) { askGuideQuestion(chipKey); }
 
-// Mini Scientific Calculator
+// Redesigned Basic + Scientific Calculator (DEG/RAD, History, Helpful Errors, Keyboard Input)
 let miniCalcExpr = '';
 let miniCalcAngleMode = 'DEG';
+let miniCalcMode = 'basic';
+let miniCalcLastAns = 0;
+let miniCalcHistory = [];
 
 function toggleMiniCalculator() {
+    if (typeof isMaintenanceModeActive === 'function' && isMaintenanceModeActive()) {
+        if (typeof showMaintenanceLockNotice === 'function') showMaintenanceLockNotice();
+        return;
+    }
     const flyout = document.getElementById('calcFlyoutWindow');
     if (!flyout) return;
     flyout.classList.toggle('open');
     if (flyout.classList.contains('open')) {
+        setCalculatorMode(miniCalcMode);
         updateMiniCalcDisplay();
+        renderMiniCalcHistory();
     }
 }
 
+function setCalculatorMode(mode) {
+    miniCalcMode = mode === 'scientific' ? 'scientific' : 'basic';
+    const sciRow = document.getElementById('calcSciKeypad');
+    const basicBtn = document.getElementById('calcModeBasicBtn');
+    const sciBtn = document.getElementById('calcModeSciBtn');
+    const flyout = document.getElementById('calcFlyoutWindow');
+    if (sciRow) sciRow.style.display = miniCalcMode === 'scientific' ? 'grid' : 'none';
+    if (basicBtn) basicBtn.classList.toggle('active', miniCalcMode === 'basic');
+    if (sciBtn) sciBtn.classList.toggle('active', miniCalcMode === 'scientific');
+    if (flyout) flyout.classList.toggle('is-scientific', miniCalcMode === 'scientific');
+    updateMiniCalcStatusLine();
+}
+
+function toggleMiniCalcAngle() {
+    miniCalcAngleMode = miniCalcAngleMode === 'DEG' ? 'RAD' : 'DEG';
+    const btn = document.getElementById('calcAngleToggleBtn');
+    if (btn) btn.textContent = miniCalcAngleMode;
+    updateMiniCalcStatusLine();
+}
+
+function updateMiniCalcStatusLine(overrideExpr) {
+    const hist = document.getElementById('calcHistoryLine');
+    if (!hist) return;
+    if (overrideExpr !== undefined) {
+        hist.textContent = overrideExpr;
+        return;
+    }
+    const modeLabel = miniCalcMode === 'scientific' ? 'Scientific' : 'Basic';
+    hist.textContent = `${miniCalcAngleMode} · ${modeLabel}`;
+}
+
+function showMiniCalcError(msg) {
+    const errEl = document.getElementById('calcErrorLine');
+    if (!errEl) return;
+    if (!msg) {
+        errEl.style.display = 'none';
+        errEl.textContent = '';
+    } else {
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+    }
+}
+
+function toggleMiniCalcHistory() {
+    const drawer = document.getElementById('calcHistoryDrawer');
+    const btn = document.getElementById('calcHistoryToggleBtn');
+    if (!drawer) return;
+    const nextOpen = drawer.style.display === 'none';
+    drawer.style.display = nextOpen ? 'block' : 'none';
+    if (btn) btn.classList.toggle('active', nextOpen);
+    if (nextOpen) renderMiniCalcHistory();
+}
+
+function renderMiniCalcHistory() {
+    const list = document.getElementById('calcHistoryList');
+    if (!list) return;
+    if (miniCalcHistory.length === 0) {
+        list.innerHTML = `<div class="calc-history-empty">No calculations yet.</div>`;
+        return;
+    }
+    list.innerHTML = miniCalcHistory.map((item, idx) => `
+        <button type="button" class="calc-history-item" onclick="reuseMiniCalcHistory(${idx})" title="Click to reuse result">
+            <span class="calc-hist-expr">${String(item.expr).replace(/</g, '&lt;')} =</span>
+            <strong class="calc-hist-res">${String(item.result).replace(/</g, '&lt;')}</strong>
+        </button>
+    `).join('');
+}
+
+function reuseMiniCalcHistory(idx) {
+    const item = miniCalcHistory[idx];
+    if (!item) return;
+    showMiniCalcError('');
+    miniCalcExpr = String(item.result);
+    updateMiniCalcDisplay(miniCalcExpr);
+}
+
+function clearMiniCalcHistory() {
+    miniCalcHistory = [];
+    renderMiniCalcHistory();
+}
+
+function calcUseLastAns() {
+    showMiniCalcError('');
+    miniCalcExpr += String(miniCalcLastAns);
+    updateMiniCalcDisplay();
+}
+
 function calcAppend(val) {
+    showMiniCalcError('');
     if (val === 'pi') val = 'π';
     if (val === 'e') val = 'e';
     miniCalcExpr += val;
@@ -236,12 +333,13 @@ function calcAppend(val) {
 
 function calcClear() {
     miniCalcExpr = '';
-    const hist = document.getElementById('calcHistoryLine');
-    if (hist) hist.textContent = miniCalcAngleMode;
+    showMiniCalcError('');
+    updateMiniCalcStatusLine();
     updateMiniCalcDisplay('0');
 }
 
 function calcBackspace() {
+    showMiniCalcError('');
     miniCalcExpr = miniCalcExpr.slice(0, -1);
     updateMiniCalcDisplay(miniCalcExpr || '0');
 }
@@ -253,25 +351,66 @@ function updateMiniCalcDisplay(override) {
 
 function calcEvaluate() {
     if (!miniCalcExpr) return;
+    showMiniCalcError('');
+    const rawExpr = miniCalcExpr.trim();
     try {
-        const toRad = miniCalcAngleMode === 'DEG' ? `(Math.PI/180)*` : '';
-        const parsed = miniCalcExpr
-            .replace(/×/g, '*').replace(/÷/g, '/')
-            .replace(/π/g, 'Math.PI').replace(/\be\b/g, 'Math.E')
+        // Balance check for parentheses
+        let depth = 0;
+        for (const ch of rawExpr) {
+            if (ch === '(') depth++;
+            else if (ch === ')') depth--;
+            if (depth < 0) throw new Error('SYNTAX');
+        }
+        if (depth !== 0) throw new Error('SYNTAX');
+
+        const trigWrap = (fn) => miniCalcAngleMode === 'DEG'
+            ? `((v)=>Math.${fn}((v)*Math.PI/180))(`
+            : `Math.${fn}(`;
+
+        let parsed = rawExpr
+            .replace(/×/g, '*')
+            .replace(/÷/g, '/')
+            .replace(/−/g, '-')
+            .replace(/(\d|\)|π|e)(π|e|sin\(|cos\(|tan\(|log\(|ln\(|sqrt\()/g, '$1*$2')
+            .replace(/(\d)(π)/g, '$1*$2')
+            .replace(/(π|e)(\d)/g, '$1*$2')
+            .replace(/(\d+(?:\.\d+)?)%/g, '($1/100)')
+            .replace(/π/g, 'Math.PI')
+            .replace(/\be\b/g, 'Math.E')
             .replace(/sqrt\(/g, 'Math.sqrt(')
-            .replace(/sin\(/g, `Math.sin(${toRad}`)
-            .replace(/cos\(/g, `Math.cos(${toRad}`)
-            .replace(/tan\(/g, `Math.tan(${toRad}`)
+            .replace(/sin\(/g, trigWrap('sin'))
+            .replace(/cos\(/g, trigWrap('cos'))
+            .replace(/tan\(/g, trigWrap('tan'))
+            .replace(/log\(/g, 'Math.log10(')
             .replace(/ln\(/g, 'Math.log(')
             .replace(/\^/g, '**');
-        const res = Function(`"use strict"; return (${parsed})`)();
-        const formatted = Number(Number(res).toFixed(6));
-        const hist = document.getElementById('calcHistoryLine');
-        if (hist) hist.textContent = `${miniCalcExpr} =`;
-        miniCalcExpr = String(formatted);
+
+        const res = Function(`"use strict"; return (${parsed});`)();
+        if (typeof res !== 'number' || Number.isNaN(res)) {
+            throw new Error('SYNTAX');
+        }
+        if (!Number.isFinite(res)) {
+            throw new Error('DIV_ZERO');
+        }
+        const rounded = Math.abs(res - Math.round(res)) < 1e-11
+            ? Math.round(res)
+            : Number(res.toFixed(8));
+
+        miniCalcLastAns = rounded;
+        miniCalcHistory.unshift({ expr: rawExpr, result: rounded });
+        if (miniCalcHistory.length > 25) miniCalcHistory.pop();
+        renderMiniCalcHistory();
+        updateMiniCalcStatusLine(`${rawExpr} =`);
+        miniCalcExpr = String(rounded);
         updateMiniCalcDisplay(miniCalcExpr);
     } catch (e) {
-        updateMiniCalcDisplay('Error');
+        if (e && e.message === 'DIV_ZERO') {
+            showMiniCalcError('Cannot divide by zero.');
+            updateMiniCalcDisplay('Undefined');
+        } else {
+            showMiniCalcError('Invalid expression — check syntax or parentheses.');
+            updateMiniCalcDisplay('Error');
+        }
     }
 }
 

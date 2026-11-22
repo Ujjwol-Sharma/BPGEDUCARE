@@ -48,6 +48,30 @@ function deepMergeState(currentData, payload) {
         updated.teamMembers = payload.teamMembers;
     }
 
+    if (payload.homepageContent && typeof payload.homepageContent === 'object') {
+        updated.homepageContent = Object.assign({}, currentData.homepageContent || {}, payload.homepageContent);
+    }
+
+    if (payload.maintenanceMode && typeof payload.maintenanceMode === 'object') {
+        updated.maintenanceMode = Object.assign({}, currentData.maintenanceMode || {}, payload.maintenanceMode);
+    }
+
+    if (payload.siteSettings && typeof payload.siteSettings === 'object') {
+        updated.siteSettings = Object.assign({}, currentData.siteSettings || {}, payload.siteSettings);
+    }
+
+    if (Array.isArray(payload.notifications)) {
+        updated.notifications = payload.notifications;
+    }
+
+    if (Array.isArray(payload.chatbotFaqs)) {
+        updated.chatbotFaqs = payload.chatbotFaqs;
+    }
+
+    if (Array.isArray(payload.payments)) {
+        updated.payments = payload.payments;
+    }
+
     if (currentData.portals && payload.portals) {
         updated.portals = Object.assign({}, currentData.portals);
         for (const classKey of Object.keys(payload.portals)) {
@@ -195,3 +219,6 @@ module.exports = function academyStateHandler(req, res) {
     res.statusCode = 405;
     res.end(JSON.stringify({ success: false, error: 'Method not allowed' }));
 };
+
+module.exports.writeStateToDisk = writeStateToDisk;
+module.exports.deepMergeState = deepMergeState;

@@ -73,6 +73,9 @@ function renderEntireStudentPortal() {
         if (val !== undefined && val !== '') el.innerHTML = val;
     });
 
+    renderMaintenanceNotice();
+    renderHomepageContent();
+    renderHomepageNotifications();
     renderAnnouncementsDrawer();
     renderHomepageTeamSection();
     renderClassSelectionView();
@@ -585,11 +588,161 @@ function closePdfViewerModal() {
 /* --------------------------------------------------------------------------
    HOMEPAGE OUR TEAM SECTION & CLASS SELECTION VIEW
    -------------------------------------------------------------------------- */
+function renderMaintenanceNotice() {
+    const banner = document.getElementById('maintenanceNoticeBanner');
+    const titleEl = document.getElementById('maintenanceNoticeTitle');
+    const msgEl = document.getElementById('maintenanceNoticeMessage');
+    const m = ACADEMY_STATE.maintenanceMode || {};
+    const enabled = Boolean(m.enabled);
+    document.body.classList.toggle('maintenance-mode-active', enabled);
+    if (!banner) return;
+    banner.style.display = enabled ? 'block' : 'none';
+    if (titleEl) titleEl.textContent = m.title || 'Scheduled Maintenance';
+    if (msgEl) msgEl.textContent = m.message || 'Student dashboards, lessons, mock tests, the calculator, and checkout are temporarily locked.';
+}
+
+function renderHomepageContent() {
+    const hc = ACADEMY_STATE.homepageContent || {};
+    const setText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined && val !== '') el.textContent = val;
+    };
+
+    setText('heroPillText', hc.heroPillText);
+    setText('heroTitleMain', hc.heroTitleMain);
+    setText('heroTitleMuted', hc.heroTitleMuted);
+    if (hc.heroDescription) {
+        const leadEl = document.getElementById('heroLeadText');
+        if (leadEl) leadEl.innerHTML = escapeHtml(hc.heroDescription).replace(/Bishnu Prasad Gautam \(BPG Sir\)/g, '<strong>Bishnu Prasad Gautam (BPG Sir)</strong>');
+    }
+    if (typeof isUserAuthenticated === 'function' && !isUserAuthenticated() && hc.heroPrimaryBtnLabel) {
+        setText('heroPrimaryCtaLabel', hc.heroPrimaryBtnLabel);
+    }
+    setText('heroSecondaryCtaLabel', hc.heroSecondaryBtnLabel);
+    setText('heroFacultyName', hc.heroFacultyName);
+    setText('heroFacultyRole', hc.heroFacultyRole);
+    setText('heroFacultyTag', hc.heroFacultyTag);
+    const portrait = document.getElementById('heroPortraitImg');
+    if (portrait && hc.heroPortraitUrl) portrait.src = hc.heroPortraitUrl;
+
+    const topBanner = document.getElementById('homeEditableBanner');
+    const topText = document.getElementById('homeBannerText');
+    const topLink = document.getElementById('homeBannerLink');
+    if (topBanner) {
+        if (hc.bannerEnabled && hc.bannerText) {
+            topBanner.style.display = 'block';
+            if (topText) topText.textContent = hc.bannerText;
+            if (topLink) {
+                if (hc.bannerLinkLabel && hc.bannerLinkUrl) {
+                    topLink.style.display = 'inline-block';
+                    topLink.textContent = hc.bannerLinkLabel;
+                    topLink.href = hc.bannerLinkUrl;
+                } else {
+                    topLink.style.display = 'none';
+                }
+            }
+        } else {
+            topBanner.style.display = 'none';
+        }
+    }
+
+    setText('homeFeaturesEyebrow', hc.featuresEyebrow);
+    setText('homeFeaturesHeading', hc.featuresHeading);
+    setText('homeNotificationsEyebrow', hc.notificationsEyebrow);
+    setText('homeNotificationsHeading', hc.notificationsHeading);
+    setText('homeTeamEyebrow', hc.teamEyebrow);
+    setText('homeTeamHeading', hc.teamHeading);
+    setText('footerCopyrightText', hc.footerText);
+
+    // Update Feature Cards labels/subs if customized
+    if (Array.isArray(hc.featureCards)) {
+        const cardBtnIds = {
+            lessons: 'btnHomeLessons',
+            mocktests: 'btnHomeMockTests',
+            syllabus: 'btnHomeSyllabusGrid',
+            calendar: 'btnHomeLiveCalendar',
+            plans: 'btnHomePlans'
+        };
+        hc.featureCards.forEach(fc => {
+            const btn = document.getElementById(cardBtnIds[fc.id]);
+            if (!btn) return;
+            const lbl = btn.querySelector('.lessons-card-label');
+            const sub = btn.querySelector('.lessons-card-sub');
+            if (lbl && fc.label) lbl.textContent = fc.label;
+            if (sub && fc.sub) sub.textContent = fc.sub;
+        });
+    }
+
+    // Update WhatsApp links from siteSettings
+    const waNum = typeof getConfiguredWhatsappNumber === 'function' ? getConfiguredWhatsappNumber() : '9779866064252';
+    const localDisplay = waNum.startsWith('977') ? waNum.slice(3) : waNum;
+    const footerWa = document.getElementById('footerWhatsappLink');
+    if (footerWa) {
+        footerWa.href = `https://wa.me/${waNum}?text=${encodeURIComponent('Namaste BPG Sir, I have an academic inquiry regarding BPG EDUCARE')}`;
+        footerWa.innerHTML = `<i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp: ${escapeHtml(localDisplay)}`;
+    }
+    const floatWa = document.getElementById('floatingWhatsappBtn');
+    if (floatWa) {
+        floatWa.href = `https://wa.me/${waNum}?text=${encodeURIComponent('Namaste BPG Sir, I have an academic inquiry regarding BPG EDUCARE')}`;
+        floatWa.setAttribute('title', `Contact on WhatsApp (+${waNum})`);
+    }
+}
+
+function renderHomepageNotifications() {
+    const section = document.getElementById('homeNotificationsSection');
+    const mount = document.getElementById('homeNotificationsMount');
+    if (!mount) return;
+
+    const list = Array.isArray(ACADEMY_STATE.notifications) ? ACADEMY_STATE.notifications : [];
+    const sorted = [...list]
+        .filter(n => n.published !== false)
+        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+
+    if (sorted.length === 0) {
+        if (section) section.style.display = 'none';
+        mount.innerHTML = '';
+        return;
+    }
+    if (section) section.style.display = 'block';
+
+    const scopeLabels = {
+        sitewide: 'Sitewide',
+        'class-12': 'Class 12',
+        'class-11': 'Class 11',
+        'class-10': 'Class 10',
+        'after-12': 'Entrance Prep'
+    };
+
+    mount.innerHTML = sorted.slice(0, 6).map(n => {
+        const dateLabel = n.createdAt ? new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+        const scopeLabel = scopeLabels[n.scope] || 'Sitewide';
+        const isClassSpecific = n.scope && n.scope !== 'sitewide';
+        return `
+            <article class="home-notif-card ${isClassSpecific ? 'is-class-notif' : ''}">
+                <div class="home-notif-meta">
+                    <span class="home-notif-cat">${escapeHtml(n.category || 'Announcement')}</span>
+                    <span class="home-notif-scope ${isClassSpecific ? 'class-only' : ''}">${escapeHtml(scopeLabel)}</span>
+                    ${dateLabel ? `<span class="home-notif-date">${escapeHtml(dateLabel)}</span>` : ''}
+                </div>
+                <h3 class="home-notif-title">${escapeHtml(n.title)}</h3>
+                <p class="home-notif-body">${escapeHtml(n.body)}</p>
+            </article>
+        `;
+    }).join('');
+}
+
+function formatTeamBioHtml(rawBio) {
+    const safe = escapeHtml(rawBio || '');
+    return safe
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+}
+
 function renderTeamCardHtml(member) {
     const safeName = escapeHtml(member.name || 'Team Member');
     const safeRole = escapeHtml(member.role || 'Team Member');
-    const safeBio = escapeHtml(member.bio || '');
-    const initial = (member.name || 'B').trim().charAt(0).toUpperCase();
+    const safeBioHtml = formatTeamBioHtml(member.bio || '');
+    const initial = escapeHtml((member.initial || (member.name || 'B').trim().charAt(0) || 'T').toUpperCase());
     const photoHtml = member.photoUrl
         ? `<img src="${escapeHtml(member.photoUrl)}" alt="${safeName}" class="team-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><span class="team-avatar-fallback" style="display:none;">${initial}</span>`
         : `<span class="team-avatar-fallback">${initial}</span>`;
@@ -599,7 +752,7 @@ function renderTeamCardHtml(member) {
             <div class="team-avatar-wrap">${photoHtml}</div>
             <span class="team-role-badge">${safeRole}</span>
             <h3 class="team-member-name">${safeName}</h3>
-            ${safeBio ? `<p class="team-member-bio">${safeBio}</p>` : ''}
+            ${safeBioHtml ? `<p class="team-member-bio">${safeBioHtml}</p>` : ''}
         </article>
     `;
 }
@@ -611,10 +764,10 @@ function renderHomepageTeamSection() {
     const members = Array.isArray(ACADEMY_STATE.teamMembers) && ACADEMY_STATE.teamMembers.length > 0
         ? ACADEMY_STATE.teamMembers
         : [
-            { id: 'team-founder', slot: 'founder', name: 'Bishnu Prasad Gautam', role: 'Founder', photoUrl: './images/bpg_sir.jpg', bio: 'M.Sc. Mathematics (TU) with 12+ years mentoring NEB and IOE / CEE mathematics students in Pokhara, Nepal.' },
-            { id: 'team-ceo', slot: 'ceo', name: 'Sagar Adhikari', role: 'CEO', photoUrl: '', bio: 'Leads academic strategy, student success partnerships, and national expansion.' },
-            { id: 'team-cco', slot: 'cco', name: 'Pratiksha Gurung', role: 'CCO', photoUrl: '', bio: 'Oversees curriculum design, NEB alignment, and lesson publishing.' },
-            { id: 'team-cto', slot: 'cto', name: 'Ujjwol Poudel', role: 'CTO', photoUrl: '', bio: 'Architects the learning platform, timed mock tests, and AI tutor.' }
+            { id: 'team-founder', slot: 'founder', initial: 'B', name: 'Bishnu Prasad Gautam', role: 'Founder', photoUrl: './images/bpg_sir.jpg', bio: 'M.Sc. Mathematics (TU, CGPA 3.9/4.0) with 12+ years mentoring NEB and IOE / CEE mathematics students in Pokhara, Nepal.' },
+            { id: 'team-ceo', slot: 'ceo', initial: 'P', name: 'Paribesh Thapa', role: 'CEO', photoUrl: '', bio: '**Education | Youth | Social Impact**\nBridging education and grassroots social work to turn youth potential into lasting community impact.' },
+            { id: 'team-cco', slot: 'cco', initial: 'U', name: 'Ujjwol Sharma', role: 'CCO', photoUrl: '', bio: 'Merges creative content and smart EdTech to deliver accessible, high-impact NEB & entrance-aligned curricula.' },
+            { id: 'team-cto', slot: 'cto', initial: 'U', name: 'Utsav Sharma', role: 'CTO', photoUrl: '', bio: 'Architects fast, scalable learning platforms that make digital education seamless, accessible, and built for the future.' }
         ];
 
     const classifySlot = (m) => {

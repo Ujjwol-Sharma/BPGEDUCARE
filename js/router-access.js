@@ -43,7 +43,39 @@ function updateHeroPrimaryCta() {
     }
 }
 
+function isMaintenanceModeActive() {
+    return Boolean(typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.maintenanceMode?.enabled);
+}
+
+function showMaintenanceLockNotice() {
+    const msg = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.maintenanceMode?.message)
+        ? ACADEMY_STATE.maintenanceMode.message
+        : 'BPG EDUCARE is currently under scheduled maintenance. Student functions are temporarily locked.';
+    if (typeof showToast === 'function') showToast(msg);
+    const banner = document.getElementById('maintenanceNoticeBanner');
+    if (banner) {
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+function getConfiguredWhatsappNumber() {
+    const raw = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.whatsappNumber)
+        ? ACADEMY_STATE.siteSettings.whatsappNumber
+        : '9779866064252';
+    return String(raw).replace(/[^\d]/g, '') || '9779866064252';
+}
+
+function openConfiguredWhatsappSupport() {
+    const num = getConfiguredWhatsappNumber();
+    const msg = 'Namaste BPG Sir, I have an inquiry regarding BPG EDUCARE.';
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+}
+
 function handleHeroPrimaryCta() {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
     if (isUserAuthenticated()) {
         handleContinueToClass();
     } else {
@@ -51,7 +83,32 @@ function handleHeroPrimaryCta() {
     }
 }
 
+function handleHeroSecondaryCta() {
+    const link = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.homepageContent?.heroSecondaryBtnLink)
+        ? String(ACADEMY_STATE.homepageContent.heroSecondaryBtnLink).trim()
+        : '#ai';
+    if (link === '#ai' || !link) {
+        if (typeof toggleWebsiteGuide === 'function') toggleWebsiteGuide();
+        return;
+    }
+    if (link.startsWith('http')) {
+        window.open(link, '_blank', 'noopener');
+    } else if (link.startsWith('#')) {
+        const target = link.slice(1);
+        if (['c10', 'c11', 'c12', 'entrance', 'classes'].includes(target)) {
+            if (target === 'classes') openClassSelectionView();
+            else handleClassNavClick(target);
+        } else {
+            scrollToSection(target);
+        }
+    }
+}
+
 function handleContinueToClass() {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
     if (!isUserAuthenticated()) {
         openAuthModal('signin');
         return;
@@ -67,6 +124,10 @@ function handleContinueToClass() {
 }
 
 function openClassSelectionView() {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
     if (typeof renderClassSelectionView === 'function') renderClassSelectionView();
     document.querySelectorAll('.portal-view, .view-container').forEach(view => {
         view.style.display = 'none';
@@ -87,6 +148,10 @@ function openClassSelectionView() {
 }
 
 function openLiveClassCalendarEntry() {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
     if (isUserAuthenticated()) {
         const myClass = getStudentRegisteredClass();
         if (!(typeof isSectionLocked === 'function' && isSectionLocked(shortKeyToPortalKey(myClass)))) {
@@ -118,7 +183,7 @@ function getStoredStudentSession() {
 
 function isUserAuthenticated() {
     const session = getStoredStudentSession();
-    return !!(session && (session.verified || session.name || session.email));
+    return !!(session && session.verified === true && session.email && (session.sessionToken || session.isFriendPass));
 }
 
 function normalizeClassKey(key) {
@@ -234,21 +299,66 @@ function closeSectionLockedModal() {
     document.getElementById('sectionLockedModal')?.classList.remove('open');
 }
 
+let selectedComparisonPlan = 'gold';
+
+function updatePlanSelectionUI(planId) {
+    const plans = typeof getPlansConfig === 'function' ? getPlansConfig() : {};
+    const normalized = (planId === 'diamond' || planId === 'gold') ? planId : 'gold';
+    selectedComparisonPlan = normalized;
+
+    const grid = document.getElementById('planComparisonGrid');
+    if (grid) {
+        grid.querySelectorAll('.plan-compare-col[data-plan]').forEach(col => {
+            const pid = col.getAttribute('data-plan');
+            const isSelected = pid === normalized;
+            const planName = plans[pid]?.name || pid;
+            col.classList.toggle('is-selected', isSelected);
+            col.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+
+            const btn = col.querySelector('.plan-select-btn');
+            if (btn) {
+                btn.classList.toggle('is-selected', isSelected);
+                btn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> Buy ${escapeHtml ? escapeHtml(planName) : planName}`;
+            }
+        });
+    }
+
+    const buyBtn = document.getElementById('planBuySelectedBtn');
+    if (buyBtn) {
+        const planName = plans[normalized]?.name || normalized;
+        const planPrice = plans[normalized]?.price ? ` (${plans[normalized].price})` : '';
+        buyBtn.textContent = `Buy ${planName}${planPrice}`;
+    }
+}
+
+function selectComparisonPlan(planId) {
+    updatePlanSelectionUI(planId);
+}
+
 function openPlanComparisonModal(requiredPlan = 'gold', itemTitle = '') {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
     const modal = document.getElementById('planComparisonModal');
     const grid = document.getElementById('planComparisonGrid');
     const sub = document.getElementById('planComparisonSubtitle');
-    const waLink = document.getElementById('planUpgradeWhatsappLink');
     if (!modal || !grid) return;
 
     const plans = typeof getPlansConfig === 'function' ? getPlansConfig() : {};
     const currentPlan = getStudentPlan();
-    const targetPlan = String(requiredPlan || 'gold').toLowerCase();
+    const reqNorm = String(requiredPlan || '').toLowerCase();
+    const targetPlan = (reqNorm === 'gold' || reqNorm === 'diamond')
+        ? reqNorm
+        : (currentPlan === 'gold' ? 'diamond' : 'gold');
+
+    const goldName = plans.gold?.name || 'Padandas';
+    const diamondName = plans.diamond?.name || 'Topper';
 
     if (sub) {
         sub.innerHTML = itemTitle
             ? `Unlock <strong>${escapeHtml ? escapeHtml(itemTitle) : itemTitle}</strong> by upgrading to <strong>${formatPlanLabel(targetPlan)}</strong> or higher.`
-            : 'Compare Free, Gold, and Diamond plans across all open sections.';
+            : `Hover and choose between <strong>${escapeHtml ? escapeHtml(goldName) : goldName}</strong> and <strong>${escapeHtml ? escapeHtml(diamondName) : diamondName}</strong> across all open sections.`;
     }
 
     // Count items unlocked by each plan across open sections (PDFs, Videos, Zoom Classes)
@@ -287,16 +397,24 @@ function openPlanComparisonModal(requiredPlan = 'gold', itemTitle = '') {
         });
     });
 
-    const tiers = ['free', 'gold', 'diamond'];
+    const tiers = ['gold', 'diamond'];
     grid.innerHTML = tiers.map(pid => {
         const cfg = plans[pid] || { name: pid, price: 'Rs. 0', period: '', description: '' };
-        const isHighlighted = Boolean(requiredPlan) && pid === targetPlan;
+        const isHighlighted = Boolean(reqNorm) && pid === targetPlan;
+        const isSelected = pid === targetPlan;
         const isCurrent = pid === currentPlan && isUserAuthenticated();
         const c = counts[pid];
+        const safeName = escapeHtml ? escapeHtml(cfg.name) : cfg.name;
         return `
-            <div class="plan-compare-col ${isHighlighted ? 'is-recommended' : ''}">
+            <div class="plan-compare-col ${isHighlighted ? 'is-recommended' : ''} ${isSelected ? 'is-selected' : ''}"
+                 data-plan="${pid}"
+                 role="button"
+                 tabindex="0"
+                 aria-pressed="${isSelected ? 'true' : 'false'}"
+                 onclick="selectComparisonPlan('${pid}')"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectComparisonPlan('${pid}');}">
                 <div class="plan-compare-head">
-                    <span class="plan-tier-name">${cfg.name}</span>
+                    <span class="plan-tier-name">${safeName}</span>
                     ${isHighlighted ? '<span class="plan-highlight-tag">Unlocks this item</span>' : (isCurrent ? '<span class="plan-current-tag">Your plan</span>' : '')}
                 </div>
                 <div class="plan-price-row">
@@ -307,24 +425,200 @@ function openPlanComparisonModal(requiredPlan = 'gold', itemTitle = '') {
                 <ul class="plan-counts-list">
                     <li>${c.p} Lesson PDFs &amp; ${c.v} Videos (open sections)</li>
                     <li>${c.z} Live Zoom Classes (open sections)</li>
-                    <li>${pid === 'diamond' ? 'Full access to all open section lessons, mock tests &amp; live classes' : (pid === 'gold' ? 'All Free content + Gold lessons, mock tests &amp; live classes' : 'Selected Free lessons, mock tests &amp; live classes')}</li>
+                    <li>${pid === 'diamond' ? 'Full access to all open section lessons, mock tests &amp; live classes' : 'Gold lessons, mock tests, study PDFs &amp; live classes'}</li>
                 </ul>
+                <button type="button" class="plan-select-btn ${isSelected ? 'is-selected' : ''}" onclick="event.stopPropagation(); openCheckoutModal('${pid}')">
+                    <i class="fa-solid fa-bag-shopping"></i> Buy ${safeName}
+                </button>
             </div>
         `;
     }).join('');
 
-    if (waLink) {
-        const session = getStoredStudentSession();
-        const planName = plans[targetPlan]?.name || targetPlan;
-        const msg = `Namaste BPG Sir, I would like to upgrade my BPG EDUCARE membership (${session?.email || 'my email'}) to the ${planName} plan.`;
-        waLink.href = `https://wa.me/9779866064252?text=${encodeURIComponent(msg)}`;
-    }
-
+    updatePlanSelectionUI(targetPlan);
     modal.classList.add('open');
 }
 
 function closePlanComparisonModal() {
     document.getElementById('planComparisonModal')?.classList.remove('open');
+}
+
+/* --------------------------------------------------------------------------
+   1B. SIGNED-IN ESEWA + WHATSAPP CHECKOUT FLOW
+   -------------------------------------------------------------------------- */
+let activeCheckoutPlanId = 'gold';
+
+function buildPaymentRemarksText(session, planName) {
+    const fullName = session?.name || 'Student';
+    const className = session?.grade || getClassDisplayTitle(getStudentRegisteredClass());
+    const email = session?.email || '';
+    const username = session?.username || (email.includes('@') ? email.split('@')[0] : 'student');
+    return `Name: ${fullName} | Class: ${className} | Username: ${username} | Gmail: ${email} | Plan: ${planName}`;
+}
+
+function openCheckoutModal(planId = 'gold') {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
+    const normalized = (planId === 'diamond' || planId === 'gold') ? planId : 'gold';
+    if (!isUserAuthenticated()) {
+        window.pendingCheckoutPlan = normalized;
+        closePlanComparisonModal();
+        openAuthModal('signin');
+        showToast('Please sign in first to purchase a plan.');
+        return;
+    }
+
+    activeCheckoutPlanId = normalized;
+    closePlanComparisonModal();
+
+    const plans = typeof getPlansConfig === 'function' ? getPlansConfig() : {};
+    const cfg = plans[normalized] || { name: normalized, price: '' };
+    const session = getStoredStudentSession();
+
+    const titleEl = document.getElementById('checkoutPlanTitle');
+    if (titleEl) titleEl.textContent = `Buy ${cfg.name} Plan`;
+    const priceEl = document.getElementById('checkoutPlanPriceLine');
+    if (priceEl) priceEl.textContent = `Amount: ${cfg.price || '—'}${cfg.period ? ` · ${cfg.period}` : ''}`;
+
+    const qrImg = document.getElementById('checkoutEsewaQrImg');
+    const qrUrl = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.esewaQrUrl)
+        ? ACADEMY_STATE.siteSettings.esewaQrUrl
+        : 'images/payment_qr.png';
+    if (qrImg) {
+        qrImg.src = qrUrl;
+        qrImg.style.display = 'block';
+    }
+
+    const remarksEl = document.getElementById('checkoutRemarksPreview');
+    if (remarksEl) {
+        remarksEl.textContent = buildPaymentRemarksText(session, cfg.name);
+    }
+
+    const txnInput = document.getElementById('checkoutTransactionId');
+    if (txnInput) txnInput.value = '';
+
+    const statusBanner = document.getElementById('checkoutStatusBanner');
+    if (statusBanner) statusBanner.style.display = 'none';
+
+    document.getElementById('checkoutModal')?.classList.add('open');
+}
+
+function closeCheckoutModal() {
+    document.getElementById('checkoutModal')?.classList.remove('open');
+}
+
+async function copyPaymentRemarks() {
+    const remarksEl = document.getElementById('checkoutRemarksPreview');
+    const text = remarksEl ? remarksEl.textContent : '';
+    if (!text) return;
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('Payment remarks copied to clipboard.');
+    } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); showToast('Payment remarks copied.'); } catch (e2) {}
+        ta.remove();
+    }
+}
+
+async function submitStaticEsewaPayment() {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
+    const session = getStoredStudentSession();
+    if (!session || !session.email) {
+        openAuthModal('signin');
+        return;
+    }
+
+    const plans = typeof getPlansConfig === 'function' ? getPlansConfig() : {};
+    const cfg = plans[activeCheckoutPlanId] || { name: activeCheckoutPlanId, price: '' };
+    const transactionId = (document.getElementById('checkoutTransactionId')?.value || '').trim();
+    const btn = document.getElementById('btnCheckoutWhatsappConfirm');
+    const statusBanner = document.getElementById('checkoutStatusBanner');
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving pending purchase...';
+    }
+
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'CREATE_PAYMENT',
+                planId: activeCheckoutPlanId,
+                planName: cfg.name,
+                amount: cfg.price,
+                transactionId
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+            throw new Error(data.error || 'Could not record payment.');
+        }
+
+        if (statusBanner) {
+            statusBanner.style.display = 'block';
+            statusBanner.innerHTML = `<p style="margin:0;"><strong>Purchase saved as Pending.</strong> Opening WhatsApp with your prefilled confirmation message. Your plan will activate once an admin verifies your payment.</p>`;
+        }
+
+        if (data.whatsappUrl) {
+            window.open(data.whatsappUrl, '_blank', 'noopener');
+        }
+        showToast('Purchase submitted as pending. Please send the WhatsApp message to confirm.');
+    } catch (err) {
+        showToast(err.message || 'Could not submit payment.');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> I&rsquo;ve Paid &mdash; Continue to WhatsApp';
+        }
+    }
+}
+
+async function handleGatewayPaymentReturn() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const gatewayVerified = params.get('payment_verified') === '1';
+        const planId = params.get('plan');
+        const transactionId = params.get('txn_id') || params.get('refId') || '';
+        if (!gatewayVerified || !planId || !transactionId || !isUserAuthenticated()) return;
+
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'VERIFY_GATEWAY_PAYMENT',
+                gatewayVerified: true,
+                planId,
+                transactionId
+            })
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+            if (data.user && data.sessionToken) {
+                const session = getStoredStudentSession() || {};
+                session.plan = data.user.plan;
+                session.sessionToken = data.sessionToken;
+                localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+                localStorage.setItem('bpg_student_session', JSON.stringify(session));
+                updateAuthUserPill();
+            }
+            if (data.whatsappUrl) {
+                window.open(data.whatsappUrl, '_blank', 'noopener');
+            }
+            showToast('Payment verified! Opening WhatsApp confirmation.');
+        }
+    } catch (e) {}
 }
 
 function hasAccessToClass(classKey) {
@@ -385,6 +679,10 @@ function openStudentHomepage() {
 }
 
 function openMyWorkspaceTab(tabKey) {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
     if (!isUserAuthenticated()) {
         openAuthModal('signin');
         return;
@@ -428,6 +726,10 @@ function openMyClassWorkspace() {
 }
 
 function handleClassNavClick(targetClassKey) {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
     const targetNorm = normalizeClassKey(targetClassKey);
     const portalKey = shortKeyToPortalKey(targetNorm);
     pendingTargetClass = targetNorm;
@@ -455,20 +757,106 @@ function handleProgramCardClick(targetClassKey) {
     handleClassNavClick(targetClassKey);
 }
 
+let pendingSwitchRequestedClass = '';
+
 function showRestrictedAccessModal(targetClassKey) {
     const myClass = getStudentRegisteredClass();
+    const targetNorm = normalizeClassKey(targetClassKey);
+    pendingSwitchRequestedClass = shortKeyToPortalKey(targetNorm);
     const myTitle = getClassDisplayTitle(myClass);
+    const reqTitle = getClassDisplayTitle(targetNorm);
 
     const modal = document.getElementById('restrictedAccessModal');
     const msgEl = document.getElementById('restrictedAccessMessage');
     if (msgEl) {
-        msgEl.innerHTML = `Your ID is registered exclusively for <strong>${myTitle}</strong>. To enroll in a different program, please register a new account.`;
+        msgEl.innerHTML = `Your account can only have <strong>one active class at a time</strong>. Switching to <strong>${reqTitle}</strong> will end your access to <strong>${myTitle}</strong> once approved by an admin.`;
     }
+    const curEl = document.getElementById('switchCurrentClassLabel');
+    if (curEl) curEl.textContent = myTitle;
+    const reqEl = document.getElementById('switchRequestedClassLabel');
+    if (reqEl) reqEl.textContent = reqTitle;
+
+    const reasonInput = document.getElementById('switchRequestReason');
+    if (reasonInput) reasonInput.value = '';
+
+    const statusBox = document.getElementById('switchRequestStatusBox');
+    const submitBtn = document.getElementById('btnSubmitClassSwitch');
+    const myReqs = Array.isArray(window.MY_CLASS_SWITCH_REQUESTS) ? window.MY_CLASS_SWITCH_REQUESTS : [];
+    const existingPending = myReqs.find(r => r.status === 'pending' && r.requestedClassKey === pendingSwitchRequestedClass);
+    const latestReq = myReqs[0];
+
+    if (statusBox) {
+        if (existingPending) {
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = `<p style="margin:0;"><strong>Pending Request:</strong> You already requested a switch to ${reqTitle} on ${new Date(existingPending.submittedAt).toLocaleDateString()}.</p>`;
+            if (submitBtn) submitBtn.disabled = true;
+        } else if (latestReq && latestReq.status === 'rejected' && latestReq.requestedClassKey === pendingSwitchRequestedClass) {
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = `<p style="margin:0;"><strong>Previous Request Rejected:</strong> ${escapeHtml ? escapeHtml(latestReq.adminNote || 'No note provided') : (latestReq.adminNote || 'No note provided')}</p>`;
+            if (submitBtn) submitBtn.disabled = false;
+        } else {
+            statusBox.style.display = 'none';
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    }
+
     if (modal) modal.classList.add('open');
 }
 
 function closeRestrictedAccessModal() {
     document.getElementById('restrictedAccessModal')?.classList.remove('open');
+}
+
+async function submitClassSwitchRequest() {
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
+    if (!isUserAuthenticated()) {
+        openAuthModal('signin');
+        return;
+    }
+    const btn = document.getElementById('btnSubmitClassSwitch');
+    const reason = (document.getElementById('switchRequestReason')?.value || '').trim();
+    const statusBox = document.getElementById('switchRequestStatusBox');
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+    }
+
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/student-roster', {
+            method: 'POST',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'REQUEST_CLASS_SWITCH',
+                requestedClass: pendingSwitchRequestedClass,
+                reason
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            throw new Error(data.error || 'Could not submit class switch request.');
+        }
+
+        if (data.request) {
+            window.MY_CLASS_SWITCH_REQUESTS = [data.request, ...(window.MY_CLASS_SWITCH_REQUESTS || [])];
+        }
+        if (statusBox) {
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = `<p style="margin:0;"><strong>Request Submitted:</strong> Pending admin approval. You will keep access to your current class until approved.</p>`;
+        }
+        showToast(data.message || 'Class switch request submitted.');
+    } catch (err) {
+        if (btn) btn.disabled = false;
+        showToast(err.message || 'Could not submit request.');
+    } finally {
+        if (btn) {
+            btn.textContent = 'Confirm & Submit Switch Request';
+        }
+    }
 }
 
 function handleSwitchAccountRegister() {
@@ -501,6 +889,12 @@ function handleSignOutSilent() {
 function switchPortal(portalId) {
     if (!portalId) portalId = 'view-home';
     let targetId = portalId.startsWith('view-') ? portalId : `view-${portalId}`;
+
+    // MAINTENANCE MODE GUARD: Only public homepage is visible; all other views/direct links are locked
+    if (isMaintenanceModeActive() && targetId !== 'view-home') {
+        showMaintenanceLockNotice();
+        targetId = 'view-home';
+    }
 
     const isAuth = isUserAuthenticated();
     const norm = normalizeClassKey(targetId.replace('view-', ''));
@@ -641,12 +1035,14 @@ function scrollToSection(sectionId) {
 function updateAuthUserPill() {
     const session = getStoredStudentSession();
     const signBtn = document.getElementById('headerGoogleBtn');
+    const loginBtn = document.getElementById('headerLoginBtn');
     const userWrap = document.getElementById('userDropdownWrap');
     const userPill = document.getElementById('headerUserPill');
 
-    if (session && (session.name || session.email)) {
+    if (isUserAuthenticated() && session && (session.name || session.email)) {
         document.body.classList.add('user-authenticated');
         if (signBtn) signBtn.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'none';
         if (userWrap) userWrap.style.display = 'inline-block';
         if (userPill) userPill.classList.add('visible');
 
@@ -682,6 +1078,7 @@ function updateAuthUserPill() {
     } else {
         document.body.classList.remove('user-authenticated');
         if (signBtn) signBtn.style.display = 'inline-flex';
+        if (loginBtn) loginBtn.style.display = 'inline-flex';
         if (userWrap) userWrap.style.display = 'none';
         if (userPill) userPill.classList.remove('visible');
         const memBtn = document.getElementById('headerMembershipBtn');

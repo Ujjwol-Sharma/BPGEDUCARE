@@ -6,8 +6,7 @@
    - Inline management of existing uploads directly under each lesson row
    ========================================================================== */
 
-const ADMIN_PASSKEY = 'bpg2026';
-const ADMIN_AUTH_KEY = 'bpg_admin_authenticated_v2';
+const ADMIN_STUDIO_TOKEN = 'k9x4m7p2q8z';
 
 const SECTION_META = [
     { key: 'class-12', label: 'Class 12', sub: 'Grade XII' },
@@ -17,8 +16,9 @@ const SECTION_META = [
 ];
 
 let ADMIN_STATE = null;
-let ADMIN_ROSTER = { accounts: [], duplicateGroups: [] };
+let ADMIN_ROSTER = { accounts: [], duplicateGroups: [], classSwitchRequests: [] };
 let ADMIN_MOCK_TESTS = [];
+let ADMIN_PAYMENTS = [];
 let activeContentClass = 'class-12';
 let activeSubjectByClass = {};
 let activeMockClass = 'class-12';
@@ -82,7 +82,7 @@ function escapeHtml(str) {
 function getAdminHeaders() {
     return {
         'Content-Type': 'application/json',
-        'x-admin-passkey': ADMIN_PASSKEY
+        'x-admin-passkey': ADMIN_STUDIO_TOKEN
     };
 }
 
@@ -123,25 +123,7 @@ function broadcastUpdate(type = 'DATA_UPDATED') {
     } catch (e) {}
 }
 
-function handleAdminLogin(e) {
-    if (e) e.preventDefault();
-    const pass = (document.getElementById('admPass')?.value || '').trim();
-    if (pass !== ADMIN_PASSKEY && pass !== 'admin') {
-        showAdminToast('Incorrect admin passkey.', 'error');
-        return;
-    }
-    sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
-    openAdminShell();
-}
-
-function logoutAdmin() {
-    sessionStorage.removeItem(ADMIN_AUTH_KEY);
-    document.getElementById('adminShell').style.display = 'none';
-    document.getElementById('adminLoginSplash').classList.remove('hidden');
-}
-
 async function openAdminShell() {
-    document.getElementById('adminLoginSplash')?.classList.add('hidden');
     const shell = document.getElementById('adminShell');
     if (shell) shell.style.display = 'flex';
     await loadAdminData();
@@ -150,28 +132,35 @@ async function openAdminShell() {
 async function loadAdminData() {
     setSaveStatus('Loading...');
     try {
-        const [stateRes, rosterRes, mockRes] = await Promise.all([
+        const [stateRes, rosterRes, mockRes, payRes] = await Promise.all([
             fetch('/api/academy-state?_t=' + Date.now(), {
                 cache: 'no-store',
-                headers: { 'x-admin-passkey': ADMIN_PASSKEY }
+                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
             }),
             fetch('/api/student-roster?_t=' + Date.now(), {
                 cache: 'no-store',
-                headers: { 'x-admin-passkey': ADMIN_PASSKEY }
+                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
             }),
             fetch('/api/mock-tests?_t=' + Date.now(), {
                 cache: 'no-store',
-                headers: { 'x-admin-passkey': ADMIN_PASSKEY }
+                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
+            }),
+            fetch('/api/payments?_t=' + Date.now(), {
+                cache: 'no-store',
+                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
             })
         ]);
 
         const stateJson = await stateRes.json();
         const rosterJson = await rosterRes.json();
         const mockJson = await mockRes.json().catch(() => ({ tests: [] }));
+        const payJson = await payRes.json().catch(() => ({ payments: [] }));
 
         if (stateJson?.data) ADMIN_STATE = stateJson.data;
         if (rosterJson?.data) ADMIN_ROSTER = rosterJson.data;
         if (Array.isArray(mockJson?.tests)) ADMIN_MOCK_TESTS = mockJson.tests;
+        if (Array.isArray(payJson?.payments)) ADMIN_PAYMENTS = payJson.payments;
+        else if (Array.isArray(ADMIN_STATE?.payments)) ADMIN_PAYMENTS = ADMIN_STATE.payments;
 
         setSaveStatus('All changes saved');
         renderAllAdminTabs();
@@ -207,25 +196,35 @@ async function persistAcademyState(partialPayload, successMsg = 'Saved') {
 }
 
 function switchAdminTab(tabName) {
-    ['users', 'content', 'mocktests', 'zoom', 'team', 'sections', 'plans'].forEach(t => {
+    ['users', 'switches', 'payments', 'content', 'mocktests', 'zoom', 'notifications', 'homepage', 'team', 'faqs', 'sections', 'plans'].forEach(t => {
         document.getElementById(`tabBtn-${t}`)?.classList.toggle('active', t === tabName);
         document.getElementById(`pane-${t}`)?.classList.toggle('active', t === tabName);
     });
     if (tabName === 'users') renderUsersTab();
+    if (tabName === 'switches') renderSwitchRequestsTab();
+    if (tabName === 'payments') renderPaymentsTab();
     if (tabName === 'content') renderContentTab();
     if (tabName === 'mocktests') renderMockTestsTab();
     if (tabName === 'zoom') renderZoomClassesTab();
+    if (tabName === 'notifications') renderNotificationsTab();
+    if (tabName === 'homepage') renderHomepageEditorTab();
     if (tabName === 'team') renderTeamTab();
+    if (tabName === 'faqs') renderFaqsTab();
     if (tabName === 'sections') renderSectionAccessTab();
     if (tabName === 'plans') renderPlansTab();
 }
 
 function renderAllAdminTabs() {
     renderUsersTab();
+    renderSwitchRequestsTab();
+    renderPaymentsTab();
     renderContentTab();
     renderMockTestsTab();
     renderZoomClassesTab();
+    renderNotificationsTab();
+    renderHomepageEditorTab();
     renderTeamTab();
+    renderFaqsTab();
     renderSectionAccessTab();
     renderPlansTab();
 }
@@ -2171,6 +2170,8 @@ function renderTeamTab() {
    5. TAB 3: SECTION ACCESS (OPEN / LOCKED)
    -------------------------------------------------------------------------- */
 function renderSectionAccessTab() {
+    if (typeof renderMaintenanceSettings === 'function') renderMaintenanceSettings();
+    if (typeof renderSiteSettings === 'function') renderSiteSettings();
     const mount = document.getElementById('sectionAccessList');
     if (!mount || !ADMIN_STATE) return;
 
@@ -2569,15 +2570,728 @@ function renderPlanStudentPreview() {
 }
 
 /* --------------------------------------------------------------------------
+   6B. CLASS SWITCH REQUESTS
+   -------------------------------------------------------------------------- */
+function renderSwitchRequestsTab() {
+    const mount = document.getElementById('switchRequestsAdminMount');
+    const badge = document.getElementById('switchPendingBadge');
+    const requests = Array.isArray(ADMIN_ROSTER?.classSwitchRequests) ? ADMIN_ROSTER.classSwitchRequests : [];
+    const pendingCount = requests.filter(r => r.status === 'pending').length;
+
+    if (badge) {
+        badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+        badge.textContent = String(pendingCount);
+    }
+    if (!mount) return;
+
+    if (requests.length === 0) {
+        mount.innerHTML = `<div style="padding:24px; text-align:center; color:var(--adm-text-muted);">No class switch requests yet.</div>`;
+        return;
+    }
+
+    mount.innerHTML = `
+        <div class="adm-table-wrap">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Current / Previous Class</th>
+                        <th>Requested Class</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Admin Note</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${requests.map(r => {
+                        const statusClass = r.status === 'approved' ? 'open' : (r.status === 'rejected' ? 'locked' : '');
+                        const dateStr = r.submittedAt ? new Date(r.submittedAt).toLocaleString() : '—';
+                        return `
+                            <tr>
+                                <td>
+                                    <strong>${escapeHtml(r.studentName)}</strong><br>
+                                    <small style="color:var(--adm-text-muted);">${escapeHtml(r.email)}</small>
+                                    ${r.reason ? `<div style="font-size:0.78rem; color:var(--adm-text-muted); margin-top:4px;">Reason: ${escapeHtml(r.reason)}</div>` : ''}
+                                </td>
+                                <td>${escapeHtml(r.currentGrade || r.currentClassKey)}</td>
+                                <td><strong>${escapeHtml(r.requestedGrade || r.requestedClassKey)}</strong></td>
+                                <td><small>${escapeHtml(dateStr)}</small></td>
+                                <td><span class="adm-status-pill ${statusClass}">${escapeHtml(String(r.status || 'pending').toUpperCase())}</span></td>
+                                <td>
+                                    ${r.status === 'pending'
+                                        ? `<input type="text" class="adm-input" id="switchNote-${escapeHtml(r.id)}" placeholder="Optional note..." style="min-width:160px;">`
+                                        : `<small>${escapeHtml(r.adminNote || '—')}</small>`}
+                                </td>
+                                <td>
+                                    ${r.status === 'pending' ? `
+                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                            <button type="button" class="btn-adm-dark" style="padding:6px 10px; font-size:0.78rem;" onclick="handleSwitchRequestDecision('${escapeHtml(r.id)}', true)">Approve</button>
+                                            <button type="button" class="btn-topbar" style="padding:6px 10px; font-size:0.78rem; color:#dc2626;" onclick="handleSwitchRequestDecision('${escapeHtml(r.id)}', false)">Reject</button>
+                                        </div>
+                                    ` : `<small style="color:var(--adm-text-muted);">Reviewed</small>`}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+async function handleSwitchRequestDecision(requestId, approve) {
+    const noteEl = document.getElementById(`switchNote-${requestId}`);
+    const adminNote = noteEl ? noteEl.value.trim() : '';
+    try {
+        const res = await fetch('/api/student-roster', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({
+                action: approve ? 'APPROVE_CLASS_SWITCH' : 'REJECT_CLASS_SWITCH',
+                requestId,
+                adminNote
+            })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.error || 'Action failed');
+        if (json.data) ADMIN_ROSTER = json.data;
+        showAdminToast(approve ? 'Class switch approved and student class updated.' : 'Class switch request rejected.');
+        broadcastUpdate('PERMISSIONS_UPDATE');
+        renderSwitchRequestsTab();
+        renderUsersTab();
+    } catch (err) {
+        showAdminToast(err.message || 'Could not update switch request.', 'error');
+    }
+}
+
+/* --------------------------------------------------------------------------
+   6C. PAYMENTS & PLAN ACTIVATION
+   -------------------------------------------------------------------------- */
+async function loadAdminPayments() {
+    try {
+        const res = await fetch('/api/payments?_t=' + Date.now(), {
+            cache: 'no-store',
+            headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
+        });
+        const json = await res.json();
+        if (json.ok && Array.isArray(json.payments)) {
+            ADMIN_PAYMENTS = json.payments;
+            renderPaymentsTab();
+        }
+    } catch (e) {}
+}
+
+function renderPaymentsTab() {
+    const mount = document.getElementById('paymentsAdminMount');
+    const badge = document.getElementById('paymentsPendingBadge');
+    const list = Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : [];
+    const pendingCount = list.filter(p => p.status === 'pending').length;
+
+    if (badge) {
+        badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+        badge.textContent = String(pendingCount);
+    }
+    if (!mount) return;
+
+    if (list.length === 0) {
+        mount.innerHTML = `<div style="padding:24px; text-align:center; color:var(--adm-text-muted);">No plan purchases submitted yet.</div>`;
+        return;
+    }
+
+    mount.innerHTML = `
+        <div class="adm-table-wrap">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Class</th>
+                        <th>Plan &amp; Amount</th>
+                        <th>eSewa Txn ID</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${list.map(p => {
+                        const statusClass = p.status === 'verified' ? 'open' : (p.status === 'rejected' ? 'locked' : '');
+                        return `
+                            <tr>
+                                <td>
+                                    <strong>${escapeHtml(p.fullName)}</strong><br>
+                                    <small style="color:var(--adm-text-muted);">${escapeHtml(p.email)} (${escapeHtml(p.username)})</small>
+                                </td>
+                                <td>${escapeHtml(p.className || p.classKey)}</td>
+                                <td><strong>${escapeHtml(p.planName)}</strong><br><small>${escapeHtml(p.amount)}</small></td>
+                                <td><code>${escapeHtml(p.transactionId || 'Not provided')}</code></td>
+                                <td><small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small></td>
+                                <td><span class="adm-status-pill ${statusClass}">${escapeHtml(String(p.status || 'pending').toUpperCase())}</span></td>
+                                <td>
+                                    ${p.status === 'pending' ? `
+                                        <div style="display:flex; flex-direction:column; gap:6px;">
+                                            <input type="text" class="adm-input" id="payNote-${escapeHtml(p.id)}" placeholder="Verification note..." style="min-width:150px; padding:5px 8px; font-size:0.78rem;">
+                                            <div style="display:flex; gap:6px;">
+                                                <button type="button" class="btn-adm-dark" style="padding:6px 10px; font-size:0.78rem;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', true)">Verify &amp; Activate</button>
+                                                <button type="button" class="btn-topbar" style="padding:6px 10px; font-size:0.78rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', false)">Reject</button>
+                                            </div>
+                                        </div>
+                                    ` : `<small>${escapeHtml(p.adminNote || p.status)}</small>`}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+async function handleAdminPaymentDecision(paymentId, verify) {
+    const noteEl = document.getElementById(`payNote-${paymentId}`);
+    const adminNote = noteEl ? noteEl.value.trim() : '';
+    try {
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({
+                action: verify ? 'ADMIN_VERIFY_PAYMENT' : 'ADMIN_REJECT_PAYMENT',
+                paymentId,
+                adminNote
+            })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Payment update failed');
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        showAdminToast(json.message || 'Payment updated.');
+        broadcastUpdate('PERMISSIONS_UPDATE');
+        await loadAdminData();
+    } catch (err) {
+        showAdminToast(err.message || 'Could not update payment.', 'error');
+    }
+}
+
+/* --------------------------------------------------------------------------
+   6D. NOTIFICATIONS MANAGER
+   -------------------------------------------------------------------------- */
+let editingNotification = null;
+
+function renderNotificationsTab() {
+    const mount = document.getElementById('notificationsAdminMount');
+    if (!mount || !ADMIN_STATE) return;
+    const list = Array.isArray(ADMIN_STATE.notifications) ? ADMIN_STATE.notifications : [];
+
+    const editorHtml = editingNotification ? `
+        <div class="adm-card" style="background:var(--adm-bg-subtle); margin-bottom:18px; padding:16px;">
+            <h3 style="margin:0 0 12px 0; font-size:1rem;">${editingNotification.id ? 'Edit Notification' : 'New Notification'}</h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:10px;">
+                <div>
+                    <label class="adm-label">Title</label>
+                    <input type="text" id="notifFormTitle" class="adm-input" value="${escapeHtml(editingNotification.title || '')}" placeholder="Announcement title">
+                </div>
+                <div>
+                    <label class="adm-label">Category</label>
+                    <select id="notifFormCategory" class="adm-select">
+                        ${['Announcement', 'News', 'Class Alert', 'Exam Update'].map(c => `<option value="${c}" ${editingNotification.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+                    </select>
+                </div>
+                <div>
+                    <label class="adm-label">Audience Scope</label>
+                    <select id="notifFormScope" class="adm-select">
+                        <option value="sitewide" ${editingNotification.scope === 'sitewide' ? 'selected' : ''}>Sitewide (Everyone)</option>
+                        <option value="class-12" ${editingNotification.scope === 'class-12' ? 'selected' : ''}>Class 12 Only</option>
+                        <option value="class-11" ${editingNotification.scope === 'class-11' ? 'selected' : ''}>Class 11 Only</option>
+                        <option value="class-10" ${editingNotification.scope === 'class-10' ? 'selected' : ''}>Class 10 Only</option>
+                        <option value="after-12" ${editingNotification.scope === 'after-12' ? 'selected' : ''}>Entrance Prep Only</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label class="adm-label">Message</label>
+                <textarea id="notifFormBody" class="adm-input" rows="3" placeholder="Notification details...">${escapeHtml(editingNotification.body || '')}</textarea>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.86rem; cursor:pointer;">
+                    <input type="checkbox" id="notifFormPublished" ${editingNotification.published !== false ? 'checked' : ''}> Publish immediately
+                </label>
+                <button type="button" class="btn-topbar" onclick="previewNotificationDraft()">Preview</button>
+                <button type="button" class="btn-adm-dark" onclick="saveNotificationForm()">Save Notification</button>
+                <button type="button" class="btn-topbar" onclick="editingNotification=null; renderNotificationsTab();">Cancel</button>
+            </div>
+            <div id="notifPreviewBox" style="margin-top:10px; display:none;"></div>
+        </div>
+    ` : '';
+
+    mount.innerHTML = editorHtml + (list.length === 0
+        ? `<div style="padding:20px; text-align:center; color:var(--adm-text-muted);">No notifications created yet.</div>`
+        : `<div class="adm-table-wrap">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th>Title &amp; Message</th>
+                        <th>Category</th>
+                        <th>Scope</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${list.map(n => `
+                        <tr>
+                            <td><strong>${escapeHtml(n.title)}</strong><br><small style="color:var(--adm-text-muted);">${escapeHtml(n.body)}</small></td>
+                            <td>${escapeHtml(n.category || 'Announcement')}</td>
+                            <td>${escapeHtml(n.scope === 'sitewide' ? 'Sitewide' : n.scope)}</td>
+                            <td><span class="adm-status-pill ${n.published ? 'open' : 'locked'}">${n.published ? 'Published' : 'Draft'}</span></td>
+                            <td>
+                                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                    <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.78rem;" onclick="editNotificationItem('${escapeHtml(n.id)}')">Edit</button>
+                                    <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.78rem;" onclick="toggleNotificationPublish('${escapeHtml(n.id)}')">${n.published ? 'Unpublish' : 'Publish'}</button>
+                                    <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.78rem; color:#dc2626;" onclick="deleteNotificationItem('${escapeHtml(n.id)}')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>`);
+}
+
+function startCreateNotification() {
+    editingNotification = { id: '', title: '', body: '', category: 'Announcement', scope: 'sitewide', published: true };
+    renderNotificationsTab();
+}
+
+function editNotificationItem(id) {
+    const found = (ADMIN_STATE?.notifications || []).find(n => n.id === id);
+    if (!found) return;
+    editingNotification = JSON.parse(JSON.stringify(found));
+    renderNotificationsTab();
+}
+
+function previewNotificationDraft() {
+    const box = document.getElementById('notifPreviewBox');
+    if (!box) return;
+    const title = document.getElementById('notifFormTitle')?.value.trim() || 'Untitled';
+    const body = document.getElementById('notifFormBody')?.value.trim() || '';
+    const cat = document.getElementById('notifFormCategory')?.value || 'Announcement';
+    const scope = document.getElementById('notifFormScope')?.value || 'sitewide';
+    box.style.display = 'block';
+    box.innerHTML = `
+        <div style="padding:12px 14px; border:1px solid var(--adm-border); border-radius:10px; background:var(--adm-surface);">
+            <div style="font-size:0.75rem; color:var(--adm-text-muted); margin-bottom:4px;">Preview · ${escapeHtml(cat)} · ${escapeHtml(scope)}</div>
+            <strong>${escapeHtml(title)}</strong>
+            <p style="margin:4px 0 0; font-size:0.86rem;">${escapeHtml(body)}</p>
+        </div>
+    `;
+}
+
+async function saveNotificationForm() {
+    const title = document.getElementById('notifFormTitle')?.value.trim();
+    const body = document.getElementById('notifFormBody')?.value.trim();
+    const category = document.getElementById('notifFormCategory')?.value || 'Announcement';
+    const scope = document.getElementById('notifFormScope')?.value || 'sitewide';
+    const published = Boolean(document.getElementById('notifFormPublished')?.checked);
+    if (!title || !body) {
+        showAdminToast('Title and message are required.', 'error');
+        return;
+    }
+    const list = JSON.parse(JSON.stringify(ADMIN_STATE?.notifications || []));
+    const now = new Date().toISOString();
+    if (editingNotification && editingNotification.id) {
+        const idx = list.findIndex(n => n.id === editingNotification.id);
+        if (idx >= 0) {
+            list[idx] = { ...list[idx], title, body, category, scope, published, updatedAt: now };
+        }
+    } else {
+        list.unshift({ id: 'notif_' + Date.now(), title, body, category, scope, published, createdAt: now, updatedAt: now });
+    }
+    editingNotification = null;
+    await persistAcademyState({ notifications: list }, 'Notification saved.');
+}
+
+async function toggleNotificationPublish(id) {
+    const list = JSON.parse(JSON.stringify(ADMIN_STATE?.notifications || []));
+    const item = list.find(n => n.id === id);
+    if (!item) return;
+    item.published = !item.published;
+    item.updatedAt = new Date().toISOString();
+    await persistAcademyState({ notifications: list }, item.published ? 'Notification published.' : 'Notification unpublished.');
+}
+
+async function deleteNotificationItem(id) {
+    const list = (ADMIN_STATE?.notifications || []).filter(n => n.id !== id);
+    await persistAcademyState({ notifications: list }, 'Notification deleted.');
+}
+
+/* --------------------------------------------------------------------------
+   6E. HOMEPAGE EDITOR
+   -------------------------------------------------------------------------- */
+function renderHomepageEditorTab() {
+    const mount = document.getElementById('homepageEditorMount');
+    if (!mount || !ADMIN_STATE) return;
+    const hc = ADMIN_STATE.homepageContent || {};
+    const cards = Array.isArray(hc.featureCards) ? hc.featureCards : [];
+
+    mount.innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+            <div>
+                <label class="adm-label">Hero Pill Text</label>
+                <input type="text" id="hcHeroPill" class="adm-input" value="${escapeHtml(hc.heroPillText || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Hero Main Heading</label>
+                <input type="text" id="hcHeroTitleMain" class="adm-input" value="${escapeHtml(hc.heroTitleMain || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Hero Muted Sub-Heading</label>
+                <input type="text" id="hcHeroTitleMuted" class="adm-input" value="${escapeHtml(hc.heroTitleMuted || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Hero Portrait Image URL</label>
+                <input type="text" id="hcHeroPortrait" class="adm-input" value="${escapeHtml(hc.heroPortraitUrl || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Hero Faculty Name</label>
+                <input type="text" id="hcFacultyName" class="adm-input" value="${escapeHtml(hc.heroFacultyName || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Hero Faculty Role</label>
+                <input type="text" id="hcFacultyRole" class="adm-input" value="${escapeHtml(hc.heroFacultyRole || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Hero Faculty Tag</label>
+                <input type="text" id="hcFacultyTag" class="adm-input" value="${escapeHtml(hc.heroFacultyTag || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Guest Primary Button Label</label>
+                <input type="text" id="hcPrimaryBtn" class="adm-input" value="${escapeHtml(hc.heroPrimaryBtnLabel || 'Get Started')}">
+            </div>
+            <div>
+                <label class="adm-label">Secondary Button Label</label>
+                <input type="text" id="hcSecondaryBtn" class="adm-input" value="${escapeHtml(hc.heroSecondaryBtnLabel || 'Ask BPG AI')}">
+            </div>
+            <div>
+                <label class="adm-label">Secondary Button Link</label>
+                <input type="text" id="hcSecondaryLink" class="adm-input" value="${escapeHtml(hc.heroSecondaryBtnLink || '#ai')}">
+            </div>
+        </div>
+        <div style="margin-top:12px;">
+            <label class="adm-label">Hero Description</label>
+            <textarea id="hcHeroDesc" class="adm-input" rows="2">${escapeHtml(hc.heroDescription || '')}</textarea>
+        </div>
+
+        <hr style="margin:18px 0; border:none; border-top:1px solid var(--adm-border);">
+        <h3 style="margin:0 0 10px 0; font-size:0.96rem;">Top Announcement Banner</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; align-items:end;">
+            <label style="display:inline-flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;">
+                <input type="checkbox" id="hcBannerEnabled" ${hc.bannerEnabled ? 'checked' : ''}> Show Top Banner on Homepage
+            </label>
+            <div>
+                <label class="adm-label">Banner Text</label>
+                <input type="text" id="hcBannerText" class="adm-input" value="${escapeHtml(hc.bannerText || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Banner Link Label</label>
+                <input type="text" id="hcBannerLinkLabel" class="adm-input" value="${escapeHtml(hc.bannerLinkLabel || '')}">
+            </div>
+            <div>
+                <label class="adm-label">Banner Link URL</label>
+                <input type="text" id="hcBannerLinkUrl" class="adm-input" value="${escapeHtml(hc.bannerLinkUrl || '')}">
+            </div>
+        </div>
+
+        <hr style="margin:18px 0; border:none; border-top:1px solid var(--adm-border);">
+        <h3 style="margin:0 0 10px 0; font-size:0.96rem;">Section Headings &amp; Footer</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+            <div><label class="adm-label">Features Eyebrow</label><input type="text" id="hcFeatEyebrow" class="adm-input" value="${escapeHtml(hc.featuresEyebrow || '')}"></div>
+            <div><label class="adm-label">Features Heading</label><input type="text" id="hcFeatHeading" class="adm-input" value="${escapeHtml(hc.featuresHeading || '')}"></div>
+            <div><label class="adm-label">Notifications Eyebrow</label><input type="text" id="hcNotifEyebrow" class="adm-input" value="${escapeHtml(hc.notificationsEyebrow || '')}"></div>
+            <div><label class="adm-label">Notifications Heading</label><input type="text" id="hcNotifHeading" class="adm-input" value="${escapeHtml(hc.notificationsHeading || '')}"></div>
+            <div><label class="adm-label">Team Eyebrow</label><input type="text" id="hcTeamEyebrow" class="adm-input" value="${escapeHtml(hc.teamEyebrow || '')}"></div>
+            <div><label class="adm-label">Team Heading</label><input type="text" id="hcTeamHeading" class="adm-input" value="${escapeHtml(hc.teamHeading || '')}"></div>
+            <div><label class="adm-label">Footer Text</label><input type="text" id="hcFooterText" class="adm-input" value="${escapeHtml(hc.footerText || '')}"></div>
+        </div>
+
+        <hr style="margin:18px 0; border:none; border-top:1px solid var(--adm-border);">
+        <h3 style="margin:0 0 10px 0; font-size:0.96rem;">Feature Cards</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
+            ${cards.map((fc, idx) => `
+                <div style="padding:10px; border:1px solid var(--adm-border); border-radius:10px;">
+                    <label class="adm-label">${escapeHtml(fc.id)} Label</label>
+                    <input type="text" class="adm-input" id="hcCardLabel-${idx}" value="${escapeHtml(fc.label || '')}" style="margin-bottom:6px;">
+                    <label class="adm-label">Subtitle</label>
+                    <input type="text" class="adm-input" id="hcCardSub-${idx}" value="${escapeHtml(fc.sub || '')}">
+                </div>
+            `).join('')}
+        </div>
+        <div id="homepagePreviewBox" style="margin-top:16px; display:none;"></div>
+    `;
+}
+
+function collectHomepageDraft() {
+    const existing = ADMIN_STATE?.homepageContent || {};
+    const cards = (existing.featureCards || []).map((fc, idx) => ({
+        ...fc,
+        label: document.getElementById(`hcCardLabel-${idx}`)?.value.trim() || fc.label,
+        sub: document.getElementById(`hcCardSub-${idx}`)?.value.trim() || fc.sub
+    }));
+    return {
+        heroPillText: document.getElementById('hcHeroPill')?.value.trim() || '',
+        heroTitleMain: document.getElementById('hcHeroTitleMain')?.value.trim() || '',
+        heroTitleMuted: document.getElementById('hcHeroTitleMuted')?.value.trim() || '',
+        heroDescription: document.getElementById('hcHeroDesc')?.value.trim() || '',
+        heroPrimaryBtnLabel: document.getElementById('hcPrimaryBtn')?.value.trim() || 'Get Started',
+        heroSecondaryBtnLabel: document.getElementById('hcSecondaryBtn')?.value.trim() || 'Ask BPG AI',
+        heroSecondaryBtnLink: document.getElementById('hcSecondaryLink')?.value.trim() || '#ai',
+        heroPortraitUrl: document.getElementById('hcHeroPortrait')?.value.trim() || 'images/bpg_sir.jpg',
+        heroFacultyName: document.getElementById('hcFacultyName')?.value.trim() || '',
+        heroFacultyRole: document.getElementById('hcFacultyRole')?.value.trim() || '',
+        heroFacultyTag: document.getElementById('hcFacultyTag')?.value.trim() || '',
+        bannerEnabled: Boolean(document.getElementById('hcBannerEnabled')?.checked),
+        bannerText: document.getElementById('hcBannerText')?.value.trim() || '',
+        bannerLinkLabel: document.getElementById('hcBannerLinkLabel')?.value.trim() || '',
+        bannerLinkUrl: document.getElementById('hcBannerLinkUrl')?.value.trim() || '',
+        featuresEyebrow: document.getElementById('hcFeatEyebrow')?.value.trim() || '',
+        featuresHeading: document.getElementById('hcFeatHeading')?.value.trim() || '',
+        notificationsEyebrow: document.getElementById('hcNotifEyebrow')?.value.trim() || '',
+        notificationsHeading: document.getElementById('hcNotifHeading')?.value.trim() || '',
+        teamEyebrow: document.getElementById('hcTeamEyebrow')?.value.trim() || '',
+        teamHeading: document.getElementById('hcTeamHeading')?.value.trim() || '',
+        footerText: document.getElementById('hcFooterText')?.value.trim() || '',
+        featureCards: cards
+    };
+}
+
+function previewHomepageDraft() {
+    const draft = collectHomepageDraft();
+    const box = document.getElementById('homepagePreviewBox');
+    if (!box) return;
+    box.style.display = 'block';
+    box.innerHTML = `
+        <div style="padding:18px; border:1px solid var(--adm-border); border-radius:12px; background:var(--adm-bg-subtle);">
+            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--adm-text-muted); margin-bottom:8px;">Homepage Preview</div>
+            ${draft.bannerEnabled ? `<div style="padding:8px 12px; background:var(--adm-surface); border:1px solid var(--adm-border); border-radius:8px; margin-bottom:10px; font-size:0.84rem;">${escapeHtml(draft.bannerText)} <strong>${escapeHtml(draft.bannerLinkLabel)}</strong></div>` : ''}
+            <div style="font-size:0.8rem; color:var(--adm-text-muted);">${escapeHtml(draft.heroPillText)}</div>
+            <h2 style="margin:6px 0;">${escapeHtml(draft.heroTitleMain)} <span style="opacity:0.6;">${escapeHtml(draft.heroTitleMuted)}</span></h2>
+            <p style="font-size:0.9rem; margin:6px 0 12px;">${escapeHtml(draft.heroDescription)}</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <span class="adm-status-pill open">${escapeHtml(draft.heroPrimaryBtnLabel)}</span>
+                <span class="adm-status-pill">${escapeHtml(draft.heroSecondaryBtnLabel)}</span>
+            </div>
+        </div>
+    `;
+}
+
+async function saveHomepageEditor() {
+    const draft = collectHomepageDraft();
+    await persistAcademyState({ homepageContent: draft }, 'Homepage content published.');
+}
+
+/* --------------------------------------------------------------------------
+   6F. CHATBOT FAQS MANAGER
+   -------------------------------------------------------------------------- */
+let editingFaq = null;
+
+function renderFaqsTab() {
+    const mount = document.getElementById('faqsAdminMount');
+    if (!mount || !ADMIN_STATE) return;
+    const faqs = Array.isArray(ADMIN_STATE.chatbotFaqs) ? ADMIN_STATE.chatbotFaqs : [];
+
+    const editorHtml = editingFaq ? `
+        <div class="adm-card" style="background:var(--adm-bg-subtle); margin-bottom:16px; padding:16px;">
+            <h3 style="margin:0 0 10px 0; font-size:1rem;">${editingFaq.id ? 'Edit FAQ' : 'New FAQ'}</h3>
+            <div style="margin-bottom:10px;">
+                <label class="adm-label">Question</label>
+                <input type="text" id="faqFormQuestion" class="adm-input" value="${escapeHtml(editingFaq.question || '')}">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label class="adm-label">Keywords (comma-separated)</label>
+                <input type="text" id="faqFormKeywords" class="adm-input" value="${escapeHtml((editingFaq.keywords || []).join(', '))}">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label class="adm-label">Answer</label>
+                <textarea id="faqFormAnswer" class="adm-input" rows="3">${escapeHtml(editingFaq.answer || '')}</textarea>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.86rem;">
+                    <input type="checkbox" id="faqFormPublished" ${editingFaq.published !== false ? 'checked' : ''}> Published
+                </label>
+                <button type="button" class="btn-adm-dark" onclick="saveFaqForm()">Save FAQ</button>
+                <button type="button" class="btn-topbar" onclick="editingFaq=null; renderFaqsTab();">Cancel</button>
+            </div>
+        </div>
+    ` : '';
+
+    mount.innerHTML = editorHtml + `
+        <div class="adm-table-wrap">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th>Question &amp; Answer</th>
+                        <th>Keywords</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${faqs.map(f => `
+                        <tr>
+                            <td><strong>${escapeHtml(f.question)}</strong><br><small style="color:var(--adm-text-muted);">${escapeHtml(f.answer)}</small></td>
+                            <td><small>${escapeHtml((f.keywords || []).join(', '))}</small></td>
+                            <td><span class="adm-status-pill ${f.published !== false ? 'open' : 'locked'}">${f.published !== false ? 'Published' : 'Hidden'}</span></td>
+                            <td>
+                                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                    <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.78rem;" onclick="editFaqItem('${escapeHtml(f.id)}')">Edit</button>
+                                    <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.78rem;" onclick="toggleFaqPublish('${escapeHtml(f.id)}')">${f.published !== false ? 'Hide' : 'Publish'}</button>
+                                    <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.78rem; color:#dc2626;" onclick="deleteFaqItem('${escapeHtml(f.id)}')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function startCreateFaq() {
+    editingFaq = { id: '', question: '', keywords: [], answer: '', links: [], published: true };
+    renderFaqsTab();
+}
+
+function editFaqItem(id) {
+    const found = (ADMIN_STATE?.chatbotFaqs || []).find(f => f.id === id);
+    if (!found) return;
+    editingFaq = JSON.parse(JSON.stringify(found));
+    renderFaqsTab();
+}
+
+async function saveFaqForm() {
+    const question = document.getElementById('faqFormQuestion')?.value.trim();
+    const answer = document.getElementById('faqFormAnswer')?.value.trim();
+    const keywords = (document.getElementById('faqFormKeywords')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+    const published = Boolean(document.getElementById('faqFormPublished')?.checked);
+    if (!question || !answer) {
+        showAdminToast('Question and answer are required.', 'error');
+        return;
+    }
+    const list = JSON.parse(JSON.stringify(ADMIN_STATE?.chatbotFaqs || []));
+    const now = new Date().toISOString();
+    if (editingFaq && editingFaq.id) {
+        const idx = list.findIndex(f => f.id === editingFaq.id);
+        if (idx >= 0) list[idx] = { ...list[idx], question, keywords, answer, published, updatedAt: now };
+    } else {
+        list.unshift({ id: 'faq_' + Date.now(), question, keywords, answer, links: [], published, updatedAt: now });
+    }
+    editingFaq = null;
+    await persistAcademyState({ chatbotFaqs: list }, 'Chatbot FAQ saved.');
+}
+
+async function toggleFaqPublish(id) {
+    const list = JSON.parse(JSON.stringify(ADMIN_STATE?.chatbotFaqs || []));
+    const item = list.find(f => f.id === id);
+    if (!item) return;
+    item.published = item.published === false;
+    await persistAcademyState({ chatbotFaqs: list }, item.published ? 'FAQ published.' : 'FAQ hidden.');
+}
+
+async function deleteFaqItem(id) {
+    const list = (ADMIN_STATE?.chatbotFaqs || []).filter(f => f.id !== id);
+    await persistAcademyState({ chatbotFaqs: list }, 'FAQ deleted.');
+}
+
+/* --------------------------------------------------------------------------
+   6G. MAINTENANCE MODE & SITE SETTINGS
+   -------------------------------------------------------------------------- */
+function renderMaintenanceSettings() {
+    const mount = document.getElementById('maintenanceSettingsMount');
+    const btn = document.getElementById('btnToggleMaintenance');
+    if (!mount || !ADMIN_STATE) return;
+    const m = ADMIN_STATE.maintenanceMode || { enabled: false, title: 'Scheduled Maintenance', message: '' };
+    const enabled = Boolean(m.enabled);
+    if (btn) {
+        btn.textContent = enabled ? 'Disable Maintenance Mode' : 'Enable Maintenance Mode';
+        btn.style.background = enabled ? '#dc2626' : '';
+    }
+    mount.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <span class="adm-status-pill ${enabled ? 'locked' : 'open'}">${enabled ? 'MAINTENANCE ACTIVE' : 'SITE LIVE'}</span>
+            <small style="color:var(--adm-text-muted);">${enabled ? 'Public homepage stays visible; all student portals, calculator & checkout are locked.' : 'All open student features are operating normally.'}</small>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 2fr auto; gap:10px; align-items:end;">
+            <div>
+                <label class="adm-label">Notice Title</label>
+                <input type="text" id="maintTitleInput" class="adm-input" value="${escapeHtml(m.title || 'Scheduled Maintenance')}">
+            </div>
+            <div>
+                <label class="adm-label">Notice Message</label>
+                <input type="text" id="maintMsgInput" class="adm-input" value="${escapeHtml(m.message || '')}">
+            </div>
+            <button type="button" class="btn-topbar" onclick="saveMaintenanceMessage()">Save Message</button>
+        </div>
+    `;
+}
+
+async function toggleMaintenanceMode() {
+    const current = ADMIN_STATE?.maintenanceMode || { enabled: false };
+    const nextEnabled = !current.enabled;
+    const title = document.getElementById('maintTitleInput')?.value.trim() || current.title || 'Scheduled Maintenance';
+    const message = document.getElementById('maintMsgInput')?.value.trim() || current.message || '';
+    await persistAcademyState({
+        maintenanceMode: { enabled: nextEnabled, title, message, updatedAt: new Date().toISOString() }
+    }, nextEnabled ? 'Maintenance Mode enabled.' : 'Maintenance Mode disabled — site is live.');
+}
+
+async function saveMaintenanceMessage() {
+    const current = ADMIN_STATE?.maintenanceMode || { enabled: false };
+    const title = document.getElementById('maintTitleInput')?.value.trim() || 'Scheduled Maintenance';
+    const message = document.getElementById('maintMsgInput')?.value.trim() || '';
+    await persistAcademyState({
+        maintenanceMode: { ...current, title, message, updatedAt: new Date().toISOString() }
+    }, 'Maintenance notice saved.');
+}
+
+function renderSiteSettings() {
+    const mount = document.getElementById('siteSettingsMount');
+    if (!mount || !ADMIN_STATE) return;
+    const s = ADMIN_STATE.siteSettings || {};
+    mount.innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+            <div>
+                <label class="adm-label">WhatsApp Number (with country code)</label>
+                <input type="text" id="setWhatsappNumber" class="adm-input" value="${escapeHtml(s.whatsappNumber || '9779866064252')}" placeholder="9779866064252">
+            </div>
+            <div>
+                <label class="adm-label">eSewa QR Image URL / Path</label>
+                <input type="text" id="setEsewaQrUrl" class="adm-input" value="${escapeHtml(s.esewaQrUrl || 'images/payment_qr.png')}" placeholder="images/payment_qr.png">
+            </div>
+            <div>
+                <label class="adm-label">eSewa Merchant Name</label>
+                <input type="text" id="setEsewaMerchant" class="adm-input" value="${escapeHtml(s.esewaMerchantName || 'BPG EDUCARE')}">
+            </div>
+            <div>
+                <label class="adm-label">Google OAuth Client ID (optional)</label>
+                <input type="text" id="setGoogleClientId" class="adm-input" value="${escapeHtml(s.googleClientId || '')}" placeholder="12345-abc.apps.googleusercontent.com">
+            </div>
+        </div>
+    `;
+}
+
+async function saveSiteSettings() {
+    const whatsappNumber = (document.getElementById('setWhatsappNumber')?.value || '').replace(/[^\d]/g, '') || '9779866064252';
+    const esewaQrUrl = document.getElementById('setEsewaQrUrl')?.value.trim() || 'images/payment_qr.png';
+    const esewaMerchantName = document.getElementById('setEsewaMerchant')?.value.trim() || 'BPG EDUCARE';
+    const googleClientId = document.getElementById('setGoogleClientId')?.value.trim() || '';
+    await persistAcademyState({
+        siteSettings: { whatsappNumber, esewaQrUrl, esewaMerchantName, googleClientId }
+    }, 'Site settings saved.');
+}
+
+/* --------------------------------------------------------------------------
    7. BOOT
    -------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('bpg_theme') === 'dark' ? 'dark' : 'light';
     applyAdminTheme(savedTheme);
-
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('pass') === ADMIN_PASSKEY || sessionStorage.getItem(ADMIN_AUTH_KEY) === '1') {
-        sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
-        openAdminShell();
-    }
+    openAdminShell();
 });

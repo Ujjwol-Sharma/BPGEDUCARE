@@ -5,6 +5,43 @@
 
 async function syncRosterPermissionsFromServer() {
     try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const session = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
+
+        if (session && session.sessionToken) {
+            const meRes = await fetch('/api/student-roster?me=1&_t=' + Date.now(), {
+                cache: 'no-store',
+                headers: authHeaders
+            });
+            if (meRes.ok) {
+                const meJson = await meRes.json();
+                if (Array.isArray(meJson.mySwitchRequests)) {
+                    window.MY_CLASS_SWITCH_REQUESTS = meJson.mySwitchRequests;
+                }
+                if (meJson.account) {
+                    const match = meJson.account;
+                    const gradeChanged = match.grade && match.grade !== session.grade;
+                    const planChanged = match.plan && match.plan !== session.plan;
+                    const legacyChanged = Boolean(match.legacyAccess) !== Boolean(session.legacyAccess);
+
+                    if (gradeChanged || planChanged || legacyChanged) {
+                        session.grade = match.grade || session.grade;
+                        session.classKey = normalizeClassKey(session.grade);
+                        session.plan = match.plan || 'free';
+                        session.legacyAccess = Boolean(match.legacyAccess);
+                        session.planExplicitlySet = Boolean(match.planExplicitlySet);
+                        localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+                        localStorage.setItem('bpg_student_session', JSON.stringify(session));
+                        localStorage.setItem('bpg_student_class', session.classKey);
+                        updateAuthUserPill();
+                        syncWithServerDatabase();
+                        if (gradeChanged) openMyClassWorkspace();
+                    }
+                    return;
+                }
+            }
+        }
+
         const res = await fetch('/api/student-roster?_t=' + Date.now(), { cache: 'no-store' });
         if (!res.ok) return;
         const json = await res.json();
@@ -66,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 email: 'scholar@bpgacademy.edu.np',
                 grade: guestGrade,
                 classKey: normKey,
+                isFriendPass: true,
                 verified: true
             };
             localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(friendAccount));
@@ -165,7 +203,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initial Database & Roster Hydration on Load
-    syncWithServerDatabase();
+    syncWithServerDatabase().then(() => {
+        if (typeof handleGatewayPaymentReturn === 'function') {
+            handleGatewayPaymentReturn();
+        }
+    });
     syncRosterPermissionsFromServer();
 
     // Cache Invalidation: Re-fetch on tab focus
@@ -210,6 +252,7 @@ window.closeRestrictedAccessModal = closeRestrictedAccessModal;
 window.showSectionLockedModal = showSectionLockedModal;
 window.closeSectionLockedModal = closeSectionLockedModal;
 window.openPlanComparisonModal = openPlanComparisonModal;
+window.selectComparisonPlan = selectComparisonPlan;
 window.closePlanComparisonModal = closePlanComparisonModal;
 window.syncSectionLockBadges = syncSectionLockBadges;
 window.handleRequestPasswordResetOtp = handleRequestPasswordResetOtp;
@@ -239,3 +282,18 @@ window.clearAiChat = clearAiChat;
 window.initRoamingWidgets = initRoamingWidgets;
 window.refreshStudentPortalUI = refreshStudentPortalUI;
 window.syncRosterPermissionsFromServer = syncRosterPermissionsFromServer;
+window.handleGoogleAuthClick = handleGoogleAuthClick;
+window.handleLocalGoogleSubmit = handleLocalGoogleSubmit;
+window.openCheckoutModal = openCheckoutModal;
+window.closeCheckoutModal = closeCheckoutModal;
+window.copyPaymentRemarks = copyPaymentRemarks;
+window.submitStaticEsewaPayment = submitStaticEsewaPayment;
+window.submitClassSwitchRequest = submitClassSwitchRequest;
+window.handleHeroSecondaryCta = handleHeroSecondaryCta;
+window.openConfiguredWhatsappSupport = openConfiguredWhatsappSupport;
+window.setCalculatorMode = setCalculatorMode;
+window.toggleMiniCalcAngle = toggleMiniCalcAngle;
+window.toggleMiniCalcHistory = toggleMiniCalcHistory;
+window.reuseMiniCalcHistory = reuseMiniCalcHistory;
+window.clearMiniCalcHistory = clearMiniCalcHistory;
+window.calcUseLastAns = calcUseLastAns;

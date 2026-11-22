@@ -179,6 +179,17 @@ module.exports = function mockTestsHandler(req, res) {
     const state = readAcademyState();
     if (!Array.isArray(state.mockTests)) state.mockTests = [];
 
+    // Enforce Maintenance Mode for all non-admin mock test requests
+    if (!isAdmin && state.maintenanceMode?.enabled) {
+        res.statusCode = 503;
+        res.end(JSON.stringify({
+            ok: false,
+            code: 'MAINTENANCE_MODE',
+            error: state.maintenanceMode.message || 'Mock tests are locked during scheduled maintenance.'
+        }));
+        return;
+    }
+
     /* ----------------------------------------------------------------------
        GET /api/mock-tests
        ---------------------------------------------------------------------- */
@@ -202,6 +213,15 @@ module.exports = function mockTestsHandler(req, res) {
 
         const user = resolveRequestUser(req);
         const classKey = gradeToClassKey(rawClass || user?.classKey || 'class-12');
+        if (user && user.email && user.classKey && classKey !== gradeToClassKey(user.classKey || user.grade)) {
+            res.statusCode = 403;
+            res.end(JSON.stringify({
+                ok: false,
+                code: 'CLASS_MISMATCH',
+                error: `Your account is enrolled in ${user.grade || user.classKey}.`
+            }));
+            return;
+        }
         const lock = state.sectionLocks?.[classKey] || { locked: false, reason: '' };
 
         if (lock.locked) {

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BPG EDUCARE — Admin</title>
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="icon" type="image/jpeg" href="images/bpg-educare-logo.jpg">
 
     <!-- Apply saved light/dark theme immediately -->
     <script>
@@ -13,14 +14,16 @@
             try {
                 var t = localStorage.getItem('bpg_theme') || 'light';
                 document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
-            } catch (e) {}
+            } catch (e) { }
         })();
     </script>
 
     <!-- Normal Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,39 +32,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <!-- Admin Stylesheet -->
-    <link rel="stylesheet" href="./css/admin.css?v=20261121v4">
+    <link rel="stylesheet" href="./css/admin.css?v=20261122v5">
 </head>
+
 <body>
 
-    <!-- 1. ADMIN LOGIN -->
-    <div class="admin-login-splash" id="adminLoginSplash">
-        <button type="button" id="loginThemeToggleBtn" class="adm-theme-btn adm-login-theme-btn" onclick="toggleAdminTheme()" title="Switch Theme" aria-label="Toggle Light and Dark Mode">
-            <i class="fa-solid fa-moon" aria-hidden="true"></i>
-        </button>
-        <div class="login-card">
-            <h2 style="margin-bottom:8px;">BPG EDUCARE Admin</h2>
-            <p>Sign in with your admin passkey to manage users, lessons, section access, and plans.</p>
-            <form onsubmit="handleAdminLogin(event)">
-                <div class="login-field">
-                    <label for="admEmail">Admin Email</label>
-                    <input type="text" id="admEmail" class="adm-input" value="admin@bpgeducare.edu.np" required>
-                </div>
-                <div class="login-field">
-                    <label for="admPass">Admin Passkey</label>
-                    <input type="password" id="admPass" class="adm-input" placeholder="Enter passkey (default: bpg2026)" required>
-                </div>
-                <button type="submit" class="btn-adm-primary" style="margin-top:8px;">
-                    Open Admin Panel
-                </button>
-            </form>
-            <div style="margin-top:16px; font-size:0.8rem; color:var(--adm-text-muted);">
-                Default passkey: <code>bpg2026</code>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. SIMPLIFIED 4-TAB ADMIN SHELL -->
-    <div class="admin-shell" id="adminShell" style="display:none;">
+    <!-- SIMPLIFIED 4-TAB ADMIN SHELL (Direct access via secret URL; no password prompt) -->
+    <div class="admin-shell" id="adminShell" style="display:flex;">
         <header class="admin-topbar">
             <div class="topbar-left">
                 <span class="cms-brand-badge">BPG EDUCARE Admin</span>
@@ -69,17 +46,23 @@
             </div>
             <div class="topbar-right">
                 <a href="./index.html" target="_blank" class="btn-topbar">Open Website</a>
-                <button type="button" class="btn-topbar danger" onclick="logoutAdmin()">Log Out</button>
-                <button type="button" id="adminThemeToggleBtn" class="adm-theme-btn" onclick="toggleAdminTheme()" title="Switch Theme" aria-label="Toggle Light and Dark Mode">
+                <button type="button" id="adminThemeToggleBtn" class="adm-theme-btn" onclick="toggleAdminTheme()"
+                    title="Switch Theme" aria-label="Toggle Light and Dark Mode">
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
             </div>
         </header>
 
         <!-- Clearly Labeled Admin Tabs -->
-        <nav class="admin-nav-bar" aria-label="Admin Navigation">
+        <nav class="admin-nav-bar" aria-label="Admin Navigation" style="flex-wrap:wrap;">
             <button type="button" class="adm-tab-btn active" id="tabBtn-users" onclick="switchAdminTab('users')">
                 Users
+            </button>
+            <button type="button" class="adm-tab-btn" id="tabBtn-switches" onclick="switchAdminTab('switches')">
+                Switch Requests <span id="switchPendingBadge" class="adm-nav-badge" style="display:none;">0</span>
+            </button>
+            <button type="button" class="adm-tab-btn" id="tabBtn-payments" onclick="switchAdminTab('payments')">
+                Payments <span id="paymentsPendingBadge" class="adm-nav-badge" style="display:none;">0</span>
             </button>
             <button type="button" class="adm-tab-btn" id="tabBtn-content" onclick="switchAdminTab('content')">
                 Content
@@ -90,11 +73,21 @@
             <button type="button" class="adm-tab-btn" id="tabBtn-zoom" onclick="switchAdminTab('zoom')">
                 Zoom Classes
             </button>
+            <button type="button" class="adm-tab-btn" id="tabBtn-notifications"
+                onclick="switchAdminTab('notifications')">
+                Notifications
+            </button>
+            <button type="button" class="adm-tab-btn" id="tabBtn-homepage" onclick="switchAdminTab('homepage')">
+                Homepage
+            </button>
             <button type="button" class="adm-tab-btn" id="tabBtn-team" onclick="switchAdminTab('team')">
                 Team
             </button>
+            <button type="button" class="adm-tab-btn" id="tabBtn-faqs" onclick="switchAdminTab('faqs')">
+                Chatbot FAQs
+            </button>
             <button type="button" class="adm-tab-btn" id="tabBtn-sections" onclick="switchAdminTab('sections')">
-                Section Access
+                Settings &amp; Maintenance
             </button>
             <button type="button" class="adm-tab-btn" id="tabBtn-plans" onclick="switchAdminTab('plans')">
                 Plans &amp; Access
@@ -113,7 +106,8 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Users</h2>
-                            <p class="adm-card-subtitle">Search students by name or Gmail, view or update their current membership plan, and review flagged duplicate Gmail accounts.</p>
+                            <p class="adm-card-subtitle">Search students by name or Gmail, view or update their current
+                                membership plan, and review flagged duplicate Gmail accounts.</p>
                         </div>
                     </div>
 
@@ -135,7 +129,8 @@
                     </form>
 
                     <div style="margin-bottom:16px;">
-                        <input type="text" id="userSearchInput" class="adm-input" placeholder="Search by name or Gmail..." oninput="renderUsersTab()">
+                        <input type="text" id="userSearchInput" class="adm-input"
+                            placeholder="Search by name or Gmail..." oninput="renderUsersTab()">
                     </div>
 
                     <div class="adm-table-wrap">
@@ -157,6 +152,40 @@
             </section>
 
             <!-- ==============================================================
+                 TAB 1B: CLASS SWITCH REQUESTS
+                 ============================================================== -->
+            <section class="adm-pane" id="pane-switches">
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Class Switch Requests</h2>
+                            <p class="adm-card-subtitle">Review student requests to switch their active class. Approving
+                                a request ends access to the student&rsquo;s previous class and grants access to the
+                                requested class.</p>
+                        </div>
+                    </div>
+                    <div id="switchRequestsAdminMount"></div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 TAB 1C: PAYMENTS (ESEWA & WHATSAPP VERIFICATION)
+                 ============================================================== -->
+            <section class="adm-pane" id="pane-payments">
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Payments &amp; Plan Activation</h2>
+                            <p class="adm-card-subtitle">Review pending eSewa / WhatsApp purchases, record payment
+                                verification, and activate student plans.</p>
+                        </div>
+                        <button type="button" class="btn-topbar" onclick="loadAdminPayments()">Refresh Payments</button>
+                    </div>
+                    <div id="paymentsAdminMount"></div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
                  TAB 2: CONTENT (4 CLASS SECTIONS -> SUBJECT -> SYLLABUS LESSONS)
                  ============================================================== -->
             <section class="adm-pane" id="pane-content">
@@ -164,16 +193,21 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Lessons, PDFs &amp; Videos</h2>
-                            <p class="adm-card-subtitle">Select a class and subject to upload original PDFs and videos with custom thumbnails directly to any lesson in syllabus order.</p>
+                            <p class="adm-card-subtitle">Select a class and subject to upload original PDFs and videos
+                                with custom thumbnails directly to any lesson in syllabus order.</p>
                         </div>
                     </div>
 
                     <!-- 4 Clearly Labeled Class Sections -->
                     <div class="adm-class-sections-bar" id="adminClassSectionsBar">
-                        <button type="button" class="adm-class-pill active" id="classSecBtn-class-12" onclick="selectAdminContentClass('class-12')">Class 12</button>
-                        <button type="button" class="adm-class-pill" id="classSecBtn-class-11" onclick="selectAdminContentClass('class-11')">Class 11</button>
-                        <button type="button" class="adm-class-pill" id="classSecBtn-class-10" onclick="selectAdminContentClass('class-10')">Class 10</button>
-                        <button type="button" class="adm-class-pill" id="classSecBtn-after-12" onclick="selectAdminContentClass('after-12')">Entrance Prep</button>
+                        <button type="button" class="adm-class-pill active" id="classSecBtn-class-12"
+                            onclick="selectAdminContentClass('class-12')">Class 12</button>
+                        <button type="button" class="adm-class-pill" id="classSecBtn-class-11"
+                            onclick="selectAdminContentClass('class-11')">Class 11</button>
+                        <button type="button" class="adm-class-pill" id="classSecBtn-class-10"
+                            onclick="selectAdminContentClass('class-10')">Class 10</button>
+                        <button type="button" class="adm-class-pill" id="classSecBtn-after-12"
+                            onclick="selectAdminContentClass('after-12')">Entrance Prep</button>
                     </div>
 
                     <!-- Subject Bar + Syllabus-Ordered Lessons Mount -->
@@ -189,16 +223,21 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Mock Tests</h2>
-                            <p class="adm-card-subtitle">Create, time, preview, and publish MCQ mock tests organized by class and subject.</p>
+                            <p class="adm-card-subtitle">Create, time, preview, and publish MCQ mock tests organized by
+                                class and subject.</p>
                         </div>
                     </div>
 
                     <!-- 4 Clearly Labeled Class Sections -->
                     <div class="adm-class-sections-bar" id="adminMockClassSectionsBar">
-                        <button type="button" class="adm-class-pill active" id="mockClassBtn-class-12" onclick="selectAdminMockClass('class-12')">Class 12</button>
-                        <button type="button" class="adm-class-pill" id="mockClassBtn-class-11" onclick="selectAdminMockClass('class-11')">Class 11</button>
-                        <button type="button" class="adm-class-pill" id="mockClassBtn-class-10" onclick="selectAdminMockClass('class-10')">Class 10</button>
-                        <button type="button" class="adm-class-pill" id="mockClassBtn-after-12" onclick="selectAdminMockClass('after-12')">Entrance Prep</button>
+                        <button type="button" class="adm-class-pill active" id="mockClassBtn-class-12"
+                            onclick="selectAdminMockClass('class-12')">Class 12</button>
+                        <button type="button" class="adm-class-pill" id="mockClassBtn-class-11"
+                            onclick="selectAdminMockClass('class-11')">Class 11</button>
+                        <button type="button" class="adm-class-pill" id="mockClassBtn-class-10"
+                            onclick="selectAdminMockClass('class-10')">Class 10</button>
+                        <button type="button" class="adm-class-pill" id="mockClassBtn-after-12"
+                            onclick="selectAdminMockClass('after-12')">Entrance Prep</button>
                     </div>
 
                     <div id="mockTestsAdminMount"></div>
@@ -213,9 +252,11 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Zoom Classes</h2>
-                            <p class="adm-card-subtitle">Create, edit, reschedule, cancel, or delete live Zoom classes in Nepal Time (NPT · UTC+5:45).</p>
+                            <p class="adm-card-subtitle">Create, edit, reschedule, cancel, or delete live Zoom classes
+                                in Nepal Time (NPT · UTC+5:45).</p>
                         </div>
-                        <button type="button" class="btn-adm-dark" onclick="startCreateZoomClass()">+ Schedule Zoom Class</button>
+                        <button type="button" class="btn-adm-dark" onclick="startCreateZoomClass()">+ Schedule Zoom
+                            Class</button>
                     </div>
                     <div id="zoomClassesAdminMount"></div>
                 </div>
@@ -229,23 +270,111 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Team</h2>
-                            <p class="adm-card-subtitle">Add, edit, or remove homepage team profiles. On desktop, Founder appears centered in Row 1 and CEO, CCO, and CTO appear in Row 2.</p>
+                            <p class="adm-card-subtitle">Add, edit, or remove homepage team profiles. On desktop,
+                                Founder appears centered in Row 1 and CEO, CCO, and CTO appear in Row 2.</p>
                         </div>
-                        <button type="button" class="btn-adm-dark" onclick="startAddTeamMember()">+ Add Team Member</button>
+                        <button type="button" class="btn-adm-dark" onclick="startAddTeamMember()">+ Add Team
+                            Member</button>
                     </div>
                     <div id="teamAdminMount"></div>
                 </div>
             </section>
 
             <!-- ==============================================================
-                 TAB 3: SECTION ACCESS (OPEN / LOCKED TOGGLES)
+                 TAB 2.8: NOTIFICATIONS MANAGER
+                 ============================================================== -->
+            <section class="adm-pane" id="pane-notifications">
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Notifications &amp; Announcements</h2>
+                            <p class="adm-card-subtitle">Create, preview, publish, edit, and unpublish sitewide or
+                                class-specific updates. Class-specific alerts are visible only to students in that
+                                class.</p>
+                        </div>
+                        <button type="button" class="btn-adm-dark" onclick="startCreateNotification()">+ New
+                            Notification</button>
+                    </div>
+                    <div id="notificationsAdminMount"></div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 TAB 2.9: HOMEPAGE EDITOR
+                 ============================================================== -->
+            <section class="adm-pane" id="pane-homepage">
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Homepage Editor</h2>
+                            <p class="adm-card-subtitle">Edit all homepage headings, descriptions, button labels and
+                                links, top banner, feature cards, and hero photo. Preview changes before publishing.</p>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button type="button" class="btn-topbar" onclick="previewHomepageDraft()">Preview
+                                Changes</button>
+                            <button type="button" class="btn-adm-dark" onclick="saveHomepageEditor()">Publish
+                                Homepage</button>
+                        </div>
+                    </div>
+                    <div id="homepageEditorMount"></div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 TAB 2.10: CHATBOT FAQS MANAGER
+                 ============================================================== -->
+            <section class="adm-pane" id="pane-faqs">
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Chatbot FAQs</h2>
+                            <p class="adm-card-subtitle">Edit the public website knowledge base used by BPG EDUCARE AI.
+                                Private student records and admin-only data are never exposed.</p>
+                        </div>
+                        <button type="button" class="btn-adm-dark" onclick="startCreateFaq()">+ Add FAQ</button>
+                    </div>
+                    <div id="faqsAdminMount"></div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 TAB 3: SETTINGS, MAINTENANCE MODE & SECTION ACCESS
                  ============================================================== -->
             <section class="adm-pane" id="pane-sections">
                 <div class="adm-card">
                     <div class="adm-card-head">
                         <div>
+                            <h2 class="adm-card-title">Maintenance Mode</h2>
+                            <p class="adm-card-subtitle">When enabled, the public homepage stays visible with a
+                                maintenance notice while student dashboards, lessons, mock tests, calculator, and
+                                checkout are locked.</p>
+                        </div>
+                        <button type="button" class="btn-adm-dark" id="btnToggleMaintenance"
+                            onclick="toggleMaintenanceMode()">Enable Maintenance Mode</button>
+                    </div>
+                    <div id="maintenanceSettingsMount"></div>
+                </div>
+
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Checkout, WhatsApp &amp; Google Sign-In Settings</h2>
+                            <p class="adm-card-subtitle">Configure the WhatsApp confirmation number, eSewa QR image URL,
+                                and Google OAuth Client ID.</p>
+                        </div>
+                        <button type="button" class="btn-adm-dark" onclick="saveSiteSettings()">Save Site
+                            Settings</button>
+                    </div>
+                    <div id="siteSettingsMount"></div>
+                </div>
+
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
                             <h2 class="adm-card-title">Section Access</h2>
-                            <p class="adm-card-subtitle">Open or lock each section independently. Locked sections stay visible with a Locked badge and block every student plan, including Diamond.</p>
+                            <p class="adm-card-subtitle">Open or lock each section independently. Locked sections stay
+                                visible with a Locked badge and block every student plan, including Diamond.</p>
                         </div>
                     </div>
                     <div id="sectionAccessList" class="adm-sections-grid"></div>
@@ -260,9 +389,11 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Plan Settings</h2>
-                            <p class="adm-card-subtitle">Edit plan names, descriptions, and prices for Free, Gold, and Diamond.</p>
+                            <p class="adm-card-subtitle">Edit plan names, descriptions, and prices for Free, Gold, and
+                                Diamond.</p>
                         </div>
-                        <button type="button" class="btn-adm-dark" onclick="savePlanSettings()">Save Plan Details</button>
+                        <button type="button" class="btn-adm-dark" onclick="savePlanSettings()">Save Plan
+                            Details</button>
                     </div>
                     <div id="planSettingsGrid" class="adm-plans-edit-grid"></div>
                 </div>
@@ -271,20 +402,23 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Content Access by Plan</h2>
-                            <p class="adm-card-subtitle">Assign a minimum plan to individual lesson PDFs and resources, or select multiple items to assign at once.</p>
+                            <p class="adm-card-subtitle">Assign a minimum plan to individual lesson PDFs and resources,
+                                or select multiple items to assign at once.</p>
                         </div>
                     </div>
 
                     <div class="adm-bulk-bar">
                         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                            <select id="planFilterClass" class="adm-select" style="width:auto;" onchange="renderPlanAccessTable()">
+                            <select id="planFilterClass" class="adm-select" style="width:auto;"
+                                onchange="renderPlanAccessTable()">
                                 <option value="all">All Subjects</option>
                                 <option value="class-12">Class 12</option>
                                 <option value="class-11">Class 11</option>
                                 <option value="class-10">Class 10 (SEE)</option>
                                 <option value="after-12">Entrance Prep</option>
                             </select>
-                            <select id="planFilterType" class="adm-select" style="width:auto;" onchange="renderPlanAccessTable()">
+                            <select id="planFilterType" class="adm-select" style="width:auto;"
+                                onchange="renderPlanAccessTable()">
                                 <option value="all">All Content</option>
                                 <option value="lesson-pdf">PDFs</option>
                                 <option value="lesson-video">Videos</option>
@@ -293,13 +427,15 @@
                             </select>
                         </div>
                         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                            <span id="bulkSelectedCount" style="font-size:0.84rem; color:var(--adm-text-muted);">0 selected</span>
+                            <span id="bulkSelectedCount" style="font-size:0.84rem; color:var(--adm-text-muted);">0
+                                selected</span>
                             <select id="bulkPlanSelect" class="adm-select" style="width:auto;">
                                 <option value="free">Free</option>
                                 <option value="gold">Gold</option>
                                 <option value="diamond">Diamond</option>
                             </select>
-                            <button type="button" class="btn-adm-dark" onclick="applyBulkPlanAssignment()">Assign Selected</button>
+                            <button type="button" class="btn-adm-dark" onclick="applyBulkPlanAssignment()">Assign
+                                Selected</button>
                         </div>
                     </div>
 
@@ -307,7 +443,8 @@
                         <table class="adm-table">
                             <thead>
                                 <tr>
-                                    <th style="width:36px;"><input type="checkbox" id="bulkSelectAll" onchange="toggleSelectAllPlanItems(this.checked)"></th>
+                                    <th style="width:36px;"><input type="checkbox" id="bulkSelectAll"
+                                            onchange="toggleSelectAllPlanItems(this.checked)"></th>
                                     <th>Subject</th>
                                     <th>Type</th>
                                     <th>Title</th>
@@ -323,12 +460,16 @@
                     <div class="adm-card-head">
                         <div>
                             <h2 class="adm-card-title">Student Access Preview</h2>
-                            <p class="adm-card-subtitle">See which lesson PDFs and resources a student on each plan can open right now.</p>
+                            <p class="adm-card-subtitle">See which lesson PDFs and resources a student on each plan can
+                                open right now.</p>
                         </div>
                         <div class="adm-preview-tabs">
-                            <button type="button" class="btn-topbar active-preview" id="previewBtn-free" onclick="setPlanPreviewTier('free')">Free</button>
-                            <button type="button" class="btn-topbar" id="previewBtn-gold" onclick="setPlanPreviewTier('gold')">Gold</button>
-                            <button type="button" class="btn-topbar" id="previewBtn-diamond" onclick="setPlanPreviewTier('diamond')">Diamond</button>
+                            <button type="button" class="btn-topbar active-preview" id="previewBtn-free"
+                                onclick="setPlanPreviewTier('free')">Free</button>
+                            <button type="button" class="btn-topbar" id="previewBtn-gold"
+                                onclick="setPlanPreviewTier('gold')">Gold</button>
+                            <button type="button" class="btn-topbar" id="previewBtn-diamond"
+                                onclick="setPlanPreviewTier('diamond')">Diamond</button>
                         </div>
                     </div>
                     <div id="planStudentPreviewMount"></div>
@@ -339,7 +480,8 @@
     </div>
 
     <!-- Student Preview Modal for Mock Tests -->
-    <div class="adm-preview-modal-backdrop" id="adminMockPreviewModal" role="dialog" aria-modal="true" style="display:none;">
+    <div class="adm-preview-modal-backdrop" id="adminMockPreviewModal" role="dialog" aria-modal="true"
+        style="display:none;">
         <div class="adm-preview-modal-card">
             <div class="adm-preview-modal-top">
                 <div style="display:flex; align-items:center; gap:10px;">
@@ -353,7 +495,8 @@
     </div>
 
     <!-- Safe Delete & Move Content Confirmation Modal (Lessons / Units / Chapters) -->
-    <div class="adm-preview-modal-backdrop" id="adminSafeDeleteModal" role="dialog" aria-modal="true" style="display:none;">
+    <div class="adm-preview-modal-backdrop" id="adminSafeDeleteModal" role="dialog" aria-modal="true"
+        style="display:none;">
         <div class="adm-preview-modal-card" style="max-width:560px;">
             <div class="adm-preview-modal-top">
                 <strong id="safeDeleteModalTitle">Confirm Deletion</strong>
@@ -365,6 +508,7 @@
 
     <div id="adminToastContainer" class="adm-toast-container"></div>
 
-    <script src="./js/admin-studio.js?v=20261121v4"></script>
+    <script src="./js/admin-studio.js?v=20261122v5"></script>
 </body>
+
 </html>

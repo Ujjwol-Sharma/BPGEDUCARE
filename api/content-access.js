@@ -39,6 +39,41 @@ module.exports = function contentAccessHandler(req, res) {
     const user = resolveRequestUser(req);
     const portal = state.portals?.[classKey];
 
+    // 0. Enforce Maintenance Mode for non-admin requests
+    if (!isAdmin && state.maintenanceMode?.enabled) {
+        res.statusCode = 503;
+        res.end(JSON.stringify({
+            ok: false,
+            code: 'MAINTENANCE_MODE',
+            error: state.maintenanceMode.message || 'Site is currently under maintenance.'
+        }));
+        return;
+    }
+
+    // 0a. Require verified student session for non-admin content access
+    if (!isAdmin && (!user || !user.email || user.emailVerified === false)) {
+        res.statusCode = 401;
+        res.end(JSON.stringify({
+            ok: false,
+            code: 'EMAIL_VERIFICATION_REQUIRED',
+            error: 'Please sign in with a verified email account to access class content.'
+        }));
+        return;
+    }
+
+    // 0b. Enforce one-active-class-per-account rule on server
+    if (!isAdmin && user && user.email && user.classKey && classKey !== gradeToClassKey(user.classKey || user.grade)) {
+        res.statusCode = 403;
+        res.end(JSON.stringify({
+            ok: false,
+            code: 'CLASS_MISMATCH',
+            currentClass: gradeToClassKey(user.classKey || user.grade),
+            requestedClass: classKey,
+            error: `Your account is enrolled in ${user.grade || user.classKey}. Submit a class switch request to access another class.`
+        }));
+        return;
+    }
+
     // 1. Always enforce section lock FIRST for students (even Diamond!)
     const lock = state.sectionLocks?.[classKey] || { locked: false, reason: '' };
     if (!isAdmin && lock.locked) {

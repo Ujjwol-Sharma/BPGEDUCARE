@@ -10,12 +10,12 @@
     }
   },
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/admin/", "destination": "/admin.html" }
+    { "source": "/admin-k9x4m7p2q8z", "destination": "/admin.html" },
+    { "source": "/admin-k9x4m7p2q8z/", "destination": "/admin.html" }
   ],
   "headers": [
     {
-      "source": "/admin(.*)",
+      "source": "/admin-k9x4m7p2q8z(.*)",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
         { "key": "Cache-Control", "value": "no-store, max-age=0" }

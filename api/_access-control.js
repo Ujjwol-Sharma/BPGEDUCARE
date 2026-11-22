@@ -15,7 +15,7 @@ const TMP_DB_PATH = path.join(os.tmpdir(), 'bpg-academy-state.json');
 const ROSTER_PATH = path.join(DATA_DIR, 'student-roster.json');
 const TMP_ROSTER_PATH = path.join(os.tmpdir(), 'bpg-student-roster.json');
 
-const MASTER_PASSKEY = 'bpg2026';
+const MASTER_PASSKEY = 'k9x4m7p2q8z';
 const OTP_SECRET = process.env.OTP_SECRET || 'bpg-maths-academy-hmac-secret-2026';
 
 const PLAN_RANK = {
@@ -107,6 +107,7 @@ const DEFAULT_TEAM_MEMBERS = [
     {
         id: 'team-founder',
         slot: 'founder',
+        initial: 'B',
         name: 'Bishnu Prasad Gautam',
         role: 'Founder',
         photoUrl: './images/bpg_sir.jpg',
@@ -115,26 +116,208 @@ const DEFAULT_TEAM_MEMBERS = [
     {
         id: 'team-ceo',
         slot: 'ceo',
-        name: 'Sagar Adhikari',
+        initial: 'P',
+        name: 'Paribesh Thapa',
         role: 'CEO',
         photoUrl: '',
-        bio: 'Leads academic strategy, student success partnerships, and national expansion across Nepal.'
+        bio: '**Education | Youth | Social Impact**\nBridging education and grassroots social work to turn youth potential into lasting community impact.'
     },
     {
         id: 'team-cco',
         slot: 'cco',
-        name: 'Pratiksha Gurung',
+        initial: 'U',
+        name: 'Ujjwol Sharma',
         role: 'CCO',
         photoUrl: '',
-        bio: 'Oversees curriculum design, NEB & entrance alignment, and high-clarity lesson publishing.'
+        bio: 'Merges creative content and smart EdTech to deliver accessible, high-impact NEB & entrance-aligned curricula.'
     },
     {
         id: 'team-cto',
         slot: 'cto',
-        name: 'Ujjwol Poudel',
+        initial: 'U',
+        name: 'Utsav Sharma',
         role: 'CTO',
         photoUrl: '',
-        bio: 'Architects the BPG EDUCARE learning platform, timed mock testing engine, and AI tutoring systems.'
+        bio: 'Architects fast, scalable learning platforms that make digital education seamless, accessible, and built for the future.'
+    }
+];
+
+const DEFAULT_HOMEPAGE_CONTENT = {
+    heroPillText: 'Pokhara, Nepal · NEB & Entrance Mathematics',
+    heroTitleMain: 'Understand Mathematics.',
+    heroTitleMuted: 'Master every concept.',
+    heroDescription: 'Structured, concept-first mathematics portals for Class 10, Class 11, Class 12, and IOE / CEE / KU entrance — mentored by Bishnu Prasad Gautam (BPG Sir).',
+    heroPrimaryBtnLabel: 'Get Started',
+    heroSecondaryBtnLabel: 'Ask BPG AI',
+    heroSecondaryBtnLink: '#ai',
+    heroPortraitUrl: 'images/bpg_sir.jpg',
+    heroFacultyName: 'Bishnu Prasad Gautam',
+    heroFacultyRole: 'Founder & Lead Faculty · BPG Sir',
+    heroFacultyTag: 'TU M.Sc.',
+    bannerEnabled: false,
+    bannerText: 'Admissions open for Class 11 & Class 12 NEB Mathematics batches.',
+    bannerLinkLabel: 'View Plans',
+    bannerLinkUrl: '#plans',
+    featuresEyebrow: 'Explore BPG EDUCARE',
+    featuresHeading: 'Everything you need in one place',
+    featureCards: [
+        { id: 'lessons', label: 'Lessons', sub: 'Open subjects, chapters, and lesson PDFs', link: '#lessons' },
+        { id: 'mocktests', label: 'Mock Tests', sub: 'Timed MCQ practice tests and instant scoring', link: '#mocktests' },
+        { id: 'syllabus', label: 'Syllabus Grid', sub: 'Units, teaching hours, and marks weightage', link: '#syllabus' },
+        { id: 'calendar', label: 'Live Class Calendar', sub: 'Scheduled Zoom classes and timings', link: '#calendar' },
+        { id: 'plans', label: 'Plans', sub: 'Compare Gold and Diamond access', link: '#plans' }
+    ],
+    notificationsEyebrow: 'Updates & Alerts',
+    notificationsHeading: 'Notifications',
+    teamEyebrow: 'Leadership',
+    teamHeading: 'Our Team',
+    footerText: '© 2026 BPG EDUCARE · Pokhara, Nepal'
+};
+
+const DEFAULT_MAINTENANCE_MODE = {
+    enabled: false,
+    title: 'Scheduled Maintenance',
+    message: 'BPG EDUCARE is currently undergoing scheduled maintenance. Student portals, lessons, mock tests, the calculator, and checkout are temporarily locked while we update the platform.',
+    updatedAt: ''
+};
+
+const DEFAULT_SITE_SETTINGS = {
+    whatsappNumber: '9779866064252',
+    esewaQrUrl: 'images/payment_qr.png',
+    esewaMerchantName: 'BPG EDUCARE',
+    googleClientId: process.env.GOOGLE_CLIENT_ID || ''
+};
+
+const DEFAULT_NOTIFICATIONS = [];
+
+const DEFAULT_CHATBOT_FAQS = [
+    {
+        id: 'faq-google-signin',
+        question: 'How does Google sign-in and account linking work?',
+        keywords: ['google', 'sign in', 'login', 'gmail', 'link', 'account', 'oauth', 'continue with google'],
+        answer: 'Click **Sign In** or **Get Started**, then choose **Continue with Google**. Each Gmail address maps to one BPG EDUCARE account. If you already registered with that Gmail, signing in with Google securely links to your existing profile, class access, and plan without creating a duplicate account.',
+        links: [{ label: 'Open Sign In', action: "openAuthModal('signin')" }],
+        published: true
+    },
+    {
+        id: 'faq-enrollment',
+        question: 'How does class enrollment and the one-class rule work?',
+        keywords: ['enroll', 'enrollment', 'one class', 'active class', 'register', 'join class', 'single class'],
+        answer: 'Each student account has **one active class at a time** (Class 10, Class 11, Class 12, or Entrance Prep). When you sign up, you choose your primary class. Once signed in, the homepage button changes to **Continue to Class** so you can jump straight back into your active workspace.',
+        links: [{ label: 'Continue to Class', action: 'handleContinueToClass()' }],
+        published: true
+    },
+    {
+        id: 'faq-class-switch',
+        question: 'How do I switch or change my active class?',
+        keywords: ['switch class', 'change class', 'transfer', 'move class', 'different class', 'leave class'],
+        answer: 'Because each account holds one active class at a time, switching classes requires submitting a **Class Switch Request**. Select the new class you want to join, review the confirmation notice explaining that leaving ends access to your current class, and submit the request. An admin will review and approve it.',
+        links: [{ label: 'View Classes', action: 'openClassSelectionView()' }],
+        published: true
+    },
+    {
+        id: 'faq-request-status',
+        question: 'How can I check my class switch request status?',
+        keywords: ['request status', 'switch status', 'pending', 'approved', 'rejected', 'approval'],
+        answer: 'Open your account menu in the top-right header or click a different class to view your **Class Switch Request** status (`Pending`, `Approved`, or `Rejected`) along with any admin note. Access to the new class is granted automatically once an admin approves your request.',
+        links: [{ label: 'Check Class Status', action: 'openClassSelectionView()' }],
+        published: true
+    },
+    {
+        id: 'faq-lessons',
+        question: 'Where do I find lessons and chapter videos?',
+        keywords: ['lesson', 'lessons', 'chapter', 'chapters', 'video', 'videos', 'subjects', 'study'],
+        answer: 'Sign in and open **Lessons** from the homepage or your class workspace. Lessons are organized by subject in syllabus order and include chapter PDFs and lesson videos.',
+        links: [{ label: 'Open Lessons', action: 'openMyLessonsView()' }],
+        published: true
+    },
+    {
+        id: 'faq-notes-pdfs',
+        question: 'How do I view and download notes and PDFs?',
+        keywords: ['note', 'notes', 'pdf', 'pdfs', 'download', 'formula sheet', 'cheat sheet'],
+        answer: 'Inside your class **Lessons / Notes** tab, click any chapter to view its attached PDFs with cover previews. Free items open immediately; Gold and Diamond items show their required plan tier. You can preview PDFs inline or download them.',
+        links: [{ label: 'Open Notes & PDFs', action: 'openMyLessonsView()' }],
+        published: true
+    },
+    {
+        id: 'faq-mock-tests',
+        question: 'How do Mock Tests work?',
+        keywords: ['mock test', 'mock tests', 'mcq', 'exam', 'quiz', 'timer', 'score', 'test'],
+        answer: 'Open **Mock Tests** from the homepage or your class workspace to take timed MCQ tests. Your remaining time and answers are saved on the server so refreshing the page will not lose progress, and you get instant scoring and answer review upon submission.',
+        links: [{ label: 'Open Mock Tests', action: 'openMyMockTestsView()' }],
+        published: true
+    },
+    {
+        id: 'faq-syllabus-grid',
+        question: 'Where is the NEB Syllabus Grid and marks weightage?',
+        keywords: ['syllabus', 'grid', 'weightage', 'marks', 'hours', 'specification', 'blueprint'],
+        answer: 'Click **Syllabus Grid** on the homepage or inside your class workspace to see the official NEB/CDC/IOE unit breakdown, teaching hours, marks weightage, and question pattern.',
+        links: [{ label: 'Open Syllabus Grid', action: 'openMySyllabusView()' }],
+        published: true
+    },
+    {
+        id: 'faq-live-classes',
+        question: 'How do I join Live Zoom Classes?',
+        keywords: ['live class', 'zoom', 'schedule', 'timing', 'npt', 'calendar', 'meeting'],
+        answer: 'Open **Live Class Calendar** to view upcoming Zoom sessions in Nepal Time (NPT). Signed-in students in the matching class and plan tier see the direct **Join Zoom** button when a session is scheduled.',
+        links: [{ label: 'Open Live Class Calendar', action: 'openLiveClassCalendarEntry()' }],
+        published: true
+    },
+    {
+        id: 'faq-notifications',
+        question: 'Where can I see announcements and class notifications?',
+        keywords: ['notification', 'notifications', 'announcement', 'news', 'alert', 'updates'],
+        answer: 'Check the **Notifications** section on the homepage for the newest published sitewide news and announcements. When signed in, you will also see alerts published specifically for your active class.',
+        links: [{ label: 'View Notifications', action: "scrollToSection('homeNotificationsSection')" }],
+        published: true
+    },
+    {
+        id: 'faq-plans',
+        question: 'What is the difference between Free, Gold, and Diamond plans?',
+        keywords: ['plan', 'plans', 'free', 'gold', 'diamond', 'pricing', 'price', 'upgrade', 'membership'],
+        answer: 'New accounts start on **Free** (sample lessons, PDFs, and open live sessions). **Gold** unlocks Gold-tier lessons, notes, mock tests, and live classes. **Diamond** unlocks all content across every open section. Click **Plans** to compare prices and features.',
+        links: [{ label: 'Compare Plans', action: "openPlanComparisonModal('', '')" }],
+        published: true
+    },
+    {
+        id: 'faq-esewa',
+        question: 'How do I pay with eSewa?',
+        keywords: ['esewa', 'qr', 'pay', 'payment', 'checkout', 'buy', 'remarks'],
+        answer: 'Sign in, open **Plans**, and tap **Buy** on Gold or Diamond to open Checkout. Scan the eSewa QR using your eSewa app and include your **Name, Class, Username, and Gmail** in the payment remarks (use the **Copy Payment Remarks** button for convenience).',
+        links: [{ label: 'View Plans & Buy', action: "openPlanComparisonModal('gold', '')" }],
+        published: true
+    },
+    {
+        id: 'faq-whatsapp-confirm',
+        question: 'How does WhatsApp confirmation work after paying?',
+        keywords: ['whatsapp', 'confirm', 'confirmation', 'pending', 'verify', 'activation', 'transaction'],
+        answer: 'After scanning the static eSewa QR, click **I’ve Paid — Continue to WhatsApp** in Checkout. This records your purchase as **pending** for admin review and opens WhatsApp with your prefilled confirmation details so you can tap Send. Your plan activates once the admin verifies your payment.',
+        links: [{ label: 'Open Plans', action: "openPlanComparisonModal('gold', '')" }],
+        published: true
+    },
+    {
+        id: 'faq-calculator',
+        question: 'How do I use the Scientific Calculator?',
+        keywords: ['calculator', 'calc', 'scientific', 'deg', 'rad', 'history', 'trig', 'log'],
+        answer: 'Click the **Calculator** icon in the bottom-right dock. It supports **Basic** and **Scientific** modes (percentages, parentheses, powers, roots, `log`, `ln`, `sin`, `cos`, `tan`, `π`), a **DEG/RAD** toggle, calculation history with result reuse, and full desktop keyboard input.',
+        links: [{ label: 'Open Calculator', action: 'toggleMiniCalculator()' }],
+        published: true
+    },
+    {
+        id: 'faq-maintenance',
+        question: 'What happens during Maintenance Mode?',
+        keywords: ['maintenance', 'locked', 'unavailable', 'down', 'notice'],
+        answer: 'During scheduled maintenance, the public homepage stays visible with a maintenance notice, while student dashboards, lessons, mock tests, the calculator, and checkout are temporarily locked until maintenance is turned off by an admin.',
+        links: [],
+        published: true
+    },
+    {
+        id: 'faq-support',
+        question: 'How do I contact support or BPG Sir?',
+        keywords: ['support', 'contact', 'help', 'bpg sir', 'bishnu', 'pokhara', 'phone'],
+        answer: 'You can reach **Bishnu Prasad Gautam (BPG Sir)** directly via the WhatsApp button on the website, or visit BPG EDUCARE in Pokhara, Nepal.',
+        links: [{ label: 'Contact on WhatsApp', action: 'openConfiguredWhatsappSupport()' }],
+        published: true
     }
 ];
 
@@ -162,7 +345,138 @@ function canonicalizeEmail(rawEmail) {
 }
 
 function isValidEmailFormat(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+    const cleaned = String(email || '').trim().toLowerCase();
+    if (!cleaned || cleaned.length > 254) return false;
+    return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+$/.test(cleaned);
+}
+
+const DISPOSABLE_EMAIL_DOMAINS = new Set([
+    'mailinator.com', 'tempmail.com', 'temp-mail.org', 'temp-mail.io',
+    'guerrillamail.com', 'guerrillamail.net', 'guerrillamail.org', 'sharklasers.com',
+    '10minutemail.com', '10minutemail.net', 'yopmail.com', 'yopmail.fr',
+    'throwaway.email', 'throwawaymail.com', 'fakeinbox.com', 'trashmail.com',
+    'getnada.com', 'nada.email', 'dispostable.com', 'maildrop.cc',
+    'mintemail.com', 'mytemp.email', 'mohmal.com', 'mailnesia.com',
+    'emailondeck.com', 'burnermail.io', 'inboxbear.com', 'spambog.com',
+    'example.com', 'example.org', 'example.net', 'test.com', 'invalid.com', 'localhost'
+]);
+
+function isDisposableOrFakeEmail(email) {
+    const cleaned = String(email || '').trim().toLowerCase();
+    const atIdx = cleaned.indexOf('@');
+    if (atIdx <= 0) return true;
+    const domain = cleaned.slice(atIdx + 1);
+    if (!domain || !domain.includes('.')) return true;
+    if (DISPOSABLE_EMAIL_DOMAINS.has(domain)) return true;
+    for (const d of DISPOSABLE_EMAIL_DOMAINS) {
+        if (domain.endsWith('.' + d)) return true;
+    }
+    return false;
+}
+
+function hashPassword(password) {
+    const raw = String(password || '');
+    const salt = crypto.randomBytes(16).toString('hex');
+    const derived = crypto.scryptSync(raw, salt, 64).toString('hex');
+    return `scrypt$${salt}$${derived}`;
+}
+
+function verifyPassword(password, storedPasskey) {
+    const raw = String(password || '');
+    const stored = String(storedPasskey || '');
+    if (!raw || !stored) return false;
+    if (stored.startsWith('scrypt$')) {
+        const parts = stored.split('$');
+        if (parts.length !== 3) return false;
+        const [, salt, expectedHex] = parts;
+        try {
+            const derived = crypto.scryptSync(raw, salt, 64);
+            const expected = Buffer.from(expectedHex, 'hex');
+            return derived.length === expected.length && crypto.timingSafeEqual(derived, expected);
+        } catch (e) {
+            return false;
+        }
+    }
+    // Legacy plaintext passkey compatibility for existing accounts
+    const a = Buffer.from(raw, 'utf8');
+    const b = Buffer.from(stored, 'utf8');
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+const OTP_STORE_FILE = path.join(os.tmpdir(), 'bpg-otp-store-v2.json');
+
+function loadOtpStoreMap() {
+    if (!global.__BPG_OTP_STORE__) {
+        global.__BPG_OTP_STORE__ = new Map();
+        try {
+            if (fs.existsSync(OTP_STORE_FILE)) {
+                const parsed = JSON.parse(fs.readFileSync(OTP_STORE_FILE, 'utf8'));
+                if (parsed && typeof parsed === 'object') {
+                    const now = Date.now();
+                    for (const [k, v] of Object.entries(parsed)) {
+                        if (v && (!v.expiresAt || v.expiresAt > now - 60 * 60 * 1000)) {
+                            global.__BPG_OTP_STORE__.set(k, v);
+                        }
+                    }
+                }
+            }
+        } catch (e) {}
+    }
+    return global.__BPG_OTP_STORE__;
+}
+
+function persistOtpStoreMap() {
+    try {
+        const map = loadOtpStoreMap();
+        const obj = {};
+        const now = Date.now();
+        for (const [k, v] of map.entries()) {
+            if (v && (!v.expiresAt || v.expiresAt > now - 60 * 60 * 1000)) {
+                obj[k] = v;
+            }
+        }
+        fs.writeFileSync(OTP_STORE_FILE, JSON.stringify(obj), 'utf8');
+    } catch (e) {}
+}
+
+function getOtpStoreEntry(key) {
+    return loadOtpStoreMap().get(key) || null;
+}
+
+function setOtpStoreEntry(key, value) {
+    loadOtpStoreMap().set(key, value);
+    persistOtpStoreMap();
+}
+
+function deleteOtpStoreEntry(key) {
+    loadOtpStoreMap().delete(key);
+    persistOtpStoreMap();
+}
+
+function getClientIp(req) {
+    const fwd = req?.headers?.['x-forwarded-for'];
+    if (fwd) return String(fwd).split(',')[0].trim();
+    return String(req?.socket?.remoteAddress || 'unknown');
+}
+
+function checkRateLimit(bucketKey, maxHits, windowMs) {
+    const map = loadOtpStoreMap();
+    const key = `rl:${bucketKey}`;
+    const now = Date.now();
+    let entry = map.get(key);
+    if (!entry || now > entry.resetAt) {
+        entry = { count: 0, resetAt: now + windowMs, expiresAt: now + windowMs };
+    }
+    entry.count += 1;
+    map.set(key, entry);
+    persistOtpStoreMap();
+    if (entry.count > maxHits) {
+        return {
+            allowed: false,
+            retryAfterSeconds: Math.max(1, Math.ceil((entry.resetAt - now) / 1000))
+        };
+    }
+    return { allowed: true, remaining: Math.max(0, maxHits - entry.count) };
 }
 
 function normalizePlan(plan) {
@@ -190,7 +504,7 @@ function normalizeGradeName(grade) {
 }
 
 function isAdminPasskeyValid(passkey) {
-    return passkey === MASTER_PASSKEY || passkey === 'admin';
+    return passkey === MASTER_PASSKEY;
 }
 
 /* --------------------------------------------------------------------------
@@ -244,7 +558,7 @@ function verifyStudentSessionToken(token) {
    -------------------------------------------------------------------------- */
 function readRoster() {
     if (!fs.existsSync(DATA_DIR)) {
-        try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch (e) {}
+        try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch (e) { }
     }
 
     let roster = null;
@@ -262,20 +576,25 @@ function readRoster() {
                     }
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     if (!roster || !Array.isArray(roster.accounts)) {
         roster = {
             lastUpdated: new Date().toISOString(),
+            classSwitchRequests: [],
             accounts: [
-                { name: 'Creative Scholar', email: 'scholar@bpgacademy.edu.np', grade: 'Class 12', classKey: 'class-12', plan: 'free', legacyAccess: true, joinedAt: '2026-11-01' },
-                { name: 'Rohan Sharma', email: 'rohan.sharma@gmail.com', grade: 'Class 11', classKey: 'class-11', plan: 'free', legacyAccess: true, joinedAt: '2026-11-03' },
-                { name: 'Aayush KC', email: 'aayush.kc@gmail.com', grade: 'Class 10', classKey: 'class-10', plan: 'free', legacyAccess: true, joinedAt: '2026-11-04' },
-                { name: 'Prabhat Paudel', email: 'prabhat.entrance@gmail.com', grade: 'After 12 Entrance', classKey: 'after-12', plan: 'free', legacyAccess: true, joinedAt: '2026-11-05' }
+                { name: 'Creative Scholar', username: 'creative.scholar', email: 'scholar@bpgacademy.edu.np', grade: 'Class 12', classKey: 'class-12', plan: 'free', legacyAccess: true, joinedAt: '2026-11-01' },
+                { name: 'Rohan Sharma', username: 'rohan.sharma', email: 'rohan.sharma@gmail.com', grade: 'Class 11', classKey: 'class-11', plan: 'free', legacyAccess: true, joinedAt: '2026-11-03' },
+                { name: 'Aayush KC', username: 'aayush.kc', email: 'aayush.kc@gmail.com', grade: 'Class 10', classKey: 'class-10', plan: 'free', legacyAccess: true, joinedAt: '2026-11-04' },
+                { name: 'Prabhat Paudel', username: 'prabhat.entrance', email: 'prabhat.entrance@gmail.com', grade: 'After 12 Entrance', classKey: 'after-12', plan: 'free', legacyAccess: true, joinedAt: '2026-11-05' }
             ]
         };
         writeRoster(roster);
+    }
+
+    if (!Array.isArray(roster.classSwitchRequests)) {
+        roster.classSwitchRequests = [];
     }
 
     // Normalize every account while preserving existing accounts
@@ -285,14 +604,19 @@ function readRoster() {
         const canonicalEmail = canonicalizeEmail(email);
         canonicalCounts[canonicalEmail] = (canonicalCounts[canonicalEmail] || 0) + 1;
         const isExistingLegacy = acc.legacyAccess !== undefined ? Boolean(acc.legacyAccess) : (acc.plan === undefined);
+        const defaultUsername = email.includes('@') ? email.split('@')[0] : (acc.name || 'student').toLowerCase().replace(/[^a-z0-9]/g, '');
         return {
             ...acc,
             email,
             canonicalEmail,
+            username: String(acc.username || defaultUsername).trim(),
             grade: normalizeGradeName(acc.grade || acc.classKey),
             classKey: gradeToClassKey(acc.classKey || acc.grade),
             plan: normalizePlan(acc.plan || 'free'),
             legacyAccess: isExistingLegacy,
+            googleLinked: Boolean(acc.googleLinked),
+            googleSub: String(acc.googleSub || ''),
+            avatarUrl: String(acc.avatarUrl || ''),
             passkey: acc.passkey || 'bpgstudent',
             joinedAt: acc.joinedAt || new Date().toISOString().split('T')[0]
         };
@@ -320,18 +644,27 @@ function readRoster() {
 function writeRoster(roster) {
     const clean = {
         lastUpdated: new Date().toISOString(),
-        accounts: (roster.accounts || []).map(acc => ({
-            name: acc.name || 'Student',
-            email: String(acc.email || '').trim().toLowerCase(),
-            canonicalEmail: canonicalizeEmail(acc.email),
-            grade: normalizeGradeName(acc.grade || acc.classKey),
-            classKey: gradeToClassKey(acc.classKey || acc.grade),
-            plan: normalizePlan(acc.plan || 'free'),
-            planExplicitlySet: Boolean(acc.planExplicitlySet),
-            legacyAccess: Boolean(acc.legacyAccess),
-            passkey: acc.passkey || 'bpgstudent',
-            joinedAt: acc.joinedAt || new Date().toISOString().split('T')[0]
-        }))
+        classSwitchRequests: Array.isArray(roster.classSwitchRequests) ? roster.classSwitchRequests : [],
+        accounts: (roster.accounts || []).map(acc => {
+            const email = String(acc.email || '').trim().toLowerCase();
+            const defaultUsername = email.includes('@') ? email.split('@')[0] : (acc.name || 'student').toLowerCase().replace(/[^a-z0-9]/g, '');
+            return {
+                name: acc.name || 'Student',
+                username: String(acc.username || defaultUsername).trim(),
+                email,
+                canonicalEmail: canonicalizeEmail(email),
+                grade: normalizeGradeName(acc.grade || acc.classKey),
+                classKey: gradeToClassKey(acc.classKey || acc.grade),
+                plan: normalizePlan(acc.plan || 'free'),
+                planExplicitlySet: Boolean(acc.planExplicitlySet),
+                legacyAccess: Boolean(acc.legacyAccess),
+                googleLinked: Boolean(acc.googleLinked),
+                googleSub: String(acc.googleSub || ''),
+                avatarUrl: String(acc.avatarUrl || ''),
+                passkey: acc.passkey || 'bpgstudent',
+                joinedAt: acc.joinedAt || new Date().toISOString().split('T')[0]
+            };
+        })
     };
 
     const serialized = JSON.stringify(clean, null, 2);
@@ -340,10 +673,10 @@ function writeRoster(roster) {
         const tmp = ROSTER_PATH + '.tmp.' + Date.now();
         fs.writeFileSync(tmp, serialized, 'utf8');
         fs.renameSync(tmp, ROSTER_PATH);
-    } catch (e) {}
+    } catch (e) { }
     try {
         fs.writeFileSync(TMP_ROSTER_PATH, serialized, 'utf8');
-    } catch (e) {}
+    } catch (e) { }
     return readRoster();
 }
 
@@ -533,12 +866,87 @@ function ensureAccessModelDefaults(state) {
             return {
                 id: m.id || `team_${idx + 1}`,
                 slot,
+                initial: String(m.initial || (m.name ? m.name.trim().charAt(0).toUpperCase() : 'T')).trim().charAt(0).toUpperCase(),
                 name: String(m.name || '').trim(),
                 role: rawRole || 'Team Member',
                 photoUrl: String(m.photoUrl || '').trim(),
                 bio: String(m.bio || '').trim()
             };
         });
+    }
+
+    // 6. Homepage Content (all text, buttons, banner, photos editable)
+    if (!state.homepageContent || typeof state.homepageContent !== 'object') {
+        state.homepageContent = JSON.parse(JSON.stringify(DEFAULT_HOMEPAGE_CONTENT));
+    } else {
+        state.homepageContent = Object.assign(
+            {},
+            JSON.parse(JSON.stringify(DEFAULT_HOMEPAGE_CONTENT)),
+            state.homepageContent
+        );
+        if (!Array.isArray(state.homepageContent.featureCards) || state.homepageContent.featureCards.length === 0) {
+            state.homepageContent.featureCards = JSON.parse(JSON.stringify(DEFAULT_HOMEPAGE_CONTENT.featureCards));
+        }
+    }
+
+    // 7. Maintenance Mode
+    if (!state.maintenanceMode || typeof state.maintenanceMode !== 'object') {
+        state.maintenanceMode = JSON.parse(JSON.stringify(DEFAULT_MAINTENANCE_MODE));
+    } else {
+        state.maintenanceMode = {
+            enabled: Boolean(state.maintenanceMode.enabled),
+            title: String(state.maintenanceMode.title || DEFAULT_MAINTENANCE_MODE.title),
+            message: String(state.maintenanceMode.message || DEFAULT_MAINTENANCE_MODE.message),
+            updatedAt: state.maintenanceMode.updatedAt || ''
+        };
+    }
+
+    // 8. Site Settings (WhatsApp number, eSewa QR, Google Client ID)
+    if (!state.siteSettings || typeof state.siteSettings !== 'object') {
+        state.siteSettings = JSON.parse(JSON.stringify(DEFAULT_SITE_SETTINGS));
+    } else {
+        state.siteSettings = {
+            whatsappNumber: String(state.siteSettings.whatsappNumber || DEFAULT_SITE_SETTINGS.whatsappNumber).replace(/[^\d]/g, '') || DEFAULT_SITE_SETTINGS.whatsappNumber,
+            esewaQrUrl: String(state.siteSettings.esewaQrUrl || DEFAULT_SITE_SETTINGS.esewaQrUrl).trim(),
+            esewaMerchantName: String(state.siteSettings.esewaMerchantName || DEFAULT_SITE_SETTINGS.esewaMerchantName).trim(),
+            googleClientId: String(state.siteSettings.googleClientId || DEFAULT_SITE_SETTINGS.googleClientId || '').trim()
+        };
+    }
+
+    // 9. Notifications (Sitewide & Class-specific)
+    if (!Array.isArray(state.notifications)) {
+        state.notifications = JSON.parse(JSON.stringify(DEFAULT_NOTIFICATIONS));
+    } else {
+        state.notifications = state.notifications.map((n, idx) => ({
+            id: n.id || `notif_${idx + 1}`,
+            title: String(n.title || 'Update').trim(),
+            body: String(n.body || '').trim(),
+            category: String(n.category || 'Announcement').trim(),
+            scope: n.scope === 'all' || !n.scope ? 'sitewide' : (n.scope === 'sitewide' ? 'sitewide' : gradeToClassKey(n.scope)),
+            published: n.published !== undefined ? Boolean(n.published) : true,
+            createdAt: n.createdAt || new Date().toISOString(),
+            updatedAt: n.updatedAt || n.createdAt || new Date().toISOString()
+        }));
+    }
+
+    // 10. Chatbot FAQs (Admin-editable, public knowledge base)
+    if (!Array.isArray(state.chatbotFaqs) || state.chatbotFaqs.length === 0) {
+        state.chatbotFaqs = JSON.parse(JSON.stringify(DEFAULT_CHATBOT_FAQS));
+    } else {
+        state.chatbotFaqs = state.chatbotFaqs.map((f, idx) => ({
+            id: f.id || `faq_${idx + 1}`,
+            question: String(f.question || '').trim(),
+            keywords: Array.isArray(f.keywords) ? f.keywords : String(f.keywords || '').split(',').map(s => s.trim()).filter(Boolean),
+            answer: String(f.answer || '').trim(),
+            links: Array.isArray(f.links) ? f.links : [],
+            published: f.published !== undefined ? Boolean(f.published) : true,
+            updatedAt: f.updatedAt || new Date().toISOString()
+        }));
+    }
+
+    // 11. Payments Ledger (Pending / Verified / Rejected)
+    if (!Array.isArray(state.payments)) {
+        state.payments = [];
     }
 
     return state;
@@ -565,7 +973,7 @@ function readAcademyState() {
                     }
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     if (!newestState) {
@@ -593,37 +1001,51 @@ function resolveRequestUser(req) {
         try {
             const parsed = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
             token = parsed.searchParams.get('token') || '';
-        } catch (e) {}
+        } catch (e) { }
     }
     const verified = verifyStudentSessionToken(token);
     if (verified && verified.email) {
         const account = findAccountByEmail(verified.email);
-        if (account) return account;
-        return {
-            email: verified.email,
-            canonicalEmail: canonicalizeEmail(verified.email),
-            name: verified.name || 'Student',
-            grade: verified.grade || 'Class 12',
-            classKey: gradeToClassKey(verified.grade),
-            plan: normalizePlan(verified.plan || 'free'),
-            legacyAccess: false
-        };
-    }
-
-    const headerEmail = req.headers['x-student-email'] || '';
-    if (headerEmail) {
-        const account = findAccountByEmail(headerEmail);
-        if (account) return account;
+        if (!account || account.emailVerified === false) {
+            return null;
+        }
+        return account;
     }
 
     return null;
 }
 
 function evaluateItemAccess(user, classKey, item, state) {
+    // 0. Maintenance Mode blocks all non-admin content access
+    if (state?.maintenanceMode?.enabled) {
+        return {
+            allowed: false,
+            status: 503,
+            code: 'MAINTENANCE_MODE',
+            error: state.maintenanceMode.message || 'Site is currently under maintenance.'
+        };
+    }
+
     const normClass = gradeToClassKey(classKey);
+
+    // 1. One-active-class-per-account rule on server
+    if (user && user.email && user.classKey) {
+        const userClass = gradeToClassKey(user.classKey || user.grade);
+        if (normClass !== userClass) {
+            return {
+                allowed: false,
+                status: 403,
+                code: 'CLASS_MISMATCH',
+                currentClass: userClass,
+                requestedClass: normClass,
+                error: `Your account is currently enrolled in ${normalizeGradeName(userClass)}. Request a class switch to access ${normalizeGradeName(normClass)}.`
+            };
+        }
+    }
+
     const lock = state?.sectionLocks?.[normClass] || DEFAULT_SECTION_LOCKS[normClass] || { locked: false };
 
-    // 1. Section locks ALWAYS apply to every plan, including Diamond & legacy
+    // 2. Section locks ALWAYS apply to every plan, including Diamond & legacy
     if (lock.locked) {
         return {
             allowed: false,
@@ -682,6 +1104,49 @@ function sanitizeStateForStudent(rawState, user) {
     const clone = JSON.parse(JSON.stringify(rawState));
     delete clone.adminPasskey;
     delete clone.mockTests; // Keep mock test answer keys strictly server-side via /api/mock-tests
+    delete clone.payments;  // Keep payment ledger strictly admin-side (or /api/payments?me=1)
+
+    // Never expose eSewa QR URL to unauthenticated guests
+    if (clone.siteSettings && (!user || !user.email)) {
+        delete clone.siteSettings.esewaQrUrl;
+    }
+
+    // Filter Notifications: only published, sitewide OR matching user's active class, newest first
+    const userClassKey = (user && user.email) ? gradeToClassKey(user.classKey || user.grade) : '';
+    if (Array.isArray(clone.notifications)) {
+        clone.notifications = clone.notifications
+            .filter(n => {
+                if (!n.published) return false;
+                if (n.scope === 'sitewide') return true;
+                return Boolean(userClassKey && n.scope === userClassKey);
+            })
+            .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+    }
+
+    // Filter Chatbot FAQs: only published FAQs
+    if (Array.isArray(clone.chatbotFaqs)) {
+        clone.chatbotFaqs = clone.chatbotFaqs.filter(f => f.published !== false);
+    }
+
+    // If Maintenance Mode is enabled, lock all student portal content, calendar, and Zoom classes
+    if (clone.maintenanceMode?.enabled) {
+        if (clone.portals) {
+            Object.keys(clone.portals).forEach(classKey => {
+                const portal = clone.portals[classKey];
+                if (!portal) return;
+                portal.sectionLocked = true;
+                portal.lockReason = clone.maintenanceMode.message || 'Scheduled maintenance';
+                portal.units = [];
+                portal.notes = [];
+                portal.notesPdfs = [];
+                portal.syllabusRows = [];
+                portal.subjects = [];
+            });
+        }
+        clone.calendarEvents = [];
+        clone.zoomClasses = [];
+        return clone;
+    }
 
     if (!clone.portals) return clone;
 
@@ -870,8 +1335,22 @@ module.exports = {
     PLAN_RANK,
     DEFAULT_SECTION_LOCKS,
     DEFAULT_PLANS_CONFIG,
+    DEFAULT_TEAM_MEMBERS,
+    DEFAULT_HOMEPAGE_CONTENT,
+    DEFAULT_MAINTENANCE_MODE,
+    DEFAULT_SITE_SETTINGS,
+    DEFAULT_NOTIFICATIONS,
+    DEFAULT_CHATBOT_FAQS,
     canonicalizeEmail,
     isValidEmailFormat,
+    isDisposableOrFakeEmail,
+    hashPassword,
+    verifyPassword,
+    getOtpStoreEntry,
+    setOtpStoreEntry,
+    deleteOtpStoreEntry,
+    getClientIp,
+    checkRateLimit,
     normalizePlan,
     gradeToClassKey,
     normalizeGradeName,

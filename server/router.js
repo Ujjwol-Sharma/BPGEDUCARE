@@ -13,6 +13,7 @@ const studentRosterHandler = require('../api/student-roster');
 const contentAccessHandler = require('../api/content-access');
 const mockTestsHandler = require('../api/mock-tests');
 const aiTutorHandler = require('../api/ai-tutor');
+const paymentsHandler = require('../api/payments');
 
 const API_ROUTES = {
     '/api/academy-state': academyStateHandler,
@@ -28,7 +29,9 @@ const API_ROUTES = {
     '/api/mock-tests': mockTestsHandler,
     '/api/mock-tests.js': mockTestsHandler,
     '/api/ai-tutor': aiTutorHandler,
-    '/api/ai-tutor.js': aiTutorHandler
+    '/api/ai-tutor.js': aiTutorHandler,
+    '/api/payments': paymentsHandler,
+    '/api/payments.js': paymentsHandler
 };
 
 function parseJsonBodyAndDispatch(req, res, handler) {
@@ -58,13 +61,16 @@ function handleRequest(req, res) {
         return;
     }
 
-    // 2. Clean URL Rewrites (/ -> /index.html, /admin -> /admin.html, /download -> /bpg-academy.zip)
-    if (pathname === '/' || pathname === '') {
+    // 2. Clean URL Rewrites & Secret Admin Route (/admin-k9x4m7p2q8z -> /admin.html)
+    if (pathname === '/admin' || pathname === '/admin/' || pathname === '/admin.html') {
+        res.status(404).end('404 Not Found');
+        return;
+    } else if (pathname === '/' || pathname === '') {
         pathname = '/index.html';
-    } else if (pathname === '/admin' || pathname === '/admin/') {
+    } else if (pathname === '/admin-k9x4m7p2q8z' || pathname === '/admin-k9x4m7p2q8z/') {
         pathname = '/admin.html';
     } else if (pathname === '/download' || pathname === '/download/') {
-        pathname = '/bpg-academy.zip';
+        pathname = '/bpg-educare-mathematics.zip';
     }
 
     const safeFilePath = path.normalize(path.join(ROOT_DIR, pathname));
@@ -87,7 +93,9 @@ function handleRequest(req, res) {
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
             if (ext === '.zip') {
-                res.setHeader('Content-Disposition', 'attachment; filename="bpg-academy.zip"');
+                const downloadName = path.basename(safeFilePath) || 'bpg-educare-mathematics.zip';
+                res.setHeader('Content-Disposition', `attachment; filename="${downloadName}"`);
+                res.setHeader('Content-Length', String(stats.size));
             }
         } else {
             res.setHeader('Cache-Control', 'public, max-age=3600');

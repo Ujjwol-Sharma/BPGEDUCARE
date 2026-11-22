@@ -629,13 +629,16 @@ function buildContextHeader(context, portal) {
 }
 
 function searchCourseMaterial(state, classKey, query) {
+    const stopwords = new Set(['the', 'and', 'for', 'are', 'you', 'can', 'today', 'now', 'what', 'where', 'when', 'which', 'about', 'how', 'does', 'this', 'that', 'with', 'from', 'explain', 'please', 'help', 'understand', 'still', 'another', 'class', 'grade', 'math', 'maths', 'tell', 'show']);
     const words = String(query || '')
         .toLowerCase()
         .replace(/[^a-z0-9\s]/g, ' ')
         .split(/\s+/)
-        .filter(w => w.length >= 3 && !['what', 'where', 'when', 'which', 'about', 'how', 'does', 'this', 'that', 'with', 'from', 'explain', 'please', 'help', 'understand', 'still', 'another', 'class', 'grade', 'math', 'maths', 'tell', 'show'].includes(w));
+        .filter(w => w.length >= 3 && !stopwords.has(w));
 
     if (!words.length || !state?.portals) return [];
+
+    const wordHit = (hay, w) => new RegExp(`\\b${w}`, 'i').test(hay);
 
     const keysToSearch = classKey && state.portals[classKey]
         ? [classKey, ...Object.keys(state.portals).filter(k => k !== classKey)]
@@ -650,7 +653,7 @@ function searchCourseMaterial(state, classKey, query) {
         (p.subjects || []).forEach(subj => {
             (subj.lessons || []).forEach(l => {
                 const hay = `${l.code || ''} ${l.title || ''} ${subj.name || ''}`.toLowerCase();
-                const score = words.reduce((acc, w) => acc + (hay.includes(w) ? 2 : 0), 0);
+                const score = words.reduce((acc, w) => acc + (wordHit(hay, w) ? 2 : 0), 0);
                 if (score > 0) {
                     matches.push({
                         score: score + (ck === classKey ? 2 : 0),
@@ -667,7 +670,7 @@ function searchCourseMaterial(state, classKey, query) {
 
         (p.syllabusRows || []).forEach(r => {
             const hay = `${r.code || ''} ${r.name || ''} ${r.focus || ''}`.toLowerCase();
-            const score = words.reduce((acc, w) => acc + (hay.includes(w) ? 1.5 : 0), 0);
+            const score = words.reduce((acc, w) => acc + (wordHit(hay, w) ? 1.5 : 0), 0);
             if (score > 0) {
                 matches.push({
                     score: score + (ck === classKey ? 1 : 0),
@@ -777,6 +780,15 @@ function generateTutorReply(message, history, context, state) {
         return { html: res.html, topicSig, styleIndex: styleIdx, method: res.methodLabel };
     }
 
+    // 6.5. Privacy / Admin-only guard (never expose private student records or admin-only info)
+    if (/(admin\s*passkey|all\s*students|student\s*emails|student\s*list|roster|other\s*student|payment\s*records|private\s*record|password\s*of)/i.test(ql)) {
+        return {
+            html: `${ctxNote}<p>I cannot access or share private student records, account details, payment logs, or admin-only information. I can help with public website features, classes, plans, FAQs, and math concepts.</p>`,
+            topicSig: 'privacy_guard',
+            styleIndex: 0
+        };
+    }
+
     // 7. Live Zoom Classes query (reads live state.zoomClasses!)
     if (/(zoom|live\s*class|schedule|timing|upcoming\s*class)/i.test(ql)) {
         const list = (state.zoomClasses || []).filter(z => {
@@ -792,21 +804,47 @@ function generateTutorReply(message, history, context, state) {
                     <ul>
                         ${list.slice(0, 5).map(z => `<li><strong>${esc(z.title)}</strong> (${esc(z.subject)}) — ${esc(z.date)} at ${esc(z.startTime)} NPT (${z.durationMinutes} min) with ${esc(z.teacher)}</li>`).join('')}
                     </ul>
-                    <p>Open <strong>Live Class Calendar</strong> while signed in to access your <strong>Join on Zoom</strong> button.</p>
+                    <div class="ai-inline-actions">
+                        <button type="button" class="ai-action-chip" onclick="closeWebsiteGuide(); openLiveClassCalendarEntry();">Open Live Class Calendar &rarr;</button>
+                    </div>
                 `,
                 topicSig: 'zoom_schedule',
                 styleIndex: 0
             };
         }
         return {
-            html: `${ctxNote}<p>There are no upcoming live Zoom classes scheduled right now for this grade. Check the <strong>Live Class Calendar</strong> for updates.</p>`,
+            html: `${ctxNote}<p>There are no upcoming live Zoom classes scheduled right now for this grade. Check the <strong>Live Class Calendar</strong> for updates.</p><div class="ai-inline-actions"><button type="button" class="ai-action-chip" onclick="closeWebsiteGuide(); openLiveClassCalendarEntry();">Open Live Class Calendar &rarr;</button></div>`,
             topicSig: 'zoom_schedule',
             styleIndex: 0
         };
     }
 
+    // 7.5. Public Sitewide Notifications query (only published & sitewide!)
+    if (/(latest\s*(news|update|notification|announcement)|what'?s\s*new|recent\s*announcement)/i.test(ql)) {
+        const pubNotifs = (state.notifications || [])
+            .filter(n => n.published && n.scope === 'sitewide')
+            .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+            .slice(0, 4);
+        if (pubNotifs.length > 0) {
+            return {
+                html: `
+                    ${ctxNote}
+                    <p><strong>Latest Published Announcements:</strong></p>
+                    <ul>
+                        ${pubNotifs.map(n => `<li><strong>${esc(n.title)}</strong> (${esc(n.category || 'Announcement')}): ${esc(n.body)}</li>`).join('')}
+                    </ul>
+                    <div class="ai-inline-actions">
+                        <button type="button" class="ai-action-chip" onclick="closeWebsiteGuide(); scrollToSection('homeNotificationsSection');">View Notifications &rarr;</button>
+                    </div>
+                `,
+                topicSig: 'notifications_info',
+                styleIndex: 0
+            };
+        }
+    }
+
     // 8. Plans / Membership query
-    if (/(plan|pricing|gold|diamond|free\s*plan|membership|upgrade)/i.test(ql)) {
+    if (/(plan|pricing|gold|diamond|free\s*plan|membership|upgrade|how\s*much)/i.test(ql) && !/(esewa|qr|whatsapp|pay|remark|transaction)/i.test(ql)) {
         const plans = state.plansConfig || {};
         return {
             html: `
@@ -818,7 +856,9 @@ function generateTutorReply(message, history, context, state) {
                         return `<li><strong>${esc(p.name)} (${esc(p.price)}):</strong> ${esc(p.description)}</li>`;
                     }).join('')}
                 </ul>
-                <p>Click the <strong>Plans</strong> card on the homepage to compare full access.</p>
+                <div class="ai-inline-actions">
+                    <button type="button" class="ai-action-chip" onclick="closeWebsiteGuide(); openPlanComparisonModal('', '');">Compare Plans &rarr;</button>
+                </div>
             `,
             topicSig: 'plans_info',
             styleIndex: 0
@@ -826,19 +866,87 @@ function generateTutorReply(message, history, context, state) {
     }
 
     // 9. Team / BPG Sir query
-    if (/(team|founder|ceo|cco|cto|who\s+is\s+bpg|bishnu)/i.test(ql)) {
+    if (/(team|founder|ceo|cco|cto|who\s+is\s+bpg|bishnu|paribesh|ujjwol|utsav)/i.test(ql)) {
         const members = state.teamMembers || [];
         return {
             html: `
                 ${ctxNote}
                 <p><strong>BPG EDUCARE Leadership Team:</strong></p>
                 <ul>
-                    ${members.map(m => `<li><strong>${esc(m.name)}</strong> (${esc(m.role)}): ${esc(m.bio)}</li>`).join('')}
+                    ${members.map(m => `<li><strong>${esc(m.name)}</strong> (${esc(m.role)}): ${esc(String(m.bio || '').replace(/\*\*/g, '').replace(/\n/g, ' — '))}</li>`).join('')}
                 </ul>
+                <div class="ai-inline-actions">
+                    <button type="button" class="ai-action-chip" onclick="closeWebsiteGuide(); scrollToSection('homeTeamSection');">View Team Section &rarr;</button>
+                </div>
             `,
             topicSig: 'team_info',
             styleIndex: 0
         };
+    }
+
+    // 9.5. Website-Specific FAQ Knowledge Base (Admin-editable, >=15 core FAQs)
+    const faqs = (state.chatbotFaqs || []).filter(f => f.published !== false);
+    if (faqs.length > 0) {
+        const qClean = ql.replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+        const qTokens = qClean.split(' ').filter(w => w.length >= 2);
+        let bestFaq = null;
+        let bestScore = 0;
+
+        for (const faq of faqs) {
+            let score = 0;
+            const faqQ = String(faq.question || '').toLowerCase();
+            const faqA = String(faq.answer || '').toLowerCase();
+            const keywords = Array.isArray(faq.keywords) ? faq.keywords.map(k => String(k).toLowerCase()) : [];
+
+            for (const kw of keywords) {
+                if (!kw) continue;
+                if (qClean.includes(kw)) {
+                    score += kw.includes(' ') ? 6 : 4;
+                } else {
+                    const kwParts = kw.split(/\s+/);
+                    for (const kp of kwParts) {
+                        if (kp.length >= 3 && qTokens.includes(kp)) score += 2;
+                    }
+                }
+            }
+
+            const faqWords = faqQ.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 3);
+            for (const fw of faqWords) {
+                if (qTokens.includes(fw)) score += 1.5;
+            }
+            for (const qt of qTokens) {
+                if (qt.length >= 4 && faqA.includes(qt)) score += 0.5;
+            }
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestFaq = faq;
+            }
+        }
+
+        if (bestFaq && bestScore >= 3.5) {
+            const formattedAnswer = esc(bestFaq.answer)
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>');
+            const linksHtml = Array.isArray(bestFaq.links) && bestFaq.links.length > 0
+                ? `<div class="ai-inline-actions">${bestFaq.links.map(l => {
+                    if (l.action) {
+                        return `<button type="button" class="ai-action-chip" onclick="closeWebsiteGuide(); ${esc(l.action)}">${esc(l.label)} &rarr;</button>`;
+                    }
+                    if (l.href) {
+                        return `<a class="ai-action-chip" href="${esc(l.href)}" target="_blank" rel="noopener" style="text-decoration:none;">${esc(l.label)} &rarr;</a>`;
+                    }
+                    return '';
+                }).join('')}</div>`
+                : '';
+
+            return {
+                html: `${ctxNote}<p><strong>${esc(bestFaq.question)}</strong></p><p>${formattedAnswer}</p>${linksHtml}`,
+                topicSig: `faq_${bestFaq.id}`,
+                styleIndex: 0
+            };
+        }
     }
 
     // 10. Multi-Style Curriculum Concepts (supports re-explaining with different method/example!)
@@ -905,16 +1013,16 @@ function generateTutorReply(message, history, context, state) {
         };
     }
 
-    // 14. Clear fallback when question is outside loaded course material or needs specifics
+    // 14. Clear fallback when question is outside approved website content & course material
     return {
         html: `
             ${ctxNote}
-            <p>I didn&rsquo;t find an exact match for that in the loaded BPG EDUCARE course material${ctxWithLabel.gradeLabel ? ` (${esc(ctxWithLabel.gradeLabel)})` : ''}.</p>
-            <p>Could you share the exact math problem, formula, or chapter name you&rsquo;re working on? For example:</p>
+            <p>I don&rsquo;t have information about that in BPG EDUCARE&rsquo;s approved website content or course material.</p>
+            <p>You can ask me about:</p>
             <ul>
-                <li><em>&ldquo;Solve x^2 - 5x + 6 = 0&rdquo;</em></li>
-                <li><em>&ldquo;Find the derivative of 3x^2 + 4x - 1&rdquo;</em></li>
-                <li><em>&ldquo;Explain L&rsquo;H&ocirc;pital&rsquo;s rule&rdquo;</em> (and then <em>&ldquo;explain another way&rdquo;</em>)</li>
+                <li><strong>Website &amp; Account:</strong> Google sign-in, class switching, request status, plans, eSewa &amp; WhatsApp payments, notifications, or the calculator</li>
+                <li><strong>Classes &amp; Learning:</strong> Lessons, notes &amp; PDFs, mock tests, syllabus grid, or live Zoom classes</li>
+                <li><strong>Mathematics:</strong> Equations, derivatives, limits, integration, conics, vectors, or logic</li>
             </ul>
         `,
         topicSig,

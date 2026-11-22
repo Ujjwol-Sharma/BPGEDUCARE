@@ -1336,3 +1336,14 @@
                 grid-template-columns: 1fr;
             }
         }
+        .adm-nav-badge {
+            display: inline-block;
+            margin-left: 5px;
+            padding: 1px 6px;
+            border-radius: 999px;
+            background: #dc2626;
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
