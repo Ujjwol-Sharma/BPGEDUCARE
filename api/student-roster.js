@@ -37,6 +37,33 @@ async function verifyGoogleIdToken(idToken, expectedClientId) {
     }
 }
 
+async function verifyGoogleAccessToken(accessToken, expectedClientId) {
+    if (!accessToken) return null;
+    try {
+        const [tokenResp, userResp] = await Promise.all([
+            fetch(`https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`),
+            fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            })
+        ]);
+        if (!tokenResp.ok || !userResp.ok) return null;
+        const tokenInfo = await tokenResp.json();
+        const userInfo = await userResp.json();
+        if (!userInfo || !userInfo.email || userInfo.email_verified === false) return null;
+        if (expectedClientId && tokenInfo.aud && tokenInfo.aud !== expectedClientId && tokenInfo.azp !== expectedClientId) {
+            return null;
+        }
+        return {
+            email: String(userInfo.email).trim().toLowerCase(),
+            name: String(userInfo.name || userInfo.given_name || 'Student').trim(),
+            googleSub: String(userInfo.sub || tokenInfo.sub || ''),
+            avatarUrl: String(userInfo.picture || '')
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
 function stripSensitiveAccountFields(acc) {
     const { passkey, ...safe } = acc;
     return safe;
@@ -138,13 +165,15 @@ module.exports = async function studentRosterHandler(req, res) {
                     return;
                 }
 
-                if (!payload.idToken) {
+                if (!payload.idToken && !payload.accessToken) {
                     res.statusCode = 400;
-                    res.end(JSON.stringify({ success: false, error: 'Official Google OAuth ID token is required.' }));
+                    res.end(JSON.stringify({ success: false, error: 'Official Google OAuth token is required.' }));
                     return;
                 }
 
-                const googleProfile = await verifyGoogleIdToken(payload.idToken, configuredClientId);
+                const googleProfile = payload.accessToken
+                    ? await verifyGoogleAccessToken(payload.accessToken, configuredClientId)
+                    : await verifyGoogleIdToken(payload.idToken, configuredClientId);
                 if (!googleProfile) {
                     res.statusCode = 401;
                     res.end(JSON.stringify({ success: false, error: 'Invalid, unverified, or expired Google Sign-In token.' }));

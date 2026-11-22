@@ -80,6 +80,9 @@ async function syncRosterPermissionsFromServer() {
 
 function refreshStudentPortalUI() {
     updateAuthUserPill();
+    if (typeof syncGoogleOAuthButtonsVisibility === 'function') {
+        syncGoogleOAuthButtonsVisibility();
+    }
     if (typeof renderEntireStudentPortal === 'function') {
         renderEntireStudentPortal();
     }

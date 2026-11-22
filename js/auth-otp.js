@@ -23,6 +23,7 @@ function openAuthModal(initialTab = 'signin', targetClass = null) {
     if (!modal) return;
 
     if (typeof syncSectionLockBadges === 'function') syncSectionLockBadges();
+    syncGoogleOAuthButtonsVisibility();
 
     if (targetClass) {
         pendingTargetClass = normalizeClassKey(targetClass);
@@ -157,6 +158,21 @@ function switchAuthTab(tab) {
 
 let googleAuthOriginMode = 'signin';
 
+function getConfiguredGoogleClientId() {
+    if (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.googleClientId) {
+        return String(ACADEMY_STATE.siteSettings.googleClientId).trim();
+    }
+    return '';
+}
+
+function syncGoogleOAuthButtonsVisibility() {
+    const hasClientId = Boolean(getConfiguredGoogleClientId());
+    const signInWrap = document.getElementById('googleOAuthSignInWrap');
+    const signUpWrap = document.getElementById('googleOAuthSignUpWrap');
+    if (signInWrap) signInWrap.style.display = hasClientId ? 'block' : 'none';
+    if (signUpWrap) signUpWrap.style.display = hasClientId ? 'block' : 'none';
+}
+
 function getSelectedSignupGradeForGoogle() {
     if (googleAuthOriginMode === 'signup') {
         return document.getElementById('signupGrade')?.value || 'Class 12';
@@ -175,11 +191,38 @@ function handleGoogleAuthClick(mode = 'signin') {
         return;
     }
     googleAuthOriginMode = mode;
-    const clientId = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.googleClientId)
-        ? String(ACADEMY_STATE.siteSettings.googleClientId).trim()
-        : '';
+    const clientId = getConfiguredGoogleClientId();
 
-    if (clientId && window.google?.accounts?.id) {
+    if (!clientId) {
+        showToast('Google Sign-In is not configured yet. Please sign in or sign up with your email.');
+        syncGoogleOAuthButtonsVisibility();
+        return;
+    }
+
+    // 1. Primary: Official Google OAuth 2.0 Account Chooser Popup Window
+    if (window.google?.accounts?.oauth2?.initTokenClient) {
+        try {
+            const tokenClient = window.google.accounts.oauth2.initTokenClient({
+                client_id: clientId,
+                scope: 'openid email profile',
+                prompt: 'select_account',
+                callback: async (tokenResponse) => {
+                    if (!tokenResponse || tokenResponse.error || !tokenResponse.access_token) {
+                        if (tokenResponse?.error && tokenResponse.error !== 'popup_closed_by_user') {
+                            showToast('Google Sign-In was cancelled or could not complete.');
+                        }
+                        return;
+                    }
+                    await completeGoogleTokenSignIn({ accessToken: tokenResponse.access_token });
+                }
+            });
+            tokenClient.requestAccessToken({ prompt: 'select_account' });
+            return;
+        } catch (e) {}
+    }
+
+    // 2. Fallback: Google Identity Services ID token flow
+    if (window.google?.accounts?.id) {
         try {
             window.google.accounts.id.initialize({
                 client_id: clientId,
@@ -188,40 +231,19 @@ function handleGoogleAuthClick(mode = 'signin') {
                         showToast('Google Sign-In was cancelled.');
                         return;
                     }
-                    await completeGoogleTokenSignIn(response.credential);
+                    await completeGoogleTokenSignIn({ idToken: response.credential });
                 }
             });
-            window.google.accounts.id.prompt((notification) => {
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    openOfficialGoogleButtonPane(clientId);
-                }
-            });
+            window.google.accounts.id.prompt();
             return;
         } catch (e) {}
     }
 
-    openGmailOtpPane();
+    showToast('Google Sign-In script is still loading. Please try again in a moment.');
 }
 
 function openOfficialGoogleButtonPane(clientId) {
-    const err = document.getElementById('googleChooserErrorBanner');
-    if (err) err.style.display = 'none';
-    const form = document.getElementById('googleGmailOtpForm');
-    if (form) form.style.display = 'none';
-    const sub = document.getElementById('googlePaneSubtitle');
-    if (sub) sub.textContent = "Sign in securely using Google's official authentication system.";
-    const container = document.getElementById('googleOfficialBtnContainer');
-    switchAuthTab('google');
-    if (container && window.google?.accounts?.id) {
-        container.style.display = 'flex';
-        container.innerHTML = '';
-        window.google.accounts.id.renderButton(container, {
-            theme: 'outline',
-            size: 'large',
-            width: 300,
-            text: 'continue_with'
-        });
-    }
+    handleGoogleAuthClick(googleAuthOriginMode);
 }
 
 function openGmailOtpPane() {
@@ -232,10 +254,11 @@ function openGmailOtpPane() {
     const form = document.getElementById('googleGmailOtpForm');
     if (form) form.style.display = 'block';
     const sub = document.getElementById('googlePaneSubtitle');
-    if (sub) sub.textContent = "Enter your Gmail address. We'll send a 6-digit verification code to your inbox to verify and sign in.";
-    const gradeSelect = document.getElementById('googleLocalGrade');
-    if (gradeSelect) {
-        gradeSelect.value = getSelectedSignupGradeForGoogle();
+    if (sub) sub.textContent = "Enter your registered email address and we'll send a 6-digit login code to your inbox.";
+    const signInEmail = (document.getElementById('signinEmail')?.value || '').trim();
+    const localEmailInput = document.getElementById('googleLocalEmail');
+    if (localEmailInput && signInEmail && !localEmailInput.value) {
+        localEmailInput.value = signInEmail;
     }
     switchAuthTab('google');
     setTimeout(() => document.getElementById('googleLocalEmail')?.focus(), 60);
@@ -244,13 +267,13 @@ function openGmailOtpPane() {
 async function handleGmailOtpSubmit(e) {
     if (e) e.preventDefault();
     const email = (document.getElementById('googleLocalEmail')?.value || '').trim().toLowerCase();
-    const name = (document.getElementById('googleLocalName')?.value || '').trim() || (email.split('@')[0] || 'Student');
-    const grade = document.getElementById('googleLocalGrade')?.value || 'Class 12';
+    const name = email.split('@')[0] || 'Student';
+    const grade = 'Class 12';
     const err = document.getElementById('googleChooserErrorBanner');
     if (err) err.style.display = 'none';
 
     if (!email) {
-        showToast('Please enter your Gmail address.');
+        showToast('Please enter your registered email address.');
         return;
     }
 
@@ -273,10 +296,10 @@ async function handleGmailOtpSubmit(e) {
                 startResendCooldown(data.retryAfterSeconds);
             }
             if (err) {
-                err.innerHTML = `<p style="margin:0;">${data.error || 'Could not send verification code to this Gmail address.'}</p>`;
+                err.innerHTML = `<p style="margin:0;">${data.error || 'Could not send login code to this email address.'}</p>`;
                 err.style.display = 'block';
             }
-            showToast(data.error || 'Could not send verification code.');
+            showToast(data.error || 'Could not send login code.');
             return;
         }
 
@@ -293,7 +316,7 @@ async function handleGmailOtpSubmit(e) {
         document.getElementById('googleLocalChooserContainer').style.display = 'none';
         document.getElementById('otpStep2Container').style.display = 'block';
         const head = document.getElementById('otpStep2Heading');
-        if (head) head.textContent = 'Verify Your Gmail';
+        if (head) head.textContent = 'Enter 6-Digit Login Code';
         document.getElementById('otpTargetEmailBadge').textContent = email;
         const otpErr = document.getElementById('otpVerifyErrorBanner');
         if (otpErr) otpErr.style.display = 'none';
@@ -303,25 +326,29 @@ async function handleGmailOtpSubmit(e) {
 
         clearOtpDigitBoxes();
         setTimeout(() => document.getElementById('otpDigit0')?.focus(), 80);
-        showToast(data.message || `Verification code sent to ${email}`);
+        showToast(data.message || `6-digit login code sent to ${email}`);
     } catch (e2) {
-        showToast('Unable to reach server to send verification code.');
+        showToast('Unable to reach server to send login code.');
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.textContent = 'Send 6-Digit Verification Code';
+            btn.textContent = 'Send 6-Digit Login Code';
         }
     }
 }
 
-async function completeGoogleTokenSignIn(idToken) {
+async function completeGoogleTokenSignIn(tokenPayload) {
     try {
+        const payload = typeof tokenPayload === 'string'
+            ? { idToken: tokenPayload }
+            : (tokenPayload || {});
         const res = await fetch('/api/student-roster', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'GOOGLE_SIGN_IN',
-                idToken,
+                idToken: payload.idToken || '',
+                accessToken: payload.accessToken || '',
                 grade: getSelectedSignupGradeForGoogle()
             })
         });

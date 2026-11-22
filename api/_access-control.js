@@ -909,7 +909,7 @@ function ensureAccessModelDefaults(state) {
             whatsappNumber: String(state.siteSettings.whatsappNumber || DEFAULT_SITE_SETTINGS.whatsappNumber).replace(/[^\d]/g, '') || DEFAULT_SITE_SETTINGS.whatsappNumber,
             esewaQrUrl: String(state.siteSettings.esewaQrUrl || DEFAULT_SITE_SETTINGS.esewaQrUrl).trim(),
             esewaMerchantName: String(state.siteSettings.esewaMerchantName || DEFAULT_SITE_SETTINGS.esewaMerchantName).trim(),
-            googleClientId: String(state.siteSettings.googleClientId || DEFAULT_SITE_SETTINGS.googleClientId || '').trim()
+            googleClientId: String(state.siteSettings.googleClientId || process.env.GOOGLE_CLIENT_ID || DEFAULT_SITE_SETTINGS.googleClientId || '').trim()
         };
     }
 

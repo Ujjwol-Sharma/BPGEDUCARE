@@ -229,12 +229,12 @@ module.exports = async function handler(req, res) {
             });
         }
 
-        // For password reset, ensure an account exists for that inbox
-        if (mode === 'reset' && !existingAccount) {
+        // For password reset or passwordless email-code login, ensure an account exists for that inbox
+        if ((mode === 'reset' || mode === 'gmail_otp') && !existingAccount) {
             return res.status(404).json({
                 ok: false,
                 code: 'ACCOUNT_NOT_FOUND',
-                error: 'No account found for this email address. Please create a new account.'
+                error: 'No account found for this email address. Please create a new account first.'
             });
         }
 
