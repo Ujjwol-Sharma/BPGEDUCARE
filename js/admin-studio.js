@@ -6,7 +6,11 @@
    - Inline management of existing uploads directly under each lesson row
    ========================================================================== */
 
-const ADMIN_STUDIO_TOKEN = 'k9x4m7p2q8z';
+const ADMIN_PASSKEY_STORAGE_KEY = 'bpg_admin_passkey_session';
+let ADMIN_STUDIO_TOKEN = '';
+try {
+    ADMIN_STUDIO_TOKEN = sessionStorage.getItem(ADMIN_PASSKEY_STORAGE_KEY) || '';
+} catch (e) {}
 
 const SECTION_META = [
     { key: 'class-12', label: 'Class 12', sub: 'Grade XII' },
@@ -123,7 +127,103 @@ function broadcastUpdate(type = 'DATA_UPDATED') {
     } catch (e) {}
 }
 
+async function verifyAdminPasskeyWithServer(candidatePasskey) {
+    if (!candidatePasskey) return false;
+    try {
+        const res = await fetch('/api/academy-state?verifyAdmin=1&_t=' + Date.now(), {
+            cache: 'no-store',
+            headers: { 'x-admin-passkey': candidatePasskey }
+        });
+        if (!res.ok) return false;
+        const json = await res.json();
+        return Boolean(json && json.success && json.isAdmin === true);
+    } catch (e) {
+        return false;
+    }
+}
+
+async function handleAdminLogin(event) {
+    if (event) event.preventDefault();
+    const input = document.getElementById('adminPasskeyInput');
+    const errEl = document.getElementById('adminLoginError');
+    const btn = document.getElementById('adminLoginSubmitBtn');
+    const candidate = (input?.value || '').trim();
+
+    if (errEl) {
+        errEl.style.display = 'none';
+        errEl.textContent = '';
+    }
+    if (!candidate) return;
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i><span>Verifying...</span>';
+    }
+
+    const ok = await verifyAdminPasskeyWithServer(candidate);
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-unlock-keyhole" aria-hidden="true"></i><span>Unlock Admin Console</span>';
+    }
+
+    if (!ok) {
+        if (errEl) {
+            errEl.textContent = 'Invalid master admin passkey. Access denied.';
+            errEl.style.display = 'block';
+        }
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+        return;
+    }
+
+    ADMIN_STUDIO_TOKEN = candidate;
+    try {
+        sessionStorage.setItem(ADMIN_PASSKEY_STORAGE_KEY, candidate);
+    } catch (e) {}
+    if (input) input.value = '';
+    await openAdminShell();
+}
+
+function lockAdminSession() {
+    ADMIN_STUDIO_TOKEN = '';
+    ADMIN_STATE = null;
+    try {
+        sessionStorage.removeItem(ADMIN_PASSKEY_STORAGE_KEY);
+    } catch (e) {}
+    const shell = document.getElementById('adminShell');
+    if (shell) shell.style.display = 'none';
+    const splash = document.getElementById('adminLoginSplash');
+    if (splash) {
+        splash.classList.remove('hidden');
+        splash.style.display = 'flex';
+    }
+    const input = document.getElementById('adminPasskeyInput');
+    if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 50);
+    }
+}
+
+async function initAdminAuthGate() {
+    if (ADMIN_STUDIO_TOKEN) {
+        const valid = await verifyAdminPasskeyWithServer(ADMIN_STUDIO_TOKEN);
+        if (valid) {
+            await openAdminShell();
+            return;
+        }
+    }
+    lockAdminSession();
+}
+
 async function openAdminShell() {
+    const splash = document.getElementById('adminLoginSplash');
+    if (splash) {
+        splash.classList.add('hidden');
+        splash.style.display = 'none';
+    }
     const shell = document.getElementById('adminShell');
     if (shell) shell.style.display = 'flex';
     await loadAdminData();
@@ -3293,5 +3393,5 @@ async function saveSiteSettings() {
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('bpg_theme') === 'dark' ? 'dark' : 'light';
     applyAdminTheme(savedTheme);
-    openAdminShell();
+    initAdminAuthGate();
 });

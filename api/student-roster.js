@@ -70,8 +70,9 @@ module.exports = async function studentRosterHandler(req, res) {
                 return;
             }
 
+            const me = isAdmin ? null : resolveRequestUser(req);
+
             if (checkMe && !isAdmin) {
-                const me = resolveRequestUser(req);
                 const mySwitchRequests = me
                     ? (roster.classSwitchRequests || []).filter(r => canonicalizeEmail(r.email) === canonicalizeEmail(me.email))
                     : [];
@@ -91,7 +92,9 @@ module.exports = async function studentRosterHandler(req, res) {
                     lastUpdated: roster.lastUpdated,
                     duplicateGroups: isAdmin ? (roster.duplicateGroups || []) : [],
                     classSwitchRequests: isAdmin ? (roster.classSwitchRequests || []) : [],
-                    accounts: (roster.accounts || []).map(stripSensitiveAccountFields)
+                    accounts: isAdmin
+                        ? (roster.accounts || []).map(stripSensitiveAccountFields)
+                        : (me ? [stripSensitiveAccountFields(me)] : [])
                 }
             }));
         } catch (err) {

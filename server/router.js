@@ -61,14 +61,20 @@ function handleRequest(req, res) {
         return;
     }
 
-    // 2. Clean URL Rewrites & Secret Admin Route (/admin-k9x4m7p2q8z -> /admin.html)
-    if (pathname === '/admin' || pathname === '/admin/' || pathname === '/admin.html') {
+    // 2. Clean URL Rewrites & Protected Admin Route (/admin-k9x4m7p2q8z -> /admin-k9x4m7p2q8z.html)
+    if (
+        pathname === '/admin' ||
+        pathname === '/admin/' ||
+        pathname === '/admin.html' ||
+        pathname === '/bpg-cms-data.json' ||
+        pathname.startsWith('/data/')
+    ) {
         res.status(404).end('404 Not Found');
         return;
     } else if (pathname === '/' || pathname === '') {
         pathname = '/index.html';
     } else if (pathname === '/admin-k9x4m7p2q8z' || pathname === '/admin-k9x4m7p2q8z/') {
-        pathname = '/admin.html';
+        pathname = '/admin-k9x4m7p2q8z.html';
     } else if (pathname === '/download' || pathname === '/download/') {
         pathname = '/bpg-educare-mathematics.zip';
     }

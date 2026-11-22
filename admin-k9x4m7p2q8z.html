@@ -37,8 +37,39 @@
 
 <body>
 
-    <!-- SIMPLIFIED 4-TAB ADMIN SHELL (Direct access via secret URL; no password prompt) -->
-    <div class="admin-shell" id="adminShell" style="display:flex;">
+    <!-- PASSKEY AUTHENTICATION GATEWAY -->
+    <div class="admin-login-splash" id="adminLoginSplash">
+        <div class="login-card" style="position:relative;">
+            <button type="button" id="loginThemeToggleBtn" class="adm-theme-btn" onclick="toggleAdminTheme()"
+                title="Switch Theme" aria-label="Toggle Light and Dark Mode"
+                style="position:absolute; top:16px; right:16px;">
+                <i class="fa-solid fa-moon" aria-hidden="true"></i>
+            </button>
+            <div class="login-badge">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                Restricted Access
+            </div>
+            <h2>BPG EDUCARE Admin</h2>
+            <p>Enter the master admin passkey to unlock the management console.</p>
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" autocomplete="off">
+                <div class="login-field">
+                    <label for="adminPasskeyInput">Master Passkey</label>
+                    <input type="password" id="adminPasskeyInput" class="adm-input"
+                        placeholder="Enter admin passkey" autocomplete="current-password" required>
+                </div>
+                <div id="adminLoginError"
+                    style="display:none; margin-bottom:14px; padding:10px 12px; border-radius:8px; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.28); color:#dc2626; font-size:0.82rem; font-weight:600; text-align:left;">
+                </div>
+                <button type="submit" id="adminLoginSubmitBtn" class="btn-adm-primary">
+                    <i class="fa-solid fa-unlock-keyhole" aria-hidden="true"></i>
+                    <span>Unlock Admin Console</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PROTECTED ADMIN SHELL (Hidden until passkey is verified with server) -->
+    <div class="admin-shell" id="adminShell" style="display:none;">
         <header class="admin-topbar">
             <div class="topbar-left">
                 <span class="cms-brand-badge">BPG EDUCARE Admin</span>
@@ -46,6 +77,9 @@
             </div>
             <div class="topbar-right">
                 <a href="./index.html" target="_blank" class="btn-topbar">Open Website</a>
+                <button type="button" class="btn-topbar" onclick="lockAdminSession()" title="Lock Admin Console">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Lock
+                </button>
                 <button type="button" id="adminThemeToggleBtn" class="adm-theme-btn" onclick="toggleAdminTheme()"
                     title="Switch Theme" aria-label="Toggle Light and Dark Mode">
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>

@@ -15,7 +15,7 @@ const TMP_DB_PATH = path.join(os.tmpdir(), 'bpg-academy-state.json');
 const ROSTER_PATH = path.join(DATA_DIR, 'student-roster.json');
 const TMP_ROSTER_PATH = path.join(os.tmpdir(), 'bpg-student-roster.json');
 
-const MASTER_PASSKEY = 'k9x4m7p2q8z';
+const MASTER_PASSKEY = process.env.ADMIN_PASSKEY || 'k9x4m7p2q8z';
 const OTP_SECRET = process.env.OTP_SECRET || 'bpg-maths-academy-hmac-secret-2026';
 
 const PLAN_RANK = {
@@ -504,7 +504,7 @@ function normalizeGradeName(grade) {
 }
 
 function isAdminPasskeyValid(passkey) {
-    return passkey === MASTER_PASSKEY;
+    return Boolean(passkey && String(passkey) === MASTER_PASSKEY);
 }
 
 /* --------------------------------------------------------------------------
@@ -978,7 +978,6 @@ function readAcademyState() {
 
     if (!newestState) {
         newestState = {
-            adminPasskey: MASTER_PASSKEY,
             lastUpdated: new Date().toISOString(),
             portals: {
                 'class-12': { gradeTitle: 'Grade XII Mathematics', units: [], notes: [] },
@@ -990,6 +989,7 @@ function readAcademyState() {
         };
     }
 
+    delete newestState.adminPasskey;
     ensureAccessModelDefaults(newestState);
     global.__BPG_ACADEMY_STATE__ = newestState;
     return newestState;

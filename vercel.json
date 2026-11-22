@@ -10,8 +10,11 @@
     }
   },
   "rewrites": [
-    { "source": "/admin-k9x4m7p2q8z", "destination": "/admin" },
-    { "source": "/admin-k9x4m7p2q8z/", "destination": "/admin" }
+    { "source": "/admin", "destination": "/_not_found" },
+    { "source": "/admin/(.*)", "destination": "/_not_found" },
+    { "source": "/admin.html", "destination": "/_not_found" },
+    { "source": "/data/(.*)", "destination": "/_not_found" },
+    { "source": "/bpg-cms-data.json", "destination": "/_not_found" }
   ],
   "headers": [
     {

@@ -141,8 +141,29 @@ module.exports = function academyStateHandler(req, res) {
 
     if (req.method === 'GET' || req.method === 'HEAD') {
         try {
-            const rawData = readAcademyState();
+            const parsedUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
             const isAdmin = isAdminPasskeyValid(req.headers['x-admin-passkey']);
+
+            if (parsedUrl.searchParams.get('verifyAdmin') === '1') {
+                if (!isAdmin) {
+                    res.statusCode = 401;
+                    res.end(JSON.stringify({
+                        success: false,
+                        isAdmin: false,
+                        error: 'Unauthorized: Invalid master admin passkey.'
+                    }));
+                    return;
+                }
+                res.statusCode = 200;
+                res.end(JSON.stringify({
+                    success: true,
+                    isAdmin: true
+                }));
+                return;
+            }
+
+            const rawData = readAcademyState();
+            delete rawData.adminPasskey;
             const user = isAdmin ? null : resolveRequestUser(req);
             const responseData = isAdmin ? rawData : sanitizeStateForStudent(rawData, user);
 
@@ -194,7 +215,7 @@ module.exports = function academyStateHandler(req, res) {
             const currentData = readAcademyState();
             const updated = deepMergeState(currentData, payload);
             updated.lastUpdated = new Date().toISOString();
-            updated.adminPasskey = MASTER_PASSKEY;
+            delete updated.adminPasskey;
 
             writeStateToDisk(updated);
 
