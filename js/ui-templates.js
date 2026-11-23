@@ -550,21 +550,30 @@
         </div>
     </div>
 
-    <!-- PDF / Formula Sheet Viewer Modal -->
-    <div class="modal-backdrop pdf-reader-modal" id="pdfViewerModal" role="dialog" aria-modal="true">
-        <div class="modal-card pdf-reader-card" style="max-width: 920px; width: 96%;">
+    <!-- PDF / Formula Sheet Viewer Modal (Strict Read-Only / No-Download / Anti-Screenshot) -->
+    <div class="modal-backdrop pdf-reader-modal bpg-protected-content" id="pdfViewerModal" role="dialog" aria-modal="true" oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+        <div class="modal-card pdf-reader-card" style="max-width: 920px; width: 96%; position: relative;">
             <div class="pdf-reader-bar" style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft); margin-bottom: 12px; gap: 10px;">
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <span class="badge-free" id="pdfModalBadge" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 999px;">Verified Resource</span>
+                    <span class="badge-free" id="pdfModalBadge" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 999px;"><i class="fa-solid fa-shield-halved"></i> Read-Only</span>
                     <h3 id="pdfModalTitle" style="font-size: 1.05rem; margin: 0; color: var(--text-primary);">Mathematical Notes</h3>
                 </div>
                 <button class="btn-modal-dismiss static" onclick="closePdfViewerModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <p id="pdfModalMeta" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; display:none;"></p>
-            <div id="pdfModalBody" class="pdf-embed-wrapper" style="max-height: 74vh; overflow-y: auto; margin-bottom: 14px;"></div>
-            <div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--border-soft);">
-                <a href="#" id="pdfModalNewTabBtn" target="_blank" class="btn btn-secondary" style="font-size: 0.82rem; padding: 8px 14px; text-decoration: none; display:none;"><i class="fa-solid fa-up-right-from-square"></i> Open in New Tab</a>
-                <a href="#" id="pdfModalDownloadBtn" class="btn btn-secondary" style="font-size: 0.82rem; padding: 8px 14px; text-decoration: none;"><i class="fa-solid fa-download"></i> Download PDF</a>
+            <div id="pdfCaptureShieldOverlay" class="bpg-capture-shield-overlay" style="display:none;" onclick="dismissScreenshotBlurShield()">
+                <div class="bpg-capture-shield-box">
+                    <i class="fa-solid fa-eye-slash" style="font-size:1.8rem; margin-bottom:8px;"></i>
+                    <strong id="pdfCaptureShieldTitle">Protected Study Material</strong>
+                    <p id="pdfCaptureShieldMsg" style="margin:6px 0 12px; font-size:0.84rem;">Screenshots, screen recording, and downloads are disabled on BPG EDUCARE. Click here to resume reading.</p>
+                    <button type="button" class="btn btn-primary" style="font-size:0.82rem; padding:7px 14px;">Resume Reading</button>
+                </div>
+            </div>
+            <div id="pdfModalBody" class="pdf-embed-wrapper bpg-protected-content" style="max-height: 74vh; overflow-y: auto; margin-bottom: 14px; position: relative;" oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--border-soft);">
+                <span style="font-size: 0.76rem; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Protected View &middot; Downloads &amp; Screenshots Restricted
+                </span>
                 <button class="btn btn-primary" onclick="closePdfViewerModal()" style="font-size: 0.82rem; padding: 8px 14px;">Close</button>
             </div>
         </div>

@@ -5166,3 +5166,69 @@ body {
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ==========================================================================
+   17. CONTENT PROTECTION: NO-DOWNLOAD PDF SHIELD, ANTI-SCREENSHOT & NO-PRINT
+   ========================================================================== */
+.bpg-protected-content,
+.bpg-pdf-page-shield,
+.notes-lesson-detail,
+.mock-runner-shell {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+}
+
+#pdfModalBody.is-capture-blurred {
+    filter: blur(28px) brightness(0.35) !important;
+    pointer-events: none !important;
+    transition: filter 0.08s ease;
+}
+
+.bpg-capture-shield-overlay {
+    position: absolute;
+    inset: 56px 16px 60px 16px;
+    z-index: 50;
+    background: rgba(17, 17, 20, 0.86);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.bpg-capture-shield-box {
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+body.bpg-global-screenshot-shield #bpgWorkspacesMount,
+body.bpg-global-screenshot-shield #pdfViewerModal .modal-card {
+    filter: blur(30px) !important;
+}
+
+@media print {
+    html, body, body * {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    body::before {
+        content: "Printing, saving as PDF, and screenshots are restricted on BPG EDUCARE.";
+        display: block !important;
+        visibility: visible !important;
+        padding: 48px 24px;
+        text-align: center;
+        font-family: sans-serif;
+        font-size: 18pt;
+        color: #111114;
+    }
+}

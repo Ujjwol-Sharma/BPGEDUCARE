@@ -534,6 +534,38 @@ function findLocalLessonPdf(classKey, subjectId, lessonId, pdfId) {
     return null;
 }
 
+function getPdfWatermarkText() {
+    try {
+        const s = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
+        if (s && s.email) {
+            return `BPG EDUCARE · ${s.name || 'Student'} (${s.email}) · DO NOT COPY`;
+        }
+    } catch (e) {}
+    return 'BPG EDUCARE · PROTECTED STUDY MATERIAL · DO NOT COPY';
+}
+
+function paintCanvasWatermark(canvas) {
+    try {
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        const wmText = getPdfWatermarkText();
+        ctx.save();
+        ctx.font = '600 16px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(17, 17, 20, 0.085)';
+        ctx.textAlign = 'center';
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate(-Math.PI / 6);
+        for (let y = -h; y <= h; y += 190) {
+            for (let x = -w; x <= w; x += 520) {
+                ctx.fillText(wmText, x, y);
+            }
+        }
+        ctx.restore();
+    } catch (e) {}
+}
+
 async function renderPdfPagesIntoContainer(pdfBytesOrUrl, containerEl) {
     if (!window.pdfjsLib || !containerEl) return false;
     try {
@@ -543,18 +575,40 @@ async function renderPdfPagesIntoContainer(pdfBytesOrUrl, containerEl) {
         containerEl.innerHTML = '';
         for (let pageNum = 1; pageNum <= doc.numPages; pageNum++) {
             const page = await doc.getPage(pageNum);
-            const viewport = page.getViewport({ scale: 1.4 });
+            const viewport = page.getViewport({ scale: 1.5 });
+            const pageWrap = document.createElement('div');
+            pageWrap.className = 'bpg-pdf-page-shield';
+            pageWrap.style.position = 'relative';
+            pageWrap.style.marginBottom = '14px';
+            pageWrap.style.userSelect = 'none';
+            pageWrap.oncontextmenu = () => false;
+            pageWrap.ondragstart = () => false;
+
             const canvas = document.createElement('canvas');
             canvas.width = viewport.width;
             canvas.height = viewport.height;
             canvas.style.width = '100%';
             canvas.style.height = 'auto';
             canvas.style.display = 'block';
-            canvas.style.marginBottom = '12px';
             canvas.style.borderRadius = '6px';
             canvas.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
-            containerEl.appendChild(canvas);
+            canvas.style.pointerEvents = 'none';
+            canvas.style.userSelect = 'none';
+
+            // Transparent overlay blocking direct canvas interaction / save-image-as
+            const shield = document.createElement('div');
+            shield.style.position = 'absolute';
+            shield.style.inset = '0';
+            shield.style.zIndex = '2';
+            shield.oncontextmenu = (ev) => { ev.preventDefault(); return false; };
+            shield.ondragstart = (ev) => { ev.preventDefault(); return false; };
+
+            pageWrap.appendChild(canvas);
+            pageWrap.appendChild(shield);
+            containerEl.appendChild(pageWrap);
+
             await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+            paintCanvasWatermark(canvas);
         }
         return true;
     } catch (e) {
@@ -562,48 +616,47 @@ async function renderPdfPagesIntoContainer(pdfBytesOrUrl, containerEl) {
     }
 }
 
+function activateScreenshotBlurShield(reasonMsg) {
+    const bodyEl = document.getElementById('pdfModalBody');
+    const overlay = document.getElementById('pdfCaptureShieldOverlay');
+    const msgEl = document.getElementById('pdfCaptureShieldMsg');
+    if (bodyEl) bodyEl.classList.add('is-capture-blurred');
+    if (msgEl && reasonMsg) msgEl.textContent = reasonMsg + ' Click here to resume reading.';
+    if (overlay) overlay.style.display = 'flex';
+}
+
+function dismissScreenshotBlurShield() {
+    const bodyEl = document.getElementById('pdfModalBody');
+    const overlay = document.getElementById('pdfCaptureShieldOverlay');
+    if (bodyEl) bodyEl.classList.remove('is-capture-blurred');
+    if (overlay) overlay.style.display = 'none';
+}
+
 function displayPdfInViewerModal(pdf, fileUrl) {
-    let openUrl = fileUrl;
     let pdfBytes = null;
     if (fileUrl.startsWith('data:application/pdf;base64,')) {
         const b64 = fileUrl.slice('data:application/pdf;base64,'.length);
         const binary = atob(b64);
         pdfBytes = new Uint8Array(binary.length);
         for (let i = 0; i < binary.length; i++) pdfBytes[i] = binary.charCodeAt(i);
-        openUrl = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
     }
 
     const badgeEl = document.getElementById('pdfModalBadge');
     const titleEl = document.getElementById('pdfModalTitle');
     const bodyEl = document.getElementById('pdfModalBody');
-    const dlBtn = document.getElementById('pdfModalDownloadBtn');
-    const newTabBtn = document.getElementById('pdfModalNewTabBtn');
 
-    if (badgeEl) badgeEl.textContent = 'PDF';
+    dismissScreenshotBlurShield();
+    if (badgeEl) badgeEl.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Read-Only PDF';
     if (titleEl) titleEl.textContent = pdf.title || pdf.fileName || 'Lesson PDF';
-    if (dlBtn) {
-        dlBtn.style.display = 'inline-flex';
-        dlBtn.href = openUrl;
-        dlBtn.setAttribute('download', pdf.fileName || ((pdf.title || 'lesson') + '.pdf'));
-    }
-    if (newTabBtn) {
-        newTabBtn.style.display = 'inline-flex';
-        newTabBtn.href = openUrl;
-    }
 
-    const isMobileViewport = window.innerWidth <= 820 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
     if (bodyEl) {
-        if (isMobileViewport && window.pdfjsLib && (pdfBytes || openUrl)) {
-            bodyEl.innerHTML = `<div id="pdfJsPagesMount" style="padding:4px; text-align:center; color:var(--text-secondary);">Loading PDF pages...</div>`;
-            const mount = document.getElementById('pdfJsPagesMount');
-            renderPdfPagesIntoContainer(pdfBytes || openUrl, mount).then(ok => {
-                if (!ok && mount) {
-                    mount.innerHTML = `<iframe src="${openUrl}" style="width:100%; height:64vh; border:none; border-radius:8px;"></iframe>`;
-                }
-            });
-        } else {
-            bodyEl.innerHTML = `<iframe src="${openUrl}" style="width:100%; height:68vh; min-height:480px; border:none; border-radius:8px; background:#f4f4f6;"></iframe>`;
-        }
+        bodyEl.innerHTML = `<div id="pdfJsPagesMount" style="padding:4px; text-align:center; color:var(--text-secondary);">Loading protected PDF pages...</div>`;
+        const mount = document.getElementById('pdfJsPagesMount');
+        renderPdfPagesIntoContainer(pdfBytes || fileUrl, mount).then(ok => {
+            if (!ok && mount) {
+                mount.innerHTML = `<div style="padding:32px 16px; text-align:center; color:var(--text-secondary);">Unable to render this PDF in protected mode.</div>`;
+            }
+        });
     }
 
     document.getElementById('pdfViewerModal')?.classList.add('open');
@@ -737,8 +790,106 @@ function closeVideoPlayerModal() {
 }
 
 function closePdfViewerModal() {
+    dismissScreenshotBlurShield();
+    const bodyEl = document.getElementById('pdfModalBody');
+    if (bodyEl) bodyEl.innerHTML = '';
     document.getElementById('pdfViewerModal')?.classList.remove('open');
 }
+
+function isProtectedViewOpen() {
+    const pdfOpen = document.getElementById('pdfViewerModal')?.classList.contains('open');
+    const inWorkspace = document.querySelector('#bpgWorkspacesMount .portal-view.active');
+    return Boolean(pdfOpen || inWorkspace);
+}
+
+function triggerGlobalScreenshotPenalty(msg = 'Screenshots and screen capture are restricted on BPG EDUCARE.') {
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText('Protected content — screenshots disabled on BPG EDUCARE.').catch(() => {});
+        }
+    } catch (e) {}
+
+    if (document.getElementById('pdfViewerModal')?.classList.contains('open')) {
+        activateScreenshotBlurShield(msg);
+    }
+
+    document.body.classList.add('bpg-global-screenshot-shield');
+    if (typeof showToast === 'function') showToast(msg);
+    setTimeout(() => {
+        document.body.classList.remove('bpg-global-screenshot-shield');
+    }, 2400);
+}
+
+(function initStudentContentProtectionGuard() {
+    if (window.__BPG_CONTENT_GUARD_INITIALIZED__) return;
+    window.__BPG_CONTENT_GUARD_INITIALIZED__ = true;
+
+    // 1. Intercept PrintScreen, macOS Cmd+Shift+3/4/5, Windows Meta+Shift+S, Ctrl/Cmd+P, Ctrl/Cmd+S
+    window.addEventListener('keydown', (e) => {
+        const key = (e.key || '').toLowerCase();
+        const isCmdOrCtrl = e.metaKey || e.ctrlKey;
+
+        // Block Print (Ctrl/Cmd + P) & Save Page (Ctrl/Cmd + S) globally
+        if (isCmdOrCtrl && (key === 'p' || key === 's')) {
+            e.preventDefault();
+            e.stopPropagation();
+            triggerGlobalScreenshotPenalty('Printing and saving study materials are disabled.');
+            return false;
+        }
+
+        // Block PrintScreen key
+        if (e.key === 'PrintScreen' || e.keyCode === 44) {
+            e.preventDefault();
+            triggerGlobalScreenshotPenalty('Screenshots are restricted on BPG EDUCARE.');
+            return false;
+        }
+
+        // Block macOS Screenshot shortcuts (Cmd + Shift + 3 / 4 / 5 / 6) & Windows Snipping Tool (Meta + Shift + S)
+        if ((e.metaKey && e.shiftKey && ['3', '4', '5', '6', 's'].includes(key)) ||
+            (isCmdOrCtrl && e.shiftKey && (key === 's' || key === 'i' || key === 'c'))) {
+            if (isProtectedViewOpen()) {
+                e.preventDefault();
+                triggerGlobalScreenshotPenalty('Screen capture shortcuts are disabled inside study workspaces.');
+                return false;
+            }
+        }
+    }, true);
+
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen' || e.keyCode === 44) {
+            triggerGlobalScreenshotPenalty('Screenshots are restricted on BPG EDUCARE.');
+        }
+    }, true);
+
+    // 2. Blur protected PDF immediately when window loses focus (e.g., Snipping Tool, Screenshot overlay, or App Switcher)
+    window.addEventListener('blur', () => {
+        if (document.getElementById('pdfViewerModal')?.classList.contains('open')) {
+            activateScreenshotBlurShield('Protected PDF paused while window is out of focus.');
+        }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden' && document.getElementById('pdfViewerModal')?.classList.contains('open')) {
+            activateScreenshotBlurShield('Protected PDF paused while tab was hidden.');
+        }
+    });
+
+    // 3. Block right-click, drag, and copy inside PDF viewer, lesson materials, and mock tests
+    document.addEventListener('contextmenu', (e) => {
+        if (e.target.closest('#pdfViewerModal, .pdf-cover-card, .notes-lesson-detail, .mock-runner-shell')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    document.addEventListener('copy', (e) => {
+        if (e.target.closest('#pdfViewerModal, .notes-lesson-detail, .mock-runner-shell')) {
+            e.preventDefault();
+            if (typeof showToast === 'function') showToast('Copying study material is disabled.');
+            return false;
+        }
+    });
+})();
 
 /* --------------------------------------------------------------------------
    HOMEPAGE OUR TEAM SECTION & CLASS SELECTION VIEW
