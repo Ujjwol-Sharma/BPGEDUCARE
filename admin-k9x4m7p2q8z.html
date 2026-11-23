@@ -131,17 +131,27 @@
         <main class="admin-main">
 
             <!-- ==============================================================
-                 TAB 1: USERS
+                 TAB 1: USERS (UNIFIED STUDENT DETAILS, PAID COUNTS & PAYMENTS)
                  ============================================================== -->
             <section class="adm-pane active" id="pane-users">
                 <div id="duplicateGmailReviewBanner" class="adm-alert-banner" style="display:none;"></div>
 
+                <!-- Unified Student & Paid Summary Cards -->
+                <div id="studentsOverviewStatsMount" style="margin-bottom:18px;"></div>
+
                 <div class="adm-card">
-                    <div class="adm-card-head">
+                    <div class="adm-card-head" style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
                         <div>
-                            <h2 class="adm-card-title">Users</h2>
-                            <p class="adm-card-subtitle">Search students by name or Gmail, view or update their current
-                                membership plan, and review flagged duplicate Gmail accounts.</p>
+                            <h2 class="adm-card-title">Students &amp; Paid Subscriptions</h2>
+                            <p class="adm-card-subtitle">View all student details, total paid accounts (Gold &amp; Diamond), payment transaction IDs, class enrollment, and account verification in one unified place.</p>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button type="button" class="btn-topbar" onclick="exportStudentsCsv()">
+                                <i class="fa-solid fa-file-csv" aria-hidden="true"></i> Export CSV
+                            </button>
+                            <button type="button" class="btn-topbar" onclick="loadAdminData()">
+                                <i class="fa-solid fa-rotate" aria-hidden="true"></i> Refresh
+                            </button>
                         </div>
                     </div>
 
@@ -162,19 +172,37 @@
                         <button type="submit" class="btn-adm-dark">Add Student</button>
                     </form>
 
-                    <div style="margin-bottom:16px;">
+                    <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:10px; margin-bottom:16px;">
                         <input type="text" id="userSearchInput" class="adm-input"
-                            placeholder="Search by name or Gmail..." oninput="renderUsersTab()">
+                            placeholder="Search by name, Gmail, username, or eSewa Txn ID..." oninput="renderUsersTab()">
+                        <select id="userPlanFilterSelect" class="adm-select" onchange="renderUsersTab()">
+                            <option value="all">All Plans (Paid &amp; Free)</option>
+                            <option value="paid">Paid Students Only (Gold + Diamond)</option>
+                            <option value="gold">Gold Plan Only</option>
+                            <option value="diamond">Diamond Plan Only</option>
+                            <option value="free">Free Plan Only</option>
+                            <option value="pending_payment">Pending Payment Verification</option>
+                        </select>
+                        <select id="userClassFilterSelect" class="adm-select" onchange="renderUsersTab()">
+                            <option value="all">All Classes</option>
+                            <option value="class-12">Class 12</option>
+                            <option value="class-11">Class 11</option>
+                            <option value="class-10">Class 10</option>
+                            <option value="after-12">Entrance Prep</option>
+                        </select>
                     </div>
+
+                    <div id="usersFilterCountBar" style="font-size:0.82rem; color:var(--adm-text-muted); margin-bottom:10px;"></div>
 
                     <div class="adm-table-wrap">
                         <table class="adm-table">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Gmail / Email</th>
+                                    <th>Student Details</th>
+                                    <th>Gmail / Auth</th>
                                     <th>Class</th>
-                                    <th>Current Plan</th>
+                                    <th>Plan</th>
+                                    <th>Payment &amp; Txn Status</th>
                                     <th>Joined</th>
                                     <th>Actions</th>
                                 </tr>
@@ -183,6 +211,9 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Student Full Detail Modal / Drawer -->
+                <div id="studentDetailModalMount"></div>
             </section>
 
             <!-- ==============================================================
@@ -542,7 +573,7 @@
 
     <div id="adminToastContainer" class="adm-toast-container"></div>
 
-    <script src="./js/admin-studio.js?v=20261122v6"></script>
+    <script src="./js/admin-studio.js?v=20261123v8"></script>
 </body>
 
 </html>

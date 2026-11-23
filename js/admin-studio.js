@@ -330,15 +330,96 @@ function renderAllAdminTabs() {
 }
 
 /* --------------------------------------------------------------------------
-   3. TAB 1: USERS
+   3. TAB 1: USERS (UNIFIED STUDENT DETAILS, PAID ANALYTICS & PAYMENTS)
    -------------------------------------------------------------------------- */
+function parseNumericAmount(rawAmount) {
+    if (!rawAmount) return 0;
+    const cleaned = String(rawAmount).replace(/[^0-9.]/g, '');
+    const val = parseFloat(cleaned);
+    return Number.isFinite(val) ? val : 0;
+}
+
+function getPaymentsForEmail(email) {
+    const target = String(email || '').trim().toLowerCase();
+    if (!target) return [];
+    const list = Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : [];
+    return list.filter(p => String(p.email || '').trim().toLowerCase() === target);
+}
+
+function setUsersQuickFilter(planFilter, classFilter = 'all') {
+    const planEl = document.getElementById('userPlanFilterSelect');
+    const classEl = document.getElementById('userClassFilterSelect');
+    if (planEl && planFilter) planEl.value = planFilter;
+    if (classEl && classFilter) classEl.value = classFilter;
+    renderUsersTab();
+}
+
 function renderUsersTab() {
     const tbody = document.getElementById('usersTableBody');
     const dupBanner = document.getElementById('duplicateGmailReviewBanner');
+    const statsMount = document.getElementById('studentsOverviewStatsMount');
+    const countBar = document.getElementById('usersFilterCountBar');
     if (!tbody) return;
 
     const accounts = ADMIN_ROSTER.accounts || [];
     const dupGroups = ADMIN_ROSTER.duplicateGroups || [];
+    const payments = Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : [];
+
+    // Compute unified student & payment statistics
+    const totalStudents = accounts.length;
+    const goldStudents = accounts.filter(a => (a.plan || 'free').toLowerCase() === 'gold').length;
+    const diamondStudents = accounts.filter(a => (a.plan || 'free').toLowerCase() === 'diamond').length;
+    const totalPaidStudents = goldStudents + diamondStudents;
+    const freeStudents = totalStudents - totalPaidStudents;
+
+    const verifiedPayments = payments.filter(p => p.status === 'verified');
+    const pendingPayments = payments.filter(p => p.status === 'pending');
+    const totalVerifiedRevenue = verifiedPayments.reduce((sum, p) => sum + parseNumericAmount(p.amount), 0);
+
+    const c12Count = accounts.filter(a => a.classKey === 'class-12').length;
+    const c11Count = accounts.filter(a => a.classKey === 'class-11').length;
+    const c10Count = accounts.filter(a => a.classKey === 'class-10').length;
+    const entCount = accounts.filter(a => a.classKey === 'after-12').length;
+
+    if (statsMount) {
+        statsMount.innerHTML = `
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(215px, 1fr)); gap:12px;">
+                <div class="adm-card" style="margin:0; padding:16px 18px; cursor:pointer;" onclick="setUsersQuickFilter('all', 'all')" title="Click to view all students">
+                    <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--adm-text-muted);">Total Registered Students</div>
+                    <div style="font-size:1.75rem; font-weight:700; margin:4px 0; color:var(--adm-text);">${totalStudents}</div>
+                    <div style="font-size:0.8rem; color:var(--adm-text-muted);">
+                        ${totalPaidStudents} Paid &middot; ${freeStudents} Free
+                    </div>
+                </div>
+
+                <div class="adm-card" style="margin:0; padding:16px 18px; cursor:pointer; border-color:rgba(22,163,74,0.35);" onclick="setUsersQuickFilter('paid', 'all')" title="Click to filter Paid Students only">
+                    <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#16a34a;">Total Paid Students</div>
+                    <div style="font-size:1.75rem; font-weight:700; margin:4px 0; color:#16a34a;">${totalPaidStudents}</div>
+                    <div style="font-size:0.8rem; color:var(--adm-text-muted);">
+                        <strong>${goldStudents}</strong> Gold &middot; <strong>${diamondStudents}</strong> Diamond
+                    </div>
+                </div>
+
+                <div class="adm-card" style="margin:0; padding:16px 18px; cursor:pointer;" onclick="setUsersQuickFilter('${pendingPayments.length > 0 ? 'pending_payment' : 'paid'}', 'all')" title="Click to filter by payment status">
+                    <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--adm-text-muted);">Verified Payments &amp; Revenue</div>
+                    <div style="font-size:1.55rem; font-weight:700; margin:4px 0; color:var(--adm-text);">Rs. ${totalVerifiedRevenue.toLocaleString()}</div>
+                    <div style="font-size:0.8rem; color:var(--adm-text-muted);">
+                        ${verifiedPayments.length} Verified &middot; <span style="color:${pendingPayments.length > 0 ? '#d97706' : 'inherit'}; font-weight:${pendingPayments.length > 0 ? '700' : '400'};">${pendingPayments.length} Pending</span>
+                    </div>
+                </div>
+
+                <div class="adm-card" style="margin:0; padding:16px 18px;">
+                    <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--adm-text-muted);">Students By Class</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 10px; margin-top:8px; font-size:0.82rem;">
+                        <a href="#c12" onclick="setUsersQuickFilter('all','class-12'); return false;" style="color:var(--adm-text); text-decoration:none;">Class 12: <strong>${c12Count}</strong></a>
+                        <a href="#c11" onclick="setUsersQuickFilter('all','class-11'); return false;" style="color:var(--adm-text); text-decoration:none;">Class 11: <strong>${c11Count}</strong></a>
+                        <a href="#c10" onclick="setUsersQuickFilter('all','class-10'); return false;" style="color:var(--adm-text); text-decoration:none;">Class 10: <strong>${c10Count}</strong></a>
+                        <a href="#ent" onclick="setUsersQuickFilter('all','after-12'); return false;" style="color:var(--adm-text); text-decoration:none;">Entrance: <strong>${entCount}</strong></a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
     if (dupBanner) {
         if (dupGroups.length > 0) {
@@ -353,27 +434,104 @@ function renderUsersTab() {
     }
 
     const q = (document.getElementById('userSearchInput')?.value || '').trim().toLowerCase();
+    const planFilter = (document.getElementById('userPlanFilterSelect')?.value || 'all').toLowerCase();
+    const classFilter = (document.getElementById('userClassFilterSelect')?.value || 'all').toLowerCase();
+
     const filtered = accounts.filter(acc => {
+        const plan = (acc.plan || 'free').toLowerCase();
+        const userPayments = getPaymentsForEmail(acc.email);
+        const hasPendingPay = userPayments.some(p => p.status === 'pending');
+
+        if (planFilter === 'paid' && plan !== 'gold' && plan !== 'diamond') return false;
+        if (planFilter === 'gold' && plan !== 'gold') return false;
+        if (planFilter === 'diamond' && plan !== 'diamond') return false;
+        if (planFilter === 'free' && plan !== 'free') return false;
+        if (planFilter === 'pending_payment' && !hasPendingPay) return false;
+
+        if (classFilter !== 'all' && acc.classKey !== classFilter) return false;
+
         if (!q) return true;
+        const txnMatch = userPayments.some(p => String(p.transactionId || '').toLowerCase().includes(q));
         return (acc.name || '').toLowerCase().includes(q)
             || (acc.email || '').toLowerCase().includes(q)
-            || (acc.canonicalEmail || '').toLowerCase().includes(q);
+            || (acc.username || '').toLowerCase().includes(q)
+            || (acc.canonicalEmail || '').toLowerCase().includes(q)
+            || txnMatch;
     });
 
+    if (countBar) {
+        countBar.innerHTML = `Showing <strong>${filtered.length}</strong> of <strong>${totalStudents}</strong> students (${totalPaidStudents} paid: ${goldStudents} Gold, ${diamondStudents} Diamond &middot; ${freeStudents} Free)`;
+    }
+
     if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:28px; color:var(--adm-text-muted);">No matching students found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:28px; color:var(--adm-text-muted);">No matching students found for the selected filter.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = filtered.map(acc => {
         const emailEsc = escapeHtml(acc.email);
         const plan = (acc.plan || 'free').toLowerCase();
+        const isPaidPlan = plan === 'gold' || plan === 'diamond';
+        const userPayments = getPaymentsForEmail(acc.email);
+        const latestVerifiedPay = userPayments.find(p => p.status === 'verified');
+        const latestPendingPay = userPayments.find(p => p.status === 'pending');
+        const latestPay = latestPendingPay || latestVerifiedPay || userPayments[0] || null;
+
+        let paymentCellHtml = '';
+        if (latestPendingPay) {
+            paymentCellHtml = `
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="adm-status-pill" style="background:rgba(217,119,6,0.12); color:#d97706; width:fit-content;">PENDING &middot; ${escapeHtml(latestPendingPay.planName || '')} (${escapeHtml(latestPendingPay.amount || '')})</span>
+                    <small style="color:var(--adm-text-muted);">Txn: <code>${escapeHtml(latestPendingPay.transactionId || 'N/A')}</code></small>
+                    <div style="display:flex; gap:4px; margin-top:2px;">
+                        <button type="button" class="btn-adm-dark" style="padding:3px 8px; font-size:0.72rem;" onclick="handleAdminPaymentDecision('${escapeHtml(latestPendingPay.id)}', true)">Verify &amp; Activate</button>
+                        <button type="button" class="btn-topbar" style="padding:3px 8px; font-size:0.72rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(latestPendingPay.id)}', false)">Reject</button>
+                    </div>
+                </div>
+            `;
+        } else if (latestVerifiedPay) {
+            paymentCellHtml = `
+                <div>
+                    <span class="adm-status-pill open" style="font-size:0.72rem;">PAID &middot; ${escapeHtml(latestVerifiedPay.amount || latestVerifiedPay.planName || plan.toUpperCase())}</span>
+                    <div style="font-size:0.76rem; color:var(--adm-text-muted); margin-top:3px;">
+                        Txn: <code>${escapeHtml(latestVerifiedPay.transactionId || 'Verified')}</code>
+                    </div>
+                </div>
+            `;
+        } else if (isPaidPlan) {
+            paymentCellHtml = `
+                <div>
+                    <span class="adm-status-pill open" style="font-size:0.72rem;">PAID (${escapeHtml(plan.toUpperCase())})</span>
+                    <div style="font-size:0.75rem; color:var(--adm-text-muted); margin-top:2px;">Admin assigned</div>
+                </div>
+            `;
+        } else if (latestPay && latestPay.status === 'rejected') {
+            paymentCellHtml = `
+                <div>
+                    <span class="adm-status-pill locked" style="font-size:0.72rem;">REJECTED</span>
+                    <div style="font-size:0.75rem; color:var(--adm-text-muted); margin-top:2px;">Txn: <code>${escapeHtml(latestPay.transactionId || '—')}</code></div>
+                </div>
+            `;
+        } else {
+            paymentCellHtml = `<span style="color:var(--adm-text-muted); font-size:0.8rem;">Free (No payment)</span>`;
+        }
+
+        const authBadge = acc.googleLinked
+            ? '<span style="font-size:0.72rem; padding:2px 6px; border-radius:4px; background:var(--adm-bg-subtle); color:var(--adm-text-muted);">Google</span>'
+            : (acc.emailVerified ? '<span style="font-size:0.72rem; padding:2px 6px; border-radius:4px; background:rgba(22,163,74,0.1); color:#16a34a;">OTP Verified</span>' : '');
+
         return `
             <tr>
-                <td><strong>${escapeHtml(acc.name || 'Student')}</strong></td>
+                <td>
+                    <strong>${escapeHtml(acc.name || 'Student')}</strong>
+                    <div style="font-size:0.76rem; color:var(--adm-text-muted);">@${escapeHtml(acc.username || (acc.email || '').split('@')[0])}</div>
+                </td>
                 <td>
                     <div>${emailEsc}</div>
-                    ${acc.duplicateFlag ? '<span class="adm-flag-badge">Duplicate Gmail</span>' : ''}
+                    <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap; margin-top:3px;">
+                        ${authBadge}
+                        ${acc.duplicateFlag ? '<span class="adm-flag-badge">Duplicate Gmail</span>' : ''}
+                    </div>
                 </td>
                 <td>
                     <select class="adm-select compact" onchange="handleAdminUpdateUserClass('${emailEsc}', this.value)">
@@ -386,17 +544,175 @@ function renderUsersTab() {
                 <td>
                     <select class="adm-select compact" onchange="handleAdminUpdateUserPlan('${emailEsc}', this.value)">
                         <option value="free" ${plan === 'free' ? 'selected' : ''}>Free</option>
-                        <option value="gold" ${plan === 'gold' ? 'selected' : ''}>Gold</option>
-                        <option value="diamond" ${plan === 'diamond' ? 'selected' : ''}>Diamond</option>
+                        <option value="gold" ${plan === 'gold' ? 'selected' : ''}>Gold (Paid)</option>
+                        <option value="diamond" ${plan === 'diamond' ? 'selected' : ''}>Diamond (Paid)</option>
                     </select>
                 </td>
-                <td style="color:var(--adm-text-muted); font-size:0.84rem;">${escapeHtml(acc.joinedAt || '')}</td>
+                <td>${paymentCellHtml}</td>
+                <td style="color:var(--adm-text-muted); font-size:0.82rem;">${escapeHtml(acc.joinedAt || '—')}</td>
                 <td>
-                    <button type="button" class="btn-topbar danger" style="padding:5px 10px; font-size:0.78rem;" onclick="handleAdminDeleteUser('${emailEsc}')">Delete</button>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.78rem;" onclick="openStudentDetailModal('${emailEsc}')">Details</button>
+                        <button type="button" class="btn-topbar danger" style="padding:5px 10px; font-size:0.78rem;" onclick="handleAdminDeleteUser('${emailEsc}')">Delete</button>
+                    </div>
                 </td>
             </tr>
         `;
     }).join('');
+}
+
+function openStudentDetailModal(email) {
+    const mount = document.getElementById('studentDetailModalMount');
+    if (!mount) return;
+    const accounts = ADMIN_ROSTER.accounts || [];
+    const target = String(email || '').trim().toLowerCase();
+    const acc = accounts.find(a => String(a.email || '').trim().toLowerCase() === target);
+    if (!acc) return;
+
+    const userPayments = getPaymentsForEmail(acc.email);
+    const switchRequests = (ADMIN_ROSTER.classSwitchRequests || []).filter(
+        r => String(r.email || '').trim().toLowerCase() === target
+    );
+    const plan = (acc.plan || 'free').toLowerCase();
+
+    mount.innerHTML = `
+        <div style="position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9990; display:flex; align-items:center; justify-content:center; padding:16px;" onclick="if(event.target===this) closeStudentDetailModal()">
+            <div class="adm-card" style="width:100%; max-width:660px; max-height:88vh; overflow-y:auto; margin:0; padding:24px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                    <div>
+                        <h3 style="margin:0; font-size:1.2rem;">${escapeHtml(acc.name || 'Student')}</h3>
+                        <div style="font-size:0.86rem; color:var(--adm-text-muted); margin-top:2px;">${escapeHtml(acc.email)} &middot; @${escapeHtml(acc.username || '')}</div>
+                    </div>
+                    <button type="button" class="btn-topbar" onclick="closeStudentDetailModal()">Close</button>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:18px; padding:14px; border-radius:10px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
+                    <div>
+                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Active Class</div>
+                        <div style="font-weight:700; margin-top:2px;">${escapeHtml(acc.grade || acc.classKey)}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Current Plan</div>
+                        <div style="font-weight:700; margin-top:2px; text-transform:uppercase; color:${plan === 'free' ? 'inherit' : '#16a34a'};">${escapeHtml(plan)} ${plan !== 'free' ? '(PAID)' : ''}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Verification</div>
+                        <div style="font-weight:600; margin-top:2px;">${acc.googleLinked ? 'Google Linked' : (acc.emailVerified ? 'Email OTP Verified' : 'Standard')}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Joined Date</div>
+                        <div style="font-weight:600; margin-top:2px;">${escapeHtml(acc.joinedAt || '—')}</div>
+                    </div>
+                </div>
+
+                <h4 style="margin:0 0 8px 0; font-size:0.95rem;">Payment &amp; Subscription History (${userPayments.length})</h4>
+                ${userPayments.length === 0 ? `
+                    <div style="padding:14px; border:1px dashed var(--adm-border); border-radius:8px; color:var(--adm-text-muted); font-size:0.85rem; margin-bottom:16px;">
+                        No eSewa / WhatsApp payment submissions recorded for this student.
+                    </div>
+                ` : `
+                    <div class="adm-table-wrap" style="margin-bottom:16px;">
+                        <table class="adm-table">
+                            <thead>
+                                <tr>
+                                    <th>Plan &amp; Amount</th>
+                                    <th>eSewa Txn ID</th>
+                                    <th>Class</th>
+                                    <th>Submitted</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${userPayments.map(p => `
+                                    <tr>
+                                        <td><strong>${escapeHtml(p.planName)}</strong> (${escapeHtml(p.amount)})</td>
+                                        <td><code>${escapeHtml(p.transactionId || '—')}</code></td>
+                                        <td>${escapeHtml(p.className || p.classKey)}</td>
+                                        <td><small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small></td>
+                                        <td><span class="adm-status-pill ${p.status === 'verified' ? 'open' : (p.status === 'rejected' ? 'locked' : '')}">${escapeHtml(String(p.status || 'pending').toUpperCase())}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
+
+                <h4 style="margin:0 0 8px 0; font-size:0.95rem;">Class Switch History (${switchRequests.length})</h4>
+                ${switchRequests.length === 0 ? `
+                    <div style="padding:14px; border:1px dashed var(--adm-border); border-radius:8px; color:var(--adm-text-muted); font-size:0.85rem;">
+                        No class switch requests submitted by this student.
+                    </div>
+                ` : `
+                    <div class="adm-table-wrap">
+                        <table class="adm-table">
+                            <thead>
+                                <tr>
+                                    <th>From</th>
+                                    <th>Requested</th>
+                                    <th>Submitted</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${switchRequests.map(r => `
+                                    <tr>
+                                        <td>${escapeHtml(r.currentGrade || r.currentClassKey)}</td>
+                                        <td><strong>${escapeHtml(r.requestedGrade || r.requestedClassKey)}</strong></td>
+                                        <td><small>${r.submittedAt ? escapeHtml(new Date(r.submittedAt).toLocaleString()) : '—'}</small></td>
+                                        <td><span class="adm-status-pill ${r.status === 'approved' ? 'open' : (r.status === 'rejected' ? 'locked' : '')}">${escapeHtml(String(r.status || 'pending').toUpperCase())}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
+            </div>
+        </div>
+    `;
+}
+
+function closeStudentDetailModal() {
+    const mount = document.getElementById('studentDetailModalMount');
+    if (mount) mount.innerHTML = '';
+}
+
+function exportStudentsCsv() {
+    const accounts = ADMIN_ROSTER.accounts || [];
+    if (accounts.length === 0) {
+        showAdminToast('No students to export.', 'error');
+        return;
+    }
+    const headers = ['Name', 'Username', 'Email', 'Class', 'Plan', 'PaidStatus', 'LatestPaymentAmount', 'LatestTransactionId', 'PaymentStatus', 'VerificationMethod', 'JoinedAt'];
+    const rows = accounts.map(acc => {
+        const plan = (acc.plan || 'free').toLowerCase();
+        const isPaid = plan === 'gold' || plan === 'diamond';
+        const userPayments = getPaymentsForEmail(acc.email);
+        const latestPay = userPayments.find(p => p.status === 'verified') || userPayments[0] || null;
+        return [
+            acc.name || '',
+            acc.username || '',
+            acc.email || '',
+            acc.grade || acc.classKey || '',
+            plan.toUpperCase(),
+            isPaid ? 'PAID' : 'FREE',
+            latestPay ? (latestPay.amount || '') : '',
+            latestPay ? (latestPay.transactionId || '') : '',
+            latestPay ? (latestPay.status || '').toUpperCase() : (isPaid ? 'ADMIN_ASSIGNED' : 'NONE'),
+            acc.googleLinked ? 'google_oauth' : (acc.emailVerified ? 'email_otp' : 'standard'),
+            acc.joinedAt || ''
+        ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+    });
+    const csvContent = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bpg-educare-students-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showAdminToast('Exported student & payment roster to CSV.');
 }
 
 async function handleAdminAddUser(e) {
