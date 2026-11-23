@@ -877,13 +877,45 @@ function renderContentTab() {
     mount.innerHTML = `
         <!-- Editable Units & Chapters (Syllabus Grid) -->
         <div class="adm-units-panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
                 <div>
                     <strong style="font-size:0.95rem;">Units &amp; Chapters (${escapeHtml(secLabel)} Syllabus Grid)</strong>
-                    <div style="font-size:0.78rem; color:var(--adm-text-muted);">Rename or delete units and chapters. Linked lessons, PDFs, and videos stay attached on rename and can be moved before deletion.</div>
+                    <div style="font-size:0.78rem; color:var(--adm-text-muted);">Edit unit code, title, teaching hours, marks, and weightage pattern. All changes update the student Syllabus Grid immediately.</div>
                 </div>
-                <button type="button" class="btn-topbar" style="padding:6px 12px; font-size:0.8rem;" onclick="promptAddSyllabusUnit('${activeContentClass}')">+ Add Unit / Chapter</button>
+                <button type="button" class="btn-adm-dark" style="padding:6px 12px; font-size:0.8rem;" onclick="toggleAddSyllabusUnitDrawer('${activeContentClass}')">+ Add Unit / Row</button>
             </div>
+
+            ${showAddSyllabusUnitByClass[activeContentClass] ? `
+                <form class="adm-inline-drawer" style="margin-bottom:12px;" onsubmit="handleCreateSyllabusUnitRow(event, '${activeContentClass}')">
+                    <div class="adm-drawer-head">
+                        <strong>Add New Unit / Row to ${escapeHtml(secLabel)} Syllabus Grid</strong>
+                        <button type="button" class="adm-close-mini" onclick="toggleAddSyllabusUnitDrawer('${activeContentClass}')">&times;</button>
+                    </div>
+                    <div style="display:grid; grid-template-columns:110px 1.5fr 100px 110px 1.4fr auto; gap:8px; align-items:end;">
+                        <div>
+                            <label class="adm-label">Unit Code</label>
+                            <input type="text" id="newSylCode_${activeContentClass}" class="adm-input" value="Unit ${String(syllabusRows.length + 1).padStart(2, '0')}" placeholder="Unit 01" required>
+                        </div>
+                        <div>
+                            <label class="adm-label">Unit / Lesson Title</label>
+                            <input type="text" id="newSylName_${activeContentClass}" class="adm-input" placeholder="e.g. Algebra &amp; Matrices" required>
+                        </div>
+                        <div>
+                            <label class="adm-label">Hours</label>
+                            <input type="text" id="newSylHours_${activeContentClass}" class="adm-input" value="16 hrs" placeholder="16 hrs">
+                        </div>
+                        <div>
+                            <label class="adm-label">Marks</label>
+                            <input type="text" id="newSylMarks_${activeContentClass}" class="adm-input" value="10 Marks" placeholder="10 Marks">
+                        </div>
+                        <div>
+                            <label class="adm-label">Weightage Pattern</label>
+                            <input type="text" id="newSylFocus_${activeContentClass}" class="adm-input" placeholder="1 Long (5M) + 1 Short (4M) + 1 MCQ (1M)">
+                        </div>
+                        <button type="submit" class="btn-adm-dark" style="padding:9px 14px;">Save Row</button>
+                    </div>
+                </form>
+            ` : ''}
             ${syllabusRows.length === 0 ? `<div class="adm-empty-note" style="margin-top:8px;">No units yet for ${escapeHtml(secLabel)}.</div>` : syllabusRows.map((row, uIdx) => {
                 const uKey = `${activeContentClass}|${uIdx}`;
                 const isRenaming = renamingUnitKey === uKey;
@@ -891,10 +923,11 @@ function renderContentTab() {
                     <div class="adm-unit-row">
                         ${isRenaming ? `
                             <form style="display:flex; gap:8px; flex-wrap:wrap; flex:1; align-items:center;" onsubmit="saveRenamedSyllabusUnit(event, '${activeContentClass}', ${uIdx})">
-                                <input type="text" id="renameUnitCode_${uIdx}" class="adm-input" style="width:110px;" value="${escapeHtml(row.code || '')}" placeholder="Unit 01" required>
-                                <input type="text" id="renameUnitName_${uIdx}" class="adm-input" style="flex:1; min-width:200px;" value="${escapeHtml(row.name || row.domain || '')}" placeholder="Unit / Chapter title" required>
-                                <input type="text" id="renameUnitHours_${uIdx}" class="adm-input" style="width:90px;" value="${escapeHtml(row.hours || '')}" placeholder="20 hrs">
-                                <input type="text" id="renameUnitMarks_${uIdx}" class="adm-input" style="width:100px;" value="${escapeHtml(row.marks || '')}" placeholder="15 Marks">
+                                <input type="text" id="renameUnitCode_${uIdx}" class="adm-input" style="width:100px;" value="${escapeHtml(row.code || '')}" placeholder="Unit 01" required>
+                                <input type="text" id="renameUnitName_${uIdx}" class="adm-input" style="flex:1; min-width:180px;" value="${escapeHtml(row.name || row.domain || '')}" placeholder="Unit / Chapter title" required>
+                                <input type="text" id="renameUnitHours_${uIdx}" class="adm-input" style="width:85px;" value="${escapeHtml(row.hours || '')}" placeholder="20 hrs">
+                                <input type="text" id="renameUnitMarks_${uIdx}" class="adm-input" style="width:95px;" value="${escapeHtml(row.marks || '')}" placeholder="15 Marks">
+                                <input type="text" id="renameUnitFocus_${uIdx}" class="adm-input" style="flex:1; min-width:180px;" value="${escapeHtml(row.focus || row.weightage || '')}" placeholder="Weightage pattern (e.g. 1 Long + 2 Short)">
                                 <button type="submit" class="btn-adm-dark" style="padding:6px 12px; font-size:0.78rem;">Save</button>
                                 <button type="button" class="btn-topbar" style="padding:6px 10px; font-size:0.78rem;" onclick="cancelRenameUnit()">Cancel</button>
                             </form>
@@ -905,7 +938,9 @@ function renderContentTab() {
                                 <span style="margin-left:8px; font-size:0.78rem; color:var(--adm-text-muted);">${escapeHtml(row.hours || '')}${row.hours && row.marks ? ' · ' : ''}${escapeHtml(row.marks || '')}</span>
                             </div>
                             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.76rem;" onclick="startRenameSyllabusUnit('${activeContentClass}', ${uIdx})">Rename</button>
+                                <button type="button" class="btn-topbar" style="padding:4px 8px; font-size:0.74rem;" ${uIdx === 0 ? 'disabled' : ''} onclick="moveSyllabusUnitRow('${activeContentClass}', ${uIdx}, -1)" title="Move up">&uarr;</button>
+                                <button type="button" class="btn-topbar" style="padding:4px 8px; font-size:0.74rem;" ${uIdx === syllabusRows.length - 1 ? 'disabled' : ''} onclick="moveSyllabusUnitRow('${activeContentClass}', ${uIdx}, 1)" title="Move down">&darr;</button>
+                                <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.76rem;" onclick="startRenameSyllabusUnit('${activeContentClass}', ${uIdx})">Edit Row</button>
                                 <button type="button" class="btn-topbar danger" style="padding:5px 10px; font-size:0.76rem;" onclick="openSafeDeleteUnitModal('${activeContentClass}', ${uIdx})">Delete</button>
                             </div>
                         `}
