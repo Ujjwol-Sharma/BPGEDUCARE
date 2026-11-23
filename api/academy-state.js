@@ -124,6 +124,27 @@ function writeStateToDisk(updated) {
     try { fs.writeFileSync(LEGACY_CMS_PATH, serialized, 'utf8'); } catch (e) {}
 }
 
+module.exports.writeStateToDisk = writeStateToDisk;
+module.exports.deepMergeState = deepMergeState;
+
+const studentRosterHandler = require('./_student-roster');
+const sendEmailOtpHandler = require('./_send-email-otp');
+const verifyOtpHandler = require('./_verify-otp');
+const contentAccessHandler = require('./_content-access');
+const mockTestsHandler = require('./_mock-tests');
+const paymentsHandler = require('./_payments');
+const aiTutorHandler = require('./_ai-tutor');
+
+const SUB_ROUTE_HANDLERS = {
+    'student-roster': studentRosterHandler,
+    'send-email-otp': sendEmailOtpHandler,
+    'verify-otp': verifyOtpHandler,
+    'content-access': contentAccessHandler,
+    'mock-tests': mockTestsHandler,
+    'payments': paymentsHandler,
+    'ai-tutor': aiTutorHandler
+};
+
 function ensureResHelpers(res) {
     if (typeof res.status !== 'function') {
         res.status = function (code) {
@@ -143,31 +164,17 @@ function ensureResHelpers(res) {
     return res;
 }
 
-const SUB_ROUTE_MAP = {
-    'student-roster': './_student-roster',
-    'send-email-otp': './_send-email-otp',
-    'verify-otp': './_verify-otp',
-    'content-access': './_content-access',
-    'mock-tests': './_mock-tests',
-    'payments': './_payments',
-    'ai-tutor': './_ai-tutor'
-};
-
 async function academyStateHandler(req, res) {
     ensureResHelpers(res);
 
-    try {
-        const parsedRouteUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
-        const subRoute = parsedRouteUrl.searchParams.get('__route');
-        if (subRoute && SUB_ROUTE_MAP[subRoute]) {
-            return await require(SUB_ROUTE_MAP[subRoute])(req, res);
-        }
-        const cleanPath = parsedRouteUrl.pathname.replace(/^\/api\//, '').replace(/\.js$/, '');
-        if (cleanPath && cleanPath !== 'academy-state' && SUB_ROUTE_MAP[cleanPath]) {
-            return await require(SUB_ROUTE_MAP[cleanPath])(req, res);
-        }
-    } catch (e) {
-        console.error('[API Unified Router Dispatch Error]:', e);
+    const parsedRouteUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+    const subRoute = (req.query && req.query.__route) || parsedRouteUrl.searchParams.get('__route') || '';
+    if (subRoute && SUB_ROUTE_HANDLERS[subRoute]) {
+        return await SUB_ROUTE_HANDLERS[subRoute](req, res);
+    }
+    const cleanPath = parsedRouteUrl.pathname.replace(/^\/api\//, '').replace(/\.js$/, '');
+    if (cleanPath && cleanPath !== 'academy-state' && SUB_ROUTE_HANDLERS[cleanPath]) {
+        return await SUB_ROUTE_HANDLERS[cleanPath](req, res);
     }
 
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
