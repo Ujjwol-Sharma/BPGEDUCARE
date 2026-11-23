@@ -1583,18 +1583,33 @@ async function saveRenamedLesson(e, classKey, subjectId, lessonId) {
     );
 }
 
-async function promptAddSyllabusUnit(classKey) {
-    const title = prompt('Enter Unit / Chapter title:');
-    if (!title || !title.trim()) return;
+let showAddSyllabusUnitByClass = {};
+
+function toggleAddSyllabusUnitDrawer(classKey) {
+    showAddSyllabusUnitByClass[classKey] = !showAddSyllabusUnitByClass[classKey];
+    renderContentTab();
+}
+
+async function handleCreateSyllabusUnitRow(e, classKey) {
+    e.preventDefault();
     const syllabusRows = JSON.parse(JSON.stringify(ADMIN_STATE.portals[classKey]?.syllabusRows || []));
-    const code = `Unit ${String(syllabusRows.length + 1).padStart(2, '0')}`;
+    const code = (document.getElementById(`newSylCode_${classKey}`)?.value || '').trim() || `Unit ${String(syllabusRows.length + 1).padStart(2, '0')}`;
+    const name = (document.getElementById(`newSylName_${classKey}`)?.value || '').trim();
+    const hours = (document.getElementById(`newSylHours_${classKey}`)?.value || '').trim() || '12 hrs';
+    const marks = (document.getElementById(`newSylMarks_${classKey}`)?.value || '').trim() || '8 Marks';
+    const focus = (document.getElementById(`newSylFocus_${classKey}`)?.value || '').trim() || 'Structured syllabus unit';
+    if (!name) return;
+
     syllabusRows.push({
         code,
-        name: title.trim(),
-        hours: '12 hrs',
-        marks: '8 Marks',
-        focus: 'Structured syllabus unit'
+        name,
+        domain: name,
+        hours,
+        marks,
+        focus,
+        weightage: focus
     });
+
     const subjects = JSON.parse(JSON.stringify(getAdminSubjects(classKey)));
     const activeSubj = subjects.find(s => s.id === activeSubjectByClass[classKey]) || subjects[0];
     if (activeSubj) {
@@ -1602,12 +1617,31 @@ async function promptAddSyllabusUnit(classKey) {
         activeSubj.lessons.push({
             id: `${classKey}-${activeSubj.id}-l${Date.now()}`,
             code,
-            title: title.trim(),
+            title: name,
+            hours,
+            marks,
+            subTopics: [],
             pdfs: [],
             videos: []
         });
     }
-    await persistAcademyState({ portals: { [classKey]: { syllabusRows, subjects } } }, `Added "${title.trim()}".`);
+
+    showAddSyllabusUnitByClass[classKey] = false;
+    await persistAcademyState({ portals: { [classKey]: { syllabusRows, subjects } } }, `Added "${code} — ${name}" to Syllabus Grid.`);
+}
+
+async function moveSyllabusUnitRow(classKey, unitIdx, direction) {
+    const syllabusRows = JSON.parse(JSON.stringify(ADMIN_STATE.portals[classKey]?.syllabusRows || []));
+    const targetIdx = unitIdx + direction;
+    if (targetIdx < 0 || targetIdx >= syllabusRows.length) return;
+    const tmp = syllabusRows[unitIdx];
+    syllabusRows[unitIdx] = syllabusRows[targetIdx];
+    syllabusRows[targetIdx] = tmp;
+    await persistAcademyState({ portals: { [classKey]: { syllabusRows } } }, 'Syllabus Grid reordered.');
+}
+
+async function promptAddSyllabusUnit(classKey) {
+    toggleAddSyllabusUnitDrawer(classKey);
 }
 
 function startRenameSyllabusUnit(classKey, unitIdx) {
@@ -1632,20 +1666,26 @@ async function saveRenamedSyllabusUnit(e, classKey, unitIdx) {
     const newName = (document.getElementById(`renameUnitName_${unitIdx}`)?.value || '').trim();
     const newHours = (document.getElementById(`renameUnitHours_${unitIdx}`)?.value || '').trim();
     const newMarks = (document.getElementById(`renameUnitMarks_${unitIdx}`)?.value || '').trim();
+    const newFocus = (document.getElementById(`renameUnitFocus_${unitIdx}`)?.value || '').trim();
     if (!newName) return;
 
     row.code = newCode || oldCode;
     row.name = newName;
+    row.domain = newName;
     row.hours = newHours;
     row.marks = newMarks;
+    row.focus = newFocus;
+    row.weightage = newFocus;
 
-    // Update linked lesson's code/title while keeping all its PDFs & videos attached
+    // Update linked lesson's code/title while keeping all its PDFs, videos & sub-topics attached
     const subjects = JSON.parse(JSON.stringify(getAdminSubjects(classKey)));
     subjects.forEach(subj => {
         (subj.lessons || []).forEach(l => {
             if ((oldCode && l.code === oldCode) || (oldName && l.title === oldName)) {
                 l.code = row.code;
                 if (l.title === oldName) l.title = newName;
+                l.hours = newHours;
+                l.marks = newMarks;
             }
         });
     });
@@ -1653,7 +1693,7 @@ async function saveRenamedSyllabusUnit(e, classKey, unitIdx) {
     renamingUnitKey = '';
     await persistAcademyState(
         { portals: { [classKey]: { syllabusRows, subjects } } },
-        `Renamed unit to "${newName}" (all linked resources preserved).`
+        `Updated Syllabus Grid row "${newName}".`
     );
 }
 
@@ -1803,9 +1843,10 @@ async function executeSafeDelete(moveFirst) {
             }
         }
         subj.lessons = (subj.lessons || []).filter(l => l.id !== lessonId);
+        const filteredSyllabus = syllabusRows.filter(r => !((lesson.code && r.code === lesson.code) && ((r.name || r.domain) === lesson.title)));
         closeSafeDeleteModal();
         await persistAcademyState(
-            { portals: { [classKey]: { subjects } } },
+            { portals: { [classKey]: { subjects, syllabusRows: filteredSyllabus } } },
             moveFirst ? 'Moved resources and deleted lesson.' : 'Lesson deleted.'
         );
         return;

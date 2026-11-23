@@ -820,14 +820,22 @@ function ensureAccessModelDefaults(state) {
                         title: l.title || `Lesson ${lIdx + 1}`,
                         hours: l.hours || '',
                         marks: l.marks || '',
+                        subTopics: (Array.isArray(l.subTopics) ? l.subTopics : []).map((st, stIdx) => ({
+                            id: st.id || `sub_${lIdx + 1}_${stIdx + 1}`,
+                            title: String(st.title || '').trim()
+                        })).filter(st => st.title),
                         pdfs: (Array.isArray(l.pdfs) ? l.pdfs : []).map((p, pIdx) => ({
                             ...p,
                             id: p.id || `${l.id || 'l'}-pdf-${pIdx + 1}`,
+                            subTopicId: p.subTopicId || '',
+                            subTopicTitle: p.subTopicTitle || '',
                             minPlan: normalizePlan(p.minPlan || 'free')
                         })),
                         videos: (Array.isArray(l.videos) ? l.videos : []).map((v, vIdx) => ({
                             ...v,
                             id: v.id || `${l.id || 'l'}-vid-${vIdx + 1}`,
+                            subTopicId: v.subTopicId || '',
+                            subTopicTitle: v.subTopicTitle || '',
                             minPlan: normalizePlan(v.minPlan || 'free')
                         }))
                     }))

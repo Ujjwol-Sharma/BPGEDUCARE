@@ -355,10 +355,10 @@ function normalizeAcademyState(state) {
             state.portals[k] = JSON.parse(JSON.stringify(defPortal));
         } else {
             const p = state.portals[k];
-            if (!Array.isArray(p.syllabusRows) || p.syllabusRows.length === 0) {
+            if (!Array.isArray(p.syllabusRows)) {
                 p.syllabusRows = JSON.parse(JSON.stringify(defPortal.syllabusRows || []));
             }
-            if (!Array.isArray(p.units) || p.units.length === 0) {
+            if (!Array.isArray(p.units)) {
                 p.units = JSON.parse(JSON.stringify(defPortal.units || []));
             }
             if (!p.gradeTitle) p.gradeTitle = defPortal.gradeTitle;
@@ -466,7 +466,9 @@ function applyIncomingAdminState(remote) {
                 merged.subjects = [];
             } else {
                 merged.sectionLocked = false;
-                if (!Array.isArray(incP.syllabusRows) || incP.syllabusRows.length === 0) {
+                if (Array.isArray(incP.syllabusRows)) {
+                    merged.syllabusRows = incP.syllabusRows;
+                } else {
                     merged.syllabusRows = oldP.syllabusRows || defP.syllabusRows || [];
                 }
                 if (Array.isArray(incP.subjects)) {
