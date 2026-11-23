@@ -557,22 +557,27 @@ function verifyStudentSessionToken(token) {
    3. ROSTER STORAGE + DUPLICATE GMAIL FLAGGING
    -------------------------------------------------------------------------- */
 function readRoster() {
+    if (global.__BPG_STUDENT_ROSTER__ && Array.isArray(global.__BPG_STUDENT_ROSTER__.accounts)) {
+        return global.__BPG_STUDENT_ROSTER__;
+    }
+
     if (!fs.existsSync(DATA_DIR)) {
         try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch (e) { }
     }
 
     let roster = null;
-    let newestTime = 0;
+    let bestRev = -1;
+    // Always check TMP_ROSTER_PATH first; it only exists when runtime mutations occurred
     const candidates = [TMP_ROSTER_PATH, ROSTER_PATH];
     for (const p of candidates) {
         try {
             if (fs.existsSync(p)) {
                 const parsed = JSON.parse(fs.readFileSync(p, 'utf8'));
                 if (parsed && Array.isArray(parsed.accounts)) {
-                    const t = parsed.lastUpdated ? Date.parse(parsed.lastUpdated) || 0 : 0;
-                    if (!roster || t >= newestTime) {
+                    const rev = Number(parsed.revision) || (p === TMP_ROSTER_PATH ? 1 : 0);
+                    if (!roster || rev > bestRev) {
                         roster = parsed;
-                        newestTime = t;
+                        bestRev = rev;
                     }
                 }
             }
@@ -637,12 +642,16 @@ function readRoster() {
         duplicateGroups.push({ canonicalEmail: ce, emails: grouped[ce], count: grouped[ce].length });
     });
     roster.duplicateGroups = duplicateGroups;
+    roster.revision = Number(roster.revision) || 1;
+    global.__BPG_STUDENT_ROSTER__ = roster;
 
     return roster;
 }
 
 function writeRoster(roster) {
+    const nextRevision = (Number(roster?.revision) || Number(global.__BPG_STUDENT_ROSTER__?.revision) || 1) + 1;
     const clean = {
+        revision: nextRevision,
         lastUpdated: new Date().toISOString(),
         classSwitchRequests: Array.isArray(roster.classSwitchRequests) ? roster.classSwitchRequests : [],
         accounts: (roster.accounts || []).map(acc => {
@@ -658,6 +667,9 @@ function writeRoster(roster) {
                 plan: normalizePlan(acc.plan || 'free'),
                 planExplicitlySet: Boolean(acc.planExplicitlySet),
                 legacyAccess: Boolean(acc.legacyAccess),
+                emailVerified: acc.emailVerified !== undefined ? Boolean(acc.emailVerified) : true,
+                verifiedAt: acc.verifiedAt || '',
+                verificationMethod: acc.verificationMethod || '',
                 googleLinked: Boolean(acc.googleLinked),
                 googleSub: String(acc.googleSub || ''),
                 avatarUrl: String(acc.avatarUrl || ''),
@@ -669,14 +681,15 @@ function writeRoster(roster) {
 
     const serialized = JSON.stringify(clean, null, 2);
     try {
+        fs.writeFileSync(TMP_ROSTER_PATH, serialized, 'utf8');
+    } catch (e) { }
+    try {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
         const tmp = ROSTER_PATH + '.tmp.' + Date.now();
         fs.writeFileSync(tmp, serialized, 'utf8');
         fs.renameSync(tmp, ROSTER_PATH);
     } catch (e) { }
-    try {
-        fs.writeFileSync(TMP_ROSTER_PATH, serialized, 'utf8');
-    } catch (e) { }
+    global.__BPG_STUDENT_ROSTER__ = null;
     return readRoster();
 }
 
@@ -956,9 +969,10 @@ function readAcademyState() {
     if (global.__BPG_ACADEMY_STATE__) {
         return ensureAccessModelDefaults(global.__BPG_ACADEMY_STATE__);
     }
-    const candidates = [DB_PATH, TMP_DB_PATH, LEGACY_CMS_PATH];
+    // Check TMP_DB_PATH first; it only exists when runtime mutations occurred
+    const candidates = [TMP_DB_PATH, DB_PATH, LEGACY_CMS_PATH];
     let newestState = null;
-    let newestTime = 0;
+    let bestRev = -1;
 
     for (const filePath of candidates) {
         try {
@@ -966,10 +980,10 @@ function readAcademyState() {
                 const raw = fs.readFileSync(filePath, 'utf8');
                 const parsed = JSON.parse(raw);
                 if (parsed && parsed.portals) {
-                    const t = parsed.lastUpdated ? Date.parse(parsed.lastUpdated) || 0 : 0;
-                    if (!newestState || t >= newestTime) {
+                    const rev = Number(parsed.revision) || (filePath === TMP_DB_PATH ? 1 : 0);
+                    if (!newestState || rev > bestRev) {
                         newestState = parsed;
-                        newestTime = t;
+                        bestRev = rev;
                     }
                 }
             }

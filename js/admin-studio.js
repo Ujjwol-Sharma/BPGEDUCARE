@@ -334,8 +334,9 @@ function renderAllAdminTabs() {
    -------------------------------------------------------------------------- */
 function parseNumericAmount(rawAmount) {
     if (!rawAmount) return 0;
-    const cleaned = String(rawAmount).replace(/[^0-9.]/g, '');
-    const val = parseFloat(cleaned);
+    const match = String(rawAmount).replace(/,/g, '').match(/\d+(\.\d+)?/);
+    if (!match) return 0;
+    const val = parseFloat(match[0]);
     return Number.isFinite(val) ? val : 0;
 }
 

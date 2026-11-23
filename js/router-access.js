@@ -482,9 +482,12 @@ function openCheckoutModal(planId = 'gold') {
     if (priceEl) priceEl.textContent = `Amount: ${cfg.price || '—'}${cfg.period ? ` · ${cfg.period}` : ''}`;
 
     const qrImg = document.getElementById('checkoutEsewaQrImg');
-    const qrUrl = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.esewaQrUrl)
+    const rawQrUrl = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.esewaQrUrl)
         ? ACADEMY_STATE.siteSettings.esewaQrUrl
         : 'images/payment_qr.png';
+    const qrUrl = rawQrUrl.includes('payment_qr.png') && !rawQrUrl.includes('?')
+        ? `${rawQrUrl}?v=20261123`
+        : rawQrUrl;
     if (qrImg) {
         qrImg.src = qrUrl;
         qrImg.style.display = 'block';

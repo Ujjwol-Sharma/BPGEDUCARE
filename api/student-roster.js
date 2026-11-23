@@ -462,7 +462,11 @@ module.exports = async function studentRosterHandler(req, res) {
                 }
             } else if (payload.action === 'DELETE_STUDENT') {
                 const targetEmail = String(payload.email || payload.accountEmail || '').trim().toLowerCase();
-                roster.accounts = roster.accounts.filter(a => a.email !== targetEmail);
+                const targetCanonical = canonicalizeEmail(targetEmail);
+                roster.accounts = roster.accounts.filter(a => {
+                    const aEmail = String(a.email || '').trim().toLowerCase();
+                    return aEmail !== targetEmail && a.canonicalEmail !== targetCanonical;
+                });
             } else if (payload.action === 'APPROVE_CLASS_SWITCH' || payload.action === 'REJECT_CLASS_SWITCH') {
                 const reqId = String(payload.requestId || '').trim();
                 const adminNote = String(payload.adminNote || '').trim();

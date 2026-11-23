@@ -106,8 +106,11 @@ function deepMergeState(currentData, payload) {
 }
 
 function writeStateToDisk(updated) {
+    updated.revision = (Number(updated.revision) || Number(global.__BPG_ACADEMY_STATE__?.revision) || 1) + 1;
     global.__BPG_ACADEMY_STATE__ = updated;
     const serialized = JSON.stringify(updated, null, 2);
+
+    try { fs.writeFileSync(TMP_DB_PATH, serialized, 'utf8'); } catch (e) {}
 
     try {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -119,7 +122,6 @@ function writeStateToDisk(updated) {
     }
 
     try { fs.writeFileSync(LEGACY_CMS_PATH, serialized, 'utf8'); } catch (e) {}
-    try { fs.writeFileSync(TMP_DB_PATH, serialized, 'utf8'); } catch (e) {}
 }
 
 module.exports = function academyStateHandler(req, res) {
