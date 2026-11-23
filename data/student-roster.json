@@ -1,37 +1,6 @@
 {
   "lastUpdated": "2026-11-22T14:56:18.421Z",
-  "classSwitchRequests": [
-    {
-      "id": "csr_1795341224023_kzpc",
-      "studentName": "Rohan Sharma",
-      "email": "rohan.sharma@gmail.com",
-      "canonicalEmail": "rohansharma@gmail.com",
-      "currentClassKey": "class-11",
-      "currentGrade": "Class 11",
-      "requestedClassKey": "class-12",
-      "requestedGrade": "Class 12",
-      "reason": "E2E test",
-      "status": "approved",
-      "adminNote": "Approved in E2E",
-      "submittedAt": "2026-11-22T09:53:44.023Z",
-      "reviewedAt": "2026-11-22T09:53:44.025Z"
-    },
-    {
-      "id": "csr_1795341175817_njk5",
-      "studentName": "Rohan Sharma",
-      "email": "rohan.sharma@gmail.com",
-      "canonicalEmail": "rohansharma@gmail.com",
-      "currentClassKey": "class-11",
-      "currentGrade": "Class 11",
-      "requestedClassKey": "class-12",
-      "requestedGrade": "Class 12",
-      "reason": "E2E test",
-      "status": "approved",
-      "adminNote": "Approved in E2E",
-      "submittedAt": "2026-11-22T09:52:55.817Z",
-      "reviewedAt": "2026-11-22T09:52:55.819Z"
-    }
-  ],
+  "classSwitchRequests": [],
   "accounts": [
     {
       "name": "wedce",
@@ -225,5 +194,6 @@
       "passkey": "bpgstudent",
       "joinedAt": "2026-11-05"
     }
-  ]
+  ],
+  "revision": 2
 }

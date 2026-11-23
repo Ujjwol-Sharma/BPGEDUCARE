@@ -6,14 +6,14 @@ const fs = require('fs');
 const path = require('path');
 const { ROOT_DIR, MIME_TYPES, enhanceResponse } = require('./config');
 
-const sendEmailOtpHandler = require('../api/send-email-otp');
-const verifyOtpHandler = require('../api/verify-otp');
+const sendEmailOtpHandler = require('../api/_send-email-otp');
+const verifyOtpHandler = require('../api/_verify-otp');
 const academyStateHandler = require('../api/academy-state');
-const studentRosterHandler = require('../api/student-roster');
-const contentAccessHandler = require('../api/content-access');
-const mockTestsHandler = require('../api/mock-tests');
-const aiTutorHandler = require('../api/ai-tutor');
-const paymentsHandler = require('../api/payments');
+const studentRosterHandler = require('../api/_student-roster');
+const contentAccessHandler = require('../api/_content-access');
+const mockTestsHandler = require('../api/_mock-tests');
+const aiTutorHandler = require('../api/_ai-tutor');
+const paymentsHandler = require('../api/_payments');
 
 const API_ROUTES = {
     '/api/academy-state': academyStateHandler,

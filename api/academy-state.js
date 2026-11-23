@@ -124,20 +124,51 @@ function writeStateToDisk(updated) {
     try { fs.writeFileSync(LEGACY_CMS_PATH, serialized, 'utf8'); } catch (e) {}
 }
 
-module.exports = function academyStateHandler(req, res) {
+function ensureResHelpers(res) {
+    if (typeof res.status !== 'function') {
+        res.status = function (code) {
+            res.statusCode = code;
+            return res;
+        };
+    }
+    if (typeof res.json !== 'function') {
+        res.json = function (obj) {
+            if (!res.getHeader('Content-Type')) {
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            }
+            res.end(JSON.stringify(obj));
+            return res;
+        };
+    }
+    return res;
+}
+
+const SUB_ROUTE_MAP = {
+    'student-roster': './_student-roster',
+    'send-email-otp': './_send-email-otp',
+    'verify-otp': './_verify-otp',
+    'content-access': './_content-access',
+    'mock-tests': './_mock-tests',
+    'payments': './_payments',
+    'ai-tutor': './_ai-tutor'
+};
+
+async function academyStateHandler(req, res) {
+    ensureResHelpers(res);
+
     try {
         const parsedRouteUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
         const subRoute = parsedRouteUrl.searchParams.get('__route');
-        if (subRoute === 'content-access' || parsedRouteUrl.pathname === '/api/content-access') {
-            return require('./content-access')(req, res);
+        if (subRoute && SUB_ROUTE_MAP[subRoute]) {
+            return await require(SUB_ROUTE_MAP[subRoute])(req, res);
         }
-        if (subRoute === 'mock-tests' || parsedRouteUrl.pathname === '/api/mock-tests') {
-            return require('./mock-tests')(req, res);
+        const cleanPath = parsedRouteUrl.pathname.replace(/^\/api\//, '').replace(/\.js$/, '');
+        if (cleanPath && cleanPath !== 'academy-state' && SUB_ROUTE_MAP[cleanPath]) {
+            return await require(SUB_ROUTE_MAP[cleanPath])(req, res);
         }
-        if (subRoute === 'payments' || parsedRouteUrl.pathname === '/api/payments') {
-            return require('./payments')(req, res);
-        }
-    } catch (e) {}
+    } catch (e) {
+        console.error('[API Unified Router Dispatch Error]:', e);
+    }
 
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
     res.setHeader('Pragma', 'no-cache');
@@ -255,7 +286,8 @@ module.exports = function academyStateHandler(req, res) {
 
     res.statusCode = 405;
     res.end(JSON.stringify({ success: false, error: 'Method not allowed' }));
-};
+}
 
-module.exports.writeStateToDisk = writeStateToDisk;
-module.exports.deepMergeState = deepMergeState;
+academyStateHandler.writeStateToDisk = writeStateToDisk;
+academyStateHandler.deepMergeState = deepMergeState;
+module.exports = academyStateHandler;

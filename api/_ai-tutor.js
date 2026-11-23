@@ -1051,7 +1051,7 @@ module.exports = function aiTutorHandler(req, res) {
 
     try {
         const body = req.body || {};
-        const message = String(body.message || '').trim();
+        const message = String(body.message || body.question || body.query || '').trim();
         const history = Array.isArray(body.history) ? body.history : [];
         const context = body.context && typeof body.context === 'object' ? body.context : {};
 

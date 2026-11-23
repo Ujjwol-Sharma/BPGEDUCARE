@@ -181,7 +181,7 @@ module.exports = function contentAccessHandler(req, res) {
         const foundTopic = match.lesson;
 
         const pdfList = Array.isArray(foundTopic.pdfs) ? foundTopic.pdfs : [];
-        const foundPdf = pdfList.find(p => String(p.id) === pdfId);
+        const foundPdf = pdfList.find(p => String(p.id) === pdfId) || (pdfList.length === 1 ? pdfList[0] : null);
         if (!foundPdf) {
             res.statusCode = 404;
             res.end(JSON.stringify({ ok: false, code: 'NOT_FOUND', error: 'PDF not found for this lesson.' }));
@@ -241,7 +241,7 @@ module.exports = function contentAccessHandler(req, res) {
             return;
         }
         const videos = Array.isArray(match.lesson.videos) ? match.lesson.videos : [];
-        const foundVid = videos.find(v => String(v.id) === videoId);
+        const foundVid = videos.find(v => String(v.id) === videoId) || (videos.length === 1 ? videos[0] : null);
         if (!foundVid) {
             res.statusCode = 404;
             res.end(JSON.stringify({ ok: false, code: 'NOT_FOUND', error: 'Video not found for this lesson.' }));

@@ -27,50 +27,61 @@ const ATTEMPTS_PATH = path.join(DATA_DIR, 'mock-attempts.json');
 const TMP_ATTEMPTS_PATH = path.join(os.tmpdir(), 'bpg-mock-attempts.json');
 
 function readAttemptsStore() {
+    if (global.__BPG_MOCK_ATTEMPTS__ && Array.isArray(global.__BPG_MOCK_ATTEMPTS__.attempts)) {
+        return global.__BPG_MOCK_ATTEMPTS__;
+    }
     let store = null;
-    let newestTime = 0;
+    let bestRev = -1;
     for (const p of [TMP_ATTEMPTS_PATH, ATTEMPTS_PATH]) {
         try {
             if (fs.existsSync(p)) {
                 const parsed = JSON.parse(fs.readFileSync(p, 'utf8'));
                 if (parsed && Array.isArray(parsed.attempts)) {
-                    const t = parsed.lastUpdated ? Date.parse(parsed.lastUpdated) || 0 : 0;
-                    if (!store || t >= newestTime) {
+                    const rev = Number(parsed.revision) || (p === TMP_ATTEMPTS_PATH ? 1 : 0);
+                    if (!store || rev > bestRev) {
                         store = parsed;
-                        newestTime = t;
+                        bestRev = rev;
                     }
                 }
             }
         } catch (e) {}
     }
     if (!store) {
-        store = { lastUpdated: new Date().toISOString(), attempts: [] };
+        store = { revision: 1, lastUpdated: new Date().toISOString(), attempts: [] };
     }
+    store.revision = Number(store.revision) || 1;
+    global.__BPG_MOCK_ATTEMPTS__ = store;
     return store;
 }
 
 function writeAttemptsStore(store) {
+    const nextRevision = (Number(store?.revision) || Number(global.__BPG_MOCK_ATTEMPTS__?.revision) || 1) + 1;
     const clean = {
+        revision: nextRevision,
         lastUpdated: new Date().toISOString(),
         attempts: store.attempts || []
     };
+    global.__BPG_MOCK_ATTEMPTS__ = clean;
     const serialized = JSON.stringify(clean, null, 2);
+    try {
+        fs.writeFileSync(TMP_ATTEMPTS_PATH, serialized, 'utf8');
+    } catch (e) {}
     try {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
         const tmp = ATTEMPTS_PATH + '.tmp.' + Date.now();
         fs.writeFileSync(tmp, serialized, 'utf8');
         fs.renameSync(tmp, ATTEMPTS_PATH);
     } catch (e) {}
-    try {
-        fs.writeFileSync(TMP_ATTEMPTS_PATH, serialized, 'utf8');
-    } catch (e) {}
     return clean;
 }
 
 function persistMockTestsToAcademyState(state) {
+    state.revision = (Number(state.revision) || Number(global.__BPG_ACADEMY_STATE__?.revision) || 1) + 1;
     state.lastUpdated = new Date().toISOString();
+    delete state.adminPasskey;
     global.__BPG_ACADEMY_STATE__ = state;
     const serialized = JSON.stringify(state, null, 2);
+    try { fs.writeFileSync(TMP_DB_PATH, serialized, 'utf8'); } catch (e) {}
     try {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
         const tmp = DB_PATH + '.tmp.' + Date.now();
@@ -78,7 +89,6 @@ function persistMockTestsToAcademyState(state) {
         fs.renameSync(tmp, DB_PATH);
     } catch (e) {}
     try { fs.writeFileSync(LEGACY_CMS_PATH, serialized, 'utf8'); } catch (e) {}
-    try { fs.writeFileSync(TMP_DB_PATH, serialized, 'utf8'); } catch (e) {}
 }
 
 function stripAnswerKeyFromQuestions(questions) {

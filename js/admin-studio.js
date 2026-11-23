@@ -3159,12 +3159,18 @@ function renderPaymentsTab() {
                                     ${p.status === 'pending' ? `
                                         <div style="display:flex; flex-direction:column; gap:6px;">
                                             <input type="text" class="adm-input" id="payNote-${escapeHtml(p.id)}" placeholder="Verification note..." style="min-width:150px; padding:5px 8px; font-size:0.78rem;">
-                                            <div style="display:flex; gap:6px;">
+                                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
                                                 <button type="button" class="btn-adm-dark" style="padding:6px 10px; font-size:0.78rem;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', true)">Verify &amp; Activate</button>
                                                 <button type="button" class="btn-topbar" style="padding:6px 10px; font-size:0.78rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', false)">Reject</button>
+                                                <button type="button" class="btn-topbar danger" style="padding:6px 10px; font-size:0.78rem;" onclick="handleAdminDeletePayment('${escapeHtml(p.id)}')">Delete</button>
                                             </div>
                                         </div>
-                                    ` : `<small>${escapeHtml(p.adminNote || p.status)}</small>`}
+                                    ` : `
+                                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                            <small>${escapeHtml(p.adminNote || p.status)}</small>
+                                            <button type="button" class="btn-topbar danger" style="padding:4px 8px; font-size:0.74rem;" onclick="handleAdminDeletePayment('${escapeHtml(p.id)}')">Delete</button>
+                                        </div>
+                                    `}
                                 </td>
                             </tr>
                         `;
@@ -3173,6 +3179,27 @@ function renderPaymentsTab() {
             </table>
         </div>
     `;
+}
+
+async function handleAdminDeletePayment(paymentId) {
+    if (!confirm('Delete this payment record?')) return;
+    try {
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({
+                action: 'ADMIN_DELETE_PAYMENT',
+                paymentId
+            })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Delete failed');
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        showAdminToast('Payment record deleted.');
+        await loadAdminData();
+    } catch (err) {
+        showAdminToast(err.message || 'Could not delete payment.', 'error');
+    }
 }
 
 async function handleAdminPaymentDecision(paymentId, verify) {

@@ -263,6 +263,20 @@ module.exports = function paymentsHandler(req, res) {
     }
 
     const paymentId = String(body.paymentId || '').trim();
+
+    if (action === 'ADMIN_DELETE_PAYMENT') {
+        state.payments = state.payments.filter(p => p.id !== paymentId);
+        state.lastUpdated = new Date().toISOString();
+        writeStateToDisk(state);
+        res.statusCode = 200;
+        res.end(JSON.stringify({
+            ok: true,
+            message: 'Payment record deleted.',
+            payments: state.payments
+        }));
+        return;
+    }
+
     const payment = state.payments.find(p => p.id === paymentId);
     if (!payment) {
         res.statusCode = 404;
