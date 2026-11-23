@@ -895,19 +895,18 @@ function formatTeamBioHtml(rawBio) {
 
 function renderTeamCardHtml(member) {
     const safeName = escapeHtml(member.name || 'Team Member');
-    const safeRole = escapeHtml(member.role || 'Team Member');
-    const safeBioHtml = formatTeamBioHtml(member.bio || '');
+    const isFounder = String(member.slot || '').toLowerCase() === 'founder' || String(member.role || '').toLowerCase().includes('founder');
+    const safeRole = escapeHtml(member.role || 'Founder');
     const initial = escapeHtml((member.initial || (member.name || 'B').trim().charAt(0) || 'T').toUpperCase());
     const photoHtml = member.photoUrl
         ? `<img src="${escapeHtml(member.photoUrl)}" alt="${safeName}" class="team-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><span class="team-avatar-fallback" style="display:none;">${initial}</span>`
         : `<span class="team-avatar-fallback">${initial}</span>`;
 
     return `
-        <article class="team-profile-card ${member.slot === 'founder' ? 'is-founder-card' : ''}">
+        <article class="team-profile-card ${isFounder ? 'is-founder-card' : ''}">
             <div class="team-avatar-wrap">${photoHtml}</div>
-            <span class="team-role-badge">${safeRole}</span>
+            ${isFounder ? `<span class="team-role-badge">${safeRole}</span>` : ''}
             <h3 class="team-member-name">${safeName}</h3>
-            ${safeBioHtml ? `<p class="team-member-bio">${safeBioHtml}</p>` : ''}
         </article>
     `;
 }
