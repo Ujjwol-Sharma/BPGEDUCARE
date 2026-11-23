@@ -212,10 +212,15 @@ function renderNotesLessonsView(classKey, subject) {
             ${lessons.map((lesson, idx) => {
                 const pdfCount = (lesson.pdfs || []).length;
                 const vidCount = (lesson.videos || []).length;
+                const subTopics = Array.isArray(lesson.subTopics) ? lesson.subTopics : [];
                 const counts = [];
+                if (subTopics.length > 0) counts.push(`${subTopics.length} ${subTopics.length === 1 ? 'Sub-Topic' : 'Sub-Topics'}`);
                 if (pdfCount > 0) counts.push(`${pdfCount} ${pdfCount === 1 ? 'PDF' : 'PDFs'}`);
                 if (vidCount > 0) counts.push(`${vidCount} ${vidCount === 1 ? 'Video' : 'Videos'}`);
                 const countLabel = counts.length ? counts.join(' · ') : 'No uploads yet';
+                const subTopicsPreview = subTopics.length > 0
+                    ? `<div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:6px;">${subTopics.map(st => `<span style="font-size:0.73rem; padding:2px 8px; border-radius:999px; background:var(--bg-subtle, #f4f4f6); border:1px solid var(--border-subtle, #e4e4e7); color:var(--text-secondary);">${escapeHtml(st.title)}</span>`).join('')}</div>`
+                    : '';
 
                 return `
                     <button type="button" class="notes-lesson-row" onclick="openNotesLesson('${escapeHtml(classKey)}', '${escapeHtml(subject.id)}', '${escapeHtml(lesson.id)}')">
@@ -224,6 +229,7 @@ function renderNotesLessonsView(classKey, subject) {
                             <div class="notes-lesson-text">
                                 <span class="notes-lesson-code">${escapeHtml(lesson.code || `Lesson ${idx + 1}`)}</span>
                                 <h3>${escapeHtml(lesson.title || `Lesson ${idx + 1}`)}</h3>
+                                ${subTopicsPreview}
                             </div>
                         </div>
                         <div class="notes-lesson-right">
@@ -262,9 +268,12 @@ async function openNotesLesson(classKey, subjectId, lessonId) {
             const localPdfs = Array.isArray(localLesson?.pdfs) ? localLesson.pdfs : [];
             const remoteVids = Array.isArray(payload.lesson.videos) ? payload.lesson.videos : [];
             const localVids = Array.isArray(localLesson?.videos) ? localLesson.videos : [];
+            const remoteSubTopics = Array.isArray(payload.lesson.subTopics) ? payload.lesson.subTopics : [];
+            const localSubTopics = Array.isArray(localLesson?.subTopics) ? localLesson.subTopics : [];
             verifiedLesson = {
                 ...localLesson,
                 ...payload.lesson,
+                subTopics: remoteSubTopics.length >= localSubTopics.length ? remoteSubTopics : localSubTopics,
                 pdfs: remotePdfs.length >= localPdfs.length ? remotePdfs : localPdfs,
                 videos: remoteVids.length >= localVids.length ? remoteVids : localVids
             };
@@ -282,10 +291,53 @@ function backToNotesLessonList(classKey) {
     renderNotesLessonsView(classKey, subject);
 }
 
+let selectedSubTopicByLesson = {};
+
+function selectLessonSubTopicFilter(classKey, lessonId, subTopicId) {
+    selectedSubTopicByLesson[`${classKey}|${lessonId}`] = subTopicId || 'all';
+    const notesBox = document.getElementById(`notesContainer-${classKey}`);
+    const subject = getActiveSubjectForClass(classKey);
+    const lesson = (subject.lessons || []).find(l => l.id === lessonId);
+    if (notesBox && lesson) {
+        renderSelectedLessonContent(notesBox, classKey, subject, lesson);
+    }
+}
+
 function renderSelectedLessonContent(notesBox, classKey, subject, lesson) {
-    const pdfs = Array.isArray(lesson.pdfs) ? lesson.pdfs : [];
-    const videos = Array.isArray(lesson.videos) ? lesson.videos : [];
+    const allPdfs = Array.isArray(lesson.pdfs) ? lesson.pdfs : [];
+    const allVideos = Array.isArray(lesson.videos) ? lesson.videos : [];
+    const subTopics = Array.isArray(lesson.subTopics) ? lesson.subTopics : [];
+    const filterKey = `${classKey}|${lesson.id}`;
+    const activeStFilter = selectedSubTopicByLesson[filterKey] || 'all';
+
+    const pdfs = activeStFilter === 'all'
+        ? allPdfs
+        : allPdfs.filter(p => (p.subTopicId || '') === activeStFilter);
+    const videos = activeStFilter === 'all'
+        ? allVideos
+        : allVideos.filter(v => (v.subTopicId || '') === activeStFilter);
     const hasContent = pdfs.length > 0 || videos.length > 0;
+
+    const subTopicFilterBarHtml = subTopics.length > 0 ? `
+        <div style="margin-bottom:20px; padding:12px 14px; border-radius:12px; background:var(--bg-subtle, #f4f4f6); border:1px solid var(--border-subtle, #e4e4e7);">
+            <div style="font-size:0.74rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-secondary); margin-bottom:8px;">
+                Sub-Topics in ${escapeHtml(lesson.title || 'Unit')}
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                <button type="button" class="subject-pill-btn ${activeStFilter === 'all' ? 'active' : ''}" style="padding:6px 12px; font-size:0.82rem;" onclick="selectLessonSubTopicFilter('${escapeHtml(classKey)}', '${escapeHtml(lesson.id)}', 'all')">
+                    All (${allPdfs.length + allVideos.length})
+                </button>
+                ${subTopics.map(st => {
+                    const count = allPdfs.filter(p => p.subTopicId === st.id).length + allVideos.filter(v => v.subTopicId === st.id).length;
+                    return `
+                        <button type="button" class="subject-pill-btn ${activeStFilter === st.id ? 'active' : ''}" style="padding:6px 12px; font-size:0.82rem;" onclick="selectLessonSubTopicFilter('${escapeHtml(classKey)}', '${escapeHtml(lesson.id)}', '${escapeHtml(st.id)}')">
+                            ${escapeHtml(st.title)} (${count})
+                        </button>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    ` : '';
 
     let bodyHtml = '';
     if (!hasContent) {
@@ -322,6 +374,7 @@ function renderSelectedLessonContent(notesBox, classKey, subject, lesson) {
                                 </div>
                                 <div class="media-card-caption">
                                     <span class="media-card-title">${safeTitle}</span>
+                                    ${pdf.subTopicTitle ? `<span style="display:block; font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">${escapeHtml(pdf.subTopicTitle)}</span>` : ''}
                                 </div>
                             </div>
                         `;
@@ -357,6 +410,7 @@ function renderSelectedLessonContent(notesBox, classKey, subject, lesson) {
                                 </div>
                                 <div class="media-card-caption">
                                     <span class="media-card-title">${safeTitle}</span>
+                                    ${pdf.subTopicTitle ? `<span style="display:block; font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">${escapeHtml(pdf.subTopicTitle)}</span>` : ''}
                                 </div>
                             </div>
                         `;
@@ -379,6 +433,7 @@ function renderSelectedLessonContent(notesBox, classKey, subject, lesson) {
                     <h2>${escapeHtml(lesson.title || '')}</h2>
                 </div>
             </div>
+            ${subTopicFilterBarHtml}
             ${bodyHtml}
         </div>
     `;

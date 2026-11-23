@@ -125,6 +125,10 @@ module.exports = function contentAccessHandler(req, res) {
             return;
         }
         const { subject, lesson } = match;
+        const subTopics = (Array.isArray(lesson.subTopics) ? lesson.subTopics : []).map(st => ({
+            id: st.id,
+            title: st.title || ''
+        }));
         const pdfs = (Array.isArray(lesson.pdfs) ? lesson.pdfs : []).map(pdf => {
             const check = isAdmin ? { allowed: true } : evaluateItemAccess(user, classKey, pdf, state);
             return {
@@ -132,9 +136,12 @@ module.exports = function contentAccessHandler(req, res) {
                 title: pdf.title || pdf.fileName || 'PDF Document',
                 fileName: pdf.fileName || '',
                 coverImage: pdf.coverImage || '',
+                subTopicId: pdf.subTopicId || '',
+                subTopicTitle: pdf.subTopicTitle || '',
                 minPlan: normalizePlan(pdf.minPlan || 'free'),
                 restricted: !check.allowed,
-                hasFile: Boolean(pdf.fileUrl)
+                hasFile: Boolean(pdf.fileUrl),
+                fileUrl: check.allowed ? (pdf.fileUrl || '') : ''
             };
         });
         const videos = (Array.isArray(lesson.videos) ? lesson.videos : []).map(vid => {
@@ -143,9 +150,12 @@ module.exports = function contentAccessHandler(req, res) {
                 id: vid.id,
                 title: vid.title || 'Lesson Video',
                 thumbnailUrl: vid.thumbnailUrl || '',
+                subTopicId: vid.subTopicId || '',
+                subTopicTitle: vid.subTopicTitle || '',
                 minPlan: normalizePlan(vid.minPlan || 'free'),
                 restricted: !check.allowed,
-                hasVideo: Boolean(vid.videoUrl)
+                hasVideo: Boolean(vid.videoUrl),
+                videoUrl: check.allowed ? (vid.videoUrl || '') : ''
             };
         });
         res.statusCode = 200;
@@ -158,6 +168,7 @@ module.exports = function contentAccessHandler(req, res) {
                 id: lesson.id,
                 code: lesson.code || '',
                 title: lesson.title || '',
+                subTopics,
                 pdfs,
                 videos
             }

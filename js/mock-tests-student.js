@@ -290,6 +290,34 @@ function startMockCountdownLoop() {
     mockCountdownInterval = setInterval(tick, 500);
 }
 
+function formatMockMathHtml(rawText) {
+    if (!rawText) return '';
+    const str = String(rawText).trim();
+    const hasDelimiters = /(\$\$[\s\S]+?\$\$|\$[^$]+?\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/.test(str);
+    const hasLatexCmd = /\\(frac|dfrac|sqrt|int|sum|prod|lim|sin|cos|tan|cot|sec|csc|log|ln|alpha|beta|gamma|theta|pi|infty|pm|mp|le|leq|ge|geq|neq|approx|equiv|in|notin|subset|subseteq|cup|cap|emptyset|forall|exists|Rightarrow|Leftrightarrow|vec|hat|overline|overrightarrow|binom|begin\{|mathbb)/i.test(str);
+    if (!hasDelimiters && hasLatexCmd && window.katex) {
+        try {
+            return window.katex.renderToString(str, { throwOnError: false, displayMode: false });
+        } catch (e) {}
+    }
+    return escapeHtml(str).replace(/\n/g, '<br>');
+}
+
+function hydrateMockTestMath(containerEl) {
+    if (!containerEl || !window.renderMathInElement) return;
+    try {
+        window.renderMathInElement(containerEl, {
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            throwOnError: false
+        });
+    } catch (e) {}
+}
+
 function renderActiveMockTestRunner(container) {
     if (!activeMockSession) return;
     const { test, attempt, currentIndex } = activeMockSession;
@@ -343,7 +371,7 @@ function renderActiveMockTestRunner(container) {
             <div class="mock-question-card">
                 <div class="mock-question-text">
                     <span class="mock-q-badge">Q${idx + 1}</span>
-                    <p>${escapeHtml(q.text || '')}</p>
+                    <p>${formatMockMathHtml(q.text || '')}</p>
                 </div>
 
                 <div class="mock-options-list" role="radiogroup" aria-label="Answer options">
@@ -354,7 +382,7 @@ function renderActiveMockTestRunner(container) {
                                     role="radio" aria-checked="${isPicked ? 'true' : 'false'}"
                                     onclick="selectMockAnswer('${escapeHtml(q.id)}', '${letter}')">
                                 <span class="mock-opt-letter">${letter}</span>
-                                <span class="mock-opt-text">${escapeHtml(q.options?.[letter] || '')}</span>
+                                <span class="mock-opt-text">${formatMockMathHtml(q.options?.[letter] || '')}</span>
                             </button>
                         `;
                     }).join('')}
@@ -385,6 +413,7 @@ function renderActiveMockTestRunner(container) {
             </div>
         </div>
     `;
+    hydrateMockTestMath(container);
 }
 
 function jumpToMockQuestion(newIndex) {
@@ -545,7 +574,7 @@ function renderMockTestResultView(container, state) {
                                 <span class="mock-q-badge">Q${idx + 1}</span>
                                 <span class="mock-review-status ${item.status}">${statusLabel}</span>
                             </div>
-                            <p class="mock-review-qtext">${escapeHtml(item.text || '')}</p>
+                            <p class="mock-review-qtext">${formatMockMathHtml(item.text || '')}</p>
                             <div class="mock-review-options">
                                 ${['A', 'B', 'C', 'D'].map(letter => {
                                     const isCorrect = item.correctOption === letter;
@@ -556,7 +585,7 @@ function renderMockTestResultView(container, state) {
                                     return `
                                         <div class="mock-review-opt ${cls}">
                                             <span class="mock-opt-letter">${letter}</span>
-                                            <span>${escapeHtml(item.options?.[letter] || '')}</span>
+                                            <span>${formatMockMathHtml(item.options?.[letter] || '')}</span>
                                             ${isCorrect ? '<span class="mock-opt-tag correct-tag">Correct Answer</span>' : ''}
                                             ${isChosen && !isCorrect ? '<span class="mock-opt-tag wrong-tag">Your Answer</span>' : ''}
                                         </div>
@@ -569,6 +598,7 @@ function renderMockTestResultView(container, state) {
             </div>
         </div>
     `;
+    hydrateMockTestMath(container);
 }
 
 function exitMockTestResults(classKey) {

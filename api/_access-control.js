@@ -1209,6 +1209,10 @@ function sanitizeStateForStudent(rawState, user) {
                 title: l.title || '',
                 hours: l.hours || '',
                 marks: l.marks || '',
+                subTopics: (Array.isArray(l.subTopics) ? l.subTopics : []).map(st => ({
+                    id: st.id,
+                    title: st.title || ''
+                })),
                 pdfs: (Array.isArray(l.pdfs) ? l.pdfs : []).map(pdf => {
                     const check = evaluateItemAccess(user, classKey, pdf, clone);
                     return {
@@ -1216,6 +1220,8 @@ function sanitizeStateForStudent(rawState, user) {
                         title: pdf.title || pdf.fileName || 'PDF Document',
                         fileName: pdf.fileName || '',
                         coverImage: pdf.coverImage || '',
+                        subTopicId: pdf.subTopicId || '',
+                        subTopicTitle: pdf.subTopicTitle || '',
                         minPlan: normalizePlan(pdf.minPlan || 'free'),
                         uploadedAt: pdf.uploadedAt || '',
                         restricted: !check.allowed,
@@ -1229,6 +1235,8 @@ function sanitizeStateForStudent(rawState, user) {
                         id: vid.id,
                         title: vid.title || 'Lesson Video',
                         thumbnailUrl: vid.thumbnailUrl || '',
+                        subTopicId: vid.subTopicId || '',
+                        subTopicTitle: vid.subTopicTitle || '',
                         minPlan: normalizePlan(vid.minPlan || 'free'),
                         uploadedAt: vid.uploadedAt || '',
                         restricted: !check.allowed,

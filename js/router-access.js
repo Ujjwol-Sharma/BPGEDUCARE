@@ -486,7 +486,7 @@ function openCheckoutModal(planId = 'gold') {
         ? ACADEMY_STATE.siteSettings.esewaQrUrl
         : 'images/payment_qr.png';
     const qrUrl = rawQrUrl.includes('payment_qr.png') && !rawQrUrl.includes('?')
-        ? `${rawQrUrl}?v=20261123`
+        ? `${rawQrUrl}?v=20261123qr2`
         : rawQrUrl;
     if (qrImg) {
         qrImg.src = qrUrl;

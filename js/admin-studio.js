@@ -932,6 +932,7 @@ function renderContentTab() {
                 const isRenaming = renamingLessonKey === key;
                 const pdfs = Array.isArray(lesson.pdfs) ? lesson.pdfs : [];
                 const videos = Array.isArray(lesson.videos) ? lesson.videos : [];
+                const subTopics = Array.isArray(lesson.subTopics) ? lesson.subTopics : [];
                 const safeSubjId = escapeHtml(activeSubject.id);
                 const safeLessonId = escapeHtml(lesson.id);
 
@@ -949,9 +950,12 @@ function renderContentTab() {
                                 <div class="adm-lesson-meta">
                                     <span class="adm-lesson-num-tag">${escapeHtml(lesson.code || `Lesson ${idx + 1}`)}</span>
                                     <span class="adm-lesson-title">${escapeHtml(lesson.title || `Lesson ${idx + 1}`)}</span>
-                                    <span class="adm-lesson-counts">${pdfs.length} ${pdfs.length === 1 ? 'PDF' : 'PDFs'} &middot; ${videos.length} ${videos.length === 1 ? 'Video' : 'Videos'}</span>
+                                    <span class="adm-lesson-counts">${subTopics.length} ${subTopics.length === 1 ? 'Sub-Topic' : 'Sub-Topics'} &middot; ${pdfs.length} ${pdfs.length === 1 ? 'PDF' : 'PDFs'} &middot; ${videos.length} ${videos.length === 1 ? 'Video' : 'Videos'}</span>
                                 </div>
                                 <div class="adm-lesson-actions">
+                                    <button type="button" class="btn-lesson-action ${openForm === 'subtopic' ? 'active' : ''}" onclick="toggleLessonForm('${activeContentClass}', '${safeSubjId}', '${safeLessonId}', 'subtopic')">
+                                        <i class="fa-solid fa-sitemap" aria-hidden="true"></i> + Sub-Topic
+                                    </button>
                                     <button type="button" class="btn-lesson-action ${openForm === 'pdf' ? 'active' : ''}" onclick="toggleLessonForm('${activeContentClass}', '${safeSubjId}', '${safeLessonId}', 'pdf')">
                                         <i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i> Upload PDF
                                     </button>
@@ -968,6 +972,8 @@ function renderContentTab() {
                             `}
                         </div>
 
+                        ${subTopics.length > 0 ? renderUnitSubTopicsBar(activeContentClass, activeSubject.id, lesson) : ''}
+                        ${openForm === 'subtopic' ? renderInlineSubTopicForm(activeContentClass, activeSubject.id, lesson) : ''}
                         ${openForm === 'pdf' ? renderInlinePdfForm(activeContentClass, activeSubject.id, lesson) : ''}
                         ${openForm === 'video' ? renderInlineVideoForm(activeContentClass, activeSubject.id, lesson) : ''}
 
@@ -979,10 +985,149 @@ function renderContentTab() {
     `;
 }
 
+let preselectedSubTopicByLesson = {};
+
+function renderUnitSubTopicsBar(classKey, subjectId, lesson) {
+    const safeSubjId = escapeHtml(subjectId);
+    const safeLessonId = escapeHtml(lesson.id);
+    const subTopics = Array.isArray(lesson.subTopics) ? lesson.subTopics : [];
+    const pdfs = Array.isArray(lesson.pdfs) ? lesson.pdfs : [];
+    const videos = Array.isArray(lesson.videos) ? lesson.videos : [];
+
+    return `
+        <div style="padding:10px 14px; border-top:1px solid var(--adm-border); background:var(--adm-bg-subtle); display:flex; flex-direction:column; gap:8px;">
+            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--adm-text-muted);">
+                Sub-Topics in ${escapeHtml(lesson.title)} (${subTopics.length})
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                ${subTopics.map(st => {
+                    const stId = escapeHtml(st.id);
+                    const stPdfs = pdfs.filter(p => p.subTopicId === st.id).length;
+                    const stVids = videos.filter(v => v.subTopicId === st.id).length;
+                    return `
+                        <div style="display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:8px; background:var(--adm-surface); border:1px solid var(--adm-border); font-size:0.82rem;">
+                            <strong>${escapeHtml(st.title)}</strong>
+                            <span style="font-size:0.74rem; color:var(--adm-text-muted);">(${stPdfs} PDF, ${stVids} Vid)</span>
+                            <button type="button" class="btn-topbar" style="padding:2px 6px; font-size:0.7rem;" title="Upload PDF to this Sub-Topic" onclick="openLessonUploadForSubTopic('${classKey}', '${safeSubjId}', '${safeLessonId}', '${stId}', 'pdf')">+ PDF</button>
+                            <button type="button" class="btn-topbar" style="padding:2px 6px; font-size:0.7rem;" title="Add Video to this Sub-Topic" onclick="openLessonUploadForSubTopic('${classKey}', '${safeSubjId}', '${safeLessonId}', '${stId}', 'video')">+ Video</button>
+                            <button type="button" class="btn-topbar" style="padding:2px 6px; font-size:0.7rem;" title="Rename Sub-Topic" onclick="promptRenameSubTopic('${classKey}', '${safeSubjId}', '${safeLessonId}', '${stId}')">Edit</button>
+                            <button type="button" class="btn-topbar danger" style="padding:2px 6px; font-size:0.7rem;" title="Delete Sub-Topic" onclick="deleteUnitSubTopic('${classKey}', '${safeSubjId}', '${safeLessonId}', '${stId}')">&times;</button>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function renderInlineSubTopicForm(classKey, subjectId, lesson) {
+    const safeSubjId = escapeHtml(subjectId);
+    const safeLessonId = escapeHtml(lesson.id);
+    const prefix = `st_${classKey}_${subjectId}_${lesson.id}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+    return `
+        <div class="adm-inline-drawer">
+            <div class="adm-drawer-head">
+                <strong>Add Sub-Topic under: ${escapeHtml(lesson.code ? lesson.code + ' — ' : '')}${escapeHtml(lesson.title)}</strong>
+                <button type="button" class="adm-close-mini" onclick="toggleLessonForm('${classKey}', '${safeSubjId}', '${safeLessonId}', 'subtopic')">&times;</button>
+            </div>
+            <form class="adm-drawer-form" onsubmit="handleAddUnitSubTopic(event, '${classKey}', '${safeSubjId}', '${safeLessonId}', '${prefix}')">
+                <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:240px;">
+                        <label class="adm-label" for="subTopicTitle_${prefix}">Sub-Topic Title (e.g. 1.1 Permutation &amp; Combination, 1.2 Binomial Theorem)</label>
+                        <input type="text" id="subTopicTitle_${prefix}" class="adm-input" placeholder="Enter sub-topic name..." required>
+                    </div>
+                    <button type="submit" class="btn-adm-dark" style="padding:9px 16px;">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> Add Sub-Topic
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
+}
+
+function openLessonUploadForSubTopic(classKey, subjectId, lessonId, subTopicId, formType) {
+    const key = lessonFormKey(classKey, subjectId, lessonId);
+    preselectedSubTopicByLesson[key] = subTopicId;
+    openLessonForms[key] = formType;
+    renderContentTab();
+}
+
+async function handleAddUnitSubTopic(e, classKey, subjectId, lessonId, prefix) {
+    e.preventDefault();
+    const input = document.getElementById(`subTopicTitle_${prefix}`);
+    const title = (input?.value || '').trim();
+    if (!title) return;
+
+    const subjects = JSON.parse(JSON.stringify(getAdminSubjects(classKey)));
+    const subj = subjects.find(s => s.id === subjectId);
+    const lesson = (subj?.lessons || []).find(l => l.id === lessonId);
+    if (!lesson) return;
+    if (!Array.isArray(lesson.subTopics)) lesson.subTopics = [];
+
+    const newSt = {
+        id: `sub_${Date.now()}_${lesson.subTopics.length + 1}`,
+        title
+    };
+    lesson.subTopics.push(newSt);
+    preselectedSubTopicByLesson[lessonFormKey(classKey, subjectId, lessonId)] = newSt.id;
+    delete openLessonForms[lessonFormKey(classKey, subjectId, lessonId)];
+    await persistAcademyState({ portals: { [classKey]: { subjects } } }, `Sub-topic "${title}" added to ${lesson.title}.`);
+}
+
+async function promptRenameSubTopic(classKey, subjectId, lessonId, subTopicId) {
+    const subjects = JSON.parse(JSON.stringify(getAdminSubjects(classKey)));
+    const subj = subjects.find(s => s.id === subjectId);
+    const lesson = (subj?.lessons || []).find(l => l.id === lessonId);
+    if (!lesson || !Array.isArray(lesson.subTopics)) return;
+    const st = lesson.subTopics.find(x => x.id === subTopicId);
+    if (!st) return;
+    const nextTitle = prompt('Rename Sub-Topic:', st.title || '');
+    if (!nextTitle || !nextTitle.trim()) return;
+    st.title = nextTitle.trim();
+    (lesson.pdfs || []).forEach(p => { if (p.subTopicId === subTopicId) p.subTopicTitle = st.title; });
+    (lesson.videos || []).forEach(v => { if (v.subTopicId === subTopicId) v.subTopicTitle = st.title; });
+    await persistAcademyState({ portals: { [classKey]: { subjects } } }, 'Sub-topic renamed.');
+}
+
+async function deleteUnitSubTopic(classKey, subjectId, lessonId, subTopicId) {
+    const subjects = JSON.parse(JSON.stringify(getAdminSubjects(classKey)));
+    const subj = subjects.find(s => s.id === subjectId);
+    const lesson = (subj?.lessons || []).find(l => l.id === lessonId);
+    if (!lesson || !Array.isArray(lesson.subTopics)) return;
+    const st = lesson.subTopics.find(x => x.id === subTopicId);
+    if (!st) return;
+    if (!confirm(`Delete sub-topic "${st.title}"? Any PDFs or videos inside it will be kept under the main unit.`)) return;
+    lesson.subTopics = lesson.subTopics.filter(x => x.id !== subTopicId);
+    (lesson.pdfs || []).forEach(p => {
+        if (p.subTopicId === subTopicId) { p.subTopicId = ''; p.subTopicTitle = ''; }
+    });
+    (lesson.videos || []).forEach(v => {
+        if (v.subTopicId === subTopicId) { v.subTopicId = ''; v.subTopicTitle = ''; }
+    });
+    await persistAcademyState({ portals: { [classKey]: { subjects } } }, 'Sub-topic removed.');
+}
+
+async function updateLessonItemSubTopic(classKey, subjectId, lessonId, itemType, itemId, newSubTopicId) {
+    const subjects = JSON.parse(JSON.stringify(getAdminSubjects(classKey)));
+    const subj = subjects.find(s => s.id === subjectId);
+    const lesson = (subj?.lessons || []).find(l => l.id === lessonId);
+    if (!lesson) return;
+    const list = itemType === 'video' ? (lesson.videos || []) : (lesson.pdfs || []);
+    const item = list.find(x => x.id === itemId);
+    if (!item) return;
+    const st = (lesson.subTopics || []).find(x => x.id === newSubTopicId);
+    item.subTopicId = st ? st.id : '';
+    item.subTopicTitle = st ? st.title : '';
+    await persistAcademyState({ portals: { [classKey]: { subjects } } }, 'Updated sub-topic assignment.');
+}
+
 function renderInlinePdfForm(classKey, subjectId, lesson) {
     const safeSubjId = escapeHtml(subjectId);
     const safeLessonId = escapeHtml(lesson.id);
     const prefix = `${classKey}_${subjectId}_${lesson.id}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+    const subTopics = Array.isArray(lesson.subTopics) ? lesson.subTopics : [];
+    const preselectedSt = preselectedSubTopicByLesson[lessonFormKey(classKey, subjectId, lesson.id)] || '';
 
     return `
         <div class="adm-inline-drawer">
@@ -999,6 +1144,13 @@ function renderInlinePdfForm(classKey, subjectId, lesson) {
                     <div>
                         <label class="adm-label" for="pdfTitle_${prefix}">Title (optional)</label>
                         <input type="text" id="pdfTitle_${prefix}" class="adm-input" placeholder="Uses file name if blank">
+                    </div>
+                    <div>
+                        <label class="adm-label" for="pdfSubTopic_${prefix}">Sub-Topic (optional)</label>
+                        <select id="pdfSubTopic_${prefix}" class="adm-select">
+                            <option value="">General (${escapeHtml(lesson.title)})</option>
+                            ${subTopics.map(st => `<option value="${escapeHtml(st.id)}" ${st.id === preselectedSt ? 'selected' : ''}>${escapeHtml(st.title)}</option>`).join('')}
+                        </select>
                     </div>
                     <div>
                         <label class="adm-label" for="pdfPlan_${prefix}">Minimum Plan</label>
@@ -1024,6 +1176,8 @@ function renderInlineVideoForm(classKey, subjectId, lesson) {
     const safeLessonId = escapeHtml(lesson.id);
     const prefix = `${classKey}_${subjectId}_${lesson.id}`.replace(/[^a-zA-Z0-9_-]/g, '_');
     const previewUrl = pendingVideoThumbDataUrl[prefix] || '';
+    const subTopics = Array.isArray(lesson.subTopics) ? lesson.subTopics : [];
+    const preselectedSt = preselectedSubTopicByLesson[lessonFormKey(classKey, subjectId, lesson.id)] || '';
 
     return `
         <div class="adm-inline-drawer">
@@ -1040,6 +1194,13 @@ function renderInlineVideoForm(classKey, subjectId, lesson) {
                     <div>
                         <label class="adm-label" for="vidUrl_${prefix}">Video Link (YouTube, Vimeo, or MP4)</label>
                         <input type="url" id="vidUrl_${prefix}" class="adm-input" placeholder="https://youtube.com/watch?v=..." required>
+                    </div>
+                    <div>
+                        <label class="adm-label" for="vidSubTopic_${prefix}">Sub-Topic (optional)</label>
+                        <select id="vidSubTopic_${prefix}" class="adm-select">
+                            <option value="">General (${escapeHtml(lesson.title)})</option>
+                            ${subTopics.map(st => `<option value="${escapeHtml(st.id)}" ${st.id === preselectedSt ? 'selected' : ''}>${escapeHtml(st.title)}</option>`).join('')}
+                        </select>
                     </div>
                     <div>
                         <label class="adm-label" for="vidPlan_${prefix}">Minimum Plan</label>
@@ -1072,12 +1233,16 @@ function renderInlineVideoForm(classKey, subjectId, lesson) {
 function renderExistingLessonUploads(classKey, subjectId, lesson, pdfs, videos) {
     const safeSubjId = escapeHtml(subjectId);
     const safeLessonId = escapeHtml(lesson.id);
+    const subTopics = Array.isArray(lesson.subTopics) ? lesson.subTopics : [];
 
     return `
         <div class="adm-existing-uploads">
             ${pdfs.map(pdf => {
                 const pid = escapeHtml(pdf.id);
                 const mp = (pdf.minPlan || 'free').toLowerCase();
+                const curStId = pdf.subTopicId || '';
+                const curStObj = subTopics.find(x => x.id === curStId);
+                const stBadge = curStObj ? curStObj.title : (pdf.subTopicTitle || '');
                 return `
                     <div class="adm-upload-item">
                         <div class="adm-upload-left">
@@ -1086,10 +1251,16 @@ function renderExistingLessonUploads(classKey, subjectId, lesson, pdfs, videos) 
                             </div>
                             <div>
                                 <div class="adm-upload-title">${escapeHtml(pdf.title || pdf.fileName || 'PDF')}</div>
-                                <div class="adm-upload-sub">PDF</div>
+                                <div class="adm-upload-sub">PDF${stBadge ? ` &middot; <strong>${escapeHtml(stBadge)}</strong>` : ''}</div>
                             </div>
                         </div>
                         <div class="adm-upload-controls">
+                            ${subTopics.length > 0 ? `
+                                <select class="adm-select compact" title="Assign Sub-Topic" onchange="updateLessonItemSubTopic('${classKey}', '${safeSubjId}', '${safeLessonId}', 'pdf', '${pid}', this.value)">
+                                    <option value="">General Unit</option>
+                                    ${subTopics.map(st => `<option value="${escapeHtml(st.id)}" ${st.id === curStId ? 'selected' : ''}>${escapeHtml(st.title)}</option>`).join('')}
+                                </select>
+                            ` : ''}
                             <select class="adm-select compact" onchange="updateLessonItemPlan('${classKey}', '${safeSubjId}', '${safeLessonId}', 'pdf', '${pid}', this.value)">
                                 <option value="free" ${mp === 'free' ? 'selected' : ''}>Free</option>
                                 <option value="gold" ${mp === 'gold' ? 'selected' : ''}>Gold</option>
@@ -1105,6 +1276,9 @@ function renderExistingLessonUploads(classKey, subjectId, lesson, pdfs, videos) 
             ${videos.map(vid => {
                 const vidId = escapeHtml(vid.id);
                 const mp = (vid.minPlan || 'free').toLowerCase();
+                const curStId = vid.subTopicId || '';
+                const curStObj = subTopics.find(x => x.id === curStId);
+                const stBadge = curStObj ? curStObj.title : (vid.subTopicTitle || '');
                 const inputId = `replaceThumb_${vidId.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
                 return `
                     <div class="adm-upload-item">
@@ -1114,10 +1288,16 @@ function renderExistingLessonUploads(classKey, subjectId, lesson, pdfs, videos) 
                             </div>
                             <div>
                                 <div class="adm-upload-title">${escapeHtml(vid.title || 'Video')}</div>
-                                <div class="adm-upload-sub">Video</div>
+                                <div class="adm-upload-sub">Video${stBadge ? ` &middot; <strong>${escapeHtml(stBadge)}</strong>` : ''}</div>
                             </div>
                         </div>
                         <div class="adm-upload-controls">
+                            ${subTopics.length > 0 ? `
+                                <select class="adm-select compact" title="Assign Sub-Topic" onchange="updateLessonItemSubTopic('${classKey}', '${safeSubjId}', '${safeLessonId}', 'video', '${vidId}', this.value)">
+                                    <option value="">General Unit</option>
+                                    ${subTopics.map(st => `<option value="${escapeHtml(st.id)}" ${st.id === curStId ? 'selected' : ''}>${escapeHtml(st.title)}</option>`).join('')}
+                                </select>
+                            ` : ''}
                             <input type="file" id="${inputId}" accept="image/*" style="display:none;" onchange="handleReplaceVideoThumbnail(this, '${classKey}', '${safeSubjId}', '${safeLessonId}', '${vidId}')">
                             <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.76rem;" onclick="document.getElementById('${inputId}').click()">Replace Thumbnail</button>
                             <select class="adm-select compact" onchange="updateLessonItemPlan('${classKey}', '${safeSubjId}', '${safeLessonId}', 'video', '${vidId}', this.value)">
@@ -1218,6 +1398,9 @@ async function handleUploadLessonPdfs(e, classKey, subjectId, lessonId, prefix) 
 
     const customTitle = (titleInput?.value || '').trim();
     const minPlan = planSelect?.value || 'free';
+    const subTopicId = document.getElementById(`pdfSubTopic_${prefix}`)?.value || '';
+    const subTopicObj = (lesson.subTopics || []).find(st => st.id === subTopicId);
+    const subTopicTitle = subTopicObj ? subTopicObj.title : '';
 
     setSaveStatus('Uploading PDF...');
     try {
@@ -1234,6 +1417,8 @@ async function handleUploadLessonPdfs(e, classKey, subjectId, lessonId, prefix) 
                 fileName: file.name,
                 fileUrl: dataUrl,
                 coverImage,
+                subTopicId,
+                subTopicTitle,
                 minPlan,
                 adminAssignedPlan: true,
                 uploadedAt: new Date().toISOString().split('T')[0]
@@ -1266,12 +1451,17 @@ async function handleAddLessonVideo(e, classKey, subjectId, lessonId, prefix) {
     const lesson = (subj?.lessons || []).find(l => l.id === lessonId);
     if (!lesson) return;
     lesson.videos = Array.isArray(lesson.videos) ? lesson.videos : [];
+    const subTopicId = document.getElementById(`vidSubTopic_${prefix}`)?.value || '';
+    const subTopicObj = (lesson.subTopics || []).find(st => st.id === subTopicId);
+    const subTopicTitle = subTopicObj ? subTopicObj.title : '';
 
     lesson.videos.push({
         id: `lvid_${Date.now()}`,
         title,
         videoUrl,
         thumbnailUrl,
+        subTopicId,
+        subTopicTitle,
         minPlan,
         adminAssignedPlan: true,
         uploadedAt: new Date().toISOString().split('T')[0]
@@ -1896,6 +2086,264 @@ async function deleteAdminMockTest(testId) {
     }
 }
 
+let activeMathCategory = 'algebra';
+let lastFocusedMathInputId = '';
+
+const MATH_EQUATION_PALETTE = {
+    algebra: {
+        label: 'Algebra & Roots',
+        items: [
+            { label: 'a/b', title: 'Fraction', insert: '$\\frac{a}{b}$' },
+            { label: 'xⁿ', title: 'Power / Exponent', insert: '$x^{n}$' },
+            { label: 'xₙ', title: 'Subscript', insert: '$x_{n}$' },
+            { label: '√x', title: 'Square Root', insert: '$\\sqrt{x}$' },
+            { label: 'ⁿ√x', title: 'n-th Root', insert: '$\\sqrt[n]{x}$' },
+            { label: 'Quadratic', title: 'Quadratic Formula', insert: '$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$' },
+            { label: 'nCr', title: 'Binomial Combination', insert: '$\\binom{n}{r}$' },
+            { label: '|x|', title: 'Absolute Value / Modulus', insert: '$|x|$' },
+            { label: 'logₐ(x)', title: 'Logarithm base a', insert: '$\\log_{a}(x)$' },
+            { label: 'ln(x)', title: 'Natural Logarithm', insert: '$\\ln(x)$' },
+            { label: 'eˣ', title: 'Exponential', insert: '$e^{x}$' },
+            { label: 'n!', title: 'Factorial', insert: '$n!$' },
+            { label: 'a+bi', title: 'Complex Number', insert: '$z = a + bi$' },
+            { label: 'System { }', title: 'System of Equations / Piecewise', insert: '$\\begin{cases} ax + by = c \\\\ dx + ey = f \\end{cases}$' }
+        ]
+    },
+    calculus: {
+        label: 'Calculus & Series',
+        items: [
+            { label: 'lim', title: 'Limit as x approaches a', insert: '$\\lim_{x \\to a} f(x)$' },
+            { label: 'lim→∞', title: 'Limit to Infinity', insert: '$\\lim_{x \\to \\infty} f(x)$' },
+            { label: 'dy/dx', title: 'First Derivative', insert: '$\\frac{dy}{dx}$' },
+            { label: 'd²y/dx²', title: 'Second Derivative', insert: '$\\frac{d^2y}{dx^2}$' },
+            { label: '∂f/∂x', title: 'Partial Derivative', insert: '$\\frac{\\partial f}{\\partial x}$' },
+            { label: '∫ f(x)dx', title: 'Indefinite Integral', insert: '$\\int f(x)\\,dx$' },
+            { label: '∫ₐᵇ f(x)dx', title: 'Definite Integral', insert: '$\\int_{a}^{b} f(x)\\,dx$' },
+            { label: '∑', title: 'Summation', insert: '$\\sum_{n=1}^{\\infty} a_{n}$' },
+            { label: '∏', title: 'Product', insert: '$\\prod_{i=1}^{n} x_{i}$' },
+            { label: 'f\'(x)', title: 'Prime Derivative', insert: '$f\'(x)$' },
+            { label: '∞', title: 'Infinity', insert: '$\\infty$' }
+        ]
+    },
+    trig: {
+        label: 'Trig & Greek',
+        items: [
+            { label: 'sin θ', title: 'Sine', insert: '$\\sin\\theta$' },
+            { label: 'cos θ', title: 'Cosine', insert: '$\\cos\\theta$' },
+            { label: 'tan θ', title: 'Tangent', insert: '$\\tan\\theta$' },
+            { label: 'cot θ', title: 'Cotangent', insert: '$\\cot\\theta$' },
+            { label: 'sec θ', title: 'Secant', insert: '$\\sec\\theta$' },
+            { label: 'csc θ', title: 'Cosecant', insert: '$\\csc\\theta$' },
+            { label: 'sin⁻¹x', title: 'Inverse Sine', insert: '$\\sin^{-1}(x)$' },
+            { label: 'cos⁻¹x', title: 'Inverse Cosine', insert: '$\\cos^{-1}(x)$' },
+            { label: 'tan⁻¹x', title: 'Inverse Tangent', insert: '$\\tan^{-1}(x)$' },
+            { label: 'θ', title: 'Theta', insert: '$\\theta$' },
+            { label: 'π', title: 'Pi', insert: '$\\pi$' },
+            { label: 'α', title: 'Alpha', insert: '$\\alpha$' },
+            { label: 'β', title: 'Beta', insert: '$\\beta$' },
+            { label: 'γ', title: 'Gamma', insert: '$\\gamma$' },
+            { label: 'φ', title: 'Phi', insert: '$\\phi$' },
+            { label: 'λ', title: 'Lambda', insert: '$\\lambda$' },
+            { label: 'Δ', title: 'Delta', insert: '$\\Delta$' },
+            { label: '°', title: 'Degrees', insert: '$^{\\circ}$' }
+        ]
+    },
+    matrices: {
+        label: 'Matrices, Vectors & Conics',
+        items: [
+            { label: '[2×2 Matrix]', title: '2x2 Matrix', insert: '$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$' },
+            { label: '|2×2 Det|', title: '2x2 Determinant', insert: '$\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$' },
+            { label: '[3×3 Matrix]', title: '3x3 Matrix', insert: '$\\begin{pmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \\end{pmatrix}$' },
+            { label: 'a⃗', title: 'Vector a', insert: '$\\vec{a}$' },
+            { label: 'AB⃗', title: 'Vector AB', insert: '$\\overrightarrow{AB}$' },
+            { label: 'î+ĵ+k̂', title: 'Unit Vectors', insert: '$a\\hat{i} + b\\hat{j} + c\\hat{k}$' },
+            { label: 'a⃗·b⃗', title: 'Dot Product', insert: '$\\vec{a} \\cdot \\vec{b}$' },
+            { label: 'a⃗×b⃗', title: 'Cross Product', insert: '$\\vec{a} \\times \\vec{b}$' },
+            { label: 'Ellipse', title: 'Ellipse Equation', insert: '$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$' },
+            { label: 'Hyperbola', title: 'Hyperbola Equation', insert: '$\\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$' },
+            { label: 'Parabola', title: 'Parabola Equation', insert: '$y^2 = 4ax$' },
+            { label: 'Circle', title: 'Circle Equation', insert: '$(x - h)^2 + (y - k)^2 = r^2$' }
+        ]
+    },
+    sets: {
+        label: 'Sets, Logic & Relations',
+        items: [
+            { label: '±', title: 'Plus or Minus', insert: '$\\pm$' },
+            { label: '≤', title: 'Less than or equal', insert: '$\\le$' },
+            { label: '≥', title: 'Greater than or equal', insert: '$\\ge$' },
+            { label: '≠', title: 'Not equal', insert: '$\\neq$' },
+            { label: '≈', title: 'Approximately equal', insert: '$\\approx$' },
+            { label: '≡', title: 'Identical / Congruent', insert: '$\\equiv$' },
+            { label: '∈', title: 'Element of', insert: '$\\in$' },
+            { label: '∉', title: 'Not an element of', insert: '$\\notin$' },
+            { label: '⊂', title: 'Proper Subset', insert: '$\\subset$' },
+            { label: '⊆', title: 'Subset or equal', insert: '$\\subseteq$' },
+            { label: '∪', title: 'Union', insert: '$\\cup$' },
+            { label: '∩', title: 'Intersection', insert: '$\\cap$' },
+            { label: '∅', title: 'Empty Set', insert: '$\\emptyset$' },
+            { label: '∀', title: 'For all', insert: '$\\forall$' },
+            { label: '∃', title: 'There exists', insert: '$\\exists$' },
+            { label: '⇒', title: 'Implies', insert: '$\\Rightarrow$' },
+            { label: '⇔', title: 'If and only if', insert: '$\\Leftrightarrow$' },
+            { label: 'ℝ', title: 'Real Numbers', insert: '$\\mathbb{R}$' },
+            { label: 'ℕ', title: 'Natural Numbers', insert: '$\\mathbb{N}$' },
+            { label: 'ℤ', title: 'Integers', insert: '$\\mathbb{Z}$' },
+            { label: 'ℂ', title: 'Complex Numbers', insert: '$\\mathbb{C}$' }
+        ]
+    }
+};
+
+function trackMathInputFocus(inputId) {
+    lastFocusedMathInputId = inputId;
+    const badge = document.getElementById('activeMathFieldBadge');
+    if (badge) {
+        const label = inputId.startsWith('mcqText_')
+            ? `Question ${Number(inputId.replace('mcqText_', '')) + 1} Text`
+            : `Question ${Number(inputId.split('_')[1]) + 1} Option ${inputId.split('_')[2]}`;
+        badge.textContent = `Inserting into: ${label}`;
+    }
+}
+
+function switchMathPaletteCategory(catKey) {
+    syncMockEditorInputsToState();
+    activeMathCategory = catKey;
+    renderMockTestsTab();
+    if (lastFocusedMathInputId) {
+        setTimeout(() => document.getElementById(lastFocusedMathInputId)?.focus(), 20);
+    }
+}
+
+function insertMathSnippetAtCursor(snippet) {
+    let targetEl = lastFocusedMathInputId ? document.getElementById(lastFocusedMathInputId) : null;
+    if (!targetEl) {
+        targetEl = document.getElementById('mcqText_0');
+        if (targetEl) lastFocusedMathInputId = 'mcqText_0';
+    }
+    if (!targetEl) {
+        showAdminToast('Click inside a Question or Option field first.', 'error');
+        return;
+    }
+    const start = typeof targetEl.selectionStart === 'number' ? targetEl.selectionStart : targetEl.value.length;
+    const end = typeof targetEl.selectionEnd === 'number' ? targetEl.selectionEnd : targetEl.value.length;
+    const val = targetEl.value || '';
+    targetEl.value = val.slice(0, start) + snippet + val.slice(end);
+    targetEl.focus();
+    const nextPos = start + snippet.length;
+    try { targetEl.setSelectionRange(nextPos, nextPos); } catch (e) {}
+    syncMockEditorInputsToState();
+    updateAllAdminMathPreviews();
+}
+
+function extractMathFromRichHtmlClipboard(html, plainText) {
+    if (!html) return plainText;
+    try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // 1. Replace KaTeX / MathJax / Wikipedia <annotation encoding="application/x-tex"> or data-tex / alttext with $...$
+        doc.querySelectorAll('math, .katex, .MathJax, [data-tex], [data-latex]').forEach(node => {
+            const annot = node.querySelector('annotation[encoding*="tex" i]');
+            const tex = annot?.textContent || node.getAttribute('data-tex') || node.getAttribute('data-latex') || node.getAttribute('alttext');
+            if (tex && tex.trim()) {
+                const cleanTex = tex.trim().replace(/^\$+|\$+$/g, '');
+                node.replaceWith(doc.createTextNode(`$${cleanTex}$`));
+            }
+        });
+
+        // 2. Convert HTML <sup> and <sub> from Word / Google Docs / websites into superscript/subscript notation
+        doc.querySelectorAll('sup').forEach(sup => {
+            const t = (sup.textContent || '').trim();
+            if (t) sup.replaceWith(doc.createTextNode(t.length === 1 ? `^${t}` : `^{${t}}`));
+        });
+        doc.querySelectorAll('sub').forEach(sub => {
+            const t = (sub.textContent || '').trim();
+            if (t) sub.replaceWith(doc.createTextNode(t.length === 1 ? `_${t}` : `_{${t}}`));
+        });
+
+        const extracted = (doc.body.textContent || '').replace(/\u00a0/g, ' ').trim();
+        return extracted || plainText;
+    } catch (e) {
+        return plainText;
+    }
+}
+
+function handleMathInputPaste(event) {
+    if (!event || !event.clipboardData) return;
+    const html = event.clipboardData.getData('text/html') || '';
+    const plain = event.clipboardData.getData('text/plain') || '';
+    if (!html && !plain) return;
+
+    // Only intercept if HTML contains math/sup/sub/katex or special math formatting
+    if (/<(sup|sub|math|annotation)\b|data-tex|data-latex|katex|MathJax/i.test(html)) {
+        event.preventDefault();
+        const normalized = extractMathFromRichHtmlClipboard(html, plain);
+        const targetEl = event.target;
+        const start = typeof targetEl.selectionStart === 'number' ? targetEl.selectionStart : targetEl.value.length;
+        const end = typeof targetEl.selectionEnd === 'number' ? targetEl.selectionEnd : targetEl.value.length;
+        const val = targetEl.value || '';
+        targetEl.value = val.slice(0, start) + normalized + val.slice(end);
+        const nextPos = start + normalized.length;
+        try { targetEl.setSelectionRange(nextPos, nextPos); } catch (e) {}
+        syncMockEditorInputsToState();
+        updateAllAdminMathPreviews();
+    } else {
+        setTimeout(() => {
+            syncMockEditorInputsToState();
+            updateAllAdminMathPreviews();
+        }, 20);
+    }
+}
+
+function prepareMathDisplayHtml(rawText) {
+    if (!rawText) return '';
+    let str = String(rawText).trim();
+    // Auto-wrap bare LaTeX expressions if the user pasted raw LaTeX without $...$ delimiters
+    const hasMathDelimiters = /(\$\$[\s\S]+?\$\$|\$[^$]+?\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/.test(str);
+    const hasLatexCommand = /\\(frac|dfrac|sqrt|int|sum|prod|lim|sin|cos|tan|cot|sec|csc|log|ln|alpha|beta|gamma|theta|pi|infty|pm|mp|le|leq|ge|geq|neq|approx|equiv|in|notin|subset|subseteq|cup|cap|emptyset|forall|exists|Rightarrow|Leftrightarrow|vec|hat|overline|overrightarrow|binom|begin\{|mathbb)/i.test(str);
+
+    if (!hasMathDelimiters && hasLatexCommand && window.katex) {
+        // If the entire string or segment is a bare LaTeX equation, try rendering or wrapping LaTeX tokens
+        try {
+            return window.katex.renderToString(str, { throwOnError: false, displayMode: false });
+        } catch (e) {}
+    }
+    return escapeHtml(str).replace(/\n/g, '<br>');
+}
+
+function triggerAdminKatexRender(containerEl) {
+    if (!containerEl || !window.renderMathInElement) return;
+    try {
+        window.renderMathInElement(containerEl, {
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            throwOnError: false
+        });
+    } catch (e) {}
+}
+
+function updateAllAdminMathPreviews() {
+    if (!editingMockTest) return;
+    (editingMockTest.questions || []).forEach((q, idx) => {
+        const previewBox = document.getElementById(`mcqMathPreview_${idx}`);
+        if (!previewBox) return;
+        const qVal = (document.getElementById(`mcqText_${idx}`)?.value ?? q.text ?? '').trim();
+        const optsHtml = ['A', 'B', 'C', 'D'].map(opt => {
+            const oVal = (document.getElementById(`mcqOpt_${idx}_${opt}`)?.value ?? q.options?.[opt] ?? '').trim();
+            return `<span style="display:inline-flex; align-items:center; gap:4px; margin-right:12px;"><strong>${opt}:</strong> <span>${oVal ? prepareMathDisplayHtml(oVal) : '—'}</span></span>`;
+        }).join('');
+        previewBox.innerHTML = `
+            <div style="font-size:0.74rem; font-weight:700; text-transform:uppercase; color:var(--adm-text-muted); margin-bottom:4px;">Live Equation &amp; Formatting Preview</div>
+            <div style="font-size:0.92rem; font-weight:600; margin-bottom:6px;">${qVal ? prepareMathDisplayHtml(qVal) : '<span style="color:var(--adm-text-muted); font-weight:400;">Type or paste a question above to preview equations...</span>'}</div>
+            <div style="font-size:0.84rem; display:flex; flex-wrap:wrap; gap:6px;">${optsHtml}</div>
+        `;
+        triggerAdminKatexRender(previewBox);
+    });
+}
+
 function renderMockTestsTab() {
     const mount = document.getElementById('mockTestsAdminMount');
     if (!mount || !ADMIN_STATE?.portals) return;
@@ -1911,6 +2359,8 @@ function renderMockTestsTab() {
     if (editingMockTest) {
         const t = editingMockTest;
         const qs = Array.isArray(t.questions) ? t.questions : [];
+        const activeCat = MATH_EQUATION_PALETTE[activeMathCategory] || MATH_EQUATION_PALETTE.algebra;
+
         mount.innerHTML = `
             <div class="adm-mock-editor">
                 <div class="adm-mock-editor-head">
@@ -1948,6 +2398,31 @@ function renderMockTestsTab() {
                     </div>
                 </div>
 
+                <!-- MATHEMATICS EQUATION BUILDER & COPY-PASTE PALETTE -->
+                <div class="adm-card" style="margin:0 0 16px 0; padding:14px 16px; background:var(--adm-bg-subtle);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+                        <div>
+                            <strong style="font-size:0.88rem;"><i class="fa-solid fa-square-root-variable" aria-hidden="true"></i> Mathematics Equation Toolbar</strong>
+                            <span style="font-size:0.78rem; color:var(--adm-text-muted); margin-left:8px;">Click any Question or Option box, then click an equation to insert — or copy &amp; paste equations directly from Word, PDF, ChatGPT, Wikipedia, or LaTeX.</span>
+                        </div>
+                        <span id="activeMathFieldBadge" class="adm-status-pill" style="font-size:0.72rem;">Inserting into: Question 1 Text</span>
+                    </div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                        ${Object.entries(MATH_EQUATION_PALETTE).map(([k, cat]) => `
+                            <button type="button" class="btn-topbar ${k === activeMathCategory ? 'btn-adm-dark' : ''}" style="padding:5px 11px; font-size:0.76rem; ${k === activeMathCategory ? 'background:#111114; color:#fff;' : ''}" onclick="switchMathPaletteCategory('${k}')">
+                                ${escapeHtml(cat.label)}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        ${activeCat.items.map((item, iIdx) => `
+                            <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.8rem; font-family:'Fira Code', monospace;" title="${escapeHtml(item.title)} (${escapeHtml(item.insert)})" onclick="insertMathSnippetAtCursor(MATH_EQUATION_PALETTE['${activeMathCategory}'].items[${iIdx}].insert)">
+                                ${escapeHtml(item.label)}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
                 <div class="adm-mcq-list">
                     ${qs.length === 0 ? `<div class="adm-empty-note">No questions yet. Click "+ Add Question" below.</div>` : qs.map((q, idx) => `
                         <div class="adm-mcq-card">
@@ -1959,15 +2434,16 @@ function renderMockTestsTab() {
                                     <button type="button" class="btn-topbar danger" style="padding:4px 9px; font-size:0.76rem;" onclick="removeMockQuestion(${idx})">Remove</button>
                                 </div>
                             </div>
-                            <textarea id="mcqText_${idx}" class="adm-textarea" rows="2" placeholder="Enter MCQ question...">${escapeHtml(q.text || '')}</textarea>
+                            <textarea id="mcqText_${idx}" class="adm-textarea" rows="2" placeholder="Enter question or paste any math equation (e.g. Solve $x^2 - 5x + 6 = 0$ or \\frac{dy}{dx} = ...)" onfocus="trackMathInputFocus('mcqText_${idx}')" oninput="updateAllAdminMathPreviews()" onpaste="handleMathInputPaste(event)">${escapeHtml(q.text || '')}</textarea>
                             <div class="adm-mcq-options-grid">
                                 ${['A', 'B', 'C', 'D'].map(opt => `
                                     <div class="adm-mcq-opt-row">
                                         <span class="adm-mcq-opt-label">${opt}</span>
-                                        <input type="text" id="mcqOpt_${idx}_${opt}" class="adm-input" placeholder="Option ${opt}" value="${escapeHtml(q.options?.[opt] || '')}">
+                                        <input type="text" id="mcqOpt_${idx}_${opt}" class="adm-input" placeholder="Option ${opt} (supports equations)" value="${escapeHtml(q.options?.[opt] || '')}" onfocus="trackMathInputFocus('mcqOpt_${idx}_${opt}')" oninput="updateAllAdminMathPreviews()" onpaste="handleMathInputPaste(event)">
                                     </div>
                                 `).join('')}
                             </div>
+                            <div id="mcqMathPreview_${idx}" style="margin-top:10px; padding:10px 12px; border-radius:8px; background:var(--adm-bg-subtle); border:1px dashed var(--adm-border);"></div>
                             <div class="adm-correct-picker">
                                 <span>Correct answer:</span>
                                 ${['A', 'B', 'C', 'D'].map(opt => `
@@ -2002,6 +2478,7 @@ function renderMockTestsTab() {
                 </div>
             </div>
         `;
+        updateAllAdminMathPreviews();
         return;
     }
 
@@ -2151,11 +2628,11 @@ function renderAdminMockPreviewBody() {
             return `
                 <div class="adm-mcq-card" style="margin-bottom:10px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                        <strong>Q${i + 1}: ${escapeHtml(q.text || '')}</strong>
+                        <strong>Q${i + 1}: ${prepareMathDisplayHtml(q.text || '')}</strong>
                         <span class="adm-status-pill ${st === 'correct' ? 'open' : 'locked'}">${st.toUpperCase()}</span>
                     </div>
                     <div style="font-size:0.84rem; color:var(--adm-text-muted);">
-                        Your answer: <strong>${picked || 'Skipped'}</strong> &middot; Correct answer: <strong>${corr} (${escapeHtml(q.options?.[corr] || '')})</strong>
+                        Your answer: <strong>${picked || 'Skipped'}</strong> &middot; Correct answer: <strong>${corr} (${prepareMathDisplayHtml(q.options?.[corr] || '')})</strong>
                     </div>
                 </div>
             `;
@@ -2168,6 +2645,7 @@ function renderAdminMockPreviewBody() {
             </div>
             ${rows}
         `;
+        triggerAdminKatexRender(body);
         return;
     }
 
@@ -2178,12 +2656,12 @@ function renderAdminMockPreviewBody() {
             <span style="font-size:0.86rem; color:var(--adm-text-muted);">Question ${index + 1} of ${qs.length}</span>
             <span class="adm-duration-badge"><i class="fa-regular fa-clock" style="margin-right:6px;"></i><span id="admPreviewTimer">${formatAdminPreviewClock(remainingSec)}</span></span>
         </div>
-        <p style="font-size:1rem; font-weight:600; margin-bottom:14px; white-space:pre-wrap;">${escapeHtml(q.text || '(No question text yet)')}</p>
+        <div style="font-size:1rem; font-weight:600; margin-bottom:14px; white-space:pre-wrap;">${prepareMathDisplayHtml(q.text || '(No question text yet)')}</div>
         <div>
             ${['A', 'B', 'C', 'D'].map(opt => `
                 <button type="button" class="adm-preview-opt-btn ${picked === opt ? 'selected' : ''}" onclick="selectAdminMockPreviewAnswer('${escapeHtml(q.id)}', '${opt}')">
                     <span class="adm-mcq-opt-label">${opt}</span>
-                    <span>${escapeHtml(q.options?.[opt] || '(Empty option)')}</span>
+                    <span>${prepareMathDisplayHtml(q.options?.[opt] || '(Empty option)')}</span>
                 </button>
             `).join('')}
         </div>
@@ -2195,6 +2673,7 @@ function renderAdminMockPreviewBody() {
             </div>
         </div>
     `;
+    triggerAdminKatexRender(body);
 }
 
 /* --------------------------------------------------------------------------
