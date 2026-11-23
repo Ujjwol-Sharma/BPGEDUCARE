@@ -15,6 +15,7 @@ const {
     isAdminPasskeyValid,
     ensureAccessModelDefaults,
     readAcademyState,
+    readRoster,
     resolveRequestUser,
     sanitizeStateForStudent
 } = require('./_access-control');
@@ -221,6 +222,22 @@ async function academyStateHandler(req, res) {
             const user = isAdmin ? null : resolveRequestUser(req);
             const responseData = isAdmin ? rawData : sanitizeStateForStudent(rawData, user);
 
+            let adminBundle = {};
+            if (isAdmin) {
+                const roster = readRoster();
+                adminBundle = {
+                    roster: {
+                        revision: Number(roster.revision) || 0,
+                        lastUpdated: roster.lastUpdated,
+                        duplicateGroups: roster.duplicateGroups || [],
+                        classSwitchRequests: roster.classSwitchRequests || [],
+                        accounts: (roster.accounts || []).map(({ passkey, ...safe }) => safe)
+                    },
+                    mockTests: Array.isArray(rawData.mockTests) ? rawData.mockTests : [],
+                    payments: Array.isArray(rawData.payments) ? rawData.payments : []
+                };
+            }
+
             res.statusCode = 200;
             if (req.method === 'HEAD') {
                 res.end();
@@ -230,7 +247,8 @@ async function academyStateHandler(req, res) {
                 success: true,
                 source: 'database',
                 timestamp: rawData.lastUpdated || new Date().toISOString(),
-                data: responseData
+                data: responseData,
+                ...adminBundle
             }));
         } catch (err) {
             console.error('[API /api/academy-state] Error reading database:', err);

@@ -586,14 +586,10 @@ function readRoster() {
 
     if (!roster || !Array.isArray(roster.accounts)) {
         roster = {
+            revision: 20,
             lastUpdated: new Date().toISOString(),
             classSwitchRequests: [],
-            accounts: [
-                { name: 'Creative Scholar', username: 'creative.scholar', email: 'scholar@bpgacademy.edu.np', grade: 'Class 12', classKey: 'class-12', plan: 'free', legacyAccess: true, joinedAt: '2026-11-01' },
-                { name: 'Rohan Sharma', username: 'rohan.sharma', email: 'rohan.sharma@gmail.com', grade: 'Class 11', classKey: 'class-11', plan: 'free', legacyAccess: true, joinedAt: '2026-11-03' },
-                { name: 'Aayush KC', username: 'aayush.kc', email: 'aayush.kc@gmail.com', grade: 'Class 10', classKey: 'class-10', plan: 'free', legacyAccess: true, joinedAt: '2026-11-04' },
-                { name: 'Prabhat Paudel', username: 'prabhat.entrance', email: 'prabhat.entrance@gmail.com', grade: 'After 12 Entrance', classKey: 'after-12', plan: 'free', legacyAccess: true, joinedAt: '2026-11-05' }
-            ]
+            accounts: []
         };
         writeRoster(roster);
     }

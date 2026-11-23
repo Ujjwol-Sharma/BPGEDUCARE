@@ -467,6 +467,9 @@ module.exports = async function studentRosterHandler(req, res) {
                     const aEmail = String(a.email || '').trim().toLowerCase();
                     return aEmail !== targetEmail && a.canonicalEmail !== targetCanonical;
                 });
+            } else if (payload.action === 'DELETE_ALL_STUDENTS') {
+                roster.accounts = [];
+                roster.duplicateGroups = [];
             } else if (payload.action === 'APPROVE_CLASS_SWITCH' || payload.action === 'REJECT_CLASS_SWITCH') {
                 const reqId = String(payload.requestId || '').trim();
                 const adminNote = String(payload.adminNote || '').trim();

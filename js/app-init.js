@@ -8,70 +8,43 @@ async function syncRosterPermissionsFromServer() {
         const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
         const session = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
 
-        if (session && session.sessionToken) {
-            const meRes = await fetch('/api/student-roster?me=1&_t=' + Date.now(), {
-                cache: 'no-store',
-                headers: authHeaders
-            });
-            if (meRes.ok) {
-                const meJson = await meRes.json();
-                if (Array.isArray(meJson.mySwitchRequests)) {
-                    window.MY_CLASS_SWITCH_REQUESTS = meJson.mySwitchRequests;
-                }
-                if (meJson.account) {
-                    const match = meJson.account;
-                    const gradeChanged = match.grade && match.grade !== session.grade;
-                    const planChanged = match.plan && match.plan !== session.plan;
-                    const legacyChanged = Boolean(match.legacyAccess) !== Boolean(session.legacyAccess);
-
-                    if (gradeChanged || planChanged || legacyChanged) {
-                        session.grade = match.grade || session.grade;
-                        session.classKey = normalizeClassKey(session.grade);
-                        session.plan = match.plan || 'free';
-                        session.legacyAccess = Boolean(match.legacyAccess);
-                        session.planExplicitlySet = Boolean(match.planExplicitlySet);
-                        localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
-                        localStorage.setItem('bpg_student_session', JSON.stringify(session));
-                        localStorage.setItem('bpg_student_class', session.classKey);
-                        updateAuthUserPill();
-                        syncWithServerDatabase();
-                        if (gradeChanged) openMyClassWorkspace();
-                    }
-                    return;
-                }
-            }
+        if (!session || !session.sessionToken) {
+            return;
         }
 
-        const res = await fetch('/api/student-roster?_t=' + Date.now(), { cache: 'no-store' });
-        if (!res.ok) return;
-        const json = await res.json();
-        if (json && json.data && Array.isArray(json.data.accounts)) {
-            localStorage.setItem(BPG_ACCOUNTS_KEY, JSON.stringify(json.data.accounts));
+        const meRes = await fetch('/api/student-roster?me=1&_t=' + Date.now(), {
+            cache: 'no-store',
+            headers: authHeaders
+        });
+        if (meRes.status === 401) {
+            localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
+            localStorage.removeItem('bpg_student_session');
+            updateAuthUserPill();
+            return;
+        }
+        if (meRes.ok) {
+            const meJson = await meRes.json();
+            if (Array.isArray(meJson.mySwitchRequests)) {
+                window.MY_CLASS_SWITCH_REQUESTS = meJson.mySwitchRequests;
+            }
+            if (meJson.account) {
+                const match = meJson.account;
+                const gradeChanged = match.grade && match.grade !== session.grade;
+                const planChanged = match.plan && match.plan !== session.plan;
+                const legacyChanged = Boolean(match.legacyAccess) !== Boolean(session.legacyAccess);
 
-            // If current student is logged in, sync live class & plan updates from server
-            const session = getStoredStudentSession();
-            if (session && session.email) {
-                const match = json.data.accounts.find(
-                    a => (a.email || '').toLowerCase() === session.email.toLowerCase()
-                );
-                if (match) {
-                    const gradeChanged = match.grade && match.grade !== session.grade;
-                    const planChanged = match.plan && match.plan !== session.plan;
-                    const legacyChanged = Boolean(match.legacyAccess) !== Boolean(session.legacyAccess);
-
-                    if (gradeChanged || planChanged || legacyChanged) {
-                        session.grade = match.grade || session.grade;
-                        session.classKey = normalizeClassKey(session.grade);
-                        session.plan = match.plan || 'free';
-                        session.legacyAccess = Boolean(match.legacyAccess);
-                        session.planExplicitlySet = Boolean(match.planExplicitlySet);
-                        localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
-                        localStorage.setItem('bpg_student_session', JSON.stringify(session));
-                        localStorage.setItem('bpg_student_class', session.classKey);
-                        updateAuthUserPill();
-                        syncWithServerDatabase();
-                        if (gradeChanged) openMyClassWorkspace();
-                    }
+                if (gradeChanged || planChanged || legacyChanged) {
+                    session.grade = match.grade || session.grade;
+                    session.classKey = normalizeClassKey(session.grade);
+                    session.plan = match.plan || 'free';
+                    session.legacyAccess = Boolean(match.legacyAccess);
+                    session.planExplicitlySet = Boolean(match.planExplicitlySet);
+                    localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+                    localStorage.setItem('bpg_student_session', JSON.stringify(session));
+                    localStorage.setItem('bpg_student_class', session.classKey);
+                    updateAuthUserPill();
+                    syncWithServerDatabase();
+                    if (gradeChanged) openMyClassWorkspace();
                 }
             }
         }

@@ -232,34 +232,29 @@ async function openAdminShell() {
 async function loadAdminData() {
     setSaveStatus('Loading...');
     try {
-        const [stateRes, rosterRes, mockRes, payRes] = await Promise.all([
-            fetch('/api/academy-state?_t=' + Date.now(), {
-                cache: 'no-store',
-                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
-            }),
-            fetch('/api/student-roster?_t=' + Date.now(), {
-                cache: 'no-store',
-                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
-            }),
-            fetch('/api/mock-tests?_t=' + Date.now(), {
-                cache: 'no-store',
-                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
-            }),
-            fetch('/api/payments?_t=' + Date.now(), {
-                cache: 'no-store',
-                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
-            })
-        ]);
+        // Single unified request prevents concurrent multi-container Lambda spawns on Vercel
+        const stateRes = await fetch('/api/academy-state?_t=' + Date.now(), {
+            cache: 'no-store',
+            headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
+        });
 
         const stateJson = await stateRes.json();
-        const rosterJson = await rosterRes.json();
-        const mockJson = await mockRes.json().catch(() => ({ tests: [] }));
-        const payJson = await payRes.json().catch(() => ({ payments: [] }));
 
         if (stateJson?.data) ADMIN_STATE = stateJson.data;
-        if (rosterJson?.data) ADMIN_ROSTER = rosterJson.data;
-        if (Array.isArray(mockJson?.tests)) ADMIN_MOCK_TESTS = mockJson.tests;
-        if (Array.isArray(payJson?.payments)) ADMIN_PAYMENTS = payJson.payments;
+        if (stateJson?.roster) {
+            ADMIN_ROSTER = stateJson.roster;
+        } else {
+            const rosterRes = await fetch('/api/student-roster?_t=' + Date.now(), {
+                cache: 'no-store',
+                headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
+            });
+            const rosterJson = await rosterRes.json().catch(() => ({}));
+            if (rosterJson?.data) ADMIN_ROSTER = rosterJson.data;
+        }
+        if (Array.isArray(stateJson?.mockTests)) ADMIN_MOCK_TESTS = stateJson.mockTests;
+        else if (Array.isArray(ADMIN_STATE?.mockTests)) ADMIN_MOCK_TESTS = ADMIN_STATE.mockTests;
+
+        if (Array.isArray(stateJson?.payments)) ADMIN_PAYMENTS = stateJson.payments;
         else if (Array.isArray(ADMIN_STATE?.payments)) ADMIN_PAYMENTS = ADMIN_STATE.payments;
 
         setSaveStatus('All changes saved');
@@ -806,6 +801,32 @@ async function handleAdminDeleteUser(email) {
         ADMIN_ROSTER = json.data;
         setSaveStatus('Saved', true);
         showAdminToast('Student removed.');
+        broadcastUpdate('PERMISSIONS_UPDATE');
+        renderUsersTab();
+    } catch (err) {
+        showAdminToast(err.message, 'error');
+    }
+}
+
+async function handleAdminDeleteAllUsers() {
+    const count = (ADMIN_ROSTER?.accounts || []).length;
+    if (count === 0) {
+        showAdminToast('Student list is already empty.');
+        return;
+    }
+    if (!confirm(`Delete ALL ${count} student accounts permanently? This cannot be undone.`)) return;
+    setSaveStatus('Deleting all...');
+    try {
+        const res = await fetch('/api/student-roster', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({ action: 'DELETE_ALL_STUDENTS' })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.error || 'Delete all failed');
+        ADMIN_ROSTER = json.data;
+        setSaveStatus('Saved', true);
+        showAdminToast('All student accounts deleted.');
         broadcastUpdate('PERMISSIONS_UPDATE');
         renderUsersTab();
     } catch (err) {
