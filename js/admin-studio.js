@@ -2938,12 +2938,11 @@ async function handleTeamPhotoFileChange(inputEl) {
 async function handleSaveTeamMember(e) {
     e.preventDefault();
     const name = (document.getElementById('tmName')?.value || '').trim();
-    const role = (document.getElementById('tmRole')?.value || '').trim();
     const slot = document.getElementById('tmSlot')?.value || 'member';
+    const role = slot === 'founder' ? 'Founder' : '';
     const photoUrlInput = (document.getElementById('tmPhotoUrl')?.value || '').trim();
-    const bio = (document.getElementById('tmBio')?.value || '').trim();
-    if (!name || !role) {
-        showAdminToast('Name and role are required.', 'error');
+    if (!name) {
+        showAdminToast('Full name is required.', 'error');
         return;
     }
 
@@ -2958,7 +2957,7 @@ async function handleSaveTeamMember(e) {
         name,
         role,
         photoUrl,
-        bio
+        bio: ''
     };
 
     const idx = list.findIndex(m => m.id === record.id);
@@ -2984,35 +2983,31 @@ function renderTeamTab() {
     const members = getAdminTeamMembers();
     const slotLabels = {
         founder: 'Row 1 · Founder (Centered)',
-        ceo: 'Row 2 · 1st (CEO)',
-        cco: 'Row 2 · 2nd (CCO)',
-        cto: 'Row 2 · 3rd (CTO)',
-        member: 'Additional Member'
+        ceo: 'Row 2 · Team Member (1st)',
+        cco: 'Row 2 · Team Member (2nd)',
+        cto: 'Row 2 · Team Member (3rd)',
+        member: 'Row 2 · Team Member'
     };
 
     const editorHtml = editingTeamMember ? `
         <form class="adm-mock-editor" style="margin-bottom:18px;" onsubmit="handleSaveTeamMember(event)">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                <strong>${editingTeamMember.id ? 'Edit Team Profile' : 'Add Team Profile'}</strong>
+                <strong>${editingTeamMember.id ? 'Edit Team Member (Name &amp; Photo)' : 'Add Team Member (Name &amp; Photo)'}</strong>
                 <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.78rem;" onclick="cancelTeamMemberEdit()">Cancel</button>
             </div>
-            <div class="adm-form-grid-3" style="margin-bottom:12px;">
+            <div class="adm-form-grid-2" style="margin-bottom:12px;">
                 <div>
                     <label class="adm-label" for="tmName">Full Name</label>
-                    <input type="text" id="tmName" class="adm-input" value="${escapeHtml(editingTeamMember.name)}" placeholder="e.g. Bishnu Prasad Gautam" required>
-                </div>
-                <div>
-                    <label class="adm-label" for="tmRole">Role Title</label>
-                    <input type="text" id="tmRole" class="adm-input" value="${escapeHtml(editingTeamMember.role)}" placeholder="Founder / CEO / CCO / CTO" required>
+                    <input type="text" id="tmName" class="adm-input" value="${escapeHtml(editingTeamMember.name)}" placeholder="e.g. Paribesh Thapa" required>
                 </div>
                 <div>
                     <label class="adm-label" for="tmSlot">Homepage Row Position</label>
                     <select id="tmSlot" class="adm-select">
-                        <option value="founder" ${editingTeamMember.slot === 'founder' ? 'selected' : ''}>Founder (Row 1 Centered)</option>
-                        <option value="ceo" ${editingTeamMember.slot === 'ceo' ? 'selected' : ''}>CEO (Row 2 — 1st)</option>
-                        <option value="cco" ${editingTeamMember.slot === 'cco' ? 'selected' : ''}>CCO (Row 2 — 2nd)</option>
-                        <option value="cto" ${editingTeamMember.slot === 'cto' ? 'selected' : ''}>CTO (Row 2 — 3rd)</option>
-                        <option value="member" ${editingTeamMember.slot === 'member' ? 'selected' : ''}>Additional Member</option>
+                        <option value="founder" ${editingTeamMember.slot === 'founder' ? 'selected' : ''}>Row 1 · Founder (Centered)</option>
+                        <option value="ceo" ${editingTeamMember.slot === 'ceo' ? 'selected' : ''}>Row 2 · Team Member (1st)</option>
+                        <option value="cco" ${editingTeamMember.slot === 'cco' ? 'selected' : ''}>Row 2 · Team Member (2nd)</option>
+                        <option value="cto" ${editingTeamMember.slot === 'cto' ? 'selected' : ''}>Row 2 · Team Member (3rd)</option>
+                        <option value="member" ${editingTeamMember.slot === 'member' ? 'selected' : ''}>Row 2 · Additional Team Member</option>
                     </select>
                 </div>
             </div>
@@ -3026,15 +3021,11 @@ function renderTeamTab() {
                     <input type="text" id="tmPhotoUrl" class="adm-input" value="${escapeHtml(editingTeamMember.photoUrl && !editingTeamMember.photoUrl.startsWith('data:') ? editingTeamMember.photoUrl : '')}" placeholder="./images/bpg_sir.jpg or https://...">
                 </div>
             </div>
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
                 <div class="adm-team-thumb" id="teamPhotoPreviewImg">
                     ${(pendingTeamPhotoDataUrl || editingTeamMember.photoUrl) ? `<img src="${escapeHtml(pendingTeamPhotoDataUrl || editingTeamMember.photoUrl)}" alt="Preview">` : escapeHtml((editingTeamMember.name || 'T').charAt(0).toUpperCase())}
                 </div>
-                <span style="font-size:0.8rem; color:var(--adm-text-muted);">Photo preview (upload an image or enter a URL)</span>
-            </div>
-            <div style="margin-bottom:14px;">
-                <label class="adm-label" for="tmBio">Short Bio</label>
-                <textarea id="tmBio" class="adm-textarea" rows="2" placeholder="Brief leadership bio shown on the homepage...">${escapeHtml(editingTeamMember.bio || '')}</textarea>
+                <span style="font-size:0.8rem; color:var(--adm-text-muted);">Photo preview (only Name and Photo are displayed on the homepage)</span>
             </div>
             <div style="display:flex; justify-content:flex-end; gap:8px;">
                 <button type="button" class="btn-topbar" onclick="cancelTeamMemberEdit()">Cancel</button>
@@ -3057,13 +3048,11 @@ function renderTeamTab() {
                             </div>
                             <div style="min-width:0;">
                                 <strong style="display:block; font-size:0.96rem;">${escapeHtml(m.name)}</strong>
-                                <span style="font-size:0.8rem; font-weight:600; color:var(--adm-text-muted);">${escapeHtml(m.role)}</span>
-                                <div style="font-size:0.74rem; color:var(--adm-text-muted);">${escapeHtml(slotLabels[m.slot] || 'Team Member')}</div>
+                                <div style="font-size:0.75rem; color:var(--adm-text-muted); margin-top:2px;">${escapeHtml(slotLabels[m.slot] || 'Row 2 · Team Member')}</div>
                             </div>
                         </div>
-                        <p style="margin:0; font-size:0.84rem; color:var(--adm-text-secondary); line-height:1.5;">${escapeHtml(m.bio || '')}</p>
                         <div style="display:flex; gap:6px; margin-top:auto;">
-                            <button type="button" class="btn-topbar" style="padding:5px 11px; font-size:0.78rem;" onclick="startEditTeamMember('${safeId}')">Edit</button>
+                            <button type="button" class="btn-topbar" style="padding:5px 11px; font-size:0.78rem;" onclick="startEditTeamMember('${safeId}')">Edit Photo / Name</button>
                             <button type="button" class="btn-topbar danger" style="padding:5px 11px; font-size:0.78rem;" onclick="deleteTeamMember('${safeId}')">Remove</button>
                         </div>
                     </div>

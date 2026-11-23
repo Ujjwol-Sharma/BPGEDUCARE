@@ -111,34 +111,34 @@ const DEFAULT_TEAM_MEMBERS = [
         name: 'Bishnu Prasad Gautam',
         role: 'Founder',
         photoUrl: './images/bpg_sir.jpg',
-        bio: 'M.Sc. Mathematics (TU, CGPA 3.9/4.0) with 12+ years mentoring NEB and IOE / CEE mathematics students in Pokhara, Nepal.'
+        bio: ''
     },
     {
         id: 'team-ceo',
         slot: 'ceo',
         initial: 'P',
         name: 'Paribesh Thapa',
-        role: 'CEO',
+        role: '',
         photoUrl: '',
-        bio: '**Education | Youth | Social Impact**\nBridging education and grassroots social work to turn youth potential into lasting community impact.'
+        bio: ''
     },
     {
         id: 'team-cco',
         slot: 'cco',
         initial: 'U',
         name: 'Ujjwol Sharma',
-        role: 'CCO',
+        role: '',
         photoUrl: '',
-        bio: 'Merges creative content and smart EdTech to deliver accessible, high-impact NEB & entrance-aligned curricula.'
+        bio: ''
     },
     {
         id: 'team-cto',
         slot: 'cto',
         initial: 'U',
         name: 'Utsav Sharma',
-        role: 'CTO',
+        role: '',
         photoUrl: '',
-        bio: 'Architects fast, scalable learning platforms that make digital education seamless, accessible, and built for the future.'
+        bio: ''
     }
 ];
 
@@ -881,9 +881,9 @@ function ensureAccessModelDefaults(state) {
                 slot,
                 initial: String(m.initial || (m.name ? m.name.trim().charAt(0).toUpperCase() : 'T')).trim().charAt(0).toUpperCase(),
                 name: String(m.name || '').trim(),
-                role: rawRole || 'Team Member',
+                role: slot === 'founder' ? (rawRole || 'Founder') : '',
                 photoUrl: String(m.photoUrl || '').trim(),
-                bio: String(m.bio || '').trim()
+                bio: ''
             };
         });
     }
