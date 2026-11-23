@@ -258,7 +258,16 @@ async function openNotesLesson(classKey, subjectId, lessonId) {
             return;
         }
         if (res.ok && payload.ok && payload.lesson) {
-            verifiedLesson = payload.lesson;
+            const remotePdfs = Array.isArray(payload.lesson.pdfs) ? payload.lesson.pdfs : [];
+            const localPdfs = Array.isArray(localLesson?.pdfs) ? localLesson.pdfs : [];
+            const remoteVids = Array.isArray(payload.lesson.videos) ? payload.lesson.videos : [];
+            const localVids = Array.isArray(localLesson?.videos) ? localLesson.videos : [];
+            verifiedLesson = {
+                ...localLesson,
+                ...payload.lesson,
+                pdfs: remotePdfs.length >= localPdfs.length ? remotePdfs : localPdfs,
+                videos: remoteVids.length >= localVids.length ? remoteVids : localVids
+            };
         }
     } catch (e) {}
 
@@ -446,13 +455,125 @@ function renderLevelUpCard(containerEl, requiredPlan, itemTitle) {
     `;
 }
 
+function findLocalLessonPdf(classKey, subjectId, lessonId, pdfId) {
+    try {
+        const portal = ACADEMY_STATE?.portals?.[classKey];
+        if (!portal) return null;
+        const subjects = Array.isArray(portal.subjects) ? portal.subjects : [];
+        for (const s of subjects) {
+            if (subjectId && s.id !== subjectId) continue;
+            const lesson = (s.lessons || []).find(l => String(l.id) === String(lessonId));
+            if (lesson) {
+                const pdf = (lesson.pdfs || []).find(p => String(p.id) === String(pdfId));
+                if (pdf) return pdf;
+            }
+        }
+        for (const s of subjects) {
+            const lesson = (s.lessons || []).find(l => String(l.id) === String(lessonId));
+            if (lesson) {
+                const pdf = (lesson.pdfs || []).find(p => String(p.id) === String(pdfId));
+                if (pdf) return pdf;
+            }
+        }
+    } catch (e) {}
+    return null;
+}
+
+async function renderPdfPagesIntoContainer(pdfBytesOrUrl, containerEl) {
+    if (!window.pdfjsLib || !containerEl) return false;
+    try {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const src = pdfBytesOrUrl instanceof Uint8Array ? { data: pdfBytesOrUrl } : pdfBytesOrUrl;
+        const doc = await window.pdfjsLib.getDocument(src).promise;
+        containerEl.innerHTML = '';
+        for (let pageNum = 1; pageNum <= doc.numPages; pageNum++) {
+            const page = await doc.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 1.4 });
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+            canvas.style.display = 'block';
+            canvas.style.marginBottom = '12px';
+            canvas.style.borderRadius = '6px';
+            canvas.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+            containerEl.appendChild(canvas);
+            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        }
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function displayPdfInViewerModal(pdf, fileUrl) {
+    let openUrl = fileUrl;
+    let pdfBytes = null;
+    if (fileUrl.startsWith('data:application/pdf;base64,')) {
+        const b64 = fileUrl.slice('data:application/pdf;base64,'.length);
+        const binary = atob(b64);
+        pdfBytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) pdfBytes[i] = binary.charCodeAt(i);
+        openUrl = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
+    }
+
+    const badgeEl = document.getElementById('pdfModalBadge');
+    const titleEl = document.getElementById('pdfModalTitle');
+    const bodyEl = document.getElementById('pdfModalBody');
+    const dlBtn = document.getElementById('pdfModalDownloadBtn');
+    const newTabBtn = document.getElementById('pdfModalNewTabBtn');
+
+    if (badgeEl) badgeEl.textContent = 'PDF';
+    if (titleEl) titleEl.textContent = pdf.title || pdf.fileName || 'Lesson PDF';
+    if (dlBtn) {
+        dlBtn.style.display = 'inline-flex';
+        dlBtn.href = openUrl;
+        dlBtn.setAttribute('download', pdf.fileName || ((pdf.title || 'lesson') + '.pdf'));
+    }
+    if (newTabBtn) {
+        newTabBtn.style.display = 'inline-flex';
+        newTabBtn.href = openUrl;
+    }
+
+    const isMobileViewport = window.innerWidth <= 820 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+    if (bodyEl) {
+        if (isMobileViewport && window.pdfjsLib && (pdfBytes || openUrl)) {
+            bodyEl.innerHTML = `<div id="pdfJsPagesMount" style="padding:4px; text-align:center; color:var(--text-secondary);">Loading PDF pages...</div>`;
+            const mount = document.getElementById('pdfJsPagesMount');
+            renderPdfPagesIntoContainer(pdfBytes || openUrl, mount).then(ok => {
+                if (!ok && mount) {
+                    mount.innerHTML = `<iframe src="${openUrl}" style="width:100%; height:64vh; border:none; border-radius:8px;"></iframe>`;
+                }
+            });
+        } else {
+            bodyEl.innerHTML = `<iframe src="${openUrl}" style="width:100%; height:68vh; min-height:480px; border:none; border-radius:8px; background:#f4f4f6;"></iframe>`;
+        }
+    }
+
+    document.getElementById('pdfViewerModal')?.classList.add('open');
+}
+
 async function openLessonPdf(classKey, lessonId, pdfId, pdfTitle, subjectId = 'mathematics') {
+    // 1. Check if authorized PDF fileUrl is already available in local state
+    const localPdf = findLocalLessonPdf(classKey, subjectId, lessonId, pdfId);
+    if (localPdf && !localPdf.restricted && localPdf.fileUrl) {
+        displayPdfInViewerModal(localPdf, String(localPdf.fileUrl));
+        return;
+    }
+
     const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
     const url = `/api/content-access?classKey=${encodeURIComponent(classKey)}&itemType=lesson-pdf&subjectId=${encodeURIComponent(subjectId)}&lessonId=${encodeURIComponent(lessonId)}&pdfId=${encodeURIComponent(pdfId)}&_t=${Date.now()}`;
 
     try {
         const res = await fetch(url, { cache: 'no-store', headers: authHeaders });
         const payload = await res.json();
+
+        if (res.status === 401) {
+            showToast(payload.error || 'Please sign in to access this PDF.');
+            if (typeof openAuthModal === 'function') openAuthModal('signin', classKey);
+            return;
+        }
 
         if (res.status === 403 && payload.code === 'SECTION_LOCKED') {
             if (typeof showSectionLockedModal === 'function') showSectionLockedModal(classKey);
@@ -464,10 +585,11 @@ async function openLessonPdf(classKey, lessonId, pdfId, pdfTitle, subjectId = 'm
             const title = payload.itemTitle || pdfTitle || 'Lesson PDF';
             document.getElementById('pdfModalBadge').textContent = `${typeof formatPlanLabel === 'function' ? formatPlanLabel(reqPlan) : reqPlan} Plan Required`;
             document.getElementById('pdfModalTitle').textContent = title;
-            document.getElementById('pdfModalMeta').textContent = '';
             renderLevelUpCard(document.getElementById('pdfModalBody'), reqPlan, title);
             const dlBtn = document.getElementById('pdfModalDownloadBtn');
             if (dlBtn) dlBtn.style.display = 'none';
+            const newTabBtn = document.getElementById('pdfModalNewTabBtn');
+            if (newTabBtn) newTabBtn.style.display = 'none';
             document.getElementById('pdfViewerModal')?.classList.add('open');
             return;
         }
@@ -484,29 +606,7 @@ async function openLessonPdf(classKey, lessonId, pdfId, pdfTitle, subjectId = 'm
             return;
         }
 
-        let openUrl = fileUrl;
-        if (fileUrl.startsWith('data:application/pdf;base64,')) {
-            const b64 = fileUrl.slice('data:application/pdf;base64,'.length);
-            const binary = atob(b64);
-            const bytes = new Uint8Array(binary.length);
-            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-            openUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-        }
-
-        const win = window.open(openUrl, '_blank', 'noopener');
-        if (!win) {
-            document.getElementById('pdfModalBadge').textContent = 'PDF';
-            document.getElementById('pdfModalTitle').textContent = pdf.title || pdf.fileName || 'PDF';
-            document.getElementById('pdfModalMeta').textContent = '';
-            document.getElementById('pdfModalBody').innerHTML = `<iframe src="${openUrl}" style="width:100%; height:520px; border:none; border-radius:8px;"></iframe>`;
-            const dlBtn = document.getElementById('pdfModalDownloadBtn');
-            if (dlBtn) {
-                dlBtn.style.display = 'inline-flex';
-                dlBtn.href = openUrl;
-                dlBtn.setAttribute('download', pdf.fileName || 'lesson.pdf');
-            }
-            document.getElementById('pdfViewerModal')?.classList.add('open');
-        }
+        displayPdfInViewerModal(pdf, fileUrl);
     } catch (err) {
         showToast('Unable to open PDF right now.');
     }

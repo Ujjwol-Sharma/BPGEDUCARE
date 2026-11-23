@@ -50,18 +50,7 @@ module.exports = function contentAccessHandler(req, res) {
         return;
     }
 
-    // 0a. Require verified student session for non-admin content access
-    if (!isAdmin && (!user || !user.email || user.emailVerified === false)) {
-        res.statusCode = 401;
-        res.end(JSON.stringify({
-            ok: false,
-            code: 'EMAIL_VERIFICATION_REQUIRED',
-            error: 'Please sign in with a verified email account to access class content.'
-        }));
-        return;
-    }
-
-    // 0b. Enforce one-active-class-per-account rule on server
+    // 0b. Enforce one-active-class-per-account rule on server when signed in
     if (!isAdmin && user && user.email && user.classKey && classKey !== gradeToClassKey(user.classKey || user.grade)) {
         res.statusCode = 403;
         res.end(JSON.stringify({

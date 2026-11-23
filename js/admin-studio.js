@@ -1311,7 +1311,10 @@ function previewAdminLessonPdf(classKey, subjectId, lessonId, pdfId) {
     const subj = getAdminSubjects(classKey).find(s => s.id === subjectId);
     const lesson = (subj?.lessons || []).find(l => l.id === lessonId);
     const pdf = (lesson?.pdfs || []).find(p => p.id === pdfId);
-    if (!pdf?.fileUrl) return;
+    if (!pdf?.fileUrl) {
+        showAdminToast('PDF file data is missing.', 'error');
+        return;
+    }
     let openUrl = pdf.fileUrl;
     if (openUrl.startsWith('data:application/pdf;base64,')) {
         const bin = atob(openUrl.slice('data:application/pdf;base64,'.length));
@@ -1319,7 +1322,15 @@ function previewAdminLessonPdf(classKey, subjectId, lessonId, pdfId) {
         for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
         openUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
     }
-    window.open(openUrl, '_blank', 'noopener');
+    const win = window.open(openUrl, '_blank');
+    if (!win) {
+        const a = document.createElement('a');
+        a.href = openUrl;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
 }
 
 async function deleteLessonUpload(classKey, subjectId, lessonId, itemType, itemId) {

@@ -16,6 +16,9 @@
     { "source": "/bpg-cms-data.json", "destination": "/_not_found", "permanent": false }
   ],
   "rewrites": [
+    { "source": "/api/content-access", "destination": "/api/academy-state?__route=content-access" },
+    { "source": "/api/mock-tests", "destination": "/api/academy-state?__route=mock-tests" },
+    { "source": "/api/payments", "destination": "/api/academy-state?__route=payments" },
     { "source": "/admin", "destination": "/_not_found" },
     { "source": "/admin/(.*)", "destination": "/_not_found" },
     { "source": "/admin.html", "destination": "/_not_found" },

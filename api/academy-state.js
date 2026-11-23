@@ -123,6 +123,20 @@ function writeStateToDisk(updated) {
 }
 
 module.exports = function academyStateHandler(req, res) {
+    try {
+        const parsedRouteUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+        const subRoute = parsedRouteUrl.searchParams.get('__route');
+        if (subRoute === 'content-access' || parsedRouteUrl.pathname === '/api/content-access') {
+            return require('./content-access')(req, res);
+        }
+        if (subRoute === 'mock-tests' || parsedRouteUrl.pathname === '/api/mock-tests') {
+            return require('./mock-tests')(req, res);
+        }
+        if (subRoute === 'payments' || parsedRouteUrl.pathname === '/api/payments') {
+            return require('./payments')(req, res);
+        }
+    } catch (e) {}
+
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');

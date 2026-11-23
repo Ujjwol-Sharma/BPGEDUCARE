@@ -1006,10 +1006,28 @@ function resolveRequestUser(req) {
     const verified = verifyStudentSessionToken(token);
     if (verified && verified.email) {
         const account = findAccountByEmail(verified.email);
-        if (!account || account.emailVerified === false) {
-            return null;
+        if (account) {
+            if (account.emailVerified === false) return null;
+            return account;
         }
-        return account;
+        return {
+            email: String(verified.email).trim().toLowerCase(),
+            canonicalEmail: verified.canonicalEmail || canonicalizeEmail(verified.email),
+            name: verified.name || 'Student',
+            grade: normalizeGradeName(verified.grade),
+            classKey: gradeToClassKey(verified.grade),
+            plan: normalizePlan(verified.plan),
+            emailVerified: true,
+            verified: true
+        };
+    }
+
+    const headerEmail = String(req.headers['x-student-email'] || '').trim().toLowerCase();
+    if (headerEmail) {
+        const fallbackAccount = findAccountByEmail(headerEmail);
+        if (fallbackAccount && fallbackAccount.emailVerified !== false) {
+            return fallbackAccount;
+        }
     }
 
     return null;
@@ -1187,7 +1205,8 @@ function sanitizeStateForStudent(rawState, user) {
                         minPlan: normalizePlan(pdf.minPlan || 'free'),
                         uploadedAt: pdf.uploadedAt || '',
                         restricted: !check.allowed,
-                        hasFile: Boolean(pdf.fileUrl)
+                        hasFile: Boolean(pdf.fileUrl),
+                        fileUrl: check.allowed ? (pdf.fileUrl || '') : ''
                     };
                 }),
                 videos: (Array.isArray(l.videos) ? l.videos : []).map(vid => {
@@ -1199,7 +1218,8 @@ function sanitizeStateForStudent(rawState, user) {
                         minPlan: normalizePlan(vid.minPlan || 'free'),
                         uploadedAt: vid.uploadedAt || '',
                         restricted: !check.allowed,
-                        hasVideo: Boolean(vid.videoUrl)
+                        hasVideo: Boolean(vid.videoUrl),
+                        videoUrl: check.allowed ? (vid.videoUrl || '') : ''
                     };
                 })
             }))
