@@ -3507,17 +3507,18 @@ body.in-notes-tab #contactSection {
 }
 
 .home-team-section {
-    padding: 44px 0 52px;
+    padding: 28px 0 34px;
     background: var(--bg-canvas);
     border-top: 1px solid var(--border-subtle);
 }
 
 .home-team-section .home-section-head {
-    margin: 0 auto 24px;
+    margin: 0 auto 14px;
 }
 
 .home-team-section .section-heading-lg {
-    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    font-size: clamp(1.12rem, 1.8vw, 1.35rem);
+    margin-bottom: 0;
 }
 
 .home-section-head {
@@ -3557,42 +3558,42 @@ body.in-notes-tab #contactSection {
     line-height: 1.48;
 }
 
-/* Our Team Layout: Row 1 Founder Centered; Row 2 CEO, CCO, CTO (Compact) */
+/* Our Team Layout: Row 1 Founder Centered; Row 2 CEO, CCO, CTO (Extra Compact) */
 .team-row-founder {
     display: flex;
     justify-content: center;
-    gap: 16px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .team-row-founder .team-profile-card {
     width: 100%;
-    max-width: 270px;
+    max-width: 215px;
 }
 
 .team-row-execs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    max-width: 820px;
+    gap: 10px;
+    max-width: 660px;
     margin: 0 auto;
 }
 
 .team-row-extra {
-    margin-top: 14px;
+    margin-top: 10px;
 }
 
 .team-profile-card {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 18px 15px;
+    border-radius: 10px;
+    padding: 12px 11px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     box-shadow: var(--shadow-xs);
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
@@ -3609,16 +3610,16 @@ body.in-notes-tab #contactSection {
 }
 
 .team-avatar-wrap {
-    width: 62px;
-    height: 62px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid var(--border-subtle);
+    border: 1.5px solid var(--border-subtle);
     background: var(--bg-surface);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
 }
 
 .team-avatar-img {
@@ -3636,18 +3637,18 @@ body.in-notes-tab #contactSection {
     justify-content: center;
     background: var(--ink-primary);
     color: var(--bg-canvas);
-    font-size: 1.35rem;
+    font-size: 1rem;
     font-weight: 700;
 }
 
 .team-role-badge {
     display: inline-flex;
     align-items: center;
-    padding: 2px 9px;
+    padding: 1px 7px;
     border-radius: 999px;
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
-    font-size: 0.68rem;
+    font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -3661,16 +3662,16 @@ body.in-notes-tab #contactSection {
 }
 
 .team-member-name {
-    margin: 1px 0 0;
-    font-size: 0.98rem;
+    margin: 0;
+    font-size: 0.86rem;
     font-weight: 700;
     color: var(--ink-primary);
 }
 
 .team-member-bio {
     margin: 0;
-    font-size: 0.79rem;
-    line-height: 1.45;
+    font-size: 0.72rem;
+    line-height: 1.36;
     color: var(--text-secondary);
 }
 
@@ -4829,7 +4830,7 @@ body {
     }
 
     .team-profile-card {
-        padding: 16px 14px !important;
+        padding: 11px 10px !important;
     }
 
     .premium-program-card {
