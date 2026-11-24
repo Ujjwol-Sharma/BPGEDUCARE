@@ -1,8 +1,17 @@
 {
-  "revision": 42,
-  "lastUpdated": "2026-11-24T09:47:30.895Z",
+  "revision": 43,
+  "lastUpdated": "2026-11-24T10:04:57.751Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795514697750_m5hx",
+      "timestamp": "2026-11-24T10:04:57.750Z",
+      "userId": "usr_3fb71be3b31a",
+      "email": "deepsonpaudel9@gmail.com",
+      "actor": "Dipson Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795513650895_v6to",
       "timestamp": "2026-11-24T09:47:30.895Z",
@@ -131,6 +140,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_3fb71be3b31a",
+      "name": "Dipson Poudel",
+      "username": "deepsonpaudel9",
+      "email": "deepsonpaudel9@gmail.com",
+      "canonicalEmail": "deepsonpaudel9@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-24T10:04:57.696Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_3fb71be3b31a82ad",
+      "avatarUrl": "",
+      "passkey": "scrypt$3e66bb4b0c5156b3a80cafbabedb791d$c4568e796609e860c757025063b1c448c57cbd46bff0f7dd187eb53c88ad79644bec5485d02b2fdd280aa56e967a76f0180f4aa62a5c40fbc63f30262b1abbc8",
+      "joinedAt": "2026-11-24",
+      "updatedAt": "2026-11-24T10:04:57.750Z",
+      "lastModifiedBy": "Dipson Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795514697750_6bwt",
+          "timestamp": "2026-11-24T10:04:57.750Z",
+          "actor": "Dipson Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_25e888886ae4",
       "name": "Chess Club",
