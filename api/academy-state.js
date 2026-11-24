@@ -6,11 +6,15 @@
  */
 
 const fs = require('fs');
+const path = require('path');
+const os = require('os');
 const {
     DATA_DIR,
     DB_PATH,
     LEGACY_CMS_PATH,
     TMP_DB_PATH,
+    ROSTER_PATH,
+    TMP_ROSTER_PATH,
     MASTER_PASSKEY,
     isAdminPasskeyValid,
     ensureAccessModelDefaults,
@@ -19,6 +23,14 @@ const {
     resolveRequestUser,
     sanitizeStateForStudent
 } = require('./_access-control');
+const {
+    queueDurableWrite,
+    hasPendingDurableWrites,
+    extractAndQueueDurablePdfFiles,
+    flushPendingDurableCommits,
+    ensureDurableStoreHydrated
+} = require('./_durable-storage');
+const TMP_ATTEMPTS_PATH = path.join(os.tmpdir(), 'bpg-mock-attempts.json');
 
 function deepMergeState(currentData, payload) {
     const updated = Object.assign({}, currentData, payload);
@@ -108,6 +120,9 @@ function deepMergeState(currentData, payload) {
 
 function writeStateToDisk(updated) {
     updated.revision = (Number(updated.revision) || Number(global.__BPG_ACADEMY_STATE__?.revision) || 1) + 1;
+    try {
+        extractAndQueueDurablePdfFiles(updated);
+    } catch (e) {}
     global.__BPG_ACADEMY_STATE__ = updated;
     const serialized = JSON.stringify(updated, null, 2);
 
@@ -123,6 +138,7 @@ function writeStateToDisk(updated) {
     }
 
     try { fs.writeFileSync(LEGACY_CMS_PATH, serialized, 'utf8'); } catch (e) {}
+    try { queueDurableWrite('academy-state.json', serialized); } catch (e) {}
 }
 
 module.exports.writeStateToDisk = writeStateToDisk;
@@ -147,6 +163,35 @@ const SUB_ROUTE_HANDLERS = {
 };
 
 function ensureResHelpers(res) {
+    if (!res.__bpgDurableWrapped) {
+        res.__bpgDurableWrapped = true;
+        const origEnd = res.end.bind(res);
+        res.end = function (chunk, encoding, cb) {
+            if (!hasPendingDurableWrites()) {
+                return origEnd(chunk, encoding, cb);
+            }
+            const status = res.statusCode || 200;
+            if (status < 200 || status >= 300) {
+                return origEnd(chunk, encoding, cb);
+            }
+            flushPendingDurableCommits()
+                .then(() => {
+                    origEnd(chunk, encoding, cb);
+                })
+                .catch(err => {
+                    console.error('[DurableStore] Failed to persist mutation:', err);
+                    res.statusCode = 500;
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    origEnd(JSON.stringify({
+                        ok: false,
+                        success: false,
+                        code: 'DURABLE_SAVE_FAILED',
+                        error: 'Could not save changes to durable cloud storage. Please try again. (' + err.message + ')'
+                    }));
+                });
+            return res;
+        };
+    }
     if (typeof res.status !== 'function') {
         res.status = function (code) {
             res.statusCode = code;
@@ -167,6 +212,16 @@ function ensureResHelpers(res) {
 
 async function academyStateHandler(req, res) {
     ensureResHelpers(res);
+
+    if (req.method !== 'OPTIONS') {
+        await ensureDurableStoreHydrated({
+            TMP_DB_PATH,
+            TMP_ROSTER_PATH,
+            TMP_ATTEMPTS_PATH,
+            DB_PATH,
+            ROSTER_PATH
+        });
+    }
 
     const parsedRouteUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
     const subRoute = (req.query && req.query.__route) || parsedRouteUrl.searchParams.get('__route') || '';

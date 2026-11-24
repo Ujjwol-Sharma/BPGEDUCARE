@@ -13,8 +13,9 @@ const {
     isAdminPasskeyValid,
     normalizePlan
 } = require('./_access-control');
+const { readDurablePdfBuffer } = require('./_durable-storage');
 
-module.exports = function contentAccessHandler(req, res) {
+module.exports = async function contentAccessHandler(req, res) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -216,7 +217,13 @@ module.exports = function contentAccessHandler(req, res) {
             }
         }
 
-        const fileUrl = String(foundPdf.fileUrl || '');
+        let fileUrl = String(foundPdf.fileUrl || '');
+        if (!fileUrl.startsWith('data:application/pdf;base64,')) {
+            const durableBuf = await readDurablePdfBuffer(foundPdf.id);
+            if (durableBuf) {
+                fileUrl = `data:application/pdf;base64,${durableBuf.toString('base64')}`;
+            }
+        }
         if (rawMode && fileUrl.startsWith('data:application/pdf;base64,')) {
             const b64 = fileUrl.slice('data:application/pdf;base64,'.length);
             const buf = Buffer.from(b64, 'base64');
@@ -234,7 +241,7 @@ module.exports = function contentAccessHandler(req, res) {
             itemType: 'lesson-pdf',
             classKey,
             lessonId,
-            item: foundPdf
+            item: Object.assign({}, foundPdf, { fileUrl })
         }));
         return;
     }

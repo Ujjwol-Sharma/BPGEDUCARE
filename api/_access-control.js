@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
+const { queueDurableWrite } = require('./_durable-storage');
 
 const ROOT_DIR = path.join(__dirname, '..');
 const DATA_DIR = path.join(ROOT_DIR, 'data');
@@ -789,6 +790,9 @@ function writeRoster(roster) {
         fs.writeFileSync(tmp, serialized, 'utf8');
         fs.renameSync(tmp, ROSTER_PATH);
     } catch (e) { }
+    try {
+        queueDurableWrite('student-roster.json', serialized);
+    } catch (e) { }
     global.__BPG_STUDENT_ROSTER__ = null;
     return readRoster();
 }
@@ -1480,6 +1484,7 @@ module.exports = {
     LEGACY_CMS_PATH,
     TMP_DB_PATH,
     ROSTER_PATH,
+    TMP_ROSTER_PATH,
     MASTER_PASSKEY,
     OTP_SECRET,
     PLAN_RANK,

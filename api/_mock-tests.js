@@ -22,6 +22,7 @@ const {
     LEGACY_CMS_PATH,
     TMP_DB_PATH
 } = require('./_access-control');
+const { queueDurableWrite } = require('./_durable-storage');
 
 const ATTEMPTS_PATH = path.join(DATA_DIR, 'mock-attempts.json');
 const TMP_ATTEMPTS_PATH = path.join(os.tmpdir(), 'bpg-mock-attempts.json');
@@ -72,6 +73,7 @@ function writeAttemptsStore(store) {
         fs.writeFileSync(tmp, serialized, 'utf8');
         fs.renameSync(tmp, ATTEMPTS_PATH);
     } catch (e) {}
+    try { queueDurableWrite('mock-attempts.json', serialized); } catch (e) {}
     return clean;
 }
 
@@ -89,6 +91,7 @@ function persistMockTestsToAcademyState(state) {
         fs.renameSync(tmp, DB_PATH);
     } catch (e) {}
     try { fs.writeFileSync(LEGACY_CMS_PATH, serialized, 'utf8'); } catch (e) {}
+    try { queueDurableWrite('academy-state.json', serialized); } catch (e) {}
 }
 
 function stripAnswerKeyFromQuestions(questions) {

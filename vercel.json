@@ -4,6 +4,11 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "cleanUrls": true,
+  "git": {
+    "deploymentEnabled": {
+      "bpg-live-db": false
+    }
+  },
   "functions": {
     "api/*.js": {
       "includeFiles": "data/**"
