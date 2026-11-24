@@ -1,8 +1,17 @@
 {
-  "revision": 36,
-  "lastUpdated": "2026-11-24T09:45:32.481Z",
+  "revision": 37,
+  "lastUpdated": "2026-11-24T09:45:38.402Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513538402_9j4n",
+      "timestamp": "2026-11-24T09:45:38.402Z",
+      "userId": "usr_57ca72c99775",
+      "email": "suman@bpgacademy.edu.np",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Suman Sharma (suman@bpgacademy.edu.np)"
+    },
     {
       "id": "raud_1795513532481_yk0r",
       "timestamp": "2026-11-24T09:45:32.481Z",
@@ -159,31 +168,6 @@
       "joinedAt": "2026-11-03",
       "updatedAt": "2026-11-23T15:00:00.000Z",
       "lastModifiedBy": "Recovered with Verified Diamond Payment (GW999)",
-      "auditLog": []
-    },
-    {
-      "userId": "usr_57ca72c99775",
-      "name": "Suman Sharma",
-      "username": "suman",
-      "email": "suman@bpgacademy.edu.np",
-      "canonicalEmail": "suman@bpgacademy.edu.np",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": true,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-14T09:00:00.000Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "bpgstudent",
-      "joinedAt": "2026-11-14",
-      "updatedAt": "2026-11-23T15:00:00.000Z",
-      "lastModifiedBy": "Recovered from Chrome LevelDB Backup",
       "auditLog": []
     }
   ]
