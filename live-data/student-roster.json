@@ -1,8 +1,17 @@
 {
-  "revision": 50,
-  "lastUpdated": "2026-11-24T11:10:18.910Z",
+  "revision": 51,
+  "lastUpdated": "2026-11-24T11:10:20.384Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795518620384_ok6o",
+      "timestamp": "2026-11-24T11:10:20.384Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Chess Club: payment ORD-1795518544717-1E3DF3 marked FAILED"
+    },
     {
       "id": "raud_1795518618910_l0m8",
       "timestamp": "2026-11-24T11:10:18.910Z",
@@ -261,9 +270,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T11:10:18.910Z",
+      "updatedAt": "2026-11-24T11:10:20.384Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795518620384_mv9n",
+          "timestamp": "2026-11-24T11:10:20.384Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795518544717-1E3DF3 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795518618910_4wq0",
           "timestamp": "2026-11-24T11:10:18.910Z",
