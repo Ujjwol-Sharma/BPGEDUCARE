@@ -1,8 +1,17 @@
 {
-  "revision": 45,
-  "lastUpdated": "2026-11-24T10:07:43.142Z",
+  "revision": 46,
+  "lastUpdated": "2026-11-24T10:08:22.554Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795514902554_gu2g",
+      "timestamp": "2026-11-24T10:08:22.554Z",
+      "userId": "usr_8e81abd1d7f6",
+      "email": "deepsonking444@gmail.com",
+      "actor": "Dipson Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795514801914_11q4",
       "timestamp": "2026-11-24T10:06:41.914Z",
@@ -149,6 +158,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_8e81abd1d7f6",
+      "name": "Dipson Poudel",
+      "username": "deepsonking444",
+      "email": "deepsonking444@gmail.com",
+      "canonicalEmail": "deepsonking444@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-24T10:08:22.500Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_8e81abd1d7f63c16",
+      "avatarUrl": "",
+      "passkey": "scrypt$28a8e8ade8c7f8bdba543cb80d9b6098$2d26db5b1c89ddd3b2785dc36af640b2593d30029b476cc5ca72c9f0ceaf21907b0337e90039cd4fa4a2ad72b614488ca6abfe8c6b39d853e70e58d8ab8a8283",
+      "joinedAt": "2026-11-24",
+      "updatedAt": "2026-11-24T10:08:22.553Z",
+      "lastModifiedBy": "Dipson Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795514902554_qavi",
+          "timestamp": "2026-11-24T10:08:22.553Z",
+          "actor": "Dipson Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_3fb71be3b31a",
       "name": "Dipson Poudel",
