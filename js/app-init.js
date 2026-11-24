@@ -143,17 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (ev.data.state && typeof applyIncomingAdminState === 'function') {
                         applyIncomingAdminState(ev.data.state);
                     } else {
-                        loadStateFromStorage();
-                        renderActivePortal();
-                        syncWithServerDatabase();
+                        syncWithServerDatabase(false);
                     }
-                    syncRosterPermissionsFromServer();
                     updateAuthUserPill();
                     showToastNotification('Website updated with latest academic data.');
-                } else if (ev.data.type === 'PERMISSIONS_UPDATE') {
-                    syncRosterPermissionsFromServer();
+                } else if (ev.data.type === 'PERMISSIONS_UPDATE' || ev.data.type === 'PAYMENT_UPDATED' || ev.data.type === 'STUDENT_ROSTER_UPDATED') {
+                    syncWithServerDatabase(true);
                     updateAuthUserPill();
-                    showToastNotification('Student roster updated from Admin Studio.');
                 }
             };
 
@@ -172,30 +168,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 applyIncomingAdminState(parsed);
                 showToastNotification('Website updated with latest academic data.');
             } catch (err) {}
-        } else if (ev.key === BPG_ACCOUNTS_KEY && ev.newValue) {
-            syncRosterPermissionsFromServer();
+        } else if ((ev.key === BPG_ACCOUNTS_KEY || ev.key === 'bpg_live_mutation_ping') && ev.newValue) {
+            syncWithServerDatabase(true);
             updateAuthUserPill();
         }
     });
 
-    // Initial Database & Roster Hydration on Load
-    syncWithServerDatabase().then(() => {
+    // Initial Unified Database, Member Profile & Payment Hydration on Load
+    syncWithServerDatabase(false).then(() => {
         if (typeof handleGatewayPaymentReturn === 'function') {
             handleGatewayPaymentReturn();
         }
     });
-    syncRosterPermissionsFromServer();
 
-    // Cache Invalidation: Re-fetch on tab focus
+    // Cache Invalidation: Re-fetch immediately on tab focus
     window.addEventListener('focus', () => {
-        syncWithServerDatabase();
-        syncRosterPermissionsFromServer();
+        syncWithServerDatabase(true);
     });
 
-    // Periodic Heartbeat Poll every 12 seconds for cross-device updates
+    // Real-Time 1.5-Second Lightweight Background Poll for 1-2s Two-Way Sync
     setInterval(() => {
-        syncWithServerDatabase();
-    }, 12000);
+        if (document.visibilityState === 'hidden') return;
+        syncWithServerDatabase(true);
+    }, 1500);
 });
 
 // Global API & Window Interop Bindings
@@ -273,3 +268,7 @@ window.toggleMiniCalcHistory = toggleMiniCalcHistory;
 window.reuseMiniCalcHistory = reuseMiniCalcHistory;
 window.clearMiniCalcHistory = clearMiniCalcHistory;
 window.calcUseLastAns = calcUseLastAns;
+window.openStudentProfileModal = openStudentProfileModal;
+window.closeStudentProfileModal = closeStudentProfileModal;
+window.handleStudentProfileSave = handleStudentProfileSave;
+window.renderStudentDashboardPaymentBanner = renderStudentDashboardPaymentBanner;

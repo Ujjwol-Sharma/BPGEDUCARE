@@ -115,16 +115,121 @@ function showAdminToast(message, type = 'info') {
 }
 
 function broadcastUpdate(type = 'DATA_UPDATED') {
+    const payload = { type, timestamp: Date.now() };
     try {
         if ('BroadcastChannel' in window) {
             const ch1 = new BroadcastChannel('bpg_academy_sync');
-            ch1.postMessage({ type, timestamp: Date.now() });
+            ch1.postMessage(payload);
             ch1.close();
             const ch2 = new BroadcastChannel('bpg_maths_academy_live_sync');
-            ch2.postMessage({ type, timestamp: Date.now() });
+            ch2.postMessage(payload);
             ch2.close();
         }
     } catch (e) {}
+    try {
+        localStorage.setItem('bpg_live_mutation_ping', JSON.stringify(payload));
+    } catch (e) {}
+}
+
+let adminLastSyncVersion = '';
+let adminRealtimePollTimer = null;
+let adminRealtimeSyncInFlight = false;
+
+function updateAdminLiveSyncBadge(label = 'Live Sync · Active') {
+    const el = document.getElementById('adminLiveSyncBadge');
+    if (el) el.textContent = label;
+}
+
+function isAdminTypingInUsersOrPayments() {
+    const active = document.activeElement;
+    if (!active) return false;
+    const tag = (active.tagName || '').toUpperCase();
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') return false;
+    if (active.id === 'userSearchInput') return false; // Search input value is preserved across renderUsersTab
+    return Boolean(active.closest('#pane-users, #pane-payments, #pane-switches'));
+}
+
+async function pollAdminLiveUpdates(forceRender = false) {
+    if (!ADMIN_STUDIO_TOKEN || adminRealtimeSyncInFlight) return;
+    adminRealtimeSyncInFlight = true;
+    try {
+        const res = await fetch('/api/academy-state?light=1&_t=' + Date.now(), {
+            cache: 'no-store',
+            headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!json || !json.success) return;
+
+        const nextVer = String(json.syncVersion || '');
+        const changed = forceRender || (nextVer && nextVer !== adminLastSyncVersion);
+        if (!changed) return;
+
+        adminLastSyncVersion = nextVer;
+        if (json.roster) ADMIN_ROSTER = json.roster;
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        if (ADMIN_STATE) {
+            if (json.sectionLocks) ADMIN_STATE.sectionLocks = json.sectionLocks;
+            if (json.plansConfig) ADMIN_STATE.plansConfig = json.plansConfig;
+            if (json.maintenanceMode) ADMIN_STATE.maintenanceMode = json.maintenanceMode;
+        }
+
+        const timeLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        updateAdminLiveSyncBadge(`Live Sync · ${timeLabel}`);
+
+        if (!isAdminTypingInUsersOrPayments()) {
+            const searchEl = document.getElementById('userSearchInput');
+            const hadSearchFocus = document.activeElement === searchEl;
+            const selStart = hadSearchFocus ? searchEl.selectionStart : null;
+            const selEnd = hadSearchFocus ? searchEl.selectionEnd : null;
+
+            renderUsersTab();
+            renderSwitchRequestsTab();
+            renderPaymentsTab();
+
+            if (hadSearchFocus && searchEl) {
+                searchEl.focus();
+                try { searchEl.setSelectionRange(selStart, selEnd); } catch (e) {}
+            }
+        }
+    } catch (e) {
+    } finally {
+        adminRealtimeSyncInFlight = false;
+    }
+}
+
+function startAdminRealtimeSync() {
+    if (adminRealtimePollTimer) clearInterval(adminRealtimePollTimer);
+    adminRealtimePollTimer = setInterval(() => {
+        if (document.visibilityState === 'hidden') return;
+        pollAdminLiveUpdates(false);
+    }, 1500);
+
+    try {
+        if ('BroadcastChannel' in window && !window.__BPG_ADMIN_BC_ATTACHED__) {
+            window.__BPG_ADMIN_BC_ATTACHED__ = true;
+            const onMsg = (ev) => {
+                if (!ev.data) return;
+                pollAdminLiveUpdates(true);
+            };
+            const ch1 = new BroadcastChannel('bpg_academy_sync');
+            ch1.onmessage = onMsg;
+            const ch2 = new BroadcastChannel('bpg_maths_academy_live_sync');
+            ch2.onmessage = onMsg;
+        }
+    } catch (e) {}
+
+    if (!window.__BPG_ADMIN_STORAGE_ATTACHED__) {
+        window.__BPG_ADMIN_STORAGE_ATTACHED__ = true;
+        window.addEventListener('storage', (ev) => {
+            if (ev.key === 'bpg_live_mutation_ping' && ev.newValue) {
+                pollAdminLiveUpdates(true);
+            }
+        });
+        window.addEventListener('focus', () => {
+            pollAdminLiveUpdates(false);
+        });
+    }
 }
 
 async function verifyAdminPasskeyWithServer(candidatePasskey) {
@@ -227,6 +332,7 @@ async function openAdminShell() {
     const shell = document.getElementById('adminShell');
     if (shell) shell.style.display = 'flex';
     await loadAdminData();
+    startAdminRealtimeSync();
 }
 
 async function loadAdminData() {
@@ -240,6 +346,7 @@ async function loadAdminData() {
 
         const stateJson = await stateRes.json();
 
+        if (stateJson?.syncVersion) adminLastSyncVersion = String(stateJson.syncVersion);
         if (stateJson?.data) ADMIN_STATE = stateJson.data;
         if (stateJson?.roster) {
             ADMIN_ROSTER = stateJson.roster;
@@ -258,6 +365,8 @@ async function loadAdminData() {
         else if (Array.isArray(ADMIN_STATE?.payments)) ADMIN_PAYMENTS = ADMIN_STATE.payments;
 
         setSaveStatus('All changes saved');
+        const timeLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        updateAdminLiveSyncBadge(`Live Sync · ${timeLabel}`);
         renderAllAdminTabs();
     } catch (err) {
         setSaveStatus('Offline');
@@ -335,11 +444,50 @@ function parseNumericAmount(rawAmount) {
     return Number.isFinite(val) ? val : 0;
 }
 
-function getPaymentsForEmail(email) {
+function getPaymentsForEmail(email, userId = '') {
     const target = String(email || '').trim().toLowerCase();
-    if (!target) return [];
     const list = Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : [];
-    return list.filter(p => String(p.email || '').trim().toLowerCase() === target);
+    return list.filter(p => {
+        if (userId && p.userId && p.userId === userId) return true;
+        return target && String(p.email || '').trim().toLowerCase() === target;
+    });
+}
+
+function normalizeAdminPayStatus(status) {
+    const s = String(status || '').trim().toLowerCase();
+    if (s === 'paid' || s === 'verified' || s === 'complete') return 'paid';
+    if (s === 'awaiting_confirmation' || s === 'awaiting') return 'awaiting_confirmation';
+    if (s === 'failed' || s === 'rejected') return 'failed';
+    if (s === 'refunded') return 'refunded';
+    return 'pending';
+}
+
+function formatAdminPayStatusPill(status, extraText = '') {
+    const norm = normalizeAdminPayStatus(status);
+    const suffix = extraText ? ` &middot; ${escapeHtml(extraText)}` : '';
+    if (norm === 'paid') {
+        return `<span class="adm-status-pill open" style="font-size:0.72rem;">PAID${suffix}</span>`;
+    }
+    if (norm === 'awaiting_confirmation') {
+        return `<span class="adm-status-pill" style="background:rgba(217,119,6,0.14); color:#d97706; font-size:0.72rem;">AWAITING CONFIRMATION${suffix}</span>`;
+    }
+    if (norm === 'failed') {
+        return `<span class="adm-status-pill locked" style="font-size:0.72rem;">FAILED${suffix}</span>`;
+    }
+    if (norm === 'refunded') {
+        return `<span class="adm-status-pill" style="background:rgba(99,102,241,0.14); color:#4f46e5; font-size:0.72rem;">REFUNDED${suffix}</span>`;
+    }
+    return `<span class="adm-status-pill" style="background:rgba(245,158,11,0.14); color:#b45309; font-size:0.72rem;">PENDING${suffix}</span>`;
+}
+
+function formatRelativeOrLocalTime(isoStr) {
+    if (!isoStr) return '—';
+    const d = new Date(isoStr);
+    if (isNaN(d.getTime())) return escapeHtml(isoStr);
+    const diffSec = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (diffSec >= 0 && diffSec < 60) return `${diffSec}s ago`;
+    if (diffSec >= 60 && diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
+    return d.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 function setUsersQuickFilter(planFilter, classFilter = 'all') {
@@ -368,8 +516,11 @@ function renderUsersTab() {
     const totalPaidStudents = goldStudents + diamondStudents;
     const freeStudents = totalStudents - totalPaidStudents;
 
-    const verifiedPayments = payments.filter(p => p.status === 'verified');
-    const pendingPayments = payments.filter(p => p.status === 'pending');
+    const verifiedPayments = payments.filter(p => normalizeAdminPayStatus(p.status) === 'paid');
+    const pendingPayments = payments.filter(p => {
+        const st = normalizeAdminPayStatus(p.status);
+        return st === 'pending' || st === 'awaiting_confirmation';
+    });
     const totalVerifiedRevenue = verifiedPayments.reduce((sum, p) => sum + parseNumericAmount(p.amount), 0);
 
     const c12Count = accounts.filter(a => a.classKey === 'class-12').length;
@@ -435,8 +586,11 @@ function renderUsersTab() {
 
     const filtered = accounts.filter(acc => {
         const plan = (acc.plan || 'free').toLowerCase();
-        const userPayments = getPaymentsForEmail(acc.email);
-        const hasPendingPay = userPayments.some(p => p.status === 'pending');
+        const userPayments = getPaymentsForEmail(acc.email, acc.userId);
+        const hasPendingPay = userPayments.some(p => {
+            const st = normalizeAdminPayStatus(p.status);
+            return st === 'pending' || st === 'awaiting_confirmation';
+        });
 
         if (planFilter === 'paid' && plan !== 'gold' && plan !== 'diamond') return false;
         if (planFilter === 'gold' && plan !== 'gold') return false;
@@ -447,10 +601,14 @@ function renderUsersTab() {
         if (classFilter !== 'all' && acc.classKey !== classFilter) return false;
 
         if (!q) return true;
-        const txnMatch = userPayments.some(p => String(p.transactionId || '').toLowerCase().includes(q));
+        const txnMatch = userPayments.some(p =>
+            String(p.transactionId || '').toLowerCase().includes(q) ||
+            String(p.orderId || '').toLowerCase().includes(q)
+        );
         return (acc.name || '').toLowerCase().includes(q)
             || (acc.email || '').toLowerCase().includes(q)
             || (acc.username || '').toLowerCase().includes(q)
+            || (acc.userId || '').toLowerCase().includes(q)
             || (acc.canonicalEmail || '').toLowerCase().includes(q)
             || txnMatch;
     });
@@ -459,8 +617,10 @@ function renderUsersTab() {
         countBar.innerHTML = `Showing <strong>${filtered.length}</strong> of <strong>${totalStudents}</strong> students (${totalPaidStudents} paid: ${goldStudents} Gold, ${diamondStudents} Diamond &middot; ${freeStudents} Free)`;
     }
 
+    renderRecentAuditLogCard();
+
     if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:28px; color:var(--adm-text-muted);">No matching students found for the selected filter.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:28px; color:var(--adm-text-muted);">No matching students found for the selected filter.</td></tr>`;
         return;
     }
 
@@ -468,43 +628,53 @@ function renderUsersTab() {
         const emailEsc = escapeHtml(acc.email);
         const plan = (acc.plan || 'free').toLowerCase();
         const isPaidPlan = plan === 'gold' || plan === 'diamond';
-        const userPayments = getPaymentsForEmail(acc.email);
-        const latestVerifiedPay = userPayments.find(p => p.status === 'verified');
-        const latestPendingPay = userPayments.find(p => p.status === 'pending');
+        const accountStatus = (acc.accountStatus || 'active').toLowerCase();
+        const userPayments = getPaymentsForEmail(acc.email, acc.userId);
+        const latestVerifiedPay = userPayments.find(p => normalizeAdminPayStatus(p.status) === 'paid');
+        const latestPendingPay = userPayments.find(p => {
+            const st = normalizeAdminPayStatus(p.status);
+            return st === 'pending' || st === 'awaiting_confirmation';
+        });
         const latestPay = latestPendingPay || latestVerifiedPay || userPayments[0] || null;
 
         let paymentCellHtml = '';
         if (latestPendingPay) {
+            const normSt = normalizeAdminPayStatus(latestPendingPay.status);
             paymentCellHtml = `
                 <div style="display:flex; flex-direction:column; gap:4px;">
-                    <span class="adm-status-pill" style="background:rgba(217,119,6,0.12); color:#d97706; width:fit-content;">PENDING &middot; ${escapeHtml(latestPendingPay.planName || '')} (${escapeHtml(latestPendingPay.amount || '')})</span>
-                    <small style="color:var(--adm-text-muted);">Txn: <code>${escapeHtml(latestPendingPay.transactionId || 'N/A')}</code></small>
-                    <div style="display:flex; gap:4px; margin-top:2px;">
+                    ${formatAdminPayStatusPill(normSt, `${latestPendingPay.planName || ''} (${latestPendingPay.amount || ''})`)}
+                    <small style="color:var(--adm-text-muted);">Order: <code>${escapeHtml(latestPendingPay.orderId || latestPendingPay.id)}</code> &middot; Txn: <code>${escapeHtml(latestPendingPay.transactionId || 'N/A')}</code></small>
+                    <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:2px;">
                         <button type="button" class="btn-adm-dark" style="padding:3px 8px; font-size:0.72rem;" onclick="handleAdminPaymentDecision('${escapeHtml(latestPendingPay.id)}', true)">Verify &amp; Activate</button>
-                        <button type="button" class="btn-topbar" style="padding:3px 8px; font-size:0.72rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(latestPendingPay.id)}', false)">Reject</button>
+                        <button type="button" class="btn-topbar" style="padding:3px 8px; font-size:0.72rem;" onclick="handleAdminCheckProviderStatus('${escapeHtml(latestPendingPay.id)}')" title="Check transaction status against eSewa provider">Check Provider</button>
+                        <button type="button" class="btn-topbar" style="padding:3px 8px; font-size:0.72rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(latestPendingPay.id)}', false)">Mark Failed</button>
                     </div>
                 </div>
             `;
         } else if (latestVerifiedPay) {
             paymentCellHtml = `
                 <div>
-                    <span class="adm-status-pill open" style="font-size:0.72rem;">PAID &middot; ${escapeHtml(latestVerifiedPay.amount || latestVerifiedPay.planName || plan.toUpperCase())}</span>
-                    <div style="font-size:0.76rem; color:var(--adm-text-muted); margin-top:3px;">
-                        Txn: <code>${escapeHtml(latestVerifiedPay.transactionId || 'Verified')}</code>
+                    ${formatAdminPayStatusPill('paid', latestVerifiedPay.amount || latestVerifiedPay.planName || plan.toUpperCase())}
+                    <div style="font-size:0.75rem; color:var(--adm-text-muted); margin-top:3px;">
+                        Order: <code>${escapeHtml(latestVerifiedPay.orderId || latestVerifiedPay.id)}</code> &middot; Txn: <code>${escapeHtml(latestVerifiedPay.transactionId || 'Verified')}</code>
+                    </div>
+                    <div style="margin-top:3px;">
+                        <button type="button" class="btn-topbar" style="padding:2px 7px; font-size:0.7rem;" onclick="handleAdminRefundPayment('${escapeHtml(latestVerifiedPay.id)}')">Refund</button>
                     </div>
                 </div>
             `;
         } else if (isPaidPlan) {
             paymentCellHtml = `
                 <div>
-                    <span class="adm-status-pill open" style="font-size:0.72rem;">PAID (${escapeHtml(plan.toUpperCase())})</span>
+                    ${formatAdminPayStatusPill('paid', plan.toUpperCase())}
                     <div style="font-size:0.75rem; color:var(--adm-text-muted); margin-top:2px;">Admin assigned</div>
                 </div>
             `;
-        } else if (latestPay && latestPay.status === 'rejected') {
+        } else if (latestPay) {
+            const normSt = normalizeAdminPayStatus(latestPay.status);
             paymentCellHtml = `
                 <div>
-                    <span class="adm-status-pill locked" style="font-size:0.72rem;">REJECTED</span>
+                    ${formatAdminPayStatusPill(normSt)}
                     <div style="font-size:0.75rem; color:var(--adm-text-muted); margin-top:2px;">Txn: <code>${escapeHtml(latestPay.transactionId || '—')}</code></div>
                 </div>
             `;
@@ -513,20 +683,23 @@ function renderUsersTab() {
         }
 
         const authBadge = acc.googleLinked
-            ? '<span style="font-size:0.72rem; padding:2px 6px; border-radius:4px; background:var(--adm-bg-subtle); color:var(--adm-text-muted);">Google</span>'
+            ? '<span style="font-size:0.72rem; padding:2px 6px; border-radius:4px; background:rgba(59,130,246,0.12); color:#2563eb; font-weight:600;">Google</span>'
             : (acc.emailVerified ? '<span style="font-size:0.72rem; padding:2px 6px; border-radius:4px; background:rgba(22,163,74,0.1); color:#16a34a;">OTP Verified</span>' : '');
+
+        const latestAudit = Array.isArray(acc.auditLog) && acc.auditLog.length > 0 ? acc.auditLog[0] : null;
+        const modifiedByText = acc.lastModifiedBy || (latestAudit ? latestAudit.actor : 'System');
 
         return `
             <tr>
                 <td>
                     <strong>${escapeHtml(acc.name || 'Student')}</strong>
                     <div style="font-size:0.76rem; color:var(--adm-text-muted);">@${escapeHtml(acc.username || (acc.email || '').split('@')[0])}</div>
+                    <div style="margin-top:2px;"><code style="font-size:0.7rem; color:var(--adm-text-muted);">${escapeHtml(acc.userId || '—')}</code></div>
                 </td>
                 <td>
                     <div>${emailEsc}</div>
                     <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap; margin-top:3px;">
                         ${authBadge}
-                        ${acc.duplicateFlag ? '<span class="adm-flag-badge">Duplicate Gmail</span>' : ''}
                     </div>
                 </td>
                 <td>
@@ -544,17 +717,57 @@ function renderUsersTab() {
                         <option value="diamond" ${plan === 'diamond' ? 'selected' : ''}>Diamond (Paid)</option>
                     </select>
                 </td>
+                <td>
+                    <select class="adm-select compact" onchange="handleAdminUpdateAccountStatus('${emailEsc}', this.value)">
+                        <option value="active" ${accountStatus === 'active' ? 'selected' : ''}>Active</option>
+                        <option value="pending_verification" ${accountStatus === 'pending_verification' ? 'selected' : ''}>Pending Verification</option>
+                        <option value="suspended" ${accountStatus === 'suspended' ? 'selected' : ''}>Suspended</option>
+                    </select>
+                </td>
                 <td>${paymentCellHtml}</td>
-                <td style="color:var(--adm-text-muted); font-size:0.82rem;">${escapeHtml(acc.joinedAt || '—')}</td>
+                <td style="font-size:0.78rem;">
+                    <div style="font-weight:600; color:var(--adm-text);" title="${escapeHtml(acc.updatedAt || '')}">${formatRelativeOrLocalTime(acc.updatedAt || acc.joinedAt)}</div>
+                    <div style="font-size:0.72rem; color:var(--adm-text-muted);">by ${escapeHtml(modifiedByText)}</div>
+                </td>
                 <td>
                     <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                        <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.78rem;" onclick="openStudentDetailModal('${emailEsc}')">Details</button>
+                        <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.78rem;" onclick="openStudentDetailModal('${emailEsc}')">Details &amp; Audit</button>
                         <button type="button" class="btn-topbar danger" style="padding:5px 10px; font-size:0.78rem;" onclick="handleAdminDeleteUser('${emailEsc}')">Delete</button>
                     </div>
                 </td>
             </tr>
         `;
     }).join('');
+}
+
+function renderRecentAuditLogCard() {
+    const mount = document.getElementById('adminRecentAuditLogMount');
+    if (!mount) return;
+    const logs = Array.isArray(ADMIN_ROSTER?.auditLog) ? ADMIN_ROSTER.auditLog : [];
+    if (logs.length === 0) {
+        mount.innerHTML = '';
+        return;
+    }
+    mount.innerHTML = `
+        <div style="padding:14px 16px; border:1px solid var(--adm-border); border-radius:10px; background:var(--adm-bg-subtle);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <strong style="font-size:0.84rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--adm-text-muted);">Recent Member, Plan &amp; Access Audit Log (${logs.length})</strong>
+                <small style="color:var(--adm-text-muted);">Tracks who changed plan or access and when</small>
+            </div>
+            <div style="max-height:150px; overflow-y:auto; font-size:0.79rem; display:flex; flex-direction:column; gap:6px;">
+                ${logs.slice(0, 12).map(entry => `
+                    <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; padding-bottom:4px; border-bottom:1px dashed var(--adm-border);">
+                        <div>
+                            <strong>${escapeHtml(entry.actor || 'Admin')}</strong> &middot;
+                            <code style="font-size:0.72rem;">${escapeHtml(entry.action || 'UPDATE')}</code> &middot;
+                            <span>${escapeHtml(entry.details || '')}</span>
+                        </div>
+                        <small style="color:var(--adm-text-muted); white-space:nowrap;">${formatRelativeOrLocalTime(entry.timestamp)}</small>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
 }
 
 function openStudentDetailModal(email) {
@@ -565,67 +778,113 @@ function openStudentDetailModal(email) {
     const acc = accounts.find(a => String(a.email || '').trim().toLowerCase() === target);
     if (!acc) return;
 
-    const userPayments = getPaymentsForEmail(acc.email);
+    const userPayments = getPaymentsForEmail(acc.email, acc.userId);
     const switchRequests = (ADMIN_ROSTER.classSwitchRequests || []).filter(
-        r => String(r.email || '').trim().toLowerCase() === target
+        r => (acc.userId && r.userId === acc.userId) || String(r.email || '').trim().toLowerCase() === target
     );
+    const auditLogs = Array.isArray(acc.auditLog) ? acc.auditLog : [];
     const plan = (acc.plan || 'free').toLowerCase();
 
     mount.innerHTML = `
         <div style="position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9990; display:flex; align-items:center; justify-content:center; padding:16px;" onclick="if(event.target===this) closeStudentDetailModal()">
-            <div class="adm-card" style="width:100%; max-width:660px; max-height:88vh; overflow-y:auto; margin:0; padding:24px;">
+            <div class="adm-card" style="width:100%; max-width:740px; max-height:88vh; overflow-y:auto; margin:0; padding:24px;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px;">
                     <div>
                         <h3 style="margin:0; font-size:1.2rem;">${escapeHtml(acc.name || 'Student')}</h3>
-                        <div style="font-size:0.86rem; color:var(--adm-text-muted); margin-top:2px;">${escapeHtml(acc.email)} &middot; @${escapeHtml(acc.username || '')}</div>
+                        <div style="font-size:0.86rem; color:var(--adm-text-muted); margin-top:2px;">
+                            ${escapeHtml(acc.email)} &middot; @${escapeHtml(acc.username || '')} &middot; <code>${escapeHtml(acc.userId || '')}</code>
+                        </div>
                     </div>
                     <button type="button" class="btn-topbar" onclick="closeStudentDetailModal()">Close</button>
                 </div>
 
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:18px; padding:14px; border-radius:10px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:10px; margin-bottom:18px; padding:14px; border-radius:10px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
                     <div>
-                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Active Class</div>
+                        <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Active Class</div>
                         <div style="font-weight:700; margin-top:2px;">${escapeHtml(acc.grade || acc.classKey)}</div>
                     </div>
                     <div>
-                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Current Plan</div>
+                        <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Current Plan</div>
                         <div style="font-weight:700; margin-top:2px; text-transform:uppercase; color:${plan === 'free' ? 'inherit' : '#16a34a'};">${escapeHtml(plan)} ${plan !== 'free' ? '(PAID)' : ''}</div>
                     </div>
                     <div>
-                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Verification</div>
-                        <div style="font-weight:600; margin-top:2px;">${acc.googleLinked ? 'Google Linked' : (acc.emailVerified ? 'Email OTP Verified' : 'Standard')}</div>
+                        <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Account Status</div>
+                        <div style="font-weight:600; margin-top:2px; text-transform:capitalize;">${escapeHtml((acc.accountStatus || 'active').replace('_', ' '))}</div>
                     </div>
                     <div>
-                        <div style="font-size:0.74rem; color:var(--adm-text-muted); text-transform:uppercase;">Joined Date</div>
-                        <div style="font-weight:600; margin-top:2px;">${escapeHtml(acc.joinedAt || '—')}</div>
+                        <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Last Updated</div>
+                        <div style="font-weight:600; margin-top:2px;">${formatRelativeOrLocalTime(acc.updatedAt || acc.joinedAt)}</div>
+                        <div style="font-size:0.72rem; color:var(--adm-text-muted);">by ${escapeHtml(acc.lastModifiedBy || 'System')}</div>
                     </div>
                 </div>
 
                 <h4 style="margin:0 0 8px 0; font-size:0.95rem;">Payment &amp; Subscription History (${userPayments.length})</h4>
                 ${userPayments.length === 0 ? `
                     <div style="padding:14px; border:1px dashed var(--adm-border); border-radius:8px; color:var(--adm-text-muted); font-size:0.85rem; margin-bottom:16px;">
-                        No eSewa / WhatsApp payment submissions recorded for this student.
+                        No eSewa / WhatsApp payment orders recorded for this student.
                     </div>
                 ` : `
                     <div class="adm-table-wrap" style="margin-bottom:16px;">
                         <table class="adm-table">
                             <thead>
                                 <tr>
-                                    <th>Plan &amp; Amount</th>
+                                    <th>Order &amp; Plan</th>
                                     <th>eSewa Txn ID</th>
-                                    <th>Class</th>
                                     <th>Submitted</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${userPayments.map(p => `
+                                ${userPayments.map(p => {
+                                    const normSt = normalizeAdminPayStatus(p.status);
+                                    return `
+                                        <tr>
+                                            <td>
+                                                <strong>${escapeHtml(p.planName)}</strong> (${escapeHtml(p.amount)})<br>
+                                                <code style="font-size:0.72rem;">${escapeHtml(p.orderId || p.id)}</code>
+                                            </td>
+                                            <td><code>${escapeHtml(p.transactionId || '—')}</code></td>
+                                            <td><small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small></td>
+                                            <td>${formatAdminPayStatusPill(normSt)}</td>
+                                            <td>
+                                                <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                                                    ${normSt !== 'paid' ? `<button type="button" class="btn-adm-dark" style="padding:3px 7px; font-size:0.72rem;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', true)">Verify</button>` : ''}
+                                                    ${(normSt === 'pending' || normSt === 'awaiting_confirmation') ? `<button type="button" class="btn-topbar" style="padding:3px 7px; font-size:0.72rem;" onclick="handleAdminCheckProviderStatus('${escapeHtml(p.id)}')">Check Provider</button>` : ''}
+                                                    ${normSt === 'paid' ? `<button type="button" class="btn-topbar" style="padding:3px 7px; font-size:0.72rem;" onclick="handleAdminRefundPayment('${escapeHtml(p.id)}')">Refund</button>` : ''}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
+
+                <h4 style="margin:0 0 8px 0; font-size:0.95rem;">Audit Log: Who Changed Plan or Access &amp; When (${auditLogs.length})</h4>
+                ${auditLogs.length === 0 ? `
+                    <div style="padding:12px; border:1px dashed var(--adm-border); border-radius:8px; color:var(--adm-text-muted); font-size:0.84rem; margin-bottom:16px;">
+                        No audit events recorded yet.
+                    </div>
+                ` : `
+                    <div class="adm-table-wrap" style="margin-bottom:16px; max-height:180px; overflow-y:auto;">
+                        <table class="adm-table">
+                            <thead>
+                                <tr>
+                                    <th>When</th>
+                                    <th>Changed By</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${auditLogs.map(a => `
                                     <tr>
-                                        <td><strong>${escapeHtml(p.planName)}</strong> (${escapeHtml(p.amount)})</td>
-                                        <td><code>${escapeHtml(p.transactionId || '—')}</code></td>
-                                        <td>${escapeHtml(p.className || p.classKey)}</td>
-                                        <td><small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small></td>
-                                        <td><span class="adm-status-pill ${p.status === 'verified' ? 'open' : (p.status === 'rejected' ? 'locked' : '')}">${escapeHtml(String(p.status || 'pending').toUpperCase())}</span></td>
+                                        <td><small>${a.timestamp ? escapeHtml(new Date(a.timestamp).toLocaleString()) : '—'}</small></td>
+                                        <td><strong>${escapeHtml(a.actor || 'System')}</strong></td>
+                                        <td><code style="font-size:0.72rem;">${escapeHtml(a.action || '')}</code></td>
+                                        <td><small>${escapeHtml(a.details || '')}</small></td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -773,13 +1032,33 @@ async function handleAdminUpdateUserClass(email, newGrade) {
         const res = await fetch('/api/student-roster', {
             method: 'POST',
             headers: getAdminHeaders(),
-            body: JSON.stringify({ action: 'UPDATE_CLASS', email, grade: newGrade })
+            body: JSON.stringify({ action: 'UPDATE_CLASS', email, grade: newGrade, adminActor: 'Admin Console' })
         });
         const json = await res.json();
         if (!res.ok || !json.success) throw new Error(json.error || 'Update failed');
         ADMIN_ROSTER = json.data;
         setSaveStatus('Saved', true);
         showAdminToast(`Moved student to ${newGrade}.`);
+        broadcastUpdate('PERMISSIONS_UPDATE');
+        renderUsersTab();
+    } catch (err) {
+        showAdminToast(err.message, 'error');
+    }
+}
+
+async function handleAdminUpdateAccountStatus(email, accountStatus) {
+    setSaveStatus('Saving...');
+    try {
+        const res = await fetch('/api/student-roster', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({ action: 'UPDATE_ACCOUNT_STATUS', email, accountStatus, adminActor: 'Admin Console' })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.error || 'Status update failed');
+        ADMIN_ROSTER = json.data;
+        setSaveStatus('Saved', true);
+        showAdminToast(`Account status updated to ${accountStatus.replace('_', ' ')}.`);
         broadcastUpdate('PERMISSIONS_UPDATE');
         renderUsersTab();
     } catch (err) {
@@ -3679,7 +3958,10 @@ function renderPaymentsTab() {
     const mount = document.getElementById('paymentsAdminMount');
     const badge = document.getElementById('paymentsPendingBadge');
     const list = Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : [];
-    const pendingCount = list.filter(p => p.status === 'pending').length;
+    const pendingCount = list.filter(p => {
+        const st = normalizeAdminPayStatus(p.status);
+        return st === 'pending' || st === 'awaiting_confirmation';
+    }).length;
 
     if (badge) {
         badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
@@ -3697,45 +3979,56 @@ function renderPaymentsTab() {
             <table class="adm-table">
                 <thead>
                     <tr>
-                        <th>Student</th>
+                        <th>Student &amp; Member ID</th>
                         <th>Class</th>
-                        <th>Plan &amp; Amount</th>
+                        <th>Order, Plan &amp; Amount</th>
                         <th>eSewa Txn ID</th>
-                        <th>Submitted</th>
+                        <th>Submitted / Updated</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${list.map(p => {
-                        const statusClass = p.status === 'verified' ? 'open' : (p.status === 'rejected' ? 'locked' : '');
+                        const normSt = normalizeAdminPayStatus(p.status);
+                        const isPendingOrAwaiting = normSt === 'pending' || normSt === 'awaiting_confirmation';
                         return `
                             <tr>
                                 <td>
                                     <strong>${escapeHtml(p.fullName)}</strong><br>
-                                    <small style="color:var(--adm-text-muted);">${escapeHtml(p.email)} (${escapeHtml(p.username)})</small>
+                                    <small style="color:var(--adm-text-muted);">${escapeHtml(p.email)} (@${escapeHtml(p.username)})</small><br>
+                                    <code style="font-size:0.7rem; color:var(--adm-text-muted);">${escapeHtml(p.userId || '')}</code>
                                 </td>
                                 <td>${escapeHtml(p.className || p.classKey)}</td>
-                                <td><strong>${escapeHtml(p.planName)}</strong><br><small>${escapeHtml(p.amount)}</small></td>
-                                <td><code>${escapeHtml(p.transactionId || 'Not provided')}</code></td>
-                                <td><small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small></td>
-                                <td><span class="adm-status-pill ${statusClass}">${escapeHtml(String(p.status || 'pending').toUpperCase())}</span></td>
                                 <td>
-                                    ${p.status === 'pending' ? `
-                                        <div style="display:flex; flex-direction:column; gap:6px;">
+                                    <strong>${escapeHtml(p.planName)}</strong> (${escapeHtml(p.amount)})<br>
+                                    <code style="font-size:0.72rem;">${escapeHtml(p.orderId || p.id)}</code>
+                                </td>
+                                <td><code>${escapeHtml(p.transactionId || 'Not provided')}</code></td>
+                                <td>
+                                    <small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small>
+                                    ${p.lastProviderCheckAt ? `<br><small style="color:var(--adm-text-muted);">Provider check: ${formatRelativeOrLocalTime(p.lastProviderCheckAt)}</small>` : ''}
+                                </td>
+                                <td>${formatAdminPayStatusPill(normSt)}</td>
+                                <td>
+                                    <div style="display:flex; flex-direction:column; gap:6px;">
+                                        ${isPendingOrAwaiting ? `
                                             <input type="text" class="adm-input" id="payNote-${escapeHtml(p.id)}" placeholder="Verification note..." style="min-width:150px; padding:5px 8px; font-size:0.78rem;">
-                                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                                <button type="button" class="btn-adm-dark" style="padding:6px 10px; font-size:0.78rem;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', true)">Verify &amp; Activate</button>
-                                                <button type="button" class="btn-topbar" style="padding:6px 10px; font-size:0.78rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', false)">Reject</button>
-                                                <button type="button" class="btn-topbar danger" style="padding:6px 10px; font-size:0.78rem;" onclick="handleAdminDeletePayment('${escapeHtml(p.id)}')">Delete</button>
-                                            </div>
+                                        ` : (p.adminNote ? `<small style="color:var(--adm-text-muted);">${escapeHtml(p.adminNote)}</small>` : '')}
+                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                            ${normSt !== 'paid' ? `
+                                                <button type="button" class="btn-adm-dark" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', true)">Verify &amp; Activate</button>
+                                            ` : ''}
+                                            ${isPendingOrAwaiting ? `
+                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminCheckProviderStatus('${escapeHtml(p.id)}')" title="Check transaction status against eSewa provider">Check Provider</button>
+                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', false)">Mark Failed</button>
+                                            ` : ''}
+                                            ${normSt === 'paid' ? `
+                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminRefundPayment('${escapeHtml(p.id)}')">Refund</button>
+                                            ` : ''}
+                                            <button type="button" class="btn-topbar danger" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminDeletePayment('${escapeHtml(p.id)}')">Delete</button>
                                         </div>
-                                    ` : `
-                                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                            <small>${escapeHtml(p.adminNote || p.status)}</small>
-                                            <button type="button" class="btn-topbar danger" style="padding:4px 8px; font-size:0.74rem;" onclick="handleAdminDeletePayment('${escapeHtml(p.id)}')">Delete</button>
-                                        </div>
-                                    `}
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -3744,6 +4037,56 @@ function renderPaymentsTab() {
             </table>
         </div>
     `;
+}
+
+async function handleAdminCheckProviderStatus(paymentId) {
+    setSaveStatus('Checking eSewa...');
+    try {
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({
+                action: 'ADMIN_CHECK_PROVIDER_STATUS',
+                paymentId
+            })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Provider check failed');
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        setSaveStatus('Saved', true);
+        showAdminToast(json.message || 'Checked payment status with provider.');
+        broadcastUpdate('PAYMENT_UPDATED');
+        await pollAdminLiveUpdates(true);
+    } catch (err) {
+        setSaveStatus('Error');
+        showAdminToast(err.message || 'Could not query provider.', 'error');
+    }
+}
+
+async function handleAdminRefundPayment(paymentId) {
+    if (!confirm('Mark this payment as Refunded and revert the student subscription access?')) return;
+    setSaveStatus('Refunding...');
+    try {
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({
+                action: 'ADMIN_REFUND_PAYMENT',
+                paymentId,
+                adminNote: 'Payment refunded by Admin.'
+            })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Refund failed');
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        setSaveStatus('Saved', true);
+        showAdminToast(json.message || 'Payment marked as Refunded.');
+        broadcastUpdate('PERMISSIONS_UPDATE');
+        await pollAdminLiveUpdates(true);
+    } catch (err) {
+        setSaveStatus('Error');
+        showAdminToast(err.message || 'Could not refund payment.', 'error');
+    }
 }
 
 async function handleAdminDeletePayment(paymentId) {
@@ -3785,7 +4128,7 @@ async function handleAdminPaymentDecision(paymentId, verify) {
         if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
         showAdminToast(json.message || 'Payment updated.');
         broadcastUpdate('PERMISSIONS_UPDATE');
-        await loadAdminData();
+        await pollAdminLiveUpdates(true);
     } catch (err) {
         showAdminToast(err.message || 'Could not update payment.', 'error');
     }

@@ -234,7 +234,7 @@
                     Sign in with your registered email and password.
                 </p>
 
-                <div id="googleOAuthSignInWrap" style="display:none;">
+                <div id="googleOAuthSignInWrap" style="display:block;">
                     <button type="button" class="btn-google-oauth" id="btnGoogleSignIn" onclick="handleGoogleAuthClick('signin')">
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
@@ -274,7 +274,7 @@
                     New accounts start on the Free plan. One account is allowed per Gmail inbox.
                 </p>
 
-                <div id="googleOAuthSignUpWrap" style="display:none;">
+                <div id="googleOAuthSignUpWrap" style="display:block;">
                     <button type="button" class="btn-google-oauth" id="btnGoogleSignUp" onclick="handleGoogleAuthClick('signup')">
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
@@ -326,15 +326,41 @@
                 </form>
             </div>
 
-            <!-- PANE 2B: PASSWORDLESS SIGN IN WITH 6-DIGIT EMAIL CODE -->
+            <!-- PANE 2B: CONTINUE WITH GOOGLE / PASSWORDLESS SIGN IN WITH 6-DIGIT EMAIL CODE -->
             <div id="googleLocalChooserContainer" class="auth-pane" style="display:none;">
-                <h3 class="modal-title">Sign In with Email Code</h3>
+                <h3 class="modal-title" id="googlePaneTitle">Continue with Google</h3>
                 <p class="modal-sub" id="googlePaneSubtitle">
-                    Enter your registered email address and we'll send a 6-digit login code to your inbox.
+                    Sign in or create your account with your Google email. Existing accounts link automatically to the same member ID without creating duplicates.
                 </p>
                 <div id="googleChooserErrorBanner" class="auth-inline-alert" style="display:none;"></div>
                 <div id="googleOfficialBtnContainer" style="display:none; justify-content:center; margin:18px 0;"></div>
-                <form id="googleGmailOtpForm" onsubmit="handleGmailOtpSubmit(event)">
+
+                <!-- Interactive Google Account Chooser Form -->
+                <form id="googleAccountQuickForm" onsubmit="handleLocalGoogleSubmit(event)">
+                    <div class="modal-field">
+                        <label for="googleChooserName">Google Account Name</label>
+                        <input type="text" id="googleChooserName" class="modal-input" placeholder="Your full name" required>
+                    </div>
+                    <div class="modal-field">
+                        <label for="googleChooserEmail">Gmail Address</label>
+                        <input type="email" id="googleChooserEmail" class="modal-input" placeholder="student@gmail.com" required>
+                    </div>
+                    <div class="modal-field" id="googleChooserGradeWrap">
+                        <label for="googleChooserGrade">Enrolled Class</label>
+                        <select id="googleChooserGrade" class="modal-input">
+                            <option value="Class 12" selected>Class 12 (NEB Mat. 102)</option>
+                            <option value="Class 11">Class 11 (NEB Mat. 101)</option>
+                            <option value="Class 10">Class 10 (SEE Foundation)</option>
+                            <option value="After 12">Entrance Prep (IOE / CEE / KU)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit-action" id="btnGoogleChooserSubmit">
+                        Continue with Google Account
+                    </button>
+                </form>
+
+                <!-- 6-Digit Email Code Form -->
+                <form id="googleGmailOtpForm" onsubmit="handleGmailOtpSubmit(event)" style="display:none;">
                     <div class="modal-field">
                         <label for="googleLocalEmail">Registered Email</label>
                         <input type="email" id="googleLocalEmail" class="modal-input" placeholder="student@gmail.com" required>
@@ -488,7 +514,10 @@
             </div>
 
             <div class="modal-field" style="margin-top:16px;">
-                <label for="checkoutTransactionId">eSewa Transaction ID (optional)</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <label for="checkoutTransactionId" style="margin:0;">eSewa Transaction ID</label>
+                    <small id="checkoutServerOrderBadge" style="font-size:0.75rem; color:var(--text-secondary);"></small>
+                </div>
                 <input type="text" id="checkoutTransactionId" class="modal-input" placeholder="e.g. 0A9B8C7D">
             </div>
 
@@ -587,6 +616,19 @@
                 <button class="btn-modal-dismiss static" onclick="closeVideoPlayerModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="videoModalBody" class="video-player-stage"></div>
+        </div>
+    </div>
+
+    <!-- Student Profile, Account Status & Live Payment History Modal -->
+    <div class="modal-backdrop" id="studentProfileModal" role="dialog" aria-modal="true">
+        <div class="modal-card" style="max-width: 600px; padding: 26px;">
+            <button class="btn-modal-dismiss" onclick="closeStudentProfileModal()"><i class="fa-solid fa-xmark"></i></button>
+            <span class="modal-head-tag" style="margin-bottom:8px; display:inline-block;">Member Profile &middot; Real-Time Sync</span>
+            <h3 style="font-size:1.22rem; font-weight:700; margin:0 0 6px 0;">My Profile &amp; Subscription Status</h3>
+            <p style="font-size:0.86rem; color:var(--text-secondary); margin:0 0 16px 0;">
+                Changes to your profile, class, and payments sync automatically with the Admin Console within 1&ndash;2 seconds.
+            </p>
+            <div id="studentProfileModalBody"></div>
         </div>
     </div>
 

@@ -166,6 +166,9 @@
                         <button type="button" class="user-dropdown-item" onclick="openClassSelectionView(); closeUserDropdown();">
                             Switch Class
                         </button>
+                        <button type="button" class="user-dropdown-item" onclick="openStudentProfileModal(); closeUserDropdown();">
+                            <i class="fa-regular fa-id-card" aria-hidden="true" style="margin-right:6px;"></i> My Profile &amp; Payments
+                        </button>
                         <button type="button" class="user-dropdown-item" onclick="openPlanComparisonModal('', ''); closeUserDropdown();">
                             <i class="fa-solid fa-crown" aria-hidden="true" style="margin-right:6px;"></i> Plans
                         </button>
@@ -350,13 +353,21 @@
             <div class="student-home-center student-home-wide">
                 <div class="student-home-meta">
                     <span class="student-home-greeting" id="studentHomeGreeting">Welcome back</span>
-                    <span class="student-home-plan-badge" id="studentHomePlanBadge" onclick="openPlanComparisonModal('', '')" role="button" tabindex="0">
-                        <i class="fa-solid fa-crown" id="studentHomePlanIcon" aria-hidden="true"></i>
-                        <span id="studentHomePlanText">Free Plan</span>
-                    </span>
+                    <div style="display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span class="student-home-plan-badge" id="studentHomePlanBadge" onclick="openPlanComparisonModal('', '')" role="button" tabindex="0">
+                            <i class="fa-solid fa-crown" id="studentHomePlanIcon" aria-hidden="true"></i>
+                            <span id="studentHomePlanText">Free Plan</span>
+                        </span>
+                        <button type="button" class="btn btn-secondary" onclick="openStudentProfileModal()" style="padding:5px 12px; font-size:0.78rem; border-radius:999px;">
+                            <i class="fa-regular fa-user" aria-hidden="true"></i> Edit Profile &amp; Payment Status
+                        </button>
+                    </div>
                 </div>
 
                 <h1 class="student-home-title" id="studentHomeClassTitle">Grade XII Mathematics</h1>
+
+                <!-- Live Payment & Subscription Status Banner on Student Dashboard -->
+                <div id="studentDashboardPaymentBanner" style="display:none; margin:0 auto 20px; max-width:760px; text-align:left;"></div>
 
                 <div class="home-features-grid">
                     <button type="button" class="lessons-hero-card" id="btnOpenLessons" onclick="openMyLessonsView()">
@@ -425,13 +436,13 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <!-- Application Scripts -->
-    <script src="./js/ui-templates.js?v=20261123v16"></script>
-    <script src="./js/state-sync.js?v=20261123v16"></script>
-    <script src="./js/portal-renderer.js?v=20261123v16"></script>
-    <script src="./js/mock-tests-student.js?v=20261123v16"></script>
-    <script src="./js/router-access.js?v=20261123v16"></script>
-    <script src="./js/widgets-ai.js?v=20261123v16"></script>
-    <script src="./js/auth-otp.js?v=20261123v16"></script>
-    <script src="./js/app-init.js?v=20261123v16"></script>
+    <script src="./js/ui-templates.js?v=20261124v1"></script>
+    <script src="./js/state-sync.js?v=20261124v1"></script>
+    <script src="./js/portal-renderer.js?v=20261124v1"></script>
+    <script src="./js/mock-tests-student.js?v=20261124v1"></script>
+    <script src="./js/router-access.js?v=20261124v1"></script>
+    <script src="./js/widgets-ai.js?v=20261124v1"></script>
+    <script src="./js/auth-otp.js?v=20261124v1"></script>
+    <script src="./js/app-init.js?v=20261124v1"></script>
 </body>
 </html>

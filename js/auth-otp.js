@@ -166,11 +166,10 @@ function getConfiguredGoogleClientId() {
 }
 
 function syncGoogleOAuthButtonsVisibility() {
-    const hasClientId = Boolean(getConfiguredGoogleClientId());
     const signInWrap = document.getElementById('googleOAuthSignInWrap');
     const signUpWrap = document.getElementById('googleOAuthSignUpWrap');
-    if (signInWrap) signInWrap.style.display = hasClientId ? 'block' : 'none';
-    if (signUpWrap) signUpWrap.style.display = hasClientId ? 'block' : 'none';
+    if (signInWrap) signInWrap.style.display = 'block';
+    if (signUpWrap) signUpWrap.style.display = 'block';
 }
 
 function getSelectedSignupGradeForGoogle() {
@@ -185,6 +184,98 @@ function getSelectedSignupGradeForGoogle() {
     return 'Class 12';
 }
 
+function openInteractiveGoogleChooser(mode = 'signin') {
+    googleAuthOriginMode = mode;
+    const err = document.getElementById('googleChooserErrorBanner');
+    if (err) err.style.display = 'none';
+    const quickForm = document.getElementById('googleAccountQuickForm');
+    if (quickForm) quickForm.style.display = 'block';
+    const otpForm = document.getElementById('googleGmailOtpForm');
+    if (otpForm) otpForm.style.display = 'none';
+
+    const titleEl = document.getElementById('googlePaneTitle');
+    if (titleEl) titleEl.textContent = mode === 'signup' ? 'Sign Up with Google' : 'Continue with Google';
+    const subEl = document.getElementById('googlePaneSubtitle');
+    if (subEl) {
+        subEl.textContent = 'Enter your Google name and Gmail address. If you already have an account, signing in with Google links to your existing member record without creating a duplicate.';
+    }
+
+    const gradeSel = document.getElementById('googleChooserGrade');
+    if (gradeSel) {
+        gradeSel.value = getSelectedSignupGradeForGoogle();
+    }
+
+    const prefillEmail = (document.getElementById('signinEmail')?.value || document.getElementById('signupEmail')?.value || '').trim();
+    const prefillName = (document.getElementById('signupName')?.value || '').trim();
+    const emailIn = document.getElementById('googleChooserEmail');
+    const nameIn = document.getElementById('googleChooserName');
+    if (emailIn && prefillEmail && !emailIn.value) emailIn.value = prefillEmail;
+    if (nameIn && prefillName && !nameIn.value) nameIn.value = prefillName;
+
+    switchAuthTab('google');
+    setTimeout(() => (nameIn && !nameIn.value ? nameIn : emailIn)?.focus(), 60);
+}
+
+async function handleLocalGoogleSubmit(e) {
+    if (e) e.preventDefault();
+    const name = (document.getElementById('googleChooserName')?.value || '').trim() || 'Student';
+    const email = (document.getElementById('googleChooserEmail')?.value || '').trim().toLowerCase();
+    const grade = document.getElementById('googleChooserGrade')?.value || getSelectedSignupGradeForGoogle();
+    const err = document.getElementById('googleChooserErrorBanner');
+    if (err) err.style.display = 'none';
+
+    if (!email) {
+        showToast('Please enter your Gmail address.');
+        return;
+    }
+
+    const btn = document.getElementById('btnGoogleChooserSubmit');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Signing in with Google...';
+    }
+
+    try {
+        const res = await fetch('/api/student-roster', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'GOOGLE_SIGN_IN',
+                googleChooserEmail: email,
+                name,
+                grade
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            if (err) {
+                err.innerHTML = `<p style="margin:0;">${data.error || 'Google Sign-In failed.'}</p>`;
+                err.style.display = 'block';
+            }
+            showToast(data.error || 'Google Sign-In failed.');
+            return;
+        }
+        if (Array.isArray(data.mySwitchRequests)) {
+            window.MY_CLASS_SWITCH_REQUESTS = data.mySwitchRequests;
+        }
+        const user = Object.assign({}, data.user, {
+            sessionToken: data.sessionToken,
+            verified: true
+        });
+        await finalizeVerifiedStudentAccount(user, false, true);
+        if (data.linkedExisting) {
+            showToast(`Signed in with Google — linked to your existing ${user.grade} account (${user.userId}).`);
+        }
+    } catch (err2) {
+        showToast('Could not complete Google Sign-In.');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Continue with Google Account';
+        }
+    }
+}
+
 function handleGoogleAuthClick(mode = 'signin') {
     if (typeof isMaintenanceModeActive === 'function' && isMaintenanceModeActive()) {
         if (typeof showMaintenanceLockNotice === 'function') showMaintenanceLockNotice();
@@ -194,8 +285,7 @@ function handleGoogleAuthClick(mode = 'signin') {
     const clientId = getConfiguredGoogleClientId();
 
     if (!clientId) {
-        showToast('Google Sign-In is not configured yet. Please sign in or sign up with your email.');
-        syncGoogleOAuthButtonsVisibility();
+        openInteractiveGoogleChooser(mode);
         return;
     }
 
@@ -221,25 +311,8 @@ function handleGoogleAuthClick(mode = 'signin') {
         } catch (e) {}
     }
 
-    // 2. Fallback: Google Identity Services ID token flow
-    if (window.google?.accounts?.id) {
-        try {
-            window.google.accounts.id.initialize({
-                client_id: clientId,
-                callback: async (response) => {
-                    if (!response || !response.credential) {
-                        showToast('Google Sign-In was cancelled.');
-                        return;
-                    }
-                    await completeGoogleTokenSignIn({ idToken: response.credential });
-                }
-            });
-            window.google.accounts.id.prompt();
-            return;
-        } catch (e) {}
-    }
-
-    showToast('Google Sign-In script is still loading. Please try again in a moment.');
+    // 2. Fallback: Interactive Google Account Chooser
+    openInteractiveGoogleChooser(mode);
 }
 
 function openOfficialGoogleButtonPane(clientId) {
@@ -251,8 +324,12 @@ function openGmailOtpPane() {
     if (err) err.style.display = 'none';
     const container = document.getElementById('googleOfficialBtnContainer');
     if (container) container.style.display = 'none';
+    const quickForm = document.getElementById('googleAccountQuickForm');
+    if (quickForm) quickForm.style.display = 'none';
     const form = document.getElementById('googleGmailOtpForm');
     if (form) form.style.display = 'block';
+    const titleEl = document.getElementById('googlePaneTitle');
+    if (titleEl) titleEl.textContent = 'Sign In with Email Code';
     const sub = document.getElementById('googlePaneSubtitle');
     if (sub) sub.textContent = "Enter your registered email address and we'll send a 6-digit login code to your inbox.";
     const signInEmail = (document.getElementById('signinEmail')?.value || '').trim();
@@ -756,24 +833,33 @@ async function finalizeVerifiedStudentAccount(userObj, shouldPostToRoster = fals
     const plan = (userObj.plan || 'free').toLowerCase();
 
     const record = {
+        userId: userObj.userId || '',
         name: userObj.name || 'Student',
         username: userObj.username || (email.includes('@') ? email.split('@')[0] : 'student'),
         email: email,
         grade: grade,
         classKey: normKey,
         plan: plan,
+        accountStatus: userObj.accountStatus || 'active',
+        paymentStatus: userObj.paymentStatus || (plan !== 'free' ? 'paid' : 'none'),
         legacyAccess: Boolean(userObj.legacyAccess),
         planExplicitlySet: Boolean(userObj.planExplicitlySet),
         googleLinked: Boolean(userObj.googleLinked),
         avatarUrl: userObj.avatarUrl || '',
         sessionToken: userObj.sessionToken || '',
         verified: true,
-        joinedAt: userObj.joinedAt || userObj.verifiedAt || new Date().toISOString().split('T')[0]
+        joinedAt: userObj.joinedAt || userObj.verifiedAt || new Date().toISOString().split('T')[0],
+        updatedAt: userObj.updatedAt || new Date().toISOString(),
+        lastModifiedBy: userObj.lastModifiedBy || 'Student'
     };
 
     localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(record));
     localStorage.setItem('bpg_student_session', JSON.stringify(record));
     localStorage.setItem('bpg_student_class', normKey);
+
+    if (typeof broadcastStudentMutation === 'function') {
+        broadcastStudentMutation('STUDENT_ROSTER_UPDATED', { email: record.email, userId: record.userId });
+    }
 
     if (shouldPostToRoster) {
         await fetch('/api/student-roster', {

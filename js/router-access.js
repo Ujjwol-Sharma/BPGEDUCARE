@@ -443,19 +443,38 @@ function closePlanComparisonModal() {
 }
 
 /* --------------------------------------------------------------------------
-   1B. SIGNED-IN ESEWA + WHATSAPP CHECKOUT FLOW
+   1B. SIGNED-IN SERVER-BACKED ESEWA + WHATSAPP CHECKOUT FLOW
    -------------------------------------------------------------------------- */
 let activeCheckoutPlanId = 'gold';
+let activeCheckoutOrder = null;
 
-function buildPaymentRemarksText(session, planName) {
+function formatPaymentStatusDisplay(status) {
+    const s = String(status || '').trim().toLowerCase();
+    if (s === 'paid' || s === 'verified' || s === 'complete') {
+        return { key: 'paid', label: 'Paid', color: '#16a34a', bg: 'rgba(22,163,74,0.12)', desc: 'Verified by server. Your subscription is active.' };
+    }
+    if (s === 'awaiting_confirmation' || s === 'awaiting') {
+        return { key: 'awaiting_confirmation', label: 'Awaiting confirmation', color: '#d97706', bg: 'rgba(217,119,6,0.14)', desc: 'Your payment reference is being verified with eSewa / Admin. This page updates automatically within 1–2 seconds of confirmation.' };
+    }
+    if (s === 'failed' || s === 'rejected') {
+        return { key: 'failed', label: 'Failed', color: '#dc2626', bg: 'rgba(220,38,38,0.12)', desc: 'Payment verification failed or could not be matched. Please check your eSewa Transaction ID or contact support.' };
+    }
+    if (s === 'refunded') {
+        return { key: 'refunded', label: 'Refunded', color: '#6366f1', bg: 'rgba(99,102,241,0.12)', desc: 'This payment was refunded and subscription access was adjusted.' };
+    }
+    return { key: 'pending', label: 'Pending', color: '#b45309', bg: 'rgba(245,158,11,0.12)', desc: 'Order created on server. Scan the eSewa QR and enter your Transaction ID to confirm.' };
+}
+
+function buildPaymentRemarksText(session, planName, orderId = '') {
     const fullName = session?.name || 'Student';
     const className = session?.grade || getClassDisplayTitle(getStudentRegisteredClass());
     const email = session?.email || '';
     const username = session?.username || (email.includes('@') ? email.split('@')[0] : 'student');
-    return `Name: ${fullName} | Class: ${className} | Username: ${username} | Gmail: ${email} | Plan: ${planName}`;
+    const ordPart = orderId ? ` | Order: ${orderId}` : '';
+    return `Name: ${fullName} | Class: ${className} | Username: ${username} | Gmail: ${email} | Plan: ${planName}${ordPart}`;
 }
 
-function openCheckoutModal(planId = 'gold') {
+async function openCheckoutModal(planId = 'gold') {
     if (isMaintenanceModeActive()) {
         showMaintenanceLockNotice();
         return;
@@ -470,6 +489,7 @@ function openCheckoutModal(planId = 'gold') {
     }
 
     activeCheckoutPlanId = normalized;
+    activeCheckoutOrder = null;
     closePlanComparisonModal();
 
     const plans = typeof getPlansConfig === 'function' ? getPlansConfig() : {};
@@ -479,7 +499,7 @@ function openCheckoutModal(planId = 'gold') {
     const titleEl = document.getElementById('checkoutPlanTitle');
     if (titleEl) titleEl.textContent = `Buy ${cfg.name} Plan`;
     const priceEl = document.getElementById('checkoutPlanPriceLine');
-    if (priceEl) priceEl.textContent = `Amount: ${cfg.price || '—'}${cfg.period ? ` · ${cfg.period}` : ''}`;
+    if (priceEl) priceEl.textContent = `Amount: ${cfg.price || '—'} (NPR)${cfg.period ? ` · ${cfg.period}` : ''}`;
 
     const qrImg = document.getElementById('checkoutEsewaQrImg');
     const rawQrUrl = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.esewaQrUrl)
@@ -498,6 +518,9 @@ function openCheckoutModal(planId = 'gold') {
         remarksEl.textContent = buildPaymentRemarksText(session, cfg.name);
     }
 
+    const ordBadge = document.getElementById('checkoutServerOrderBadge');
+    if (ordBadge) ordBadge.textContent = 'Creating server order...';
+
     const txnInput = document.getElementById('checkoutTransactionId');
     if (txnInput) txnInput.value = '';
 
@@ -505,6 +528,65 @@ function openCheckoutModal(planId = 'gold') {
     if (statusBanner) statusBanner.style.display = 'none';
 
     document.getElementById('checkoutModal')?.classList.add('open');
+
+    // Create authoritative server order using server plan price & currency (NPR)
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'CREATE_ORDER',
+                planId: normalized
+            })
+        });
+        const data = await res.json();
+        if (res.ok && data.ok && data.order) {
+            activeCheckoutOrder = data.order;
+            if (ordBadge) {
+                ordBadge.textContent = `Order: ${data.order.orderId} · NPR ${Number(data.order.expectedAmount).toLocaleString()}`;
+            }
+            if (remarksEl) {
+                remarksEl.textContent = buildPaymentRemarksText(session, data.order.planName || cfg.name, data.order.orderId);
+            }
+            if (data.payment) {
+                const existingIdx = (window.MY_PAYMENTS || []).findIndex(p => p.id === data.payment.id);
+                if (existingIdx >= 0) window.MY_PAYMENTS[existingIdx] = data.payment;
+                else window.MY_PAYMENTS = [data.payment, ...(window.MY_PAYMENTS || [])];
+                renderStudentDashboardPaymentBanner();
+                refreshOpenCheckoutStatusLive();
+            }
+            if (typeof broadcastStudentMutation === 'function') {
+                broadcastStudentMutation('PAYMENT_UPDATED', { orderId: data.order.orderId, status: data.payment?.status || 'pending' });
+            }
+        }
+    } catch (e) {
+        if (ordBadge) ordBadge.textContent = '';
+    }
+}
+
+function refreshOpenCheckoutStatusLive() {
+    const modal = document.getElementById('checkoutModal');
+    const statusBanner = document.getElementById('checkoutStatusBanner');
+    if (!modal || !modal.classList.contains('open') || !statusBanner) return;
+
+    const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
+    const match = activeCheckoutOrder
+        ? myPays.find(p => p.orderId === activeCheckoutOrder.orderId || p.id === activeCheckoutOrder.paymentId)
+        : myPays[0];
+    if (!match) return;
+
+    const st = formatPaymentStatusDisplay(match.status);
+    statusBanner.style.display = 'block';
+    statusBanner.style.borderColor = st.color;
+    statusBanner.style.background = st.bg;
+    statusBanner.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
+            <strong style="color:${st.color};">Status: ${escapeHtml ? escapeHtml(st.label) : st.label}</strong>
+            <code style="font-size:0.76rem;">${escapeHtml ? escapeHtml(match.orderId || match.id) : (match.orderId || match.id)}</code>
+        </div>
+        <p style="margin:0; font-size:0.83rem;">${escapeHtml ? escapeHtml(st.desc) : st.desc}</p>
+    `;
 }
 
 function closeCheckoutModal() {
@@ -539,15 +621,13 @@ async function submitStaticEsewaPayment() {
         return;
     }
 
-    const plans = typeof getPlansConfig === 'function' ? getPlansConfig() : {};
-    const cfg = plans[activeCheckoutPlanId] || { name: activeCheckoutPlanId, price: '' };
     const transactionId = (document.getElementById('checkoutTransactionId')?.value || '').trim();
     const btn = document.getElementById('btnCheckoutWhatsappConfirm');
     const statusBanner = document.getElementById('checkoutStatusBanner');
 
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving pending purchase...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting for confirmation...';
     }
 
     try {
@@ -557,9 +637,8 @@ async function submitStaticEsewaPayment() {
             headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
             body: JSON.stringify({
                 action: 'CREATE_PAYMENT',
+                orderId: activeCheckoutOrder?.orderId || '',
                 planId: activeCheckoutPlanId,
-                planName: cfg.name,
-                amount: cfg.price,
                 transactionId
             })
         });
@@ -568,15 +647,28 @@ async function submitStaticEsewaPayment() {
             throw new Error(data.error || 'Could not record payment.');
         }
 
-        if (statusBanner) {
-            statusBanner.style.display = 'block';
-            statusBanner.innerHTML = `<p style="margin:0;"><strong>Purchase saved as Pending.</strong> Opening WhatsApp with your prefilled confirmation message. Your plan will activate once an admin verifies your payment.</p>`;
+        if (data.order) activeCheckoutOrder = data.order;
+        if (data.payment) {
+            const idx = (window.MY_PAYMENTS || []).findIndex(p => p.id === data.payment.id || p.orderId === data.payment.orderId);
+            if (idx >= 0) window.MY_PAYMENTS[idx] = data.payment;
+            else window.MY_PAYMENTS = [data.payment, ...(window.MY_PAYMENTS || [])];
+        }
+
+        refreshOpenCheckoutStatusLive();
+        renderStudentDashboardPaymentBanner();
+
+        if (typeof broadcastStudentMutation === 'function') {
+            broadcastStudentMutation('PAYMENT_UPDATED', {
+                orderId: data.payment?.orderId || '',
+                transactionId,
+                status: data.payment?.status || 'awaiting_confirmation'
+            });
         }
 
         if (data.whatsappUrl) {
             window.open(data.whatsappUrl, '_blank', 'noopener');
         }
-        showToast('Purchase submitted as pending. Please send the WhatsApp message to confirm.');
+        showToast('Payment reference submitted — Awaiting confirmation.');
     } catch (err) {
         showToast(err.message || 'Could not submit payment.');
     } finally {
@@ -590,20 +682,21 @@ async function submitStaticEsewaPayment() {
 async function handleGatewayPaymentReturn() {
     try {
         const params = new URLSearchParams(window.location.search);
-        const gatewayVerified = params.get('payment_verified') === '1';
-        const planId = params.get('plan');
+        const encodedData = params.get('data') || params.get('esewaData') || '';
+        const orderId = params.get('order_id') || params.get('transaction_uuid') || '';
         const transactionId = params.get('txn_id') || params.get('refId') || '';
-        if (!gatewayVerified || !planId || !transactionId || !isUserAuthenticated()) return;
+        if ((!encodedData && !orderId) || !isUserAuthenticated()) return;
 
+        // Only server-verified signed payloads or provider-verified orders can unlock paid access
         const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
         const res = await fetch('/api/payments', {
             method: 'POST',
             headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
             body: JSON.stringify({
                 action: 'VERIFY_GATEWAY_PAYMENT',
-                gatewayVerified: true,
-                planId,
-                transactionId
+                orderId,
+                transactionId,
+                encodedData
             })
         });
         const data = await res.json();
@@ -611,17 +704,221 @@ async function handleGatewayPaymentReturn() {
             if (data.user && data.sessionToken) {
                 const session = getStoredStudentSession() || {};
                 session.plan = data.user.plan;
+                session.paymentStatus = data.user.paymentStatus || 'paid';
                 session.sessionToken = data.sessionToken;
                 localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
                 localStorage.setItem('bpg_student_session', JSON.stringify(session));
                 updateAuthUserPill();
             }
-            if (data.whatsappUrl) {
-                window.open(data.whatsappUrl, '_blank', 'noopener');
+            if (typeof broadcastStudentMutation === 'function') {
+                broadcastStudentMutation('PAYMENT_UPDATED', { orderId, status: data.payment?.status || 'paid' });
             }
-            showToast('Payment verified! Opening WhatsApp confirmation.');
+            await syncWithServerDatabase(false);
+            showToast('Payment verified by server! Paid membership activated.');
         }
     } catch (e) {}
+}
+
+function renderStudentDashboardPaymentBanner() {
+    const mount = document.getElementById('studentDashboardPaymentBanner');
+    if (!mount) return;
+    if (!isUserAuthenticated()) {
+        mount.style.display = 'none';
+        mount.innerHTML = '';
+        return;
+    }
+
+    const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
+    if (myPays.length === 0) {
+        mount.style.display = 'none';
+        mount.innerHTML = '';
+        return;
+    }
+
+    const latest = myPays[0];
+    const st = formatPaymentStatusDisplay(latest.status);
+    const safePlan = escapeHtml ? escapeHtml(latest.planName || latest.planId || 'Plan') : (latest.planName || '');
+    const safeOrder = escapeHtml ? escapeHtml(latest.orderId || latest.id || '') : (latest.orderId || '');
+    const safeTxn = escapeHtml ? escapeHtml(latest.transactionId || 'Not submitted yet') : (latest.transactionId || '');
+
+    mount.style.display = 'block';
+    mount.innerHTML = `
+        <div style="padding:14px 18px; border-radius:12px; border:1px solid ${st.color}; background:${st.bg}; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
+                    <span style="font-size:0.74rem; font-weight:700; text-transform:uppercase; padding:2px 8px; border-radius:999px; background:${st.color}; color:#fff;">${st.label}</span>
+                    <strong>${safePlan} (${escapeHtml ? escapeHtml(latest.amount || '') : latest.amount})</strong>
+                    <code style="font-size:0.76rem;">${safeOrder}</code>
+                </div>
+                <div style="font-size:0.82rem; color:var(--text-secondary);">
+                    ${st.desc} &middot; Txn Ref: <code>${safeTxn}</code>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="openStudentProfileModal()" style="padding:6px 12px; font-size:0.78rem;">
+                View Details
+            </button>
+        </div>
+    `;
+}
+
+function openStudentProfileModal() {
+    if (!isUserAuthenticated()) {
+        openAuthModal('signin');
+        return;
+    }
+    renderStudentProfileModalContent();
+    document.getElementById('studentProfileModal')?.classList.add('open');
+}
+
+function closeStudentProfileModal() {
+    document.getElementById('studentProfileModal')?.classList.remove('open');
+}
+
+function renderStudentProfileModalContent() {
+    const body = document.getElementById('studentProfileModalBody');
+    if (!body) return;
+    const session = getStoredStudentSession() || {};
+    const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
+    const latestPay = myPays[0] || null;
+    const payDisplay = latestPay
+        ? formatPaymentStatusDisplay(latestPay.status)
+        : (session.plan && session.plan !== 'free'
+            ? formatPaymentStatusDisplay('paid')
+            : { label: 'Free (No active payment)', color: 'var(--text-secondary)', bg: 'var(--surface-soft)' });
+
+    const safeEsc = (v) => (typeof escapeHtml === 'function' ? escapeHtml(v) : String(v || ''));
+
+    body.innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:10px; padding:12px 14px; border-radius:10px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-soft, #e5e7eb); margin-bottom:16px; font-size:0.82rem;">
+            <div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Member ID</div>
+                <code style="font-weight:700;">${safeEsc(session.userId || 'Assigned')}</code>
+            </div>
+            <div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Current Plan</div>
+                <strong style="text-transform:uppercase;">${safeEsc(session.plan || 'free')}</strong>
+            </div>
+            <div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Account Status</div>
+                <strong style="color:#16a34a; text-transform:capitalize;">${safeEsc((session.accountStatus || 'active').replace('_', ' '))}</strong>
+            </div>
+            <div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Payment Status</div>
+                <strong style="color:${payDisplay.color};">${safeEsc(payDisplay.label)}</strong>
+            </div>
+        </div>
+
+        <form onsubmit="handleStudentProfileSave(event)" style="margin-bottom:18px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                <div class="modal-field" style="margin:0;">
+                    <label for="profileEditName">Full Name</label>
+                    <input type="text" id="profileEditName" class="modal-input" value="${safeEsc(session.name || '')}" required>
+                </div>
+                <div class="modal-field" style="margin:0;">
+                    <label for="profileEditUsername">Username</label>
+                    <input type="text" id="profileEditUsername" class="modal-input" value="${safeEsc(session.username || (session.email || '').split('@')[0])}" required>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                <small style="color:var(--text-secondary);">Email: <strong>${safeEsc(session.email || '')}</strong> &middot; Class: <strong>${safeEsc(session.grade || 'Class 12')}</strong></small>
+                <button type="submit" class="btn btn-primary" id="btnSaveStudentProfile" style="padding:8px 16px; font-size:0.84rem;">
+                    Save Profile Changes
+                </button>
+            </div>
+        </form>
+
+        <h4 style="font-size:0.94rem; margin:0 0 8px 0;">Payment &amp; Order History (${myPays.length})</h4>
+        ${myPays.length === 0 ? `
+            <div style="padding:12px; border:1px dashed var(--border-soft); border-radius:8px; font-size:0.83rem; color:var(--text-secondary);">
+                No payment orders yet. Click <strong>Plans</strong> to upgrade to Gold or Diamond.
+            </div>
+        ` : `
+            <div style="max-height:210px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:10px;">
+                <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+                    <thead>
+                        <tr style="background:var(--surface-soft); text-align:left;">
+                            <th style="padding:8px 10px;">Order / Plan</th>
+                            <th style="padding:8px 10px;">Amount</th>
+                            <th style="padding:8px 10px;">Txn Ref</th>
+                            <th style="padding:8px 10px;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${myPays.map(p => {
+                            const st = formatPaymentStatusDisplay(p.status);
+                            return `
+                                <tr style="border-top:1px solid var(--border-soft);">
+                                    <td style="padding:8px 10px;">
+                                        <strong>${safeEsc(p.planName || p.planId)}</strong><br>
+                                        <code style="font-size:0.72rem;">${safeEsc(p.orderId || p.id)}</code>
+                                    </td>
+                                    <td style="padding:8px 10px;">${safeEsc(p.amount)}</td>
+                                    <td style="padding:8px 10px;"><code>${safeEsc(p.transactionId || '—')}</code></td>
+                                    <td style="padding:8px 10px;">
+                                        <span style="padding:2px 8px; border-radius:999px; font-weight:600; font-size:0.74rem; color:${st.color}; background:${st.bg};">
+                                            ${safeEsc(st.label)}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `}
+    `;
+}
+
+async function handleStudentProfileSave(e) {
+    if (e) e.preventDefault();
+    const name = (document.getElementById('profileEditName')?.value || '').trim();
+    const username = (document.getElementById('profileEditUsername')?.value || '').trim();
+    if (!name) return;
+
+    const btn = document.getElementById('btnSaveStudentProfile');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+    }
+
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/student-roster', {
+            method: 'POST',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'UPDATE_PROFILE',
+                name,
+                username
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            throw new Error(data.error || 'Could not update profile.');
+        }
+
+        const session = getStoredStudentSession() || {};
+        Object.assign(session, data.user || {}, {
+            sessionToken: data.sessionToken || session.sessionToken,
+            verified: true
+        });
+        localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+        localStorage.setItem('bpg_student_session', JSON.stringify(session));
+
+        updateAuthUserPill();
+        renderStudentProfileModalContent();
+        if (typeof broadcastStudentMutation === 'function') {
+            broadcastStudentMutation('STUDENT_ROSTER_UPDATED', { userId: session.userId, email: session.email });
+        }
+        showToast('Profile saved and synced with Admin Console.');
+    } catch (err) {
+        showToast(err.message || 'Could not save profile.');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Save Profile Changes';
+        }
+    }
 }
 
 function hasAccessToClass(classKey) {
@@ -846,6 +1143,9 @@ async function submitClassSwitchRequest() {
 
         if (data.request) {
             window.MY_CLASS_SWITCH_REQUESTS = [data.request, ...(window.MY_CLASS_SWITCH_REQUESTS || [])];
+        }
+        if (typeof broadcastStudentMutation === 'function') {
+            broadcastStudentMutation('CLASS_SWITCH_REQUESTED', { request: data.request });
         }
         if (statusBox) {
             statusBox.style.display = 'block';

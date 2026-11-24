@@ -18,7 +18,10 @@ const {
     normalizeGradeName,
     issueStudentSessionToken,
     readRoster,
-    writeRoster
+    writeRoster,
+    deriveStableUserId,
+    appendAccountAuditEntry,
+    appendRosterAuditEntry
 } = require('./_access-control');
 
 const MAX_OTP_ATTEMPTS = 5;
@@ -321,8 +324,11 @@ module.exports = async function handler(req, res) {
         }
 
         const nowIso = new Date().toISOString();
+        const stableUserId = deriveStableUserId(canonical);
         const newAccount = {
+            userId: stableUserId,
             name,
+            username: email.split('@')[0],
             email,
             canonicalEmail: canonical,
             grade,
@@ -330,17 +336,35 @@ module.exports = async function handler(req, res) {
             plan: 'free',
             planExplicitlySet: false,
             legacyAccess: false,
+            accountStatus: 'active',
+            paymentStatus: 'none',
             emailVerified: true,
             verifiedAt: nowIso,
             verificationMethod: 'email_otp',
             passkey: hashPassword(newPassword || crypto.randomBytes(16).toString('hex')),
-            joinedAt: nowIso.split('T')[0]
+            joinedAt: nowIso.split('T')[0],
+            updatedAt: nowIso,
+            lastModifiedBy: `${name} (Email OTP Sign-Up)`,
+            auditLog: []
         };
+        appendAccountAuditEntry(newAccount, {
+            actor: `${name} (Email OTP Sign-Up)`,
+            action: 'ACCOUNT_CREATED',
+            details: `Verified email via 6-digit OTP and enrolled in ${grade}`
+        });
+        appendRosterAuditEntry(roster, {
+            userId: stableUserId,
+            email,
+            actor: `${name} (Email OTP Sign-Up)`,
+            action: 'ACCOUNT_CREATED',
+            details: `Registered via Email OTP (${grade})`
+        });
         roster.accounts.unshift(newAccount);
-        writeRoster(roster);
+        const savedRoster = writeRoster(roster);
+        const savedAccount = savedRoster.accounts.find(a => a.userId === stableUserId || a.canonicalEmail === canonical) || newAccount;
 
-        const sessionToken = issueStudentSessionToken(newAccount);
-        const { passkey, ...safeUser } = newAccount;
+        const sessionToken = issueStudentSessionToken(savedAccount);
+        const { passkey, ...safeUser } = savedAccount;
 
         return res.status(200).json({
             ok: true,

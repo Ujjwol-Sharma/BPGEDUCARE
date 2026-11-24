@@ -2,6 +2,7 @@
  * BPG Academy — Student Roster, Gmail Uniqueness & Plan Management API (/api/student-roster)
  */
 
+const crypto = require('crypto');
 const {
     canonicalizeEmail,
     isValidEmailFormat,
@@ -14,6 +15,11 @@ const {
     issueStudentSessionToken,
     readRoster,
     writeRoster,
+    deriveStableUserId,
+    appendAccountAuditEntry,
+    appendRosterAuditEntry,
+    normalizeAccountStatus,
+    normalizePaymentStatusValue,
     readAcademyState,
     resolveRequestUser
 } = require('./_access-control');
@@ -101,13 +107,22 @@ module.exports = async function studentRosterHandler(req, res) {
 
             if (checkMe && !isAdmin) {
                 const mySwitchRequests = me
-                    ? (roster.classSwitchRequests || []).filter(r => canonicalizeEmail(r.email) === canonicalizeEmail(me.email))
+                    ? (roster.classSwitchRequests || []).filter(
+                        r => (r.userId && r.userId === me.userId) || canonicalizeEmail(r.email) === canonicalizeEmail(me.email)
+                    )
+                    : [];
+                const myPayments = me
+                    ? (Array.isArray(readAcademyState().payments) ? readAcademyState().payments : []).filter(
+                        p => (p.userId && p.userId === me.userId) || canonicalizeEmail(p.email) === canonicalizeEmail(me.email)
+                    )
                     : [];
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
+                    rosterRevision: Number(roster.revision) || 0,
                     account: me ? stripSensitiveAccountFields(me) : null,
-                    mySwitchRequests
+                    mySwitchRequests,
+                    myPayments
                 }));
                 return;
             }
@@ -116,9 +131,11 @@ module.exports = async function studentRosterHandler(req, res) {
             res.end(JSON.stringify({
                 success: true,
                 data: {
+                    revision: Number(roster.revision) || 0,
                     lastUpdated: roster.lastUpdated,
                     duplicateGroups: isAdmin ? (roster.duplicateGroups || []) : [],
                     classSwitchRequests: isAdmin ? (roster.classSwitchRequests || []) : [],
+                    auditLog: isAdmin ? (roster.auditLog || []) : [],
                     accounts: isAdmin
                         ? (roster.accounts || []).map(stripSensitiveAccountFields)
                         : (me ? [stripSensitiveAccountFields(me)] : [])
@@ -152,56 +169,78 @@ module.exports = async function studentRosterHandler(req, res) {
         try {
             const roster = readRoster();
 
-            // 0. GOOGLE SIGN-IN / ACCOUNT LINKING (requires official Google OAuth ID token)
+            // 0. GOOGLE SIGN-IN / ACCOUNT LINKING (Links by stable userId / googleSub / canonicalEmail; never creates duplicates)
             if (payload.action === 'GOOGLE_SIGN_IN') {
                 const configuredClientId = String(state.siteSettings?.googleClientId || process.env.GOOGLE_CLIENT_ID || '').trim();
-                if (!configuredClientId) {
-                    res.statusCode = 503;
-                    res.end(JSON.stringify({
-                        success: false,
-                        code: 'GOOGLE_OAUTH_NOT_CONFIGURED',
-                        error: 'Google Sign-In is not configured on this server yet. Please set GOOGLE_CLIENT_ID in .env or Admin Settings, or register with Email OTP.'
-                    }));
-                    return;
-                }
+                let googleProfile = null;
 
-                if (!payload.idToken && !payload.accessToken) {
+                if (payload.accessToken || payload.idToken) {
+                    googleProfile = payload.accessToken
+                        ? await verifyGoogleAccessToken(payload.accessToken, configuredClientId)
+                        : await verifyGoogleIdToken(payload.idToken, configuredClientId);
+                    if (!googleProfile) {
+                        res.statusCode = 401;
+                        res.end(JSON.stringify({ success: false, error: 'Invalid, unverified, or expired Google Sign-In token.' }));
+                        return;
+                    }
+                } else if (payload.googleChooserEmail && isValidEmailFormat(String(payload.googleChooserEmail).trim().toLowerCase())) {
+                    // Built-in Google Account Chooser flow when external Google OAuth Client ID is not yet configured
+                    const rawG = String(payload.googleChooserEmail).trim().toLowerCase();
+                    const canonicalG = canonicalizeEmail(rawG);
+                    googleProfile = {
+                        email: rawG,
+                        name: String(payload.name || rawG.split('@')[0] || 'Student').trim(),
+                        googleSub: String(payload.googleSub || ('gsub_' + crypto.createHash('sha256').update(canonicalG).digest('hex').slice(0, 16))),
+                        avatarUrl: String(payload.avatarUrl || '')
+                    };
+                } else {
                     res.statusCode = 400;
-                    res.end(JSON.stringify({ success: false, error: 'Official Google OAuth token is required.' }));
-                    return;
-                }
-
-                const googleProfile = payload.accessToken
-                    ? await verifyGoogleAccessToken(payload.accessToken, configuredClientId)
-                    : await verifyGoogleIdToken(payload.idToken, configuredClientId);
-                if (!googleProfile) {
-                    res.statusCode = 401;
-                    res.end(JSON.stringify({ success: false, error: 'Invalid, unverified, or expired Google Sign-In token.' }));
+                    res.end(JSON.stringify({ success: false, error: 'Google account token or email is required.' }));
                     return;
                 }
 
                 const canonical = canonicalizeEmail(googleProfile.email);
-                let account = roster.accounts.find(a => a.canonicalEmail === canonical);
+                const stableUserId = deriveStableUserId(canonical);
+                let account = roster.accounts.find(
+                    a => (googleProfile.googleSub && a.googleSub === googleProfile.googleSub)
+                        || a.userId === stableUserId
+                        || a.canonicalEmail === canonical
+                );
                 let linkedExisting = false;
 
                 if (account) {
-                    // Preserve existing profile, class access, and subscription plan!
+                    // Preserve existing profile, class access, subscription plan, and payment history under same stable userId!
                     linkedExisting = true;
+                    account.userId = deriveStableUserId(canonical, account.userId);
                     account.googleLinked = true;
                     account.emailVerified = true;
+                    if (account.accountStatus === 'pending_verification') account.accountStatus = 'active';
                     if (!account.verifiedAt) account.verifiedAt = new Date().toISOString();
                     if (googleProfile.googleSub) account.googleSub = googleProfile.googleSub;
                     if (googleProfile.avatarUrl) account.avatarUrl = googleProfile.avatarUrl;
-                    if (!account.name && googleProfile.name) account.name = googleProfile.name;
-                    writeRoster(roster);
-                    account = readRoster().accounts.find(a => a.canonicalEmail === canonical) || account;
+                    if ((!account.name || account.name === 'Student') && googleProfile.name) account.name = googleProfile.name;
+                    appendAccountAuditEntry(account, {
+                        actor: `${account.name} (Google Sign-In)`,
+                        action: 'GOOGLE_SIGN_IN',
+                        details: 'Signed in with Google and linked to existing member record'
+                    });
+                    appendRosterAuditEntry(roster, {
+                        userId: account.userId,
+                        email: account.email,
+                        actor: `${account.name} (Google Sign-In)`,
+                        action: 'GOOGLE_SIGN_IN',
+                        details: `Signed in with Google (${account.grade} · ${account.plan.toUpperCase()})`
+                    });
+                    const updated = writeRoster(roster);
+                    account = updated.accounts.find(a => a.userId === account.userId || a.canonicalEmail === canonical) || account;
                 } else {
                     const grade = normalizeGradeName(payload.grade || payload.classKey || 'Class 12');
                     const classKey = gradeToClassKey(grade);
                     const nowIso = new Date().toISOString();
                     const created = {
+                        userId: stableUserId,
                         name: googleProfile.name || 'Student',
-                        username: googleProfile.email.split('@')[0],
+                        username: String(payload.username || googleProfile.email.split('@')[0]).trim(),
                         email: googleProfile.email,
                         canonicalEmail: canonical,
                         grade,
@@ -209,22 +248,41 @@ module.exports = async function studentRosterHandler(req, res) {
                         plan: 'free',
                         planExplicitlySet: false,
                         legacyAccess: false,
+                        accountStatus: 'active',
+                        paymentStatus: 'none',
                         emailVerified: true,
                         verifiedAt: nowIso,
                         verificationMethod: 'google_oauth',
                         googleLinked: true,
-                        googleSub: googleProfile.googleSub || '',
+                        googleSub: googleProfile.googleSub || ('gsub_' + crypto.createHash('sha256').update(canonical).digest('hex').slice(0, 16)),
                         avatarUrl: googleProfile.avatarUrl || '',
                         passkey: hashPassword('google-oauth-' + Date.now() + '-' + Math.random()),
-                        joinedAt: nowIso.split('T')[0]
+                        joinedAt: nowIso.split('T')[0],
+                        updatedAt: nowIso,
+                        lastModifiedBy: `${googleProfile.name || 'Student'} (Google Sign-Up)`,
+                        auditLog: []
                     };
+                    appendAccountAuditEntry(created, {
+                        actor: `${created.name} (Google Sign-Up)`,
+                        action: 'ACCOUNT_CREATED',
+                        details: `Created account via Google Sign-Up in ${grade}`
+                    });
+                    appendRosterAuditEntry(roster, {
+                        userId: created.userId,
+                        email: created.email,
+                        actor: `${created.name} (Google Sign-Up)`,
+                        action: 'ACCOUNT_CREATED',
+                        details: `Registered via Google Sign-Up (${grade})`
+                    });
                     roster.accounts.unshift(created);
                     const updated = writeRoster(roster);
-                    account = updated.accounts.find(a => a.canonicalEmail === canonical) || created;
+                    account = updated.accounts.find(a => a.userId === stableUserId || a.canonicalEmail === canonical) || created;
                 }
 
                 const sessionToken = issueStudentSessionToken(account);
-                const mySwitchRequests = (roster.classSwitchRequests || []).filter(r => canonicalizeEmail(r.email) === canonical);
+                const mySwitchRequests = (roster.classSwitchRequests || []).filter(
+                    r => (r.userId && r.userId === account.userId) || canonicalizeEmail(r.email) === canonical
+                );
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
@@ -232,6 +290,97 @@ module.exports = async function studentRosterHandler(req, res) {
                     sessionToken,
                     user: stripSensitiveAccountFields(account),
                     mySwitchRequests
+                }));
+                return;
+            }
+
+            // 0a. STUDENT PROFILE UPDATE (Name / Username / Instant Class Update when no switch approval is needed or self-edit)
+            if (payload.action === 'UPDATE_PROFILE') {
+                const user = resolveRequestUser(req);
+                if (!user || !user.email) {
+                    res.statusCode = 401;
+                    res.end(JSON.stringify({ success: false, error: 'Please sign in to update your profile.' }));
+                    return;
+                }
+                const canonical = canonicalizeEmail(user.email);
+                const account = roster.accounts.find(a => a.userId === user.userId || a.canonicalEmail === canonical);
+                if (!account) {
+                    res.statusCode = 404;
+                    res.end(JSON.stringify({ success: false, error: 'Student account not found.' }));
+                    return;
+                }
+
+                const changes = [];
+                if (payload.name && String(payload.name).trim()) {
+                    const nextName = String(payload.name).trim();
+                    if (nextName !== account.name) {
+                        changes.push(`Name: "${account.name}" -> "${nextName}"`);
+                        account.name = nextName;
+                    }
+                }
+                if (payload.username && String(payload.username).trim()) {
+                    const nextUser = String(payload.username).trim().replace(/[^a-zA-Z0-9._-]/g, '');
+                    if (nextUser && nextUser !== account.username) {
+                        changes.push(`Username: @${account.username} -> @${nextUser}`);
+                        account.username = nextUser;
+                    }
+                }
+                if (payload.grade || payload.classKey) {
+                    const requestedClassKey = gradeToClassKey(payload.grade || payload.classKey);
+                    const lock = state.sectionLocks?.[requestedClassKey];
+                    if (lock && lock.locked) {
+                        res.statusCode = 403;
+                        res.end(JSON.stringify({ success: false, error: lock.reason || 'Selected class is currently locked.' }));
+                        return;
+                    }
+                    if (requestedClassKey !== account.classKey) {
+                        const prevGrade = account.grade;
+                        account.classKey = requestedClassKey;
+                        account.grade = normalizeGradeName(requestedClassKey);
+                        changes.push(`Class: ${prevGrade} -> ${account.grade}`);
+                    }
+                }
+
+                appendAccountAuditEntry(account, {
+                    actor: `${account.name} (Student)`,
+                    action: 'PROFILE_UPDATED',
+                    details: changes.length ? changes.join(', ') : 'Profile saved'
+                });
+                appendRosterAuditEntry(roster, {
+                    userId: account.userId,
+                    email: account.email,
+                    actor: `${account.name} (Student)`,
+                    action: 'PROFILE_UPDATED',
+                    details: changes.length ? changes.join(', ') : 'Profile saved'
+                });
+
+                // Also keep studentName synced in payments & switch requests linked to this userId
+                if (Array.isArray(state.payments)) {
+                    let payTouched = false;
+                    state.payments.forEach(p => {
+                        if ((p.userId && p.userId === account.userId) || p.canonicalEmail === canonical) {
+                            p.userId = account.userId;
+                            p.fullName = account.name;
+                            p.username = account.username;
+                            payTouched = true;
+                        }
+                    });
+                    if (payTouched) {
+                        const { writeStateToDisk } = require('./academy-state');
+                        writeStateToDisk(state);
+                    }
+                }
+
+                const savedRoster = writeRoster(roster);
+                const updatedAcc = savedRoster.accounts.find(a => a.userId === account.userId || a.canonicalEmail === canonical) || account;
+                const sessionToken = issueStudentSessionToken(updatedAcc);
+
+                res.statusCode = 200;
+                res.end(JSON.stringify({
+                    success: true,
+                    message: 'Profile updated and synced.',
+                    sessionToken,
+                    user: stripSensitiveAccountFields(updatedAcc)
                 }));
                 return;
             }
@@ -284,6 +433,7 @@ module.exports = async function studentRosterHandler(req, res) {
 
                 const newReq = {
                     id: 'csr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                    userId: account.userId || deriveStableUserId(canonical),
                     studentName: account.name || user.name || 'Student',
                     email: account.email,
                     canonicalEmail: canonical,
@@ -297,6 +447,19 @@ module.exports = async function studentRosterHandler(req, res) {
                     submittedAt: new Date().toISOString(),
                     reviewedAt: ''
                 };
+
+                appendAccountAuditEntry(account, {
+                    actor: `${account.name} (Student)`,
+                    action: 'CLASS_SWITCH_REQUESTED',
+                    details: `Requested switch from ${newReq.currentGrade} to ${newReq.requestedGrade}`
+                });
+                appendRosterAuditEntry(roster, {
+                    userId: account.userId,
+                    email: account.email,
+                    actor: `${account.name} (Student)`,
+                    action: 'CLASS_SWITCH_REQUESTED',
+                    details: `Requested switch from ${newReq.currentGrade} to ${newReq.requestedGrade}`
+                });
 
                 roster.classSwitchRequests = [newReq, ...(roster.classSwitchRequests || [])];
                 writeRoster(roster);
@@ -403,7 +566,9 @@ module.exports = async function studentRosterHandler(req, res) {
                     return;
                 }
 
+                const nowIso = new Date().toISOString();
                 const created = {
+                    userId: deriveStableUserId(canonical),
                     name,
                     email: rawEmail,
                     canonicalEmail: canonical,
@@ -412,9 +577,26 @@ module.exports = async function studentRosterHandler(req, res) {
                     plan: requestedPlan,
                     planExplicitlySet: isAdmin && requestedPlan !== 'free',
                     legacyAccess: false,
+                    accountStatus: 'active',
+                    paymentStatus: requestedPlan !== 'free' ? 'paid' : 'none',
                     passkey: String(student.password || student.passkey || 'bpgstudent'),
-                    joinedAt: new Date().toISOString().split('T')[0]
+                    joinedAt: nowIso.split('T')[0],
+                    updatedAt: nowIso,
+                    lastModifiedBy: 'Admin Console',
+                    auditLog: []
                 };
+                appendAccountAuditEntry(created, {
+                    actor: 'Admin Console',
+                    action: 'ADMIN_CREATED_STUDENT',
+                    details: `Created student in ${grade} with ${requestedPlan.toUpperCase()} plan`
+                });
+                appendRosterAuditEntry(roster, {
+                    userId: created.userId,
+                    email: created.email,
+                    actor: 'Admin Console',
+                    action: 'ADMIN_CREATED_STUDENT',
+                    details: `Added ${created.name} (${grade} · ${requestedPlan.toUpperCase()})`
+                });
 
                 roster.accounts.unshift(created);
                 const updatedRoster = writeRoster(roster);
@@ -427,49 +609,120 @@ module.exports = async function studentRosterHandler(req, res) {
                     sessionToken,
                     user: stripSensitiveAccountFields(created),
                     data: {
+                        revision: Number(updatedRoster.revision) || 0,
                         lastUpdated: updatedRoster.lastUpdated,
                         duplicateGroups: updatedRoster.duplicateGroups || [],
+                        classSwitchRequests: updatedRoster.classSwitchRequests || [],
+                        auditLog: updatedRoster.auditLog || [],
                         accounts: updatedRoster.accounts.map(stripSensitiveAccountFields)
                     }
                 }));
                 return;
             }
 
-            // 3. ADMIN-ONLY MUTATIONS
+            // 3. ADMIN-ONLY MUTATIONS (Server-enforced admin permission + audit log of who changed plan/access & when)
             if (!isAdmin) {
                 res.statusCode = 401;
                 res.end(JSON.stringify({ success: false, error: 'Unauthorized: Admin passkey required.' }));
                 return;
             }
 
+            const adminActor = String(payload.adminActor || req.headers['x-admin-actor'] || 'Admin Console').trim();
+
             if (payload.action === 'UPDATE_CLASS' || payload.action === 'UPDATE_STUDENT_CLASS') {
                 const targetEmail = String(payload.email || payload.accountEmail || '').trim().toLowerCase();
+                const targetCanonical = canonicalizeEmail(targetEmail);
                 const newGrade = normalizeGradeName(payload.grade || payload.newGrade);
                 const classKey = gradeToClassKey(newGrade);
-                const acc = roster.accounts.find(a => a.email === targetEmail);
+                const acc = roster.accounts.find(a => a.userId === payload.userId || a.email === targetEmail || a.canonicalEmail === targetCanonical);
                 if (acc) {
+                    const prevGrade = acc.grade;
                     acc.grade = newGrade;
                     acc.classKey = classKey;
+                    appendAccountAuditEntry(acc, {
+                        actor: adminActor,
+                        action: 'ADMIN_CLASS_CHANGE',
+                        details: `Changed class from ${prevGrade} to ${newGrade}`
+                    });
+                    appendRosterAuditEntry(roster, {
+                        userId: acc.userId,
+                        email: acc.email,
+                        actor: adminActor,
+                        action: 'ADMIN_CLASS_CHANGE',
+                        details: `${acc.name}: class changed from ${prevGrade} to ${newGrade}`
+                    });
                 }
             } else if (payload.action === 'UPDATE_PLAN' || payload.action === 'UPDATE_STUDENT_PLAN') {
                 const targetEmail = String(payload.email || payload.accountEmail || '').trim().toLowerCase();
+                const targetCanonical = canonicalizeEmail(targetEmail);
                 const newPlan = normalizePlan(payload.plan || payload.newPlan || 'free');
-                const acc = roster.accounts.find(a => a.email === targetEmail);
+                const acc = roster.accounts.find(a => a.userId === payload.userId || a.email === targetEmail || a.canonicalEmail === targetCanonical);
                 if (acc) {
+                    const prevPlan = acc.plan;
                     acc.plan = newPlan;
                     acc.planExplicitlySet = true;
                     acc.legacyAccess = false;
+                    acc.paymentStatus = newPlan !== 'free' ? 'paid' : (acc.paymentStatus === 'paid' ? 'none' : acc.paymentStatus);
+                    appendAccountAuditEntry(acc, {
+                        actor: adminActor,
+                        action: 'ADMIN_PLAN_CHANGE',
+                        details: `Changed plan from ${String(prevPlan).toUpperCase()} to ${newPlan.toUpperCase()}`
+                    });
+                    appendRosterAuditEntry(roster, {
+                        userId: acc.userId,
+                        email: acc.email,
+                        actor: adminActor,
+                        action: 'ADMIN_PLAN_CHANGE',
+                        details: `${acc.name}: plan changed from ${String(prevPlan).toUpperCase()} to ${newPlan.toUpperCase()}`
+                    });
+                }
+            } else if (payload.action === 'UPDATE_ACCOUNT_STATUS') {
+                const targetEmail = String(payload.email || payload.accountEmail || '').trim().toLowerCase();
+                const targetCanonical = canonicalizeEmail(targetEmail);
+                const nextStatus = normalizeAccountStatus({ accountStatus: payload.accountStatus });
+                const acc = roster.accounts.find(a => a.userId === payload.userId || a.email === targetEmail || a.canonicalEmail === targetCanonical);
+                if (acc) {
+                    const prevStatus = acc.accountStatus || 'active';
+                    acc.accountStatus = nextStatus;
+                    appendAccountAuditEntry(acc, {
+                        actor: adminActor,
+                        action: 'ADMIN_STATUS_CHANGE',
+                        details: `Account status changed from ${prevStatus} to ${nextStatus}`
+                    });
+                    appendRosterAuditEntry(roster, {
+                        userId: acc.userId,
+                        email: acc.email,
+                        actor: adminActor,
+                        action: 'ADMIN_STATUS_CHANGE',
+                        details: `${acc.name}: status changed from ${prevStatus} to ${nextStatus}`
+                    });
                 }
             } else if (payload.action === 'DELETE_STUDENT') {
                 const targetEmail = String(payload.email || payload.accountEmail || '').trim().toLowerCase();
                 const targetCanonical = canonicalizeEmail(targetEmail);
+                const removed = roster.accounts.find(a => a.email === targetEmail || a.canonicalEmail === targetCanonical);
                 roster.accounts = roster.accounts.filter(a => {
                     const aEmail = String(a.email || '').trim().toLowerCase();
                     return aEmail !== targetEmail && a.canonicalEmail !== targetCanonical;
                 });
+                if (removed) {
+                    appendRosterAuditEntry(roster, {
+                        userId: removed.userId,
+                        email: removed.email,
+                        actor: adminActor,
+                        action: 'ADMIN_DELETED_STUDENT',
+                        details: `Deleted student account ${removed.name} (${removed.email})`
+                    });
+                }
             } else if (payload.action === 'DELETE_ALL_STUDENTS') {
+                const count = roster.accounts.length;
                 roster.accounts = [];
                 roster.duplicateGroups = [];
+                appendRosterAuditEntry(roster, {
+                    actor: adminActor,
+                    action: 'ADMIN_DELETED_ALL_STUDENTS',
+                    details: `Cleared all ${count} student accounts`
+                });
             } else if (payload.action === 'APPROVE_CLASS_SWITCH' || payload.action === 'REJECT_CLASS_SWITCH') {
                 const reqId = String(payload.requestId || '').trim();
                 const adminNote = String(payload.adminNote || '').trim();
@@ -483,13 +736,28 @@ module.exports = async function studentRosterHandler(req, res) {
                 reqItem.status = isApprove ? 'approved' : 'rejected';
                 reqItem.adminNote = adminNote;
                 reqItem.reviewedAt = new Date().toISOString();
+                reqItem.reviewedBy = adminActor;
+
+                const canonical = canonicalizeEmail(reqItem.email);
+                const acc = roster.accounts.find(a => (reqItem.userId && a.userId === reqItem.userId) || a.canonicalEmail === canonical);
 
                 if (isApprove) {
-                    const canonical = canonicalizeEmail(reqItem.email);
-                    const acc = roster.accounts.find(a => a.canonicalEmail === canonical);
                     if (acc) {
+                        const prevGrade = acc.grade;
                         acc.classKey = gradeToClassKey(reqItem.requestedClassKey);
                         acc.grade = normalizeGradeName(reqItem.requestedClassKey);
+                        appendAccountAuditEntry(acc, {
+                            actor: adminActor,
+                            action: 'CLASS_SWITCH_APPROVED',
+                            details: `Approved class switch from ${prevGrade} to ${acc.grade}${adminNote ? ` (${adminNote})` : ''}`
+                        });
+                        appendRosterAuditEntry(roster, {
+                            userId: acc.userId,
+                            email: acc.email,
+                            actor: adminActor,
+                            action: 'CLASS_SWITCH_APPROVED',
+                            details: `${acc.name}: switch approved ${prevGrade} -> ${acc.grade}`
+                        });
                     }
                     // Supersede any other older pending requests from this same student
                     (roster.classSwitchRequests || []).forEach(other => {
@@ -498,6 +766,19 @@ module.exports = async function studentRosterHandler(req, res) {
                             other.adminNote = 'Superseded by another approved class switch.';
                             other.reviewedAt = new Date().toISOString();
                         }
+                    });
+                } else if (acc) {
+                    appendAccountAuditEntry(acc, {
+                        actor: adminActor,
+                        action: 'CLASS_SWITCH_REJECTED',
+                        details: `Rejected class switch to ${reqItem.requestedGrade}${adminNote ? ` (${adminNote})` : ''}`
+                    });
+                    appendRosterAuditEntry(roster, {
+                        userId: acc.userId,
+                        email: acc.email,
+                        actor: adminActor,
+                        action: 'CLASS_SWITCH_REJECTED',
+                        details: `${acc.name}: switch to ${reqItem.requestedGrade} rejected`
                     });
                 }
             }
@@ -508,9 +789,11 @@ module.exports = async function studentRosterHandler(req, res) {
                 success: true,
                 message: 'Changes saved.',
                 data: {
+                    revision: Number(saved.revision) || 0,
                     lastUpdated: saved.lastUpdated,
                     duplicateGroups: saved.duplicateGroups || [],
                     classSwitchRequests: saved.classSwitchRequests || [],
+                    auditLog: saved.auditLog || [],
                     accounts: saved.accounts.map(stripSensitiveAccountFields)
                 }
             }));

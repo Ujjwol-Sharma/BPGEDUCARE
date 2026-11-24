@@ -79,6 +79,7 @@
             <div class="topbar-left">
                 <span class="cms-brand-badge">BPG EDUCARE Admin</span>
                 <span class="save-status-pill" id="adminSaveIndicator">Ready</span>
+                <span class="save-status-pill is-saved" id="adminLiveSyncBadge" style="font-size:0.74rem;" title="Two-way 1.5s real-time sync active">Live Sync &middot; 1.5s</span>
             </div>
             <div class="topbar-right">
                 <a href="./index.html" target="_blank" class="btn-topbar">Open Website</a>
@@ -206,18 +207,22 @@
                         <table class="adm-table">
                             <thead>
                                 <tr>
-                                    <th>Student Details</th>
+                                    <th>Student &amp; Member ID</th>
                                     <th>Gmail / Auth</th>
                                     <th>Class</th>
-                                    <th>Plan</th>
+                                    <th>Current Plan</th>
+                                    <th>Account Status</th>
                                     <th>Payment &amp; Txn Status</th>
-                                    <th>Joined</th>
+                                    <th>Last Updated &amp; Audit</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="usersTableBody"></tbody>
                         </table>
                     </div>
+
+                    <!-- Recent Admin & Student Audit Trail -->
+                    <div id="adminRecentAuditLogMount" style="margin-top:18px;"></div>
                 </div>
 
                 <!-- Student Full Detail Modal / Drawer -->
@@ -581,7 +586,7 @@
 
     <div id="adminToastContainer" class="adm-toast-container"></div>
 
-    <script src="./js/admin-studio.js?v=20261123v16"></script>
+    <script src="./js/admin-studio.js?v=20261124v1"></script>
 </body>
 
 </html>

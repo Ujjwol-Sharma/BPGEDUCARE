@@ -219,36 +219,119 @@ async function academyStateHandler(req, res) {
 
             const rawData = readAcademyState();
             delete rawData.adminPasskey;
+            const roster = readRoster();
             const user = isAdmin ? null : resolveRequestUser(req);
+            const isLightPoll = parsedUrl.searchParams.get('light') === '1';
+            const syncVersion = `${Number(rawData.revision) || 0}:${Number(roster.revision) || 0}:${rawData.lastUpdated || ''}:${roster.lastUpdated || ''}`;
+
+            if (req.method === 'HEAD') {
+                res.statusCode = 200;
+                res.end();
+                return;
+            }
+
+            if (isLightPoll) {
+                if (isAdmin) {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify({
+                        success: true,
+                        light: true,
+                        syncVersion,
+                        stateRevision: Number(rawData.revision) || 0,
+                        rosterRevision: Number(roster.revision) || 0,
+                        timestamp: rawData.lastUpdated || new Date().toISOString(),
+                        roster: {
+                            revision: Number(roster.revision) || 0,
+                            lastUpdated: roster.lastUpdated,
+                            duplicateGroups: roster.duplicateGroups || [],
+                            classSwitchRequests: roster.classSwitchRequests || [],
+                            auditLog: roster.auditLog || [],
+                            accounts: (roster.accounts || []).map(({ passkey, ...safe }) => safe)
+                        },
+                        payments: Array.isArray(rawData.payments) ? rawData.payments : [],
+                        sectionLocks: rawData.sectionLocks || {},
+                        plansConfig: rawData.plansConfig || {},
+                        maintenanceMode: rawData.maintenanceMode || { enabled: false }
+                    }));
+                    return;
+                }
+
+                const safeUser = user ? (({ passkey, ...rest }) => rest)(user) : null;
+                const myPayments = user
+                    ? (Array.isArray(rawData.payments) ? rawData.payments : []).filter(
+                        p => (p.userId && p.userId === user.userId) || p.canonicalEmail === user.canonicalEmail
+                    )
+                    : [];
+                const mySwitchRequests = user
+                    ? (roster.classSwitchRequests || []).filter(
+                        r => (r.userId && r.userId === user.userId) || r.canonicalEmail === user.canonicalEmail
+                    )
+                    : [];
+
+                res.statusCode = 200;
+                res.end(JSON.stringify({
+                    success: true,
+                    light: true,
+                    syncVersion,
+                    stateRevision: Number(rawData.revision) || 0,
+                    rosterRevision: Number(roster.revision) || 0,
+                    timestamp: rawData.lastUpdated || new Date().toISOString(),
+                    currentUser: safeUser,
+                    myPayments,
+                    mySwitchRequests,
+                    sectionLocks: rawData.sectionLocks || {},
+                    plansConfig: rawData.plansConfig || {},
+                    maintenanceMode: rawData.maintenanceMode || { enabled: false }
+                }));
+                return;
+            }
+
             const responseData = isAdmin ? rawData : sanitizeStateForStudent(rawData, user);
 
-            let adminBundle = {};
+            let extraBundle = {};
             if (isAdmin) {
-                const roster = readRoster();
-                adminBundle = {
+                extraBundle = {
+                    syncVersion,
                     roster: {
                         revision: Number(roster.revision) || 0,
                         lastUpdated: roster.lastUpdated,
                         duplicateGroups: roster.duplicateGroups || [],
                         classSwitchRequests: roster.classSwitchRequests || [],
+                        auditLog: roster.auditLog || [],
                         accounts: (roster.accounts || []).map(({ passkey, ...safe }) => safe)
                     },
                     mockTests: Array.isArray(rawData.mockTests) ? rawData.mockTests : [],
                     payments: Array.isArray(rawData.payments) ? rawData.payments : []
                 };
+            } else {
+                const safeUser = user ? (({ passkey, ...rest }) => rest)(user) : null;
+                const myPayments = user
+                    ? (Array.isArray(rawData.payments) ? rawData.payments : []).filter(
+                        p => (p.userId && p.userId === user.userId) || p.canonicalEmail === user.canonicalEmail
+                    )
+                    : [];
+                const mySwitchRequests = user
+                    ? (roster.classSwitchRequests || []).filter(
+                        r => (r.userId && r.userId === user.userId) || r.canonicalEmail === user.canonicalEmail
+                    )
+                    : [];
+                extraBundle = {
+                    syncVersion,
+                    stateRevision: Number(rawData.revision) || 0,
+                    rosterRevision: Number(roster.revision) || 0,
+                    currentUser: safeUser,
+                    myPayments,
+                    mySwitchRequests
+                };
             }
 
             res.statusCode = 200;
-            if (req.method === 'HEAD') {
-                res.end();
-                return;
-            }
             res.end(JSON.stringify({
                 success: true,
                 source: 'database',
                 timestamp: rawData.lastUpdated || new Date().toISOString(),
                 data: responseData,
-                ...adminBundle
+                ...extraBundle
             }));
         } catch (err) {
             console.error('[API /api/academy-state] Error reading database:', err);

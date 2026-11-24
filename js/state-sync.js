@@ -553,18 +553,159 @@ function getStudentAuthHeaders() {
     return headers;
 }
 
-async function syncWithServerDatabase() {
+let lastKnownSyncVersion = '';
+let lastKnownStateRevision = -1;
+window.MY_PAYMENTS = window.MY_PAYMENTS || [];
+window.MY_CLASS_SWITCH_REQUESTS = window.MY_CLASS_SWITCH_REQUESTS || [];
+
+function broadcastStudentMutation(type = 'STUDENT_ROSTER_UPDATED', detail = {}) {
+    const payload = { type, detail, timestamp: Date.now() };
     try {
-        const res = await fetch('/api/academy-state?_t=' + Date.now(), {
+        if ('BroadcastChannel' in window) {
+            const ch1 = new BroadcastChannel('bpg_academy_sync');
+            ch1.postMessage(payload);
+            ch1.close();
+            const ch2 = new BroadcastChannel('bpg_maths_academy_live_sync');
+            ch2.postMessage(payload);
+            ch2.close();
+        }
+    } catch (e) {}
+    try {
+        localStorage.setItem('bpg_live_mutation_ping', JSON.stringify(payload));
+    } catch (e) {}
+}
+
+function reconcileStudentLiveSessionPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    let uiNeedsRefresh = false;
+
+    if (Array.isArray(payload.myPayments)) {
+        const prevPayStr = JSON.stringify(window.MY_PAYMENTS || []);
+        const nextPayStr = JSON.stringify(payload.myPayments);
+        if (prevPayStr !== nextPayStr) {
+            window.MY_PAYMENTS = payload.myPayments;
+            uiNeedsRefresh = true;
+        }
+    }
+
+    if (Array.isArray(payload.mySwitchRequests)) {
+        const prevReqStr = JSON.stringify(window.MY_CLASS_SWITCH_REQUESTS || []);
+        const nextReqStr = JSON.stringify(payload.mySwitchRequests);
+        if (prevReqStr !== nextReqStr) {
+            window.MY_CLASS_SWITCH_REQUESTS = payload.mySwitchRequests;
+            uiNeedsRefresh = true;
+        }
+    }
+
+    const session = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
+    if (session && session.sessionToken) {
+        if (payload.currentUser === null) {
+            // Account was deleted or suspended on the server
+            localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
+            localStorage.removeItem('bpg_student_session');
+            if (typeof updateAuthUserPill === 'function') updateAuthUserPill();
+            if (typeof switchPortal === 'function') switchPortal('view-home');
+            return true;
+        }
+        if (payload.currentUser && payload.currentUser.email) {
+            const u = payload.currentUser;
+            const prevPlan = String(session.plan || 'free').toLowerCase();
+            const nextPlan = String(u.plan || 'free').toLowerCase();
+            const prevGrade = session.grade || 'Class 12';
+            const nextGrade = u.grade || prevGrade;
+            const nextNormClass = typeof normalizeClassKey === 'function' ? normalizeClassKey(nextGrade) : (session.classKey || 'c12');
+            const nameChanged = u.name && u.name !== session.name;
+            const usernameChanged = u.username && u.username !== session.username;
+            const planChanged = nextPlan !== prevPlan;
+            const gradeChanged = nextGrade !== prevGrade || nextNormClass !== session.classKey;
+            const statusChanged = u.accountStatus !== session.accountStatus || u.paymentStatus !== session.paymentStatus;
+            const idChanged = u.userId && u.userId !== session.userId;
+
+            if (nameChanged || usernameChanged || planChanged || gradeChanged || statusChanged || idChanged || u.updatedAt !== session.updatedAt) {
+                session.userId = u.userId || session.userId || '';
+                session.name = u.name || session.name;
+                session.username = u.username || session.username;
+                session.grade = nextGrade;
+                session.classKey = nextNormClass;
+                session.plan = nextPlan;
+                session.accountStatus = u.accountStatus || 'active';
+                session.paymentStatus = u.paymentStatus || (nextPlan !== 'free' ? 'paid' : 'none');
+                session.legacyAccess = Boolean(u.legacyAccess);
+                session.planExplicitlySet = Boolean(u.planExplicitlySet);
+                session.updatedAt = u.updatedAt || new Date().toISOString();
+                session.lastModifiedBy = u.lastModifiedBy || session.lastModifiedBy || '';
+
+                localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+                localStorage.setItem('bpg_student_session', JSON.stringify(session));
+                localStorage.setItem('bpg_student_class', nextNormClass);
+                uiNeedsRefresh = true;
+
+                if (planChanged && typeof showToast === 'function') {
+                    showToast(`Membership updated to ${nextPlan.toUpperCase()}!`);
+                }
+                if (gradeChanged && typeof showToast === 'function') {
+                    showToast(`Active class updated to ${nextGrade}!`);
+                    if (typeof openMyClassWorkspace === 'function') {
+                        const activeEl = document.querySelector('.portal-view.active');
+                        if (activeEl && activeEl.id && activeEl.id !== 'view-home' && activeEl.id !== 'view-student-home') {
+                            openMyClassWorkspace();
+                        }
+                    }
+                }
+                if (planChanged || gradeChanged) {
+                    // Fetch full unredacted state for the newly unlocked plan/class
+                    setTimeout(() => syncWithServerDatabase(false), 20);
+                }
+            }
+        }
+    }
+
+    if (uiNeedsRefresh) {
+        if (typeof updateAuthUserPill === 'function') updateAuthUserPill();
+        if (typeof renderStudentDashboardPaymentBanner === 'function') renderStudentDashboardPaymentBanner();
+        if (typeof refreshOpenCheckoutStatusLive === 'function') refreshOpenCheckoutStatusLive();
+        if (typeof renderStudentProfileModalContent === 'function' && document.getElementById('studentProfileModal')?.classList.contains('open')) {
+            renderStudentProfileModalContent();
+        }
+    }
+
+    return uiNeedsRefresh;
+}
+
+async function syncWithServerDatabase(isLight = false) {
+    try {
+        const url = isLight
+            ? '/api/academy-state?light=1&_t=' + Date.now()
+            : '/api/academy-state?_t=' + Date.now();
+        const res = await fetch(url, {
             cache: 'no-store',
             headers: getStudentAuthHeaders()
         });
-        if (res.ok) {
-            const payload = await res.json();
-            if (payload && payload.data && payload.data.portals) {
-                applyIncomingAdminState(payload.data);
-                return true;
+        if (!res.ok) return false;
+        const payload = await res.json();
+        if (!payload || !payload.success) return false;
+
+        reconcileStudentLiveSessionPayload(payload);
+
+        if (isLight) {
+            const incomingRev = Number(payload.stateRevision) || 0;
+            if (lastKnownStateRevision !== -1 && incomingRev > lastKnownStateRevision) {
+                lastKnownStateRevision = incomingRev;
+                return await syncWithServerDatabase(false);
             }
+            if (lastKnownStateRevision === -1) {
+                lastKnownStateRevision = incomingRev;
+            }
+            return true;
+        }
+
+        if (payload.stateRevision !== undefined) {
+            lastKnownStateRevision = Number(payload.stateRevision) || 0;
+        }
+        if (payload.data && payload.data.portals) {
+            applyIncomingAdminState(payload.data);
+            if (typeof renderStudentDashboardPaymentBanner === 'function') renderStudentDashboardPaymentBanner();
+            return true;
         }
     } catch (err) {}
     return false;

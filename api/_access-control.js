@@ -514,9 +514,11 @@ function issueStudentSessionToken(user) {
     const issuedAt = Date.now();
     const expiresAt = issuedAt + 30 * 24 * 60 * 60 * 1000;
     const email = String(user.email || '').trim().toLowerCase();
+    const canonicalEmail = canonicalizeEmail(email);
     const payload = {
+        userId: deriveStableUserId(canonicalEmail, user.userId),
         email,
-        canonicalEmail: canonicalizeEmail(email),
+        canonicalEmail,
         name: user.name || 'Student',
         grade: normalizeGradeName(user.grade || user.classKey),
         plan: normalizePlan(user.plan),
@@ -554,8 +556,68 @@ function verifyStudentSessionToken(token) {
 }
 
 /* --------------------------------------------------------------------------
-   3. ROSTER STORAGE + DUPLICATE GMAIL FLAGGING
+   3. ROSTER STORAGE + STABLE USER ID + AUDIT LOG + DUPLICATE GMAIL DEDUPLICATION
    -------------------------------------------------------------------------- */
+function deriveStableUserId(canonicalEmail, existingId = '') {
+    if (existingId && String(existingId).startsWith('usr_')) {
+        return String(existingId).trim();
+    }
+    const seed = String(canonicalEmail || 'student').trim().toLowerCase();
+    return 'usr_' + crypto.createHash('sha256').update(seed).digest('hex').slice(0, 12);
+}
+
+function appendAccountAuditEntry(account, { actor = 'System', action = 'UPDATE', details = '' } = {}) {
+    if (!account || typeof account !== 'object') return;
+    const nowIso = new Date().toISOString();
+    account.updatedAt = nowIso;
+    account.lastModifiedBy = String(actor || 'System');
+    if (!Array.isArray(account.auditLog)) account.auditLog = [];
+    account.auditLog.unshift({
+        id: 'aud_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        timestamp: nowIso,
+        actor: String(actor || 'System'),
+        action: String(action || 'UPDATE'),
+        details: String(details || '')
+    });
+    if (account.auditLog.length > 25) {
+        account.auditLog = account.auditLog.slice(0, 25);
+    }
+}
+
+function appendRosterAuditEntry(roster, { userId = '', email = '', actor = 'Admin', action = 'UPDATE', details = '' } = {}) {
+    if (!roster || typeof roster !== 'object') return;
+    if (!Array.isArray(roster.auditLog)) roster.auditLog = [];
+    roster.auditLog.unshift({
+        id: 'raud_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        timestamp: new Date().toISOString(),
+        userId: String(userId || ''),
+        email: String(email || ''),
+        actor: String(actor || 'Admin'),
+        action: String(action || 'UPDATE'),
+        details: String(details || '')
+    });
+    if (roster.auditLog.length > 100) {
+        roster.auditLog = roster.auditLog.slice(0, 100);
+    }
+}
+
+function normalizeAccountStatus(acc) {
+    const raw = String(acc?.accountStatus || '').trim().toLowerCase();
+    if (raw === 'suspended' || raw === 'disabled') return 'suspended';
+    if (raw === 'pending_verification' || acc?.emailVerified === false) return 'pending_verification';
+    return 'active';
+}
+
+function normalizePaymentStatusValue(status) {
+    const s = String(status || '').trim().toLowerCase();
+    if (s === 'paid' || s === 'verified' || s === 'complete' || s === 'completed') return 'paid';
+    if (s === 'awaiting_confirmation' || s === 'awaiting' || s === 'delayed') return 'awaiting_confirmation';
+    if (s === 'failed' || s === 'rejected' || s === 'canceled' || s === 'cancelled') return 'failed';
+    if (s === 'refunded' || s === 'refund') return 'refunded';
+    if (s === 'pending') return 'pending';
+    return 'none';
+}
+
 function readRoster() {
     if (global.__BPG_STUDENT_ROSTER__ && Array.isArray(global.__BPG_STUDENT_ROSTER__.accounts)) {
         return global.__BPG_STUDENT_ROSTER__;
@@ -589,6 +651,7 @@ function readRoster() {
             revision: 20,
             lastUpdated: new Date().toISOString(),
             classSwitchRequests: [],
+            auditLog: [],
             accounts: []
         };
         writeRoster(roster);
@@ -597,47 +660,68 @@ function readRoster() {
     if (!Array.isArray(roster.classSwitchRequests)) {
         roster.classSwitchRequests = [];
     }
+    if (!Array.isArray(roster.auditLog)) {
+        roster.auditLog = [];
+    }
 
-    // Normalize every account while preserving existing accounts
+    // Normalize and deduplicate accounts so each person has ONE stable member record (by userId / googleSub / canonicalEmail)
+    const dedupedMap = new Map();
     const canonicalCounts = {};
-    roster.accounts = roster.accounts.map(acc => {
-        const email = String(acc.email || '').trim().toLowerCase();
+    for (const rawAcc of roster.accounts) {
+        if (!rawAcc || typeof rawAcc !== 'object') continue;
+        const email = String(rawAcc.email || '').trim().toLowerCase();
+        if (!email) continue;
         const canonicalEmail = canonicalizeEmail(email);
-        canonicalCounts[canonicalEmail] = (canonicalCounts[canonicalEmail] || 0) + 1;
-        const isExistingLegacy = acc.legacyAccess !== undefined ? Boolean(acc.legacyAccess) : (acc.plan === undefined);
-        const defaultUsername = email.includes('@') ? email.split('@')[0] : (acc.name || 'student').toLowerCase().replace(/[^a-z0-9]/g, '');
-        return {
-            ...acc,
+        const userId = deriveStableUserId(canonicalEmail, rawAcc.userId);
+        const isExistingLegacy = rawAcc.legacyAccess !== undefined ? Boolean(rawAcc.legacyAccess) : (rawAcc.plan === undefined);
+        const defaultUsername = email.includes('@') ? email.split('@')[0] : (rawAcc.name || 'student').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const normalized = {
+            ...rawAcc,
+            userId,
             email,
             canonicalEmail,
-            username: String(acc.username || defaultUsername).trim(),
-            grade: normalizeGradeName(acc.grade || acc.classKey),
-            classKey: gradeToClassKey(acc.classKey || acc.grade),
-            plan: normalizePlan(acc.plan || 'free'),
+            username: String(rawAcc.username || defaultUsername).trim(),
+            grade: normalizeGradeName(rawAcc.grade || rawAcc.classKey),
+            classKey: gradeToClassKey(rawAcc.classKey || rawAcc.grade),
+            plan: normalizePlan(rawAcc.plan || 'free'),
+            accountStatus: normalizeAccountStatus(rawAcc),
+            paymentStatus: normalizePaymentStatusValue(rawAcc.paymentStatus || (normalizePlan(rawAcc.plan || 'free') !== 'free' ? 'paid' : 'none')),
             legacyAccess: isExistingLegacy,
-            googleLinked: Boolean(acc.googleLinked),
-            googleSub: String(acc.googleSub || ''),
-            avatarUrl: String(acc.avatarUrl || ''),
-            passkey: acc.passkey || 'bpgstudent',
-            joinedAt: acc.joinedAt || new Date().toISOString().split('T')[0]
+            googleLinked: Boolean(rawAcc.googleLinked),
+            googleSub: String(rawAcc.googleSub || ''),
+            avatarUrl: String(rawAcc.avatarUrl || ''),
+            passkey: rawAcc.passkey || 'bpgstudent',
+            joinedAt: rawAcc.joinedAt || new Date().toISOString().split('T')[0],
+            updatedAt: rawAcc.updatedAt || rawAcc.verifiedAt || (rawAcc.joinedAt ? `${rawAcc.joinedAt}T00:00:00.000Z` : new Date().toISOString()),
+            lastModifiedBy: rawAcc.lastModifiedBy || (rawAcc.googleLinked ? 'Google Sign-In' : 'System'),
+            auditLog: Array.isArray(rawAcc.auditLog) ? rawAcc.auditLog : []
         };
-    });
 
-    // Flag any pre-existing duplicate Gmail inboxes for admin review
-    const duplicateGroups = [];
-    const grouped = {};
-    roster.accounts.forEach(acc => {
-        const isDup = canonicalCounts[acc.canonicalEmail] > 1;
-        acc.duplicateFlag = isDup;
-        if (isDup) {
-            if (!grouped[acc.canonicalEmail]) grouped[acc.canonicalEmail] = [];
-            grouped[acc.canonicalEmail].push(acc.email);
+        const existing = dedupedMap.get(canonicalEmail);
+        if (!existing) {
+            dedupedMap.set(canonicalEmail, normalized);
+            canonicalCounts[canonicalEmail] = 1;
+        } else {
+            canonicalCounts[canonicalEmail] = (canonicalCounts[canonicalEmail] || 1) + 1;
+            // Merge into single canonical record, keeping higher plan and latest update
+            if (PLAN_RANK[normalized.plan] > PLAN_RANK[existing.plan]) {
+                existing.plan = normalized.plan;
+                existing.planExplicitlySet = Boolean(normalized.planExplicitlySet || existing.planExplicitlySet);
+            }
+            if (normalized.googleLinked) existing.googleLinked = true;
+            if (normalized.googleSub && !existing.googleSub) existing.googleSub = normalized.googleSub;
+            if (normalized.avatarUrl && !existing.avatarUrl) existing.avatarUrl = normalized.avatarUrl;
+            if (new Date(normalized.updatedAt || 0).getTime() > new Date(existing.updatedAt || 0).getTime()) {
+                existing.updatedAt = normalized.updatedAt;
+                existing.name = normalized.name || existing.name;
+                existing.grade = normalized.grade || existing.grade;
+                existing.classKey = normalized.classKey || existing.classKey;
+            }
         }
-    });
-    Object.keys(grouped).forEach(ce => {
-        duplicateGroups.push({ canonicalEmail: ce, emails: grouped[ce], count: grouped[ce].length });
-    });
-    roster.duplicateGroups = duplicateGroups;
+    }
+
+    roster.accounts = Array.from(dedupedMap.values());
+    roster.duplicateGroups = [];
     roster.revision = Number(roster.revision) || 1;
     global.__BPG_STUDENT_ROSTER__ = roster;
 
@@ -646,33 +730,53 @@ function readRoster() {
 
 function writeRoster(roster) {
     const nextRevision = (Number(roster?.revision) || Number(global.__BPG_STUDENT_ROSTER__?.revision) || 1) + 1;
+    const nowIso = new Date().toISOString();
+    const seenCanonical = new Set();
+    const cleanAccounts = [];
+
+    for (const acc of (roster.accounts || [])) {
+        if (!acc || typeof acc !== 'object') continue;
+        const email = String(acc.email || '').trim().toLowerCase();
+        if (!email) continue;
+        const canonicalEmail = canonicalizeEmail(email);
+        if (seenCanonical.has(canonicalEmail)) continue;
+        seenCanonical.add(canonicalEmail);
+
+        const defaultUsername = email.includes('@') ? email.split('@')[0] : (acc.name || 'student').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const plan = normalizePlan(acc.plan || 'free');
+        cleanAccounts.push({
+            userId: deriveStableUserId(canonicalEmail, acc.userId),
+            name: acc.name || 'Student',
+            username: String(acc.username || defaultUsername).trim(),
+            email,
+            canonicalEmail,
+            grade: normalizeGradeName(acc.grade || acc.classKey),
+            classKey: gradeToClassKey(acc.classKey || acc.grade),
+            plan,
+            planExplicitlySet: Boolean(acc.planExplicitlySet),
+            legacyAccess: Boolean(acc.legacyAccess),
+            accountStatus: normalizeAccountStatus(acc),
+            paymentStatus: normalizePaymentStatusValue(acc.paymentStatus || (plan !== 'free' ? 'paid' : 'none')),
+            emailVerified: acc.emailVerified !== undefined ? Boolean(acc.emailVerified) : true,
+            verifiedAt: acc.verifiedAt || '',
+            verificationMethod: acc.verificationMethod || '',
+            googleLinked: Boolean(acc.googleLinked),
+            googleSub: String(acc.googleSub || ''),
+            avatarUrl: String(acc.avatarUrl || ''),
+            passkey: acc.passkey || 'bpgstudent',
+            joinedAt: acc.joinedAt || nowIso.split('T')[0],
+            updatedAt: acc.updatedAt || nowIso,
+            lastModifiedBy: acc.lastModifiedBy || 'System',
+            auditLog: Array.isArray(acc.auditLog) ? acc.auditLog.slice(0, 25) : []
+        });
+    }
+
     const clean = {
         revision: nextRevision,
-        lastUpdated: new Date().toISOString(),
+        lastUpdated: nowIso,
         classSwitchRequests: Array.isArray(roster.classSwitchRequests) ? roster.classSwitchRequests : [],
-        accounts: (roster.accounts || []).map(acc => {
-            const email = String(acc.email || '').trim().toLowerCase();
-            const defaultUsername = email.includes('@') ? email.split('@')[0] : (acc.name || 'student').toLowerCase().replace(/[^a-z0-9]/g, '');
-            return {
-                name: acc.name || 'Student',
-                username: String(acc.username || defaultUsername).trim(),
-                email,
-                canonicalEmail: canonicalizeEmail(email),
-                grade: normalizeGradeName(acc.grade || acc.classKey),
-                classKey: gradeToClassKey(acc.classKey || acc.grade),
-                plan: normalizePlan(acc.plan || 'free'),
-                planExplicitlySet: Boolean(acc.planExplicitlySet),
-                legacyAccess: Boolean(acc.legacyAccess),
-                emailVerified: acc.emailVerified !== undefined ? Boolean(acc.emailVerified) : true,
-                verifiedAt: acc.verifiedAt || '',
-                verificationMethod: acc.verificationMethod || '',
-                googleLinked: Boolean(acc.googleLinked),
-                googleSub: String(acc.googleSub || ''),
-                avatarUrl: String(acc.avatarUrl || ''),
-                passkey: acc.passkey || 'bpgstudent',
-                joinedAt: acc.joinedAt || new Date().toISOString().split('T')[0]
-            };
-        })
+        auditLog: Array.isArray(roster.auditLog) ? roster.auditLog.slice(0, 100) : [],
+        accounts: cleanAccounts
     };
 
     const serialized = JSON.stringify(clean, null, 2);
@@ -689,9 +793,18 @@ function writeRoster(roster) {
     return readRoster();
 }
 
-function findAccountByEmail(email) {
-    const canonical = canonicalizeEmail(email);
+function findAccountByEmail(email, userId = '', googleSub = '') {
     const roster = readRoster();
+    if (userId) {
+        const byId = roster.accounts.find(a => a.userId === userId);
+        if (byId) return byId;
+    }
+    if (googleSub) {
+        const bySub = roster.accounts.find(a => a.googleSub && a.googleSub === googleSub);
+        if (bySub) return bySub;
+    }
+    if (!email) return null;
+    const canonical = canonicalizeEmail(email);
     return roster.accounts.find(a => a.canonicalEmail === canonical) || null;
 }
 
@@ -1022,28 +1135,19 @@ function resolveRequestUser(req) {
         } catch (e) { }
     }
     const verified = verifyStudentSessionToken(token);
-    if (verified && verified.email) {
-        const account = findAccountByEmail(verified.email);
+    if (verified && (verified.email || verified.userId)) {
+        const account = findAccountByEmail(verified.email, verified.userId);
         if (account) {
-            if (account.emailVerified === false) return null;
+            if (account.emailVerified === false || account.accountStatus === 'suspended') return null;
             return account;
         }
-        return {
-            email: String(verified.email).trim().toLowerCase(),
-            canonicalEmail: verified.canonicalEmail || canonicalizeEmail(verified.email),
-            name: verified.name || 'Student',
-            grade: normalizeGradeName(verified.grade),
-            classKey: gradeToClassKey(verified.grade),
-            plan: normalizePlan(verified.plan),
-            emailVerified: true,
-            verified: true
-        };
+        return null;
     }
 
     const headerEmail = String(req.headers['x-student-email'] || '').trim().toLowerCase();
     if (headerEmail) {
         const fallbackAccount = findAccountByEmail(headerEmail);
-        if (fallbackAccount && fallbackAccount.emailVerified !== false) {
+        if (fallbackAccount && fallbackAccount.emailVerified !== false && fallbackAccount.accountStatus !== 'suspended') {
             return fallbackAccount;
         }
     }
@@ -1406,6 +1510,11 @@ module.exports = {
     readRoster,
     writeRoster,
     findAccountByEmail,
+    deriveStableUserId,
+    appendAccountAuditEntry,
+    appendRosterAuditEntry,
+    normalizeAccountStatus,
+    normalizePaymentStatusValue,
     ensureAccessModelDefaults,
     readAcademyState,
     resolveRequestUser,
