@@ -1,8 +1,17 @@
 {
-  "revision": 33,
-  "lastUpdated": "2026-11-24T09:37:27.952Z",
+  "revision": 34,
+  "lastUpdated": "2026-11-24T09:45:25.444Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513525444_bbry",
+      "timestamp": "2026-11-24T09:45:25.444Z",
+      "userId": "usr_ef3068f04640",
+      "email": "scholar@bpgacademy.edu.np",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Creative Scholar (scholar@bpgacademy.edu.np)"
+    },
     {
       "id": "raud_1795513047952_tpe5",
       "timestamp": "2026-11-24T09:37:27.952Z",
@@ -207,31 +216,6 @@
       "joinedAt": "2026-11-14",
       "updatedAt": "2026-11-23T15:00:00.000Z",
       "lastModifiedBy": "Recovered from Chrome LevelDB Backup",
-      "auditLog": []
-    },
-    {
-      "userId": "usr_ef3068f04640",
-      "name": "Creative Scholar",
-      "username": "creative.scholar",
-      "email": "scholar@bpgacademy.edu.np",
-      "canonicalEmail": "scholar@bpgacademy.edu.np",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": true,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-01T09:00:00.000Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "bpgstudent",
-      "joinedAt": "2026-11-01",
-      "updatedAt": "2026-11-23T15:00:00.000Z",
-      "lastModifiedBy": "Recovered from Initial Roster Backup",
       "auditLog": []
     }
   ]
