@@ -1,8 +1,17 @@
 {
-  "revision": 29,
-  "lastUpdated": "2026-11-24T09:26:48.205Z",
+  "revision": 30,
+  "lastUpdated": "2026-11-24T09:26:51.494Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795512411494_7efc",
+      "timestamp": "2026-11-24T09:26:51.494Z",
+      "userId": "usr_55fa0d17da8e",
+      "email": "redeploy.verify@gmail.com",
+      "actor": "eSewa Provider Verification",
+      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+      "details": "Redeploy Test Scholar: GOLD activated via verified payment (ESW-REDEPLOY-777)"
+    },
     {
       "id": "raud_1795512405470_yzzn",
       "timestamp": "2026-11-24T09:26:45.470Z",
@@ -31,11 +40,11 @@
       "canonicalEmail": "redeployverify@gmail.com",
       "grade": "Class 11",
       "classKey": "class-11",
-      "plan": "free",
-      "planExplicitlySet": false,
+      "plan": "gold",
+      "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "paid",
       "emailVerified": true,
       "verifiedAt": "2026-11-24T09:26:42.036Z",
       "verificationMethod": "google_oauth",
@@ -44,9 +53,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$33532d05e0b0bb8c9b39185547f330d2$66f221ba4e0babb0d39b0a5fcf4f9d348c6b9b854258d80ad57bc4ae1c37daf257abdbd3b15e9fbe5db61213060238eaf432fbcc13155ae4a96d09caeb978876",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T09:26:48.205Z",
-      "lastModifiedBy": "Redeploy Test Scholar (Student)",
+      "updatedAt": "2026-11-24T09:26:51.494Z",
+      "lastModifiedBy": "eSewa Provider Verification",
       "auditLog": [
+        {
+          "id": "aud_1795512411494_wcvn",
+          "timestamp": "2026-11-24T09:26:51.494Z",
+          "actor": "eSewa Provider Verification",
+          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+          "details": "Order ORD-1795512408205-67EEB0 (Txn ESW-REDEPLOY-777, NPR 1499) confirmed PAID. Plan FREE -> GOLD"
+        },
         {
           "id": "aud_1795512408205_9i5c",
           "timestamp": "2026-11-24T09:26:48.205Z",

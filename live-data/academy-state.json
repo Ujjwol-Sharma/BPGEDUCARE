@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T09:26:48.205Z",
+  "lastUpdated": "2026-11-24T09:26:51.494Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3112,14 +3112,17 @@
       "amount": "Rs. 1,499",
       "expectedAmount": 1499,
       "currency": "NPR",
-      "transactionId": "",
+      "transactionId": "ESW-REDEPLOY-777",
       "orderSignature": "59b45b7d1a68f25ae0a7f2d267d136184b644ad20448a0fadcb51df687c1fc3b",
       "method": "esewa_qr",
-      "status": "pending",
-      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "status": "paid",
+      "adminNote": "Verified via signed eSewa v2 callback (Ref ESW-REDEPLOY-777, NPR 1499).",
       "createdAt": "2026-11-24T09:26:48.205Z",
-      "updatedAt": "2026-11-24T09:26:48.205Z",
-      "reviewedAt": ""
+      "updatedAt": "2026-11-24T09:26:51.494Z",
+      "reviewedAt": "2026-11-24T09:26:51.494Z",
+      "activatedAt": "2026-11-24T09:26:51.494Z",
+      "verifiedBy": "eSewa Provider Verification",
+      "activationCount": 1
     },
     {
       "id": "pay_1795341224049_r8ow",
@@ -3147,5 +3150,5 @@
       "activationCount": 1
     }
   ],
-  "revision": 8
+  "revision": 9
 }
