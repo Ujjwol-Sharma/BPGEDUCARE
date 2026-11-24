@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T15:05:47.625Z",
+  "lastUpdated": "2026-11-24T15:06:40.008Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1020,9 +1020,11 @@
         {
           "code": "Unit 05",
           "domain": "Calculus",
-          "hours": "45 hrs",
-          "marks": "20 Marks",
-          "weightage": "2 Long (10M) + 4 Short (8M) + 2 MCQ (2M)"
+          "hours": "36 hrs",
+          "marks": "22 Marks",
+          "weightage": "1 Long (8M) + 2 Short (10M) + 4 MCQ (4M)",
+          "name": "Calculus",
+          "focus": "1 Long (8M) + 2 Short (10M) + 4 MCQ (4M)"
         },
         {
           "code": "Unit 06",
@@ -1416,8 +1418,8 @@
               "id": "class-12-math-l5",
               "code": "Unit 05",
               "title": "Calculus",
-              "hours": "45 hrs",
-              "marks": "20 Marks",
+              "hours": "36 hrs",
+              "marks": "22 Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -3239,6 +3241,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 40,
+  "revision": 41,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
