@@ -1,8 +1,17 @@
 {
-  "revision": 27,
-  "lastUpdated": "2026-11-24T09:26:42.110Z",
+  "revision": 28,
+  "lastUpdated": "2026-11-24T09:26:45.470Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795512405470_yzzn",
+      "timestamp": "2026-11-24T09:26:45.470Z",
+      "userId": "usr_55fa0d17da8e",
+      "email": "redeploy.verify@gmail.com",
+      "actor": "Redeploy Verifier",
+      "action": "ADMIN_CLASS_CHANGE",
+      "details": "Redeploy Test Scholar: class changed from Class 12 to Class 11"
+    },
     {
       "id": "raud_1795512402109_cat7",
       "timestamp": "2026-11-24T09:26:42.109Z",
@@ -20,8 +29,8 @@
       "username": "redeploy.verify",
       "email": "redeploy.verify@gmail.com",
       "canonicalEmail": "redeployverify@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
+      "grade": "Class 11",
+      "classKey": "class-11",
       "plan": "free",
       "planExplicitlySet": false,
       "legacyAccess": false,
@@ -35,9 +44,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$33532d05e0b0bb8c9b39185547f330d2$66f221ba4e0babb0d39b0a5fcf4f9d348c6b9b854258d80ad57bc4ae1c37daf257abdbd3b15e9fbe5db61213060238eaf432fbcc13155ae4a96d09caeb978876",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T09:26:42.109Z",
-      "lastModifiedBy": "Redeploy Test Scholar (Google Sign-Up)",
+      "updatedAt": "2026-11-24T09:26:45.470Z",
+      "lastModifiedBy": "Redeploy Verifier",
       "auditLog": [
+        {
+          "id": "aud_1795512405470_h88f",
+          "timestamp": "2026-11-24T09:26:45.470Z",
+          "actor": "Redeploy Verifier",
+          "action": "ADMIN_CLASS_CHANGE",
+          "details": "Changed class from Class 12 to Class 11"
+        },
         {
           "id": "aud_1795512402109_x4h3",
           "timestamp": "2026-11-24T09:26:42.109Z",
