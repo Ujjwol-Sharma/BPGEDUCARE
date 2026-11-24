@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T11:19:23.770Z",
+  "lastUpdated": "2026-11-24T11:27:32.499Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2691,7 +2691,7 @@
     "heroPillText": "Pokhara, Nepal · NEB & Entrance Mathematics",
     "heroTitleMain": "Understand Mathematics.",
     "heroTitleMuted": "Master every concept.",
-    "heroDescription": "Structured, concept-first mathematics portals for Class 10, Class 11, Class 12, and IOE / CEE / KU entrance — mentored by Bishnu Prasad Gautam (BPG Sir).",
+    "heroDescription": "Structured, concept-first mathematics portals for Class 11, Class 12, and IOE / KU entrance — mentored by Bishnu Prasad Gautam (BPG Sir).",
     "heroPrimaryBtnLabel": "Get Started",
     "heroSecondaryBtnLabel": "Ask BPG AI",
     "heroSecondaryBtnLink": "#ai",
@@ -3183,6 +3183,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 31,
+  "revision": 32,
   "explicitDeleteUploadId": "lpdf_1795447149462_0"
 }
