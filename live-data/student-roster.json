@@ -1,6 +1,6 @@
 {
-  "revision": 63,
-  "lastUpdated": "2026-11-24T16:38:42.639Z",
+  "revision": 64,
+  "lastUpdated": "2026-11-24T16:38:43.235Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795538323235_s0xq",
+      "timestamp": "2026-11-24T16:38:43.235Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+      "details": "Chess Club: GOLD activated via verified payment (ORD-1795531613133-AD4BC7)"
+    },
     {
       "id": "raud_1795532308589_g0i6",
       "timestamp": "2026-11-24T14:58:28.589Z",
@@ -405,11 +414,11 @@
       "canonicalEmail": "creativechessclub01@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
+      "plan": "gold",
+      "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "awaiting_confirmation",
+      "paymentStatus": "paid",
       "emailVerified": true,
       "verifiedAt": "2026-11-24T09:46:13.317Z",
       "verificationMethod": "email_otp",
@@ -418,9 +427,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T16:38:42.639Z",
-      "lastModifiedBy": "Admin Console (Provider Status Check)",
+      "updatedAt": "2026-11-24T16:38:43.235Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795538323235_9drq",
+          "timestamp": "2026-11-24T16:38:43.235Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+          "details": "Order ORD-1795531613133-AD4BC7 (Txn N/A, NPR 1499) confirmed PAID. Plan FREE -> GOLD"
+        },
         {
           "id": "aud_1795538322639_vyoz",
           "timestamp": "2026-11-24T16:38:42.639Z",
