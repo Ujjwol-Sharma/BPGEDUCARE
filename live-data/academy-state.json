@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T15:04:45.413Z",
+  "lastUpdated": "2026-11-24T15:05:47.625Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1010,10 +1010,12 @@
         },
         {
           "code": "Unit 04",
-          "domain": "Vectors & 3D Geometry",
-          "hours": "20 hrs",
-          "marks": "14 Marks",
-          "weightage": "1 Long (5M) + 3 Short (6M) + 3 MCQ (3M)"
+          "domain": "Vectors",
+          "hours": "9hrs",
+          "marks": "6 Marks",
+          "weightage": "1 MCQ (1M)+5(M)",
+          "name": "Vectors",
+          "focus": "1 MCQ (1M)+5(M)"
         },
         {
           "code": "Unit 05",
@@ -1403,9 +1405,9 @@
             {
               "id": "class-12-math-l4",
               "code": "Unit 04",
-              "title": "Vectors & 3D Geometry",
-              "hours": "20 hrs",
-              "marks": "14 Marks",
+              "title": "Vectors",
+              "hours": "9hrs",
+              "marks": "6 Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -3237,6 +3239,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 39,
+  "revision": 40,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
