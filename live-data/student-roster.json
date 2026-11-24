@@ -1,6 +1,6 @@
 {
-  "revision": 39,
-  "lastUpdated": "2026-11-24T09:46:13.381Z",
+  "revision": 40,
+  "lastUpdated": "2026-11-24T09:47:02.138Z",
   "classSwitchRequests": [],
   "auditLog": [
     {
@@ -165,7 +165,7 @@
       "googleLinked": true,
       "googleSub": "gsub_974c713f29dd430d",
       "avatarUrl": "",
-      "passkey": "bpgstudent",
+      "passkey": "scrypt$a2555dd4546f28d2d4077e9e99eb57c4$58ea8aed30de6f5abed51b775f93d995db1a6edaee161bc127830f34b1cea63b18987fc2c84a9573b11ab2d9768f4bd4838ef269d1c15b4d6f8876c1870cdabc",
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-24T08:55:02.499Z",
       "lastModifiedBy": "Recovered from Live Session (2026-11-24)",
