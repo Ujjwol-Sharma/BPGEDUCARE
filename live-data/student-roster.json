@@ -1,8 +1,17 @@
 {
-  "revision": 37,
-  "lastUpdated": "2026-11-24T09:45:38.402Z",
+  "revision": 38,
+  "lastUpdated": "2026-11-24T09:45:40.405Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513540405_x815",
+      "timestamp": "2026-11-24T09:45:40.405Z",
+      "userId": "usr_ab78663f0a4c",
+      "email": "rohan.sharma@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Rohan Sharma (rohan.sharma@gmail.com)"
+    },
     {
       "id": "raud_1795513538402_9j4n",
       "timestamp": "2026-11-24T09:45:38.402Z",
@@ -143,31 +152,6 @@
       "joinedAt": "2026-11-22",
       "updatedAt": "2026-11-23T15:32:48.362Z",
       "lastModifiedBy": "Recovered from Chrome & Git Backup",
-      "auditLog": []
-    },
-    {
-      "userId": "usr_ab78663f0a4c",
-      "name": "Rohan Sharma",
-      "username": "rohan.sharma",
-      "email": "rohan.sharma@gmail.com",
-      "canonicalEmail": "rohansharma@gmail.com",
-      "grade": "Class 11",
-      "classKey": "class-11",
-      "plan": "diamond",
-      "planExplicitlySet": true,
-      "legacyAccess": true,
-      "accountStatus": "active",
-      "paymentStatus": "paid",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-03T09:00:00.000Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_ab78663f0a4ce1ca",
-      "avatarUrl": "",
-      "passkey": "bpgstudent",
-      "joinedAt": "2026-11-03",
-      "updatedAt": "2026-11-23T15:00:00.000Z",
-      "lastModifiedBy": "Recovered with Verified Diamond Payment (GW999)",
       "auditLog": []
     }
   ]
