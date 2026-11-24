@@ -2610,8 +2610,384 @@ function insertMathSnippetAtCursor(snippet) {
     updateAllAdminMathPreviews();
 }
 
+/* --------------------------------------------------------------------------
+   UNIVERSAL WORD (OMML / UNICODEMATH) & LINEAR MATH -> LATEX CONVERTER
+   -------------------------------------------------------------------------- */
+const UNICODE_SUPER_MAP = {
+    '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4',
+    '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+    '⁺': '+', '⁻': '-', '⁼': '=', '⁽': '(', '⁾': ')',
+    'ⁿ': 'n', 'ⁱ': 'i'
+};
+
+const UNICODE_SUB_MAP = {
+    '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4',
+    '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9',
+    '₊': '+', '₋': '-', '₌': '=', '₍': '(', '₎': ')',
+    'ₐ': 'a', 'ₑ': 'e', 'ₒ': 'o', 'ₓ': 'x', 'ₕ': 'h',
+    'ₖ': 'k', 'ₗ': 'l', 'ₘ': 'm', 'ₙ': 'n', 'ₚ': 'p',
+    'ₛ': 's', 'ₜ': 't'
+};
+
+const GREEK_UNICODE_TO_LATEX = {
+    'α': '\\alpha ', 'β': '\\beta ', 'γ': '\\gamma ', 'δ': '\\delta ',
+    'ε': '\\varepsilon ', 'ζ': '\\zeta ', 'η': '\\eta ', 'θ': '\\theta ',
+    'ϑ': '\\vartheta ', 'ι': '\\iota ', 'κ': '\\kappa ', 'λ': '\\lambda ',
+    'μ': '\\mu ', 'ν': '\\nu ', 'ξ': '\\xi ', 'π': '\\pi ',
+    'ρ': '\\rho ', 'σ': '\\sigma ', 'τ': '\\tau ', 'υ': '\\upsilon ',
+    'φ': '\\phi ', 'ϕ': '\\varphi ', 'χ': '\\chi ', 'ψ': '\\psi ',
+    'ω': '\\omega ', 'Γ': '\\Gamma ', 'Δ': '\\Delta ', 'Θ': '\\Theta ',
+    'Λ': '\\Lambda ', 'Ξ': '\\Xi ', 'Π': '\\Pi ', 'Σ': '\\Sigma ',
+    'Φ': '\\Phi ', 'Ψ': '\\Psi ', 'Ω': '\\Omega '
+};
+
+function hasRawUnicodeOrWordMath(str) {
+    if (!str) return false;
+    return /[∫∬∭∮∑∏√∛∜▒〖〗∞±∓×÷≤≥≠≈≡∈∉⊂⊆∪∩∅∀∃∂∇→⇒⇔⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁿ₀₁₂₃₄₅₆₇₈₉ₐₑₒₓₕₖₗₘₙₚₛₜα-ωΑ-Ω]/.test(str)
+        || /\b(lim|sin|cos|tan|cot|sec|csc|log|ln)\s*[_^((]/.test(str)
+        || /\b(d\^?2?[A-Za-z])\/(d[A-Za-z](\^2)?)\b/.test(str)
+        || /[A-Za-z0-9)\]}]\s*\/\s*(√|\\sqrt|\([A-Za-z0-9+\-*/^_ ]+\))/.test(str);
+}
+
+function findMatchingCloseIndex(str, openIdx) {
+    const openChar = str[openIdx];
+    const closeChar = openChar === '(' ? ')' : (openChar === '〖' ? '〗' : (openChar === '{' ? '}' : (openChar === '[' ? ']' : '')));
+    if (!closeChar) return -1;
+    let depth = 0;
+    for (let i = openIdx; i < str.length; i++) {
+        const ch = str[i];
+        if (ch === openChar) depth++;
+        else if (ch === closeChar) {
+            depth--;
+            if (depth === 0) return i;
+        }
+    }
+    return -1;
+}
+
+function findMatchingOpenIndex(str, closeIdx) {
+    const closeChar = str[closeIdx];
+    const openChar = closeChar === ')' ? '(' : (closeChar === '〗' ? '〖' : (closeChar === '}' ? '{' : (closeChar === ']' ? '[' : '')));
+    if (!openChar) return -1;
+    let depth = 0;
+    for (let i = closeIdx; i >= 0; i--) {
+        const ch = str[i];
+        if (ch === closeChar) depth++;
+        else if (ch === openChar) {
+            depth--;
+            if (depth === 0) return i;
+        }
+    }
+    return -1;
+}
+
+function replaceUnicodeRootsWithLatex(input) {
+    let s = String(input || '');
+    const rootTokens = [
+        { sym: '∜', cmd: '\\sqrt[4]' },
+        { sym: '∛', cmd: '\\sqrt[3]' },
+        { sym: '√', cmd: '\\sqrt' }
+    ];
+    for (const { sym, cmd } of rootTokens) {
+        let safety = 0;
+        while (s.includes(sym) && safety++ < 40) {
+            const idx = s.indexOf(sym);
+            let afterIdx = idx + sym.length;
+            while (afterIdx < s.length && s[afterIdx] === ' ') afterIdx++;
+            const nextCh = s[afterIdx];
+            if (nextCh === '(' || nextCh === '〖' || nextCh === '{') {
+                const closeIdx = findMatchingCloseIndex(s, afterIdx);
+                if (closeIdx !== -1) {
+                    const innerRaw = s.slice(afterIdx + 1, closeIdx);
+                    const innerConverted = replaceUnicodeRootsWithLatex(innerRaw);
+                    s = s.slice(0, idx) + `${cmd}{${innerConverted}}` + s.slice(closeIdx + 1);
+                    continue;
+                }
+            }
+            // Unparenthesized simple token after root, e.g. √x or √2
+            const m = s.slice(afterIdx).match(/^([A-Za-z0-9\\]+(\^[A-Za-z0-9]+)?)/);
+            if (m) {
+                s = s.slice(0, idx) + `${cmd}{${m[1]}}` + s.slice(afterIdx + m[1].length);
+            } else {
+                s = s.slice(0, idx) + cmd + s.slice(idx + sym.length);
+            }
+        }
+    }
+    return s;
+}
+
+function replaceBalancedSubSupGroups(input) {
+    let s = String(input || '');
+    for (let pass = 0; pass < 3; pass++) {
+        for (let i = 0; i < s.length - 1; i++) {
+            if ((s[i] === '^' || s[i] === '_') && (s[i + 1] === '(' || s[i + 1] === '〖')) {
+                const closeIdx = findMatchingCloseIndex(s, i + 1);
+                if (closeIdx !== -1) {
+                    const inner = s.slice(i + 2, closeIdx);
+                    s = s.slice(0, i + 1) + `{${inner}}` + s.slice(closeIdx + 1);
+                }
+            }
+        }
+    }
+    return s;
+}
+
+function convertInlineFractionsToFrac(input) {
+    let s = String(input || '');
+    let safety = 0;
+    let searchFrom = 0;
+
+    while (safety++ < 40) {
+        const slashIdx = s.indexOf('/', searchFrom);
+        if (slashIdx === -1) break;
+
+        // 1. Identify Numerator to the left of slashIdx
+        let numStart = slashIdx - 1;
+        while (numStart >= 0 && s[numStart] === ' ') numStart--;
+        if (numStart < 0) {
+            searchFrom = slashIdx + 1;
+            continue;
+        }
+        const numEnd = numStart + 1;
+        let numText = '';
+        let actualNumStart = numStart;
+
+        if (s[numStart] === ')' || s[numStart] === '〗' || s[numStart] === '}') {
+            const openIdx = findMatchingOpenIndex(s, numStart);
+            if (openIdx === -1) {
+                searchFrom = slashIdx + 1;
+                continue;
+            }
+            actualNumStart = openIdx;
+            // Check if preceded by a macro or base like \sqrt{...} or x^{...}
+            let prefixStart = openIdx - 1;
+            if (s[numStart] === '}' && prefixStart >= 0 && (s[prefixStart] === '^' || s[prefixStart] === '_')) {
+                prefixStart--;
+                while (prefixStart >= 0 && /[A-Za-z0-9\\]/.test(s[prefixStart])) prefixStart--;
+                actualNumStart = prefixStart + 1;
+                numText = s.slice(actualNumStart, numEnd);
+            } else if (s[numStart] === '}') {
+                while (prefixStart >= 0 && /[A-Za-z\[\]\\]/.test(s[prefixStart])) prefixStart--;
+                if (prefixStart + 1 < openIdx && s[prefixStart + 1] === '\\') {
+                    actualNumStart = prefixStart + 1;
+                    numText = s.slice(actualNumStart, numEnd);
+                } else {
+                    numText = s.slice(openIdx + 1, numStart);
+                }
+            } else {
+                // Unwrap outer grouping ( ... ) or 〖 ... 〗
+                numText = s.slice(openIdx + 1, numStart);
+            }
+        } else {
+            let k = numStart;
+            while (k >= 0 && /[A-Za-z0-9\\^_{}.]/.test(s[k])) k--;
+            actualNumStart = k + 1;
+            numText = s.slice(actualNumStart, numEnd);
+        }
+
+        if (!numText.trim()) {
+            searchFrom = slashIdx + 1;
+            continue;
+        }
+
+        // 2. Identify Denominator to the right of slashIdx
+        let denStart = slashIdx + 1;
+        while (denStart < s.length && s[denStart] === ' ') denStart++;
+        if (denStart >= s.length) break;
+
+        let actualDenEnd = denStart;
+        let denText = '';
+
+        if (s.slice(denStart).startsWith('\\sqrt')) {
+            let cur = denStart + 5;
+            if (s[cur] === '[') {
+                const closeBr = findMatchingCloseIndex(s, cur);
+                if (closeBr !== -1) cur = closeBr + 1;
+            }
+            if (s[cur] === '{') {
+                const closeBrace = findMatchingCloseIndex(s, cur);
+                if (closeBrace !== -1) {
+                    actualDenEnd = closeBrace + 1;
+                    denText = s.slice(denStart, actualDenEnd);
+                }
+            }
+        } else if (s[denStart] === '(' || s[denStart] === '〖' || s[denStart] === '{') {
+            const closeIdx = findMatchingCloseIndex(s, denStart);
+            if (closeIdx === -1) {
+                searchFrom = slashIdx + 1;
+                continue;
+            }
+            actualDenEnd = closeIdx + 1;
+            // Check if followed by an exponent like (x-1)^2
+            if (s[actualDenEnd] === '^') {
+                if (s[actualDenEnd + 1] === '{') {
+                    const expClose = findMatchingCloseIndex(s, actualDenEnd + 1);
+                    if (expClose !== -1) {
+                        actualDenEnd = expClose + 1;
+                        denText = s.slice(denStart, actualDenEnd);
+                    }
+                } else {
+                    const expM = s.slice(actualDenEnd + 1).match(/^[A-Za-z0-9]+/);
+                    if (expM) {
+                        actualDenEnd += 1 + expM[0].length;
+                        denText = s.slice(denStart, actualDenEnd);
+                    }
+                }
+            }
+            if (!denText) {
+                denText = s.slice(denStart + 1, closeIdx);
+            }
+        } else {
+            let k = denStart;
+            while (k < s.length && /[A-Za-z0-9\\^_.]/.test(s[k])) {
+                if (s[k] === '{') {
+                    const c = findMatchingCloseIndex(s, k);
+                    if (c !== -1) { k = c + 1; continue; }
+                }
+                k++;
+            }
+            if (k < s.length && s[k] === '{') {
+                const c = findMatchingCloseIndex(s, k);
+                if (c !== -1) k = c + 1;
+            }
+            actualDenEnd = k;
+            denText = s.slice(denStart, actualDenEnd);
+        }
+
+        if (!denText.trim()) {
+            searchFrom = slashIdx + 1;
+            continue;
+        }
+
+        const replacement = `\\frac{${numText.trim()}}{${denText.trim()}}`;
+        s = s.slice(0, actualNumStart) + replacement + s.slice(actualDenEnd);
+        searchFrom = actualNumStart + replacement.length;
+    }
+
+    return s;
+}
+
+function convertRawMathExprToLatex(rawExpr) {
+    if (!rawExpr) return '';
+    let s = String(rawExpr)
+        .replace(/\u00a0/g, ' ')
+        .replace(/[−–]/g, '-');
+
+    // 1. Convert Unicode superscripts & subscripts
+    s = s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ]+/g, match => {
+        const mapped = Array.from(match).map(ch => UNICODE_SUPER_MAP[ch] ?? ch).join('');
+        return `^{${mapped}}`;
+    });
+    s = s.replace(/[₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₕₖₗₘₙₚₛₜ]+/g, match => {
+        const mapped = Array.from(match).map(ch => UNICODE_SUB_MAP[ch] ?? ch).join('');
+        return `_{${mapped}}`;
+    });
+
+    // 2. Convert _( ... ) and ^( ... ) and _〖 ... 〗 and ^〖 ... 〗 into _{...} and ^{...}
+    s = replaceBalancedSubSupGroups(s);
+
+    // 3. Convert roots √(...), ∛(...), ∜(...) before fractions so dx/√((x-a)(x-b)) sees \sqrt{(x-a)(x-b)}
+    s = replaceUnicodeRootsWithLatex(s);
+
+    // 4. Remove Word n-ary placeholder ▒ (\u2592) and unwrap outer 〖 ... 〗 while keeping double-space side conditions
+    s = s.replace(/▒/g, ' ');
+    // Preserve double spaces before parenthesized conditions like "  (a>b)" as \quad
+    s = s.replace(/\s{2,}(\([A-Za-z0-9<>≤≥≠=+\-,\s]+\))/g, ' \\quad $1');
+    s = s.replace(/〖/g, '(').replace(/〗/g, ')');
+
+    // If wrapping 〖...〗 turned the whole integrand into a single outer (...), e.g. ∫ (dx/\sqrt{...} \quad (a>b)), unwrap that redundant outer paren
+    s = s.replace(/(∫|∬|∭|∮|∑|∏|\blim_\{[^}]+\}|\blim)\s*\(([\s\S]+)\)$/g, (full, op, inner) => {
+        // Check if inner's parentheses are balanced
+        let d = 0;
+        for (let i = 0; i < inner.length; i++) {
+            if (inner[i] === '(') d++;
+            else if (inner[i] === ')') {
+                d--;
+                if (d < 0) return full;
+            }
+        }
+        return d === 0 ? `${op} ${inner}` : full;
+    });
+
+    // 5. Convert inline fractions like dx/\sqrt{(x-a)(x-b)} or (a+b)/(c+d) to \frac{...}{...}
+    s = convertInlineFractionsToFrac(s);
+
+    // 6. Convert n-ary operators, symbols & Greek characters to LaTeX commands
+    s = s
+        .replace(/∭/g, '\\iiint ')
+        .replace(/∬/g, '\\iint ')
+        .replace(/∮/g, '\\oint ')
+        .replace(/∫/g, '\\int ')
+        .replace(/∑/g, '\\sum ')
+        .replace(/∏/g, '\\prod ')
+        .replace(/∂/g, '\\partial ')
+        .replace(/∇/g, '\\nabla ')
+        .replace(/∞/g, '\\infty ')
+        .replace(/⇔/g, ' \\Leftrightarrow ')
+        .replace(/⇒/g, ' \\Rightarrow ')
+        .replace(/→|->/g, ' \\to ')
+        .replace(/±/g, ' \\pm ')
+        .replace(/∓/g, ' \\mp ')
+        .replace(/×/g, ' \\times ')
+        .replace(/÷/g, ' \\div ')
+        .replace(/·/g, ' \\cdot ')
+        .replace(/≤|<=/g, ' \\le ')
+        .replace(/≥|>=/g, ' \\ge ')
+        .replace(/≠|!=/g, ' \\neq ')
+        .replace(/≈/g, ' \\approx ')
+        .replace(/≡/g, ' \\equiv ')
+        .replace(/∉/g, ' \\notin ')
+        .replace(/∈/g, ' \\in ')
+        .replace(/⊆/g, ' \\subseteq ')
+        .replace(/⊂/g, ' \\subset ')
+        .replace(/∪/g, ' \\cup ')
+        .replace(/∩/g, ' \\cap ')
+        .replace(/∅/g, ' \\emptyset ')
+        .replace(/∀/g, ' \\forall ')
+        .replace(/∃/g, ' \\exists ')
+        .replace(/°/g, '^{\\circ}');
+
+    Object.keys(GREEK_UNICODE_TO_LATEX).forEach(g => {
+        if (s.includes(g)) {
+            s = s.split(g).join(GREEK_UNICODE_TO_LATEX[g]);
+        }
+    });
+
+    // 7. Prefix standard math functions (sin, cos, tan, log, ln, lim, etc.) with backslash if not already
+    s = s.replace(/(^|[^\\A-Za-z])(arcsin|arccos|arctan|sinh|cosh|tanh|sin|cos|tan|cot|sec|csc|log|ln|lim|det|max|min)(?=\b|[_^({0-9])/g, '$1\\$2');
+
+    return s.replace(/\s+/g, ' ').trim();
+}
+
+function normalizeMathStringForPasteOrRender(rawInput) {
+    if (!rawInput) return '';
+    const trimmed = String(rawInput).trim();
+
+    // If the user already wrapped segments in $...$, convert any Word/UnicodeMath inside those $...$ segments
+    if (/(\$\$[\s\S]+?\$\$|\$[^$]+?\$)/.test(trimmed)) {
+        return trimmed.replace(/\$([^$]+)\$/g, (_, inner) => {
+            return hasRawUnicodeOrWordMath(inner) ? `$${convertRawMathExprToLatex(inner)}$` : `$${inner}$`;
+        });
+    }
+
+    if (!hasRawUnicodeOrWordMath(trimmed)) {
+        return trimmed;
+    }
+
+    // Check if there is a leading English instruction like "Evaluate ", "Find the value of ", "Integrate ", "Solve "
+    const leadMatch = trimmed.match(/^((?:Evaluate|Integrate|Differentiate|Solve|Simplify|Find(?:\s+the\s+value\s+of)?|Calculate|Prove\s+that|If)\s*:?\s+)([\s\S]+)$/i);
+    if (leadMatch && hasRawUnicodeOrWordMath(leadMatch[2])) {
+        return `${leadMatch[1]}$${convertRawMathExprToLatex(leadMatch[2])}$`;
+    }
+
+    return `$${convertRawMathExprToLatex(trimmed)}$`;
+}
+
 function extractMathFromRichHtmlClipboard(html, plainText) {
-    if (!html) return plainText;
+    if (plainText && hasRawUnicodeOrWordMath(plainText)) {
+        return normalizeMathStringForPasteOrRender(plainText);
+    }
+    if (!html) return normalizeMathStringForPasteOrRender(plainText);
     try {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -2637,9 +3013,9 @@ function extractMathFromRichHtmlClipboard(html, plainText) {
         });
 
         const extracted = (doc.body.textContent || '').replace(/\u00a0/g, ' ').trim();
-        return extracted || plainText;
+        return normalizeMathStringForPasteOrRender(extracted || plainText);
     } catch (e) {
-        return plainText;
+        return normalizeMathStringForPasteOrRender(plainText);
     }
 }
 
@@ -2649,8 +3025,10 @@ function handleMathInputPaste(event) {
     const plain = event.clipboardData.getData('text/plain') || '';
     if (!html && !plain) return;
 
-    // Only intercept if HTML contains math/sup/sub/katex or special math formatting
-    if (/<(sup|sub|math|annotation)\b|data-tex|data-latex|katex|MathJax/i.test(html)) {
+    const shouldIntercept = hasRawUnicodeOrWordMath(plain)
+        || /<(sup|sub|math|annotation)\b|data-tex|data-latex|katex|MathJax|Cambria Math|oMath/i.test(html);
+
+    if (shouldIntercept) {
         event.preventDefault();
         const normalized = extractMathFromRichHtmlClipboard(html, plain);
         const targetEl = event.target;
@@ -2672,13 +3050,13 @@ function handleMathInputPaste(event) {
 
 function prepareMathDisplayHtml(rawText) {
     if (!rawText) return '';
-    let str = String(rawText).trim();
+    let str = normalizeMathStringForPasteOrRender(String(rawText).trim());
+
     // Auto-wrap bare LaTeX expressions if the user pasted raw LaTeX without $...$ delimiters
     const hasMathDelimiters = /(\$\$[\s\S]+?\$\$|\$[^$]+?\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/.test(str);
-    const hasLatexCommand = /\\(frac|dfrac|sqrt|int|sum|prod|lim|sin|cos|tan|cot|sec|csc|log|ln|alpha|beta|gamma|theta|pi|infty|pm|mp|le|leq|ge|geq|neq|approx|equiv|in|notin|subset|subseteq|cup|cap|emptyset|forall|exists|Rightarrow|Leftrightarrow|vec|hat|overline|overrightarrow|binom|begin\{|mathbb)/i.test(str);
+    const hasLatexCommand = /\\(frac|dfrac|sqrt|int|iint|iiint|oint|sum|prod|lim|sin|cos|tan|cot|sec|csc|log|ln|alpha|beta|gamma|theta|pi|infty|pm|mp|le|leq|ge|geq|neq|approx|equiv|in|notin|subset|subseteq|cup|cap|emptyset|forall|exists|Rightarrow|Leftrightarrow|vec|hat|overline|overrightarrow|binom|begin\{|mathbb|quad)/i.test(str);
 
     if (!hasMathDelimiters && hasLatexCommand && window.katex) {
-        // If the entire string or segment is a bare LaTeX equation, try rendering or wrapping LaTeX tokens
         try {
             return window.katex.renderToString(str, { throwOnError: false, displayMode: false });
         } catch (e) {}

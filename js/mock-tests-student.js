@@ -290,11 +290,252 @@ function startMockCountdownLoop() {
     mockCountdownInterval = setInterval(tick, 500);
 }
 
+const STUDENT_UNICODE_SUPER_MAP = {
+    '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4',
+    '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+    '⁺': '+', '⁻': '-', '⁼': '=', '⁽': '(', '⁾': ')',
+    'ⁿ': 'n', 'ⁱ': 'i'
+};
+
+const STUDENT_UNICODE_SUB_MAP = {
+    '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4',
+    '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9',
+    '₊': '+', '₋': '-', '₌': '=', '₍': '(', '₎': ')',
+    'ₐ': 'a', 'ₑ': 'e', 'ₒ': 'o', 'ₓ': 'x', 'ₕ': 'h',
+    'ₖ': 'k', 'ₗ': 'l', 'ₘ': 'm', 'ₙ': 'n', 'ₚ': 'p',
+    'ₛ': 's', 'ₜ': 't'
+};
+
+const STUDENT_GREEK_TO_LATEX = {
+    'α': '\\alpha ', 'β': '\\beta ', 'γ': '\\gamma ', 'δ': '\\delta ',
+    'ε': '\\varepsilon ', 'ζ': '\\zeta ', 'η': '\\eta ', 'θ': '\\theta ',
+    'ϑ': '\\vartheta ', 'ι': '\\iota ', 'κ': '\\kappa ', 'λ': '\\lambda ',
+    'μ': '\\mu ', 'ν': '\\nu ', 'ξ': '\\xi ', 'π': '\\pi ',
+    'ρ': '\\rho ', 'σ': '\\sigma ', 'τ': '\\tau ', 'υ': '\\upsilon ',
+    'φ': '\\phi ', 'ϕ': '\\varphi ', 'χ': '\\chi ', 'ψ': '\\psi ',
+    'ω': '\\omega ', 'Γ': '\\Gamma ', 'Δ': '\\Delta ', 'Θ': '\\Theta ',
+    'Λ': '\\Lambda ', 'Ξ': '\\Xi ', 'Π': '\\Pi ', 'Σ': '\\Sigma ',
+    'Φ': '\\Phi ', 'Ψ': '\\Ψ ', 'Ω': '\\Omega '
+};
+
+function studentHasRawUnicodeOrWordMath(str) {
+    if (!str) return false;
+    return /[∫∬∭∮∑∏√∛∜▒〖〗∞±∓×÷≤≥≠≈≡∈∉⊂⊆∪∩∅∀∃∂∇→⇒⇔⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁿ₀₁₂₃₄₅₆₇₈₉ₐₑₒₓₕₖₗₘₙₚₛₜα-ωΑ-Ω]/.test(str)
+        || /\b(lim|sin|cos|tan|cot|sec|csc|log|ln)\s*[_^((]/.test(str)
+        || /\b(d\^?2?[A-Za-z])\/(d[A-Za-z](\^2)?)\b/.test(str)
+        || /[A-Za-z0-9)\]}]\s*\/\s*(√|\\sqrt|\([A-Za-z0-9+\-*/^_ ]+\))/.test(str);
+}
+
+function studentFindCloseIdx(str, openIdx) {
+    const openChar = str[openIdx];
+    const closeChar = openChar === '(' ? ')' : (openChar === '〖' ? '〗' : (openChar === '{' ? '}' : (openChar === '[' ? ']' : '')));
+    if (!closeChar) return -1;
+    let depth = 0;
+    for (let i = openIdx; i < str.length; i++) {
+        if (str[i] === openChar) depth++;
+        else if (str[i] === closeChar && --depth === 0) return i;
+    }
+    return -1;
+}
+
+function studentFindOpenIdx(str, closeIdx) {
+    const closeChar = str[closeIdx];
+    const openChar = closeChar === ')' ? '(' : (closeChar === '〗' ? '〖' : (closeChar === '}' ? '{' : (closeChar === ']' ? '[' : '')));
+    if (!openChar) return -1;
+    let depth = 0;
+    for (let i = closeIdx; i >= 0; i--) {
+        if (str[i] === closeChar) depth++;
+        else if (str[i] === openChar && --depth === 0) return i;
+    }
+    return -1;
+}
+
+function studentReplaceRoots(input) {
+    let s = String(input || '');
+    const rootTokens = [
+        { sym: '∜', cmd: '\\sqrt[4]' },
+        { sym: '∛', cmd: '\\sqrt[3]' },
+        { sym: '√', cmd: '\\sqrt' }
+    ];
+    for (const { sym, cmd } of rootTokens) {
+        let safety = 0;
+        while (s.includes(sym) && safety++ < 40) {
+            const idx = s.indexOf(sym);
+            let afterIdx = idx + sym.length;
+            while (afterIdx < s.length && s[afterIdx] === ' ') afterIdx++;
+            const nextCh = s[afterIdx];
+            if (nextCh === '(' || nextCh === '〖' || nextCh === '{') {
+                const closeIdx = studentFindCloseIdx(s, afterIdx);
+                if (closeIdx !== -1) {
+                    const innerConverted = studentReplaceRoots(s.slice(afterIdx + 1, closeIdx));
+                    s = s.slice(0, idx) + `${cmd}{${innerConverted}}` + s.slice(closeIdx + 1);
+                    continue;
+                }
+            }
+            const m = s.slice(afterIdx).match(/^([A-Za-z0-9\\]+(\^[A-Za-z0-9]+)?)/);
+            if (m) {
+                s = s.slice(0, idx) + `${cmd}{${m[1]}}` + s.slice(afterIdx + m[1].length);
+            } else {
+                s = s.slice(0, idx) + cmd + s.slice(idx + sym.length);
+            }
+        }
+    }
+    return s;
+}
+
+function studentConvertFractions(input) {
+    let s = String(input || '');
+    let safety = 0;
+    let searchFrom = 0;
+    while (safety++ < 40) {
+        const slashIdx = s.indexOf('/', searchFrom);
+        if (slashIdx === -1) break;
+        let numStart = slashIdx - 1;
+        while (numStart >= 0 && s[numStart] === ' ') numStart--;
+        if (numStart < 0) { searchFrom = slashIdx + 1; continue; }
+        const numEnd = numStart + 1;
+        let numText = '';
+        let actualNumStart = numStart;
+
+        if (s[numStart] === ')' || s[numStart] === '〗' || s[numStart] === '}') {
+            const openIdx = studentFindOpenIdx(s, numStart);
+            if (openIdx === -1) { searchFrom = slashIdx + 1; continue; }
+            actualNumStart = openIdx;
+            let prefixStart = openIdx - 1;
+            if (s[numStart] === '}' && prefixStart >= 0 && (s[prefixStart] === '^' || s[prefixStart] === '_')) {
+                prefixStart--;
+                while (prefixStart >= 0 && /[A-Za-z0-9\\]/.test(s[prefixStart])) prefixStart--;
+                actualNumStart = prefixStart + 1;
+                numText = s.slice(actualNumStart, numEnd);
+            } else if (s[numStart] === '}') {
+                while (prefixStart >= 0 && /[A-Za-z\[\]\\]/.test(s[prefixStart])) prefixStart--;
+                if (prefixStart + 1 < openIdx && s[prefixStart + 1] === '\\') {
+                    actualNumStart = prefixStart + 1;
+                    numText = s.slice(actualNumStart, numEnd);
+                } else {
+                    numText = s.slice(openIdx + 1, numStart);
+                }
+            } else {
+                numText = s.slice(openIdx + 1, numStart);
+            }
+        } else {
+            let k = numStart;
+            while (k >= 0 && /[A-Za-z0-9\\^_{}.]/.test(s[k])) k--;
+            actualNumStart = k + 1;
+            numText = s.slice(actualNumStart, numEnd);
+        }
+        if (!numText.trim()) { searchFrom = slashIdx + 1; continue; }
+
+        let denStart = slashIdx + 1;
+        while (denStart < s.length && s[denStart] === ' ') denStart++;
+        if (denStart >= s.length) break;
+        let actualDenEnd = denStart;
+        let denText = '';
+
+        if (s.slice(denStart).startsWith('\\sqrt')) {
+            let cur = denStart + 5;
+            if (s[cur] === '[') {
+                const cb = studentFindCloseIdx(s, cur);
+                if (cb !== -1) cur = cb + 1;
+            }
+            if (s[cur] === '{') {
+                const cbr = studentFindCloseIdx(s, cur);
+                if (cbr !== -1) {
+                    actualDenEnd = cbr + 1;
+                    denText = s.slice(denStart, actualDenEnd);
+                }
+            }
+        } else if (s[denStart] === '(' || s[denStart] === '〖' || s[denStart] === '{') {
+            const closeIdx = studentFindCloseIdx(s, denStart);
+            if (closeIdx === -1) { searchFrom = slashIdx + 1; continue; }
+            actualDenEnd = closeIdx + 1;
+            denText = s.slice(denStart + 1, closeIdx);
+        } else {
+            let k = denStart;
+            while (k < s.length && /[A-Za-z0-9\\^_.]/.test(s[k])) {
+                if (s[k] === '{') {
+                    const c = studentFindCloseIdx(s, k);
+                    if (c !== -1) { k = c + 1; continue; }
+                }
+                k++;
+            }
+            if (k < s.length && s[k] === '{') {
+                const c = studentFindCloseIdx(s, k);
+                if (c !== -1) k = c + 1;
+            }
+            actualDenEnd = k;
+            denText = s.slice(denStart, actualDenEnd);
+        }
+        if (!denText.trim()) { searchFrom = slashIdx + 1; continue; }
+        const rep = `\\frac{${numText.trim()}}{${denText.trim()}}`;
+        s = s.slice(0, actualNumStart) + rep + s.slice(actualDenEnd);
+        searchFrom = actualNumStart + rep.length;
+    }
+    return s;
+}
+
+function studentConvertRawMathToLatex(rawExpr) {
+    if (!rawExpr) return '';
+    let s = String(rawExpr).replace(/\u00a0/g, ' ').replace(/[−–]/g, '-');
+    s = s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ]+/g, m => `^{${Array.from(m).map(c => STUDENT_UNICODE_SUPER_MAP[c] ?? c).join('')}}`);
+    s = s.replace(/[₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₕₖₗₘₙₚₛₜ]+/g, m => `_{${Array.from(m).map(c => STUDENT_UNICODE_SUB_MAP[c] ?? c).join('')}}`);
+    for (let pass = 0; pass < 3; pass++) {
+        for (let i = 0; i < s.length - 1; i++) {
+            if ((s[i] === '^' || s[i] === '_') && (s[i + 1] === '(' || s[i + 1] === '〖')) {
+                const closeIdx = studentFindCloseIdx(s, i + 1);
+                if (closeIdx !== -1) {
+                    s = s.slice(0, i + 1) + `{${s.slice(i + 2, closeIdx)}}` + s.slice(closeIdx + 1);
+                }
+            }
+        }
+    }
+    s = studentReplaceRoots(s);
+    s = s.replace(/▒/g, ' ');
+    s = s.replace(/\s{2,}(\([A-Za-z0-9<>≤≥≠=+\-,\s]+\))/g, ' \\quad $1');
+    s = s.replace(/〖/g, '(').replace(/〗/g, ')');
+    s = s.replace(/(∫|∬|∭|∮|∑|∏|\blim_\{[^}]+\}|\blim)\s*\(([\s\S]+)\)$/g, (full, op, inner) => {
+        let d = 0;
+        for (let i = 0; i < inner.length; i++) {
+            if (inner[i] === '(') d++;
+            else if (inner[i] === ')' && --d < 0) return full;
+        }
+        return d === 0 ? `${op} ${inner}` : full;
+    });
+    s = studentConvertFractions(s);
+    s = s
+        .replace(/∭/g, '\\iiint ').replace(/∬/g, '\\iint ').replace(/∮/g, '\\oint ').replace(/∫/g, '\\int ')
+        .replace(/∑/g, '\\sum ').replace(/∏/g, '\\prod ').replace(/∂/g, '\\partial ').replace(/∇/g, '\\nabla ')
+        .replace(/∞/g, '\\infty ').replace(/⇔/g, ' \\Leftrightarrow ').replace(/⇒/g, ' \\Rightarrow ').replace(/→|->/g, ' \\to ')
+        .replace(/±/g, ' \\pm ').replace(/∓/g, ' \\mp ').replace(/×/g, ' \\times ').replace(/÷/g, ' \\div ').replace(/·/g, ' \\cdot ')
+        .replace(/≤|<=/g, ' \\le ').replace(/≥|>=/g, ' \\ge ').replace(/≠|!=/g, ' \\neq ').replace(/≈/g, ' \\approx ').replace(/≡/g, ' \\equiv ')
+        .replace(/∉/g, ' \\notin ').replace(/∈/g, ' \\in ').replace(/⊆/g, ' \\subseteq ').replace(/⊂/g, ' \\subset ')
+        .replace(/∪/g, ' \\cup ').replace(/∩/g, ' \\cap ').replace(/∅/g, ' \\emptyset ').replace(/∀/g, ' \\forall ').replace(/∃/g, ' \\exists ')
+        .replace(/°/g, '^{\\circ}');
+    Object.keys(STUDENT_GREEK_TO_LATEX).forEach(g => {
+        if (s.includes(g)) s = s.split(g).join(STUDENT_GREEK_TO_LATEX[g]);
+    });
+    s = s.replace(/(^|[^\\A-Za-z])(arcsin|arccos|arctan|sinh|cosh|tanh|sin|cos|tan|cot|sec|csc|log|ln|lim|det|max|min)(?=\b|[_^({0-9])/g, '$1\\$2');
+    return s.replace(/\s+/g, ' ').trim();
+}
+
 function formatMockMathHtml(rawText) {
     if (!rawText) return '';
-    const str = String(rawText).trim();
+    let str = String(rawText).trim();
+    if (/(\$\$[\s\S]+?\$\$|\$[^$]+?\$)/.test(str)) {
+        str = str.replace(/\$([^$]+)\$/g, (_, inner) => {
+            return studentHasRawUnicodeOrWordMath(inner) ? `$${studentConvertRawMathToLatex(inner)}$` : `$${inner}$`;
+        });
+    } else if (studentHasRawUnicodeOrWordMath(str)) {
+        const leadMatch = str.match(/^((?:Evaluate|Integrate|Differentiate|Solve|Simplify|Find(?:\s+the\s+value\s+of)?|Calculate|Prove\s+that|If)\s*:?\s+)([\s\S]+)$/i);
+        if (leadMatch && studentHasRawUnicodeOrWordMath(leadMatch[2])) {
+            str = `${leadMatch[1]}$${studentConvertRawMathToLatex(leadMatch[2])}$`;
+        } else {
+            str = `$${studentConvertRawMathToLatex(str)}$`;
+        }
+    }
+
     const hasDelimiters = /(\$\$[\s\S]+?\$\$|\$[^$]+?\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/.test(str);
-    const hasLatexCmd = /\\(frac|dfrac|sqrt|int|sum|prod|lim|sin|cos|tan|cot|sec|csc|log|ln|alpha|beta|gamma|theta|pi|infty|pm|mp|le|leq|ge|geq|neq|approx|equiv|in|notin|subset|subseteq|cup|cap|emptyset|forall|exists|Rightarrow|Leftrightarrow|vec|hat|overline|overrightarrow|binom|begin\{|mathbb)/i.test(str);
+    const hasLatexCmd = /\\(frac|dfrac|sqrt|int|iint|iiint|oint|sum|prod|lim|sin|cos|tan|cot|sec|csc|log|ln|alpha|beta|gamma|theta|pi|infty|pm|mp|le|leq|ge|geq|neq|approx|equiv|in|notin|subset|subseteq|cup|cap|emptyset|forall|exists|Rightarrow|Leftrightarrow|vec|hat|overline|overrightarrow|binom|begin\{|mathbb|quad)/i.test(str);
     if (!hasDelimiters && hasLatexCmd && window.katex) {
         try {
             return window.katex.renderToString(str, { throwOnError: false, displayMode: false });
