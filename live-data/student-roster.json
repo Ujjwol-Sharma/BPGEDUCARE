@@ -1,6 +1,6 @@
 {
-  "revision": 62,
-  "lastUpdated": "2026-11-24T16:38:42.387Z",
+  "revision": 63,
+  "lastUpdated": "2026-11-24T18:05:08.465Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795543508465_qol4",
+      "timestamp": "2026-11-24T18:05:08.465Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Ujjwol Sharma (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · DIAMOND)"
+    },
     {
       "id": "raud_1795532308589_g0i6",
       "timestamp": "2026-11-24T14:58:28.589Z",
@@ -542,9 +551,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$a2555dd4546f28d2d4077e9e99eb57c4$58ea8aed30de6f5abed51b775f93d995db1a6edaee161bc127830f34b1cea63b18987fc2c84a9573b11ab2d9768f4bd4838ef269d1c15b4d6f8876c1870cdabc",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T09:47:28.289Z",
-      "lastModifiedBy": "Admin Console",
+      "updatedAt": "2026-11-24T18:05:08.465Z",
+      "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795543508465_4tus",
+          "timestamp": "2026-11-24T18:05:08.465Z",
+          "actor": "Ujjwol Sharma (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795513648289_9kwv",
           "timestamp": "2026-11-24T09:47:28.289Z",
