@@ -1,8 +1,17 @@
 {
-  "revision": 35,
-  "lastUpdated": "2026-11-24T09:45:29.336Z",
+  "revision": 36,
+  "lastUpdated": "2026-11-24T09:45:32.481Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513532481_yk0r",
+      "timestamp": "2026-11-24T09:45:32.481Z",
+      "userId": "usr_cc8442ff9a9c",
+      "email": "aayush.kc@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Aayush KC (aayush.kc@gmail.com)"
+    },
     {
       "id": "raud_1795513529336_tzg2",
       "timestamp": "2026-11-24T09:45:29.336Z",
@@ -150,31 +159,6 @@
       "joinedAt": "2026-11-03",
       "updatedAt": "2026-11-23T15:00:00.000Z",
       "lastModifiedBy": "Recovered with Verified Diamond Payment (GW999)",
-      "auditLog": []
-    },
-    {
-      "userId": "usr_cc8442ff9a9c",
-      "name": "Aayush KC",
-      "username": "aayush.kc",
-      "email": "aayush.kc@gmail.com",
-      "canonicalEmail": "aayushkc@gmail.com",
-      "grade": "Class 10",
-      "classKey": "class-10",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": true,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-04T09:00:00.000Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_cc8442ff9a9cc31d",
-      "avatarUrl": "",
-      "passkey": "bpgstudent",
-      "joinedAt": "2026-11-04",
-      "updatedAt": "2026-11-23T15:00:00.000Z",
-      "lastModifiedBy": "Recovered from Roster Backup",
       "auditLog": []
     },
     {
