@@ -1,8 +1,17 @@
 {
-  "revision": 32,
-  "lastUpdated": "2026-11-24T09:37:07.705Z",
+  "revision": 33,
+  "lastUpdated": "2026-11-24T09:37:27.952Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513047952_tpe5",
+      "timestamp": "2026-11-24T09:37:27.952Z",
+      "userId": "usr_55fa0d17da8e",
+      "email": "redeploy.verify@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Redeploy Test Scholar (redeploy.verify@gmail.com)"
+    },
     {
       "id": "raud_1795513027705_q1vi",
       "timestamp": "2026-11-24T09:37:07.705Z",
@@ -50,74 +59,6 @@
     }
   ],
   "accounts": [
-    {
-      "userId": "usr_55fa0d17da8e",
-      "name": "Redeploy Test Scholar",
-      "username": "redeploy.verify",
-      "email": "redeploy.verify@gmail.com",
-      "canonicalEmail": "redeployverify@gmail.com",
-      "grade": "Class 11",
-      "classKey": "class-11",
-      "plan": "gold",
-      "planExplicitlySet": true,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "paid",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-24T09:26:42.036Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_55fa0d17da8eb406",
-      "avatarUrl": "",
-      "passkey": "scrypt$33532d05e0b0bb8c9b39185547f330d2$66f221ba4e0babb0d39b0a5fcf4f9d348c6b9b854258d80ad57bc4ae1c37daf257abdbd3b15e9fbe5db61213060238eaf432fbcc13155ae4a96d09caeb978876",
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T09:37:07.705Z",
-      "lastModifiedBy": "Redeploy Test Scholar (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795513027705_fhun",
-          "timestamp": "2026-11-24T09:37:07.705Z",
-          "actor": "Redeploy Test Scholar (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795512560471_vqr6",
-          "timestamp": "2026-11-24T09:29:20.471Z",
-          "actor": "Redeploy Test Scholar (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795512411494_wcvn",
-          "timestamp": "2026-11-24T09:26:51.494Z",
-          "actor": "eSewa Provider Verification",
-          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-          "details": "Order ORD-1795512408205-67EEB0 (Txn ESW-REDEPLOY-777, NPR 1499) confirmed PAID. Plan FREE -> GOLD"
-        },
-        {
-          "id": "aud_1795512408205_9i5c",
-          "timestamp": "2026-11-24T09:26:48.205Z",
-          "actor": "Redeploy Test Scholar (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795512408205-67EEB0 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795512405470_h88f",
-          "timestamp": "2026-11-24T09:26:45.470Z",
-          "actor": "Redeploy Verifier",
-          "action": "ADMIN_CLASS_CHANGE",
-          "details": "Changed class from Class 12 to Class 11"
-        },
-        {
-          "id": "aud_1795512402109_x4h3",
-          "timestamp": "2026-11-24T09:26:42.109Z",
-          "actor": "Redeploy Test Scholar (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
     {
       "userId": "usr_974c713f29dd",
       "name": "Ujjwol Sharma",
