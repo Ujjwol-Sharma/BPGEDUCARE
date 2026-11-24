@@ -1,7 +1,23 @@
 {
-  "revision": 53,
-  "lastUpdated": "2026-11-24T11:28:33.189Z",
+  "revision": 54,
+  "lastUpdated": "2026-11-24T11:28:52.508Z",
   "classSwitchRequests": [
+    {
+      "id": "csr_1795519732507_ygnh",
+      "userId": "usr_25e888886ae4",
+      "studentName": "Chess Club",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "currentClassKey": "class-11",
+      "currentGrade": "Class 11",
+      "requestedClassKey": "class-12",
+      "requestedGrade": "Class 12",
+      "reason": "sir please",
+      "status": "pending",
+      "adminNote": "",
+      "submittedAt": "2026-11-24T11:28:52.507Z",
+      "reviewedAt": ""
+    },
     {
       "id": "csr_1795519694219_u72j",
       "userId": "usr_25e888886ae4",
@@ -21,6 +37,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795519732507_o5hw",
+      "timestamp": "2026-11-24T11:28:52.507Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Chess Club (Student)",
+      "action": "CLASS_SWITCH_REQUESTED",
+      "details": "Requested switch from Class 11 to Class 12"
+    },
     {
       "id": "raud_1795519713189_y6b5",
       "timestamp": "2026-11-24T11:28:33.189Z",
@@ -306,9 +331,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T11:28:33.189Z",
-      "lastModifiedBy": "Admin Console",
+      "updatedAt": "2026-11-24T11:28:52.507Z",
+      "lastModifiedBy": "Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795519732507_ztos",
+          "timestamp": "2026-11-24T11:28:52.507Z",
+          "actor": "Chess Club (Student)",
+          "action": "CLASS_SWITCH_REQUESTED",
+          "details": "Requested switch from Class 11 to Class 12"
+        },
         {
           "id": "aud_1795519713189_7kpp",
           "timestamp": "2026-11-24T11:28:33.189Z",
