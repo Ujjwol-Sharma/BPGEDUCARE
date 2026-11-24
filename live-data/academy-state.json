@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T15:09:30.190Z",
+  "lastUpdated": "2026-11-24T15:10:43.719Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1041,8 +1041,8 @@
           "domain": "Statistics and Probability",
           "hours": "9 hrs",
           "marks": "6 Marks",
-          "focus": "Structured syllabus unit",
-          "weightage": "Structured syllabus unit"
+          "focus": "1(5S.Q)+1(MCQ)(1M)",
+          "weightage": "1(5S.Q)+1(MCQ)(1M)"
         }
       ],
       "units": [
@@ -3262,6 +3262,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 43,
+  "revision": 44,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
