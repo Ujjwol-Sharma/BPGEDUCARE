@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T15:06:40.008Z",
+  "lastUpdated": "2026-11-24T15:07:43.010Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1029,9 +1029,11 @@
         {
           "code": "Unit 06",
           "domain": "Computational Methods",
-          "hours": "22 hrs",
-          "marks": "10 Marks",
-          "weightage": "2 Short (8M) + 2 MCQ (2M)"
+          "hours": "9hrs",
+          "marks": "6 Marks",
+          "weightage": "1 Short (5M) + 1 MCQ (1M)",
+          "name": "Computational Methods",
+          "focus": "1 Short (5M) + 1 MCQ (1M)"
         }
       ],
       "units": [
@@ -1428,8 +1430,8 @@
               "id": "class-12-math-l6",
               "code": "Unit 06",
               "title": "Computational Methods",
-              "hours": "22 hrs",
-              "marks": "10 Marks",
+              "hours": "9hrs",
+              "marks": "6 Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -3241,6 +3243,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 41,
+  "revision": 42,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
