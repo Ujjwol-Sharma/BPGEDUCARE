@@ -1,8 +1,17 @@
 {
-  "revision": 40,
-  "lastUpdated": "2026-11-24T09:47:02.138Z",
+  "revision": 41,
+  "lastUpdated": "2026-11-24T09:47:28.289Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513648289_qv5t",
+      "timestamp": "2026-11-24T09:47:28.289Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_PLAN_CHANGE",
+      "details": "Ujjwol Sharma: plan changed from FREE to DIAMOND"
+    },
     {
       "id": "raud_1795513573381_8a0p",
       "timestamp": "2026-11-24T09:46:13.381Z",
@@ -154,11 +163,11 @@
       "canonicalEmail": "intumintuchintu76@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
+      "plan": "diamond",
+      "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "paid",
       "emailVerified": true,
       "verifiedAt": "2026-11-24T08:21:17.668Z",
       "verificationMethod": "google_oauth",
@@ -167,9 +176,17 @@
       "avatarUrl": "",
       "passkey": "scrypt$a2555dd4546f28d2d4077e9e99eb57c4$58ea8aed30de6f5abed51b775f93d995db1a6edaee161bc127830f34b1cea63b18987fc2c84a9573b11ab2d9768f4bd4838ef269d1c15b4d6f8876c1870cdabc",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T08:55:02.499Z",
-      "lastModifiedBy": "Recovered from Live Session (2026-11-24)",
-      "auditLog": []
+      "updatedAt": "2026-11-24T09:47:28.289Z",
+      "lastModifiedBy": "Admin Console",
+      "auditLog": [
+        {
+          "id": "aud_1795513648289_9kwv",
+          "timestamp": "2026-11-24T09:47:28.289Z",
+          "actor": "Admin Console",
+          "action": "ADMIN_PLAN_CHANGE",
+          "details": "Changed plan from FREE to DIAMOND"
+        }
+      ]
     },
     {
       "userId": "usr_1b558269b9fa",
