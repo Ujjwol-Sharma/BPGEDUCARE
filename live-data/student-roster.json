@@ -1,6 +1,6 @@
 {
-  "revision": 54,
-  "lastUpdated": "2026-11-24T11:28:52.508Z",
+  "revision": 55,
+  "lastUpdated": "2026-11-24T11:28:55.342Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795519732507_ygnh",
@@ -13,10 +13,11 @@
       "requestedClassKey": "class-12",
       "requestedGrade": "Class 12",
       "reason": "sir please",
-      "status": "pending",
+      "status": "approved",
       "adminNote": "",
       "submittedAt": "2026-11-24T11:28:52.507Z",
-      "reviewedAt": ""
+      "reviewedAt": "2026-11-24T11:28:55.342Z",
+      "reviewedBy": "Admin Console"
     },
     {
       "id": "csr_1795519694219_u72j",
@@ -37,6 +38,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795519735342_pj8a",
+      "timestamp": "2026-11-24T11:28:55.342Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "CLASS_SWITCH_APPROVED",
+      "details": "Chess Club: switch approved Class 11 -> Class 12"
+    },
     {
       "id": "raud_1795519732507_o5hw",
       "timestamp": "2026-11-24T11:28:52.507Z",
@@ -316,8 +326,8 @@
       "username": "creativechessclub01",
       "email": "creativechessclub01@gmail.com",
       "canonicalEmail": "creativechessclub01@gmail.com",
-      "grade": "Class 11",
-      "classKey": "class-11",
+      "grade": "Class 12",
+      "classKey": "class-12",
       "plan": "free",
       "planExplicitlySet": false,
       "legacyAccess": false,
@@ -331,9 +341,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T11:28:52.507Z",
-      "lastModifiedBy": "Chess Club (Student)",
+      "updatedAt": "2026-11-24T11:28:55.342Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795519735342_a5tf",
+          "timestamp": "2026-11-24T11:28:55.342Z",
+          "actor": "Admin Console",
+          "action": "CLASS_SWITCH_APPROVED",
+          "details": "Approved class switch from Class 11 to Class 12"
+        },
         {
           "id": "aud_1795519732507_ztos",
           "timestamp": "2026-11-24T11:28:52.507Z",
