@@ -1,8 +1,17 @@
 {
-  "revision": 41,
-  "lastUpdated": "2026-11-24T09:47:28.289Z",
+  "revision": 42,
+  "lastUpdated": "2026-11-24T09:47:30.895Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513650895_v6to",
+      "timestamp": "2026-11-24T09:47:30.895Z",
+      "userId": "usr_1b558269b9fa",
+      "email": "thapaparibesh01@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Paribesh Thapa (thapaparibesh01@gmail.com)"
+    },
     {
       "id": "raud_1795513648289_qv5t",
       "timestamp": "2026-11-24T09:47:28.289Z",
@@ -187,31 +196,6 @@
           "details": "Changed plan from FREE to DIAMOND"
         }
       ]
-    },
-    {
-      "userId": "usr_1b558269b9fa",
-      "name": "Paribesh Thapa",
-      "username": "thapaparibesh01",
-      "email": "thapaparibesh01@gmail.com",
-      "canonicalEmail": "thapaparibesh01@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": true,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-22T12:00:00.000Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_1b558269b9fae18a",
-      "avatarUrl": "",
-      "passkey": "bpgstudent",
-      "joinedAt": "2026-11-22",
-      "updatedAt": "2026-11-23T15:32:48.362Z",
-      "lastModifiedBy": "Recovered from Chrome & Git Backup",
-      "auditLog": []
     }
   ]
 }
