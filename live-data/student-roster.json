@@ -1,6 +1,6 @@
 {
-  "revision": 58,
-  "lastUpdated": "2026-11-24T14:46:50.244Z",
+  "revision": 59,
+  "lastUpdated": "2026-11-24T14:46:53.133Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795519732507_ygnh",
@@ -383,9 +383,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T14:46:50.244Z",
+      "updatedAt": "2026-11-24T14:46:53.133Z",
       "lastModifiedBy": "Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795531613133_7gao",
+          "timestamp": "2026-11-24T14:46:53.133Z",
+          "actor": "Chess Club (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795531613133-AD4BC7 (Padandas, NPR 1499) is pending"
+        },
         {
           "id": "aud_1795531610244_h10t",
           "timestamp": "2026-11-24T14:46:50.244Z",
