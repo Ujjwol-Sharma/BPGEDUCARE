@@ -1,8 +1,17 @@
 {
-  "revision": 34,
-  "lastUpdated": "2026-11-24T09:45:25.444Z",
+  "revision": 35,
+  "lastUpdated": "2026-11-24T09:45:29.336Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795513529336_tzg2",
+      "timestamp": "2026-11-24T09:45:29.336Z",
+      "userId": "usr_d967e7372695",
+      "email": "prabhat.entrance@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Prabhat Paudel (prabhat.entrance@gmail.com)"
+    },
     {
       "id": "raud_1795513525444_bbry",
       "timestamp": "2026-11-24T09:45:25.444Z",
@@ -164,31 +173,6 @@
       "avatarUrl": "",
       "passkey": "bpgstudent",
       "joinedAt": "2026-11-04",
-      "updatedAt": "2026-11-23T15:00:00.000Z",
-      "lastModifiedBy": "Recovered from Roster Backup",
-      "auditLog": []
-    },
-    {
-      "userId": "usr_d967e7372695",
-      "name": "Prabhat Paudel",
-      "username": "prabhat.entrance",
-      "email": "prabhat.entrance@gmail.com",
-      "canonicalEmail": "prabhatentrance@gmail.com",
-      "grade": "After 12 Entrance",
-      "classKey": "after-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": true,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-05T09:00:00.000Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_d967e7372695f2fe",
-      "avatarUrl": "",
-      "passkey": "bpgstudent",
-      "joinedAt": "2026-11-05",
       "updatedAt": "2026-11-23T15:00:00.000Z",
       "lastModifiedBy": "Recovered from Roster Backup",
       "auditLog": []
