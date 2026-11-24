@@ -132,6 +132,7 @@ function broadcastUpdate(type = 'DATA_UPDATED') {
 }
 
 let adminLastSyncVersion = '';
+let adminLastStateRevision = -1;
 let adminRealtimePollTimer = null;
 let adminRealtimeSyncInFlight = false;
 
@@ -162,16 +163,34 @@ async function pollAdminLiveUpdates(forceRender = false) {
         if (!json || !json.success) return;
 
         const nextVer = String(json.syncVersion || '');
-        const changed = forceRender || (nextVer && nextVer !== adminLastSyncVersion);
+        const incomingStateRev = Number(json.stateRevision) || 0;
+        const stateRevChanged = adminLastStateRevision !== -1 && incomingStateRev > adminLastStateRevision;
+        const changed = forceRender || stateRevChanged || (nextVer && nextVer !== adminLastSyncVersion);
         if (!changed) return;
 
         adminLastSyncVersion = nextVer;
+        adminLastStateRevision = incomingStateRev;
         if (json.roster) ADMIN_ROSTER = json.roster;
         if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
         if (ADMIN_STATE) {
             if (json.sectionLocks) ADMIN_STATE.sectionLocks = json.sectionLocks;
             if (json.plansConfig) ADMIN_STATE.plansConfig = json.plansConfig;
             if (json.maintenanceMode) ADMIN_STATE.maintenanceMode = json.maintenanceMode;
+        }
+
+        // If portals or mockTests changed in another session, sync full state so ADMIN_STATE.portals is never stale
+        if (stateRevChanged) {
+            try {
+                const fullRes = await fetch('/api/academy-state?_t=' + Date.now(), {
+                    cache: 'no-store',
+                    headers: { 'x-admin-passkey': ADMIN_STUDIO_TOKEN }
+                });
+                if (fullRes.ok) {
+                    const fullJson = await fullRes.json();
+                    if (fullJson?.data) ADMIN_STATE = fullJson.data;
+                    if (Array.isArray(fullJson?.mockTests)) ADMIN_MOCK_TESTS = fullJson.mockTests;
+                }
+            } catch (e) {}
         }
 
         const timeLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -347,6 +366,7 @@ async function loadAdminData() {
         const stateJson = await stateRes.json();
 
         if (stateJson?.syncVersion) adminLastSyncVersion = String(stateJson.syncVersion);
+        if (stateJson?.data?.revision !== undefined) adminLastStateRevision = Number(stateJson.data.revision) || 0;
         if (stateJson?.data) ADMIN_STATE = stateJson.data;
         if (stateJson?.roster) {
             ADMIN_ROSTER = stateJson.roster;
@@ -1870,7 +1890,7 @@ async function deleteLessonUpload(classKey, subjectId, lessonId, itemType, itemI
     } else {
         lesson.pdfs = (lesson.pdfs || []).filter(p => p.id !== itemId);
     }
-    await persistAcademyState({ portals: { [classKey]: { subjects } } }, 'Deleted.');
+    await persistAcademyState({ explicitDeleteUploadId: itemId, portals: { [classKey]: { subjects } } }, 'Deleted.');
 }
 
 /* --------------------------------------------------------------------------
@@ -2181,7 +2201,7 @@ async function executeSafeDelete(moveFirst) {
         const filteredSyllabus = syllabusRows.filter(r => !((lesson.code && r.code === lesson.code) && ((r.name || r.domain) === lesson.title)));
         closeSafeDeleteModal();
         await persistAcademyState(
-            { portals: { [classKey]: { subjects, syllabusRows: filteredSyllabus } } },
+            { explicitSafeDelete: true, portals: { [classKey]: { subjects, syllabusRows: filteredSyllabus } } },
             moveFirst ? 'Moved resources and deleted lesson.' : 'Lesson deleted.'
         );
         return;

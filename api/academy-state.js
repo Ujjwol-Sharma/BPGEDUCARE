@@ -103,6 +103,56 @@ function deepMergeState(currentData, payload) {
             }
             if (!Array.isArray(incomingPortal.subjects) && Array.isArray(existingPortal.subjects)) {
                 mergedPortal.subjects = existingPortal.subjects;
+            } else if (Array.isArray(incomingPortal.subjects) && Array.isArray(existingPortal.subjects)) {
+                // Preserve existing PDFs & videos unless explicitly deleted via explicitDeleteUploadId / explicitSafeDelete
+                const explicitDelId = String(payload.explicitDeleteUploadId || '').trim();
+                const isExplicitSafeDelete = Boolean(payload.explicitSafeDelete);
+                const existingPdfMap = new Map();
+                const existingLessonMap = new Map();
+                for (const es of existingPortal.subjects) {
+                    for (const el of (es.lessons || [])) {
+                        if (el && el.id) existingLessonMap.set(`${es.id || 'mathematics'}|${el.id}`, el);
+                        for (const ep of (el.pdfs || [])) {
+                            if (ep && ep.id) existingPdfMap.set(ep.id, ep);
+                        }
+                    }
+                }
+                mergedPortal.subjects = incomingPortal.subjects.map(is => ({
+                    ...is,
+                    lessons: (is.lessons || []).map(il => {
+                        const prevLesson = existingLessonMap.get(`${is.id || 'mathematics'}|${il.id}`);
+                        let mergedPdfs = (il.pdfs || []).map(ip => {
+                            const prev = ip && ip.id ? existingPdfMap.get(ip.id) : null;
+                            if (prev && !ip.fileUrl && prev.fileUrl) {
+                                return { ...ip, fileUrl: prev.fileUrl, storageKey: ip.storageKey || prev.storageKey };
+                            }
+                            return ip;
+                        });
+                        let mergedVideos = Array.isArray(il.videos) ? [...il.videos] : [];
+
+                        // Union any server-side PDFs/videos missing from a stale client tab unless explicitly deleted
+                        if (prevLesson && !isExplicitSafeDelete) {
+                            const incomingPdfIds = new Set(mergedPdfs.map(p => p && p.id));
+                            for (const ep of (prevLesson.pdfs || [])) {
+                                if (ep && ep.id && ep.id !== explicitDelId && !incomingPdfIds.has(ep.id)) {
+                                    mergedPdfs.push(ep);
+                                }
+                            }
+                            const incomingVidIds = new Set(mergedVideos.map(v => v && v.id));
+                            for (const ev of (prevLesson.videos || [])) {
+                                if (ev && ev.id && ev.id !== explicitDelId && !incomingVidIds.has(ev.id)) {
+                                    mergedVideos.push(ev);
+                                }
+                            }
+                        }
+
+                        return {
+                            ...il,
+                            pdfs: mergedPdfs,
+                            videos: mergedVideos
+                        };
+                    })
+                }));
             }
             if (Array.isArray(incomingPortal.notesPdfs)) {
                 mergedPortal.notesPdfs = incomingPortal.notesPdfs;

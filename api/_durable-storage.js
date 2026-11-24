@@ -251,9 +251,9 @@ async function flushPendingDurableCommits() {
         }
         const treeJson = await treeResp.json();
 
-        // 3. Create Git Commit
+        // 3. Create Git Commit ([skip ci] prevents Vercel from queueing preview builds on the data branch)
         const commitBody = {
-            message: `chore(live-db): persist ${filesToCommit.map(([k]) => k).join(', ')} [${cfg.vercelEnv}]`,
+            message: `chore(live-db): persist ${filesToCommit.map(([k]) => k).join(', ')} [${cfg.vercelEnv}] [skip ci]`,
             tree: treeJson.sha,
             parents: headCommitSha ? [headCommitSha] : []
         };
@@ -319,40 +319,18 @@ function mergeLiveStateNonDestructively(cloudState, localState) {
     if (!cloudState || typeof cloudState !== 'object') return localState;
     if (!localState || typeof localState !== 'object') return cloudState;
 
+    // Cloud state (bpg-live-db) is the authoritative live database; only fill missing top-level schema keys from bundle
     const merged = Object.assign({}, localState, cloudState);
     merged.revision = Math.max(Number(cloudState.revision) || 0, Number(localState.revision) || 0);
+    merged.mockTests = Array.isArray(cloudState.mockTests) ? cloudState.mockTests : (localState.mockTests || []);
+    merged.payments = Array.isArray(cloudState.payments) ? cloudState.payments : (localState.payments || []);
 
-    // Union mockTests by id (cloud version wins on conflict)
-    const testMap = new Map();
-    for (const t of (localState.mockTests || [])) {
-        if (t && t.id) testMap.set(t.id, t);
-    }
-    for (const t of (cloudState.mockTests || [])) {
-        if (t && t.id) testMap.set(t.id, t);
-    }
-    merged.mockTests = Array.from(testMap.values());
-
-    // Union payments by id / orderId (cloud version wins on conflict)
-    const payMap = new Map();
-    for (const p of (localState.payments || [])) {
-        if (p && (p.orderId || p.id)) payMap.set(p.orderId || p.id, p);
-    }
-    for (const p of (cloudState.payments || [])) {
-        if (p && (p.orderId || p.id)) payMap.set(p.orderId || p.id, p);
-    }
-    merged.payments = Array.from(payMap.values());
-
-    // Preserve all uploaded lesson PDFs and videos across portals
     if (localState.portals && cloudState.portals) {
         merged.portals = Object.assign({}, localState.portals);
         for (const ck of Object.keys(cloudState.portals)) {
             const lp = localState.portals[ck] || {};
             const cp = cloudState.portals[ck] || {};
-            const mp = Object.assign({}, lp, cp);
-            if (Array.isArray(cp.subjects) && cp.subjects.length > 0) {
-                mp.subjects = cp.subjects;
-            }
-            merged.portals[ck] = mp;
+            merged.portals[ck] = Object.assign({}, lp, cp);
         }
     }
 
