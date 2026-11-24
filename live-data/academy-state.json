@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T09:37:12.257Z",
+  "lastUpdated": "2026-11-24T09:37:17.256Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2599,33 +2599,7 @@
       "description": "Unlocks every question, solution, and PDF across all open sections."
     }
   },
-  "mockTests": [
-    {
-      "id": "mt_redeploy_test_1",
-      "classKey": "class-11",
-      "subjectId": "mathematics",
-      "title": "Redeploy Durability Timed Calculus Test",
-      "durationMinutes": 25,
-      "minPlan": "gold",
-      "adminAssignedPlan": true,
-      "status": "published",
-      "questions": [
-        {
-          "id": "q_redeploy_1",
-          "text": "Evaluate ∫▒〖dx/√((x-a)(x-b))  (a>b)〗",
-          "options": {
-            "A": "$\\ln|x - \\frac{a+b}{2} + \\sqrt{(x-a)(x-b)}| + C$",
-            "B": "$\\sin^{-1}(x) + C$",
-            "C": "$\\tan^{-1}(x) + C$",
-            "D": "$\\sqrt{(x-a)(x-b)} + C$"
-          },
-          "correctOption": "A"
-        }
-      ],
-      "createdAt": "2026-11-24T09:26:38.849Z",
-      "updatedAt": "2026-11-24T09:26:38.849Z"
-    }
-  ],
+  "mockTests": [],
   "zoomClasses": [],
   "teamMembers": [
     {
@@ -3138,6 +3112,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 17,
+  "revision": 18,
   "explicitDeleteUploadId": "pdf_redeploy_test_1"
 }
