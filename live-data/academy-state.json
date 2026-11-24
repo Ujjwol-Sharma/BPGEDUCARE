@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T15:07:43.010Z",
+  "lastUpdated": "2026-11-24T15:09:30.190Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1034,6 +1034,15 @@
           "weightage": "1 Short (5M) + 1 MCQ (1M)",
           "name": "Computational Methods",
           "focus": "1 Short (5M) + 1 MCQ (1M)"
+        },
+        {
+          "code": "Unit 07",
+          "name": "Statistics and Probability",
+          "domain": "Statistics and Probability",
+          "hours": "9 hrs",
+          "marks": "6 Marks",
+          "focus": "Structured syllabus unit",
+          "weightage": "Structured syllabus unit"
         }
       ],
       "units": [
@@ -1431,6 +1440,16 @@
               "code": "Unit 06",
               "title": "Computational Methods",
               "hours": "9hrs",
+              "marks": "6 Marks",
+              "subTopics": [],
+              "pdfs": [],
+              "videos": []
+            },
+            {
+              "id": "class-12-mathematics-l1795532968608",
+              "code": "Unit 07",
+              "title": "Statistics and Probability",
+              "hours": "9 hrs",
               "marks": "6 Marks",
               "subTopics": [],
               "pdfs": [],
@@ -3243,6 +3262,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 42,
+  "revision": 43,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
