@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T09:26:51.494Z",
+  "lastUpdated": "2026-11-24T09:37:12.257Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1370,18 +1370,6 @@
                   "subTopicTitle": "",
                   "storageKey": "pdfs/lpdf_1795447149462_0.pdf",
                   "fileSizeBytes": 600585
-                },
-                {
-                  "id": "pdf_redeploy_test_1",
-                  "title": "Calculus Redeploy Durability Proof Notes",
-                  "fileName": "calculus-redeploy-proof.pdf",
-                  "minPlan": "free",
-                  "fileUrl": "data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iajw8Pj5lbmRvYmoKdHJhaWxlcjw8Pj4KJSVFT0YK",
-                  "uploadedAt": "2026-11-24",
-                  "subTopicId": "",
-                  "subTopicTitle": "",
-                  "storageKey": "pdfs/pdf_redeploy_test_1.pdf",
-                  "fileSizeBytes": 45
                 }
               ],
               "videos": []
@@ -3150,5 +3138,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 16
+  "revision": 17,
+  "explicitDeleteUploadId": "pdf_redeploy_test_1"
 }
