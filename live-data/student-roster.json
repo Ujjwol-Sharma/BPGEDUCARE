@@ -1,6 +1,6 @@
 {
-  "revision": 60,
-  "lastUpdated": "2026-11-24T14:57:46.169Z",
+  "revision": 61,
+  "lastUpdated": "2026-11-24T14:58:28.589Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -13,10 +13,11 @@
       "requestedClassKey": "class-11",
       "requestedGrade": "Class 11",
       "reason": "Plkease sir",
-      "status": "pending",
+      "status": "rejected",
       "adminNote": "",
       "submittedAt": "2026-11-24T14:57:46.169Z",
-      "reviewedAt": ""
+      "reviewedAt": "2026-11-24T14:58:28.589Z",
+      "reviewedBy": "Admin Console"
     },
     {
       "id": "csr_1795519732507_ygnh",
@@ -54,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795532308589_g0i6",
+      "timestamp": "2026-11-24T14:58:28.589Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "CLASS_SWITCH_REJECTED",
+      "details": "Chess Club: switch to Class 11 rejected"
+    },
     {
       "id": "raud_1795532266169_fc7e",
       "timestamp": "2026-11-24T14:57:46.169Z",
@@ -408,9 +418,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T14:57:46.169Z",
-      "lastModifiedBy": "Chess Club (Student)",
+      "updatedAt": "2026-11-24T14:58:28.589Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795532308589_ownu",
+          "timestamp": "2026-11-24T14:58:28.589Z",
+          "actor": "Admin Console",
+          "action": "CLASS_SWITCH_REJECTED",
+          "details": "Rejected class switch to Class 11"
+        },
         {
           "id": "aud_1795532266169_ypnk",
           "timestamp": "2026-11-24T14:57:46.169Z",
