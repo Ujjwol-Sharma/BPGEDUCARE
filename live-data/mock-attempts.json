@@ -1,0 +1,20 @@
+{
+  "revision": 3,
+  "lastUpdated": "2026-11-24T09:53:16.998Z",
+  "attempts": [
+    {
+      "id": "att_1795513996998_1225",
+      "testId": "mt_1795513988725",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "email": "creativechessclub01@gmail.com",
+      "classKey": "class-12",
+      "startedAt": 1795513996998,
+      "finishAt": 1795515796998,
+      "answers": {},
+      "submitted": false,
+      "submittedAt": null,
+      "autoSubmitted": false,
+      "result": null
+    }
+  ]
+}
