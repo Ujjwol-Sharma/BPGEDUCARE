@@ -1,8 +1,17 @@
 {
-  "revision": 43,
-  "lastUpdated": "2026-11-24T10:04:57.751Z",
+  "revision": 44,
+  "lastUpdated": "2026-11-24T10:06:41.914Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795514801914_11q4",
+      "timestamp": "2026-11-24T10:06:41.914Z",
+      "userId": "usr_3fb71be3b31a",
+      "email": "deepsonpaudel9@gmail.com",
+      "actor": "Dipson Poudel (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795514697750_m5hx",
       "timestamp": "2026-11-24T10:04:57.750Z",
@@ -161,9 +170,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$3e66bb4b0c5156b3a80cafbabedb791d$c4568e796609e860c757025063b1c448c57cbd46bff0f7dd187eb53c88ad79644bec5485d02b2fdd280aa56e967a76f0180f4aa62a5c40fbc63f30262b1abbc8",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T10:04:57.750Z",
-      "lastModifiedBy": "Dipson Poudel (Google Sign-Up)",
+      "updatedAt": "2026-11-24T10:06:41.914Z",
+      "lastModifiedBy": "Dipson Poudel (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795514801914_u0oh",
+          "timestamp": "2026-11-24T10:06:41.914Z",
+          "actor": "Dipson Poudel (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795514697750_6bwt",
           "timestamp": "2026-11-24T10:04:57.750Z",
