@@ -1,7 +1,23 @@
 {
-  "revision": 59,
-  "lastUpdated": "2026-11-24T14:46:53.133Z",
+  "revision": 60,
+  "lastUpdated": "2026-11-24T14:57:46.169Z",
   "classSwitchRequests": [
+    {
+      "id": "csr_1795532266168_ch1h",
+      "userId": "usr_25e888886ae4",
+      "studentName": "Chess Club",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "currentClassKey": "class-12",
+      "currentGrade": "Class 12",
+      "requestedClassKey": "class-11",
+      "requestedGrade": "Class 11",
+      "reason": "Plkease sir",
+      "status": "pending",
+      "adminNote": "",
+      "submittedAt": "2026-11-24T14:57:46.169Z",
+      "reviewedAt": ""
+    },
     {
       "id": "csr_1795519732507_ygnh",
       "userId": "usr_25e888886ae4",
@@ -38,6 +54,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795532266169_fc7e",
+      "timestamp": "2026-11-24T14:57:46.169Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Chess Club (Student)",
+      "action": "CLASS_SWITCH_REQUESTED",
+      "details": "Requested switch from Class 12 to Class 11"
+    },
     {
       "id": "raud_1795527351400_dyma",
       "timestamp": "2026-11-24T13:35:51.400Z",
@@ -383,9 +408,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T14:46:53.133Z",
+      "updatedAt": "2026-11-24T14:57:46.169Z",
       "lastModifiedBy": "Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795532266169_ypnk",
+          "timestamp": "2026-11-24T14:57:46.169Z",
+          "actor": "Chess Club (Student)",
+          "action": "CLASS_SWITCH_REQUESTED",
+          "details": "Requested switch from Class 12 to Class 11"
+        },
         {
           "id": "aud_1795531613133_7gao",
           "timestamp": "2026-11-24T14:46:53.133Z",
