@@ -1,6 +1,6 @@
 {
-  "revision": 47,
-  "lastUpdated": "2026-11-24T10:09:08.011Z",
+  "revision": 48,
+  "lastUpdated": "2026-11-24T11:09:04.718Z",
   "classSwitchRequests": [],
   "auditLog": [
     {
@@ -243,7 +243,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-24T09:46:13.317Z",
       "verificationMethod": "email_otp",
@@ -252,9 +252,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T09:46:13.381Z",
-      "lastModifiedBy": "Chess Club (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-24T11:09:04.717Z",
+      "lastModifiedBy": "Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795518544717_elt0",
+          "timestamp": "2026-11-24T11:09:04.717Z",
+          "actor": "Chess Club (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795518544717-1E3DF3 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795513573381_p1t6",
           "timestamp": "2026-11-24T09:46:13.381Z",
