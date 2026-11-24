@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T15:03:07.172Z",
+  "lastUpdated": "2026-11-24T15:04:01.479Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -993,9 +993,11 @@
         {
           "code": "Unit 02",
           "domain": "Trigonometry",
-          "hours": "14 hrs",
-          "marks": "8 Marks",
-          "weightage": "1 Long (5M) + 1 Short (2M) + 1 MCQ (1M)"
+          "hours": "9 hrs",
+          "marks": "6Marks",
+          "weightage": "1 MCQ (1M) +5(M)",
+          "name": "Trigonometry",
+          "focus": "1 MCQ (1M) +5(M)"
         },
         {
           "code": "Unit 03",
@@ -1380,8 +1382,8 @@
               "id": "class-12-math-l2",
               "code": "Unit 02",
               "title": "Trigonometry",
-              "hours": "14 hrs",
-              "marks": "8 Marks",
+              "hours": "9 hrs",
+              "marks": "6Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -3233,6 +3235,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 35,
+  "revision": 36,
   "explicitDeleteUploadId": "lpdf_1795447149462_0"
 }
