@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T09:26:38.849Z",
+  "lastUpdated": "2026-11-24T09:26:48.205Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3098,6 +3098,30 @@
   ],
   "payments": [
     {
+      "id": "pay_1795512408205_wgvi",
+      "orderId": "ORD-1795512408205-67EEB0",
+      "userId": "usr_55fa0d17da8e",
+      "fullName": "Redeploy Test Scholar",
+      "username": "redeploy.verify",
+      "email": "redeploy.verify@gmail.com",
+      "canonicalEmail": "redeployverify@gmail.com",
+      "classKey": "class-11",
+      "className": "Class 11",
+      "planId": "gold",
+      "planName": "Padandas",
+      "amount": "Rs. 1,499",
+      "expectedAmount": 1499,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "59b45b7d1a68f25ae0a7f2d267d136184b644ad20448a0fadcb51df687c1fc3b",
+      "method": "esewa_qr",
+      "status": "pending",
+      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "createdAt": "2026-11-24T09:26:48.205Z",
+      "updatedAt": "2026-11-24T09:26:48.205Z",
+      "reviewedAt": ""
+    },
+    {
       "id": "pay_1795341224049_r8ow",
       "orderId": "ORD-1795341224049",
       "userId": "usr_ab78663f0a4c",
@@ -3123,5 +3147,5 @@
       "activationCount": 1
     }
   ],
-  "revision": 7
+  "revision": 8
 }
