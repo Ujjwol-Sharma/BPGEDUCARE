@@ -1,6 +1,6 @@
 {
-  "revision": 55,
-  "lastUpdated": "2026-11-24T11:28:55.342Z",
+  "revision": 56,
+  "lastUpdated": "2026-11-24T13:35:51.400Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795519732507_ygnh",
@@ -38,6 +38,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795527351400_dyma",
+      "timestamp": "2026-11-24T13:35:51.400Z",
+      "userId": "usr_1b558269b9fa",
+      "email": "thapaparibesh01@gmail.com",
+      "actor": "Paribesh Thapa (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795519735342_pj8a",
       "timestamp": "2026-11-24T11:28:55.342Z",
@@ -247,6 +256,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1b558269b9fa",
+      "name": "Paribesh Thapa",
+      "username": "thapaparibesh01",
+      "email": "thapaparibesh01@gmail.com",
+      "canonicalEmail": "thapaparibesh01@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-24T13:35:51.321Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_1b558269b9fae18a",
+      "avatarUrl": "",
+      "passkey": "scrypt$7f228ea49396b188181fce7293ed8058$9cc6750e8612770e591351ea1864c335ce306b36c3329785812c45b3361fbe03f7cdb0103e510ca21b9f91f6d783185cb4e0a5b335d99cf6ba49993ab0559b34",
+      "joinedAt": "2026-11-24",
+      "updatedAt": "2026-11-24T13:35:51.400Z",
+      "lastModifiedBy": "Paribesh Thapa (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795527351400_akef",
+          "timestamp": "2026-11-24T13:35:51.400Z",
+          "actor": "Paribesh Thapa (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_8e81abd1d7f6",
       "name": "Dipson Poudel",
