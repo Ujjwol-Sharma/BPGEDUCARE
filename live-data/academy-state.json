@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T14:46:53.133Z",
+  "lastUpdated": "2026-11-24T15:03:07.172Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -984,9 +984,11 @@
         {
           "code": "Unit 01",
           "domain": "Algebra",
-          "hours": "28 hrs",
-          "marks": "15 Marks",
-          "weightage": "1 Long (5M) + 2 Short (8M) + 2 MCQ (2M)"
+          "hours": "33 hrs",
+          "marks": "20 Marks",
+          "weightage": "1 Long (8M) + 2 Short (5M) + 2 MCQ (2M)",
+          "name": "Algebra",
+          "focus": "1 Long (8M) + 2 Short (5M) + 2 MCQ (2M)"
         },
         {
           "code": "Unit 02",
@@ -1353,8 +1355,8 @@
               "id": "class-12-math-l1",
               "code": "Unit 01",
               "title": "Algebra",
-              "hours": "28 hrs",
-              "marks": "15 Marks",
+              "hours": "33 hrs",
+              "marks": "20 Marks",
               "subTopics": [],
               "pdfs": [
                 {
@@ -3231,6 +3233,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 34,
+  "revision": 35,
   "explicitDeleteUploadId": "lpdf_1795447149462_0"
 }
