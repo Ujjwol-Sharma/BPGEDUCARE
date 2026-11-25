@@ -1,6 +1,6 @@
 {
-  "revision": 74,
-  "lastUpdated": "2026-11-25T12:13:56.672Z",
+  "revision": 75,
+  "lastUpdated": "2026-11-25T12:19:35.280Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795609175280_9c8e",
+      "timestamp": "2026-11-25T12:19:35.280Z",
+      "userId": "usr_b779167fbeb3",
+      "email": "pradipranabhat19@gmail.com",
+      "actor": "Pradip Ranabhat (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795608836672_z1bi",
       "timestamp": "2026-11-25T12:13:56.672Z",
@@ -399,6 +408,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_b779167fbeb3",
+      "name": "Pradip Ranabhat",
+      "username": "pradipranabhat19",
+      "email": "pradipranabhat19@gmail.com",
+      "canonicalEmail": "pradipranabhat19@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T12:19:35.222Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$03a10943f8be7ad6d84aac229792e3c7$ac11de6a36d2bde769e0f7e26ef761d9f1b59499c2941aae09d1376e931b3f9681e8f9bcd2cf7073028552353f383187190d77da0456cc5ac29f09fe69de18bf",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T12:19:35.280Z",
+      "lastModifiedBy": "Pradip Ranabhat (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795609175280_z7dw",
+          "timestamp": "2026-11-25T12:19:35.280Z",
+          "actor": "Pradip Ranabhat (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_0f1bb6e4792c",
       "name": "Sumit Acharya",
