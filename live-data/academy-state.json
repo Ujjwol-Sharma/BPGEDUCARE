@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T16:31:54.095Z",
+  "lastUpdated": "2026-11-25T16:38:26.324Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2948,55 +2948,7 @@
       "description": "Unlocks every question, solution, and PDF across all open sections."
     }
   },
-  "mockTests": [
-    {
-      "id": "mt_1795513988725",
-      "classKey": "class-12",
-      "subjectId": "mathematics",
-      "title": "Mock",
-      "durationMinutes": 30,
-      "minPlan": "free",
-      "adminAssignedPlan": true,
-      "status": "published",
-      "questions": [
-        {
-          "id": "q_1795513742247_0",
-          "text": "Evaluate the indefinite integral $\\int \\frac{dx}{1 + \\tan x}$.",
-          "options": {
-            "A": "$\\frac{x}{2} + \\frac{1}{2}\\ln\\vert{}\\sin x + \\cos x\\vert{} + C$",
-            "B": "$\\frac{x}{2} - \\frac{1}{2}\\ln\\vert{}\\sin x + \\cos x\\vert{} + C$",
-            "C": "$\\ln\\vert{}\\sin x + \\cos x\\vert{} + C$",
-            "D": "$x + \\ln\\vert{}\\cos x\\vert{} + C$"
-          },
-          "correctOption": "A"
-        },
-        {
-          "id": "q_1795513875612_1",
-          "text": "What is the general solution of the differential equation $\\frac{dy}{dx} = e^{x - y} + x^2 e^{-y}$?",
-          "options": {
-            "A": "$e^y = e^x + \\frac{x^3}{3} + C$",
-            "B": "$e^{-y} = e^x + \\frac{x^3}{3} + C$",
-            "C": "$e^y = e^x + 3x^3 + C$",
-            "D": "$y = e^x + \\frac{x^3}{3} + C$"
-          },
-          "correctOption": "A"
-        },
-        {
-          "id": "q_1795513924195_2",
-          "text": "A problem in mathematics is given to three students A, B, and C whose probabilities of solving it are $\\frac{1}{2}, \\frac{1}{3},$ and $\\frac{1}{4}$ respectively. What is the probability that the problem is solved?",
-          "options": {
-            "A": "$\\frac{1}{4}$",
-            "B": "$\\frac{3}{4}$",
-            "C": "$\\frac{1}{24}$",
-            "D": "$\\frac{23}{24}$"
-          },
-          "correctOption": "B"
-        }
-      ],
-      "createdAt": "2026-11-24T09:53:08.725Z",
-      "updatedAt": "2026-11-24T09:53:08.725Z"
-    }
-  ],
+  "mockTests": [],
   "zoomClasses": [],
   "teamMembers": [
     {
@@ -3678,6 +3630,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 121,
+  "revision": 122,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
