@@ -1,6 +1,6 @@
 {
-  "revision": 122,
-  "lastUpdated": "2026-11-25T16:56:47.808Z",
+  "revision": 123,
+  "lastUpdated": "2026-11-25T16:58:24.026Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795625904026_0cvr",
+      "timestamp": "2026-11-25T16:58:24.026Z",
+      "userId": "usr_687a66b28e6b",
+      "email": "dahalpurnima00@gmail.com",
+      "actor": "Shrawana Dahal (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795625807808_1rdp",
       "timestamp": "2026-11-25T16:56:47.808Z",
@@ -819,6 +828,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_687a66b28e6b",
+      "name": "Shrawana Dahal",
+      "username": "dahalpurnima00",
+      "email": "dahalpurnima00@gmail.com",
+      "canonicalEmail": "dahalpurnima00@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T16:58:23.954Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_687a66b28e6ba63c",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$049edb84314bbe5edd6d5ae53f1b607a$c0b3864d127f96584182377a6fcec2161882a31009619ef7703d287df22ffa95f7fc6adf63a2e67386a204a1c1c7e94d0cadcee9a8874310fd46318d1ab1ad66",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T16:58:24.026Z",
+      "lastModifiedBy": "Shrawana Dahal (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795625904026_xba0",
+          "timestamp": "2026-11-25T16:58:24.026Z",
+          "actor": "Shrawana Dahal (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_0cae2b14a0d9",
       "name": "Sulab Kc",
