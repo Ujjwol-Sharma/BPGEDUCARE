@@ -1,6 +1,6 @@
 {
-  "revision": 71,
-  "lastUpdated": "2026-11-25T10:43:15.217Z",
+  "revision": 72,
+  "lastUpdated": "2026-11-25T11:59:04.037Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795607944037_uxu1",
+      "timestamp": "2026-11-25T11:59:04.037Z",
+      "userId": "usr_03f7b735f6ec",
+      "email": "aadityakhatri234@gmail.com",
+      "actor": "Aaditya Khatri (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795603395217_sx8n",
       "timestamp": "2026-11-25T10:43:15.217Z",
@@ -372,6 +381,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_03f7b735f6ec",
+      "name": "Aaditya Khatri",
+      "username": "aadityakhatri234",
+      "email": "aadityakhatri234@gmail.com",
+      "canonicalEmail": "aadityakhatri234@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T11:59:03.978Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_03f7b735f6ecc39b",
+      "avatarUrl": "",
+      "passkey": "scrypt$41f1287a5025f52638caf88c42e90647$3c7cb4ee8878ae283c68b3dcc784db0a6d195d3237bbaa18eda7793d651ccb65f08ce97e9fd4163b40c37c7ad9c7f70b3ebed85e2bd6036165ffcecdf2c8c74b",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T11:59:04.037Z",
+      "lastModifiedBy": "Aaditya Khatri (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795607944037_qzuy",
+          "timestamp": "2026-11-25T11:59:04.037Z",
+          "actor": "Aaditya Khatri (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_a52d77942f5a",
       "name": "Abhinav Parajuli",
