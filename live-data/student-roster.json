@@ -1,8 +1,17 @@
 {
-  "revision": 27,
-  "lastUpdated": "2026-11-25T15:54:06.931Z",
+  "revision": 28,
+  "lastUpdated": "2026-11-25T15:54:14.358Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795622054358_0fa2",
+      "timestamp": "2026-11-25T15:54:14.358Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Creative Chess Club (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795622046931_3o5j",
       "timestamp": "2026-11-25T15:54:06.931Z",
@@ -14,6 +23,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_25e888886ae4",
+      "name": "Creative Chess Club",
+      "username": "creativechessclub01",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T15:54:14.300Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_25e888886ae4fdd5",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$ee9c2986e6057ec9f9dd7ff94e2832a0$39cd5074db5e0e1059517557f31b7a65d581d2146724e288d580244d78c84b0c23161bcdc781cfac9065fecd086dbe3db908b02ae7f420ce23b120dc03f58c06",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T15:54:14.358Z",
+      "lastModifiedBy": "Creative Chess Club (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795622054358_6qve",
+          "timestamp": "2026-11-25T15:54:14.358Z",
+          "actor": "Creative Chess Club (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_974c713f29dd",
       "name": "Ujjwol Sharma",
