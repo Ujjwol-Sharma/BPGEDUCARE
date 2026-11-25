@@ -50,9 +50,10 @@ function getGithubHeaders(token, raw = false) {
 // Pending durable file writes queued during the current request
 const pendingDurableFiles = new Map(); // relativePath (under prefix) -> { contentBuffer, encoding }
 let lastHydratedCommitSha = '';
+let lastRefEtag = '';
 let lastRefCheckAt = 0;
 let lastHydrationAuthoritative = false;
-const REF_CHECK_TTL_MS = 1200;
+const REF_CHECK_TTL_MS = 15000;
 
 function isDurableHydrationAuthoritative() {
     const cfg = getDurableConfig();
@@ -182,16 +183,23 @@ async function readDurablePdfBuffer(pdfId) {
 /**
  * Gets the current head commit SHA and tree SHA of `bpg-live-db`.
  */
-async function getDurableBranchRef(cfg) {
+async function getDurableBranchRef(cfg, useConditionalEtag = false) {
     const refUrl = `https://api.github.com/repos/${cfg.repo}/git/ref/heads/${encodeURIComponent(cfg.branch)}`;
-    const resp = await fetch(refUrl, {
-        method: 'GET',
-        headers: getGithubHeaders(cfg.token, false)
-    });
+    const headers = getGithubHeaders(cfg.token, false);
+    if (useConditionalEtag && lastRefEtag && lastHydratedCommitSha) {
+        // GitHub 304 Not Modified responses consume ZERO API rate-limit quota!
+        headers['If-None-Match'] = lastRefEtag;
+    }
+    const resp = await fetch(refUrl, { method: 'GET', headers });
+    if (resp.status === 304 && lastHydratedCommitSha) {
+        return lastHydratedCommitSha;
+    }
     if (resp.status === 404) return null;
     if (!resp.ok) {
         throw new Error(`Failed to check durable branch ref (${resp.status})`);
     }
+    const etag = resp.headers.get('etag');
+    if (etag) lastRefEtag = etag;
     const data = await resp.json();
     return data?.object?.sha || null;
 }
@@ -364,7 +372,7 @@ async function ensureDurableStoreHydrated({ TMP_DB_PATH, TMP_ROSTER_PATH, TMP_AT
     }
 
     try {
-        const remoteSha = await getDurableBranchRef(cfg);
+        const remoteSha = await getDurableBranchRef(cfg, true);
         lastRefCheckAt = now;
         if (!remoteSha) {
             lastHydrationAuthoritative = false;

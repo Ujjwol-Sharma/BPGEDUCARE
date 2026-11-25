@@ -193,11 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
         syncWithServerDatabase(true);
     });
 
-    // Real-Time 1.5-Second Lightweight Background Poll for 1-2s Two-Way Sync
+    // Lightweight Background Poll (BroadcastChannel & focus still sync instantly on save)
     setInterval(() => {
         if (document.visibilityState === 'hidden') return;
         syncWithServerDatabase(true);
-    }, 1500);
+    }, 5000);
 });
 
 // Global API & Window Interop Bindings
