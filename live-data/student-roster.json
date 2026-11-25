@@ -1,6 +1,6 @@
 {
-  "revision": 94,
-  "lastUpdated": "2026-11-25T13:43:18.401Z",
+  "revision": 95,
+  "lastUpdated": "2026-11-25T13:44:27.813Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -588,7 +588,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T13:42:08.828Z",
       "verificationMethod": "google_oauth",
@@ -597,9 +597,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$a7f86031ef810770aef0f04f3117d56f$dd58e390db4d952f40137be62366262d596892acab248acafa80e35976ebfecb297d7b64275ead4e20571e17919b7cc1c5ba22865814eaaf0fd2f7eeaea55eda",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:42:08.881Z",
-      "lastModifiedBy": "Shirish Tripathi (Google Sign-Up)",
+      "updatedAt": "2026-11-25T13:44:27.813Z",
+      "lastModifiedBy": "Shirish Tripathi (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795614267813_fdhj",
+          "timestamp": "2026-11-25T13:44:27.813Z",
+          "actor": "Shirish Tripathi (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795614267812-FE5B4D (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795614128881_6o0a",
           "timestamp": "2026-11-25T13:42:08.881Z",
