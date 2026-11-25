@@ -1,6 +1,6 @@
 {
-  "revision": 109,
-  "lastUpdated": "2026-11-25T15:41:26.047Z",
+  "revision": 110,
+  "lastUpdated": "2026-11-25T15:42:40.284Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -681,7 +681,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T15:37:37.959Z",
       "verificationMethod": "google_oauth",
@@ -690,9 +690,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$925fdff0fa849632a882d9431873acf3$604491467b2599f85ebd1177efc2e91aa6324595b268ad49859f96069f44acc01a5f14fde2c8190768361579c7d0a7081eceb2c846c34b62aac7418a2ce9b645",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:37:38.014Z",
-      "lastModifiedBy": "Ashish Adhikari (Google Sign-Up)",
+      "updatedAt": "2026-11-25T15:42:40.284Z",
+      "lastModifiedBy": "Ashish Adhikari (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795621360284_cn1j",
+          "timestamp": "2026-11-25T15:42:40.284Z",
+          "actor": "Ashish Adhikari (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795621360283-428EB3 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795621058014_oir8",
           "timestamp": "2026-11-25T15:37:38.014Z",

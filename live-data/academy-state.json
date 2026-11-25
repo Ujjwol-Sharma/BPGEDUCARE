@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:42:36.022Z",
+  "lastUpdated": "2026-11-25T15:42:40.283Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3388,6 +3388,30 @@
   ],
   "payments": [
     {
+      "id": "pay_1795621360283_g3zy",
+      "orderId": "ORD-1795621360283-428EB3",
+      "userId": "usr_643ae97cc185",
+      "fullName": "Ashish Adhikari",
+      "username": "ashish.adhikari.314",
+      "email": "ashish.adhikari.314@gmail.com",
+      "canonicalEmail": "ashishadhikari314@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planId": "diamond",
+      "planName": "Topper",
+      "amount": "Rs. 2,999",
+      "expectedAmount": 2999,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "7c46c1c0d4e44f0afea2864b0991d94a5477778ac9fcedd74629526beb96467a",
+      "method": "esewa_qr",
+      "status": "pending",
+      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "createdAt": "2026-11-25T15:42:40.283Z",
+      "updatedAt": "2026-11-25T15:42:40.283Z",
+      "reviewedAt": ""
+    },
+    {
       "id": "pay_1795613177801_m2pi",
       "orderId": "ORD-1795613177801-485BF2",
       "userId": "usr_974c713f29dd",
@@ -3436,8 +3460,33 @@
       "reviewedAt": "",
       "lastProviderCheckAt": "2026-11-25T13:38:23.119Z",
       "lastProviderStatus": "NOT_FOUND"
+    },
+    {
+      "id": "pay_1795518544717_3hlz",
+      "orderId": "ORD-1795518544717-1E3DF3",
+      "userId": "usr_25e888886ae4",
+      "fullName": "Chess Club",
+      "username": "creativechessclub01",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planId": "diamond",
+      "planName": "Topper",
+      "amount": "Rs. 2,999",
+      "expectedAmount": 2999,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "dc89f8896c09e08ba1741557f0e0951e3703e180905bf1c46747640e06e39230",
+      "method": "esewa_qr",
+      "status": "failed",
+      "adminNote": "Payment verification failed or rejected by Admin.",
+      "createdAt": "2026-11-24T11:09:04.717Z",
+      "updatedAt": "2026-11-24T11:10:20.384Z",
+      "reviewedAt": "2026-11-24T11:10:20.384Z",
+      "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 105,
+  "revision": 106,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
