@@ -1,6 +1,6 @@
 {
-  "revision": 63,
-  "lastUpdated": "2026-11-24T18:05:08.465Z",
+  "revision": 64,
+  "lastUpdated": "2026-11-25T02:25:13.893Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795573513893_h7et",
+      "timestamp": "2026-11-25T02:25:13.893Z",
+      "userId": "usr_b2f5d1fbcf97",
+      "email": "binodtimilsina06@gmail.com",
+      "actor": "Binod Timilsina (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795543508465_qol4",
       "timestamp": "2026-11-24T18:05:08.465Z",
@@ -300,6 +309,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_b2f5d1fbcf97",
+      "name": "Binod Timilsina",
+      "username": "binodtimilsina06",
+      "email": "binodtimilsina06@gmail.com",
+      "canonicalEmail": "binodtimilsina06@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T02:25:13.805Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_b2f5d1fbcf979b2c",
+      "avatarUrl": "",
+      "passkey": "scrypt$cabb6a8a988a0b2a75279cc2f9b0241f$7fb02ed4b91ea3793525c1d7ef9af9c6b9eaea86eacc0ded3a97dc5ac8a138a166a02419bb15401217e575d88a72314a42cb2ed80835c54ae34a4992ef6cb19f",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T02:25:13.893Z",
+      "lastModifiedBy": "Binod Timilsina (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795573513893_gk3i",
+          "timestamp": "2026-11-25T02:25:13.893Z",
+          "actor": "Binod Timilsina (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_1b558269b9fa",
       "name": "Paribesh Thapa",
