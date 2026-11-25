@@ -1,6 +1,6 @@
 {
-  "revision": 75,
-  "lastUpdated": "2026-11-25T12:19:35.280Z",
+  "revision": 76,
+  "lastUpdated": "2026-11-25T12:23:55.408Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795609435407_7ca9",
+      "timestamp": "2026-11-25T12:23:55.407Z",
+      "userId": "usr_219268db8c0d",
+      "email": "spandan.pkr@gmail.com",
+      "actor": "Spandan Gorkhali (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795609175280_9c8e",
       "timestamp": "2026-11-25T12:19:35.280Z",
@@ -408,6 +417,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_219268db8c0d",
+      "name": "Spandan Gorkhali",
+      "username": "spandan.pkr",
+      "email": "spandan.pkr@gmail.com",
+      "canonicalEmail": "spandanpkr@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T12:23:55.353Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_219268db8c0dd428",
+      "avatarUrl": "",
+      "passkey": "scrypt$3712dcc866d423c4f91dd98536fad283$c1ff33719f3cff2b934260cca9a45f4b5b31c6b09f2630e8b70296d49b67964be91299ac1f261b0666c3ebd97d715e34b8790761fbb0ab77157737bb718d1ff2",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T12:23:55.407Z",
+      "lastModifiedBy": "Spandan Gorkhali (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795609435407_dvo5",
+          "timestamp": "2026-11-25T12:23:55.407Z",
+          "actor": "Spandan Gorkhali (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_b779167fbeb3",
       "name": "Pradip Ranabhat",
