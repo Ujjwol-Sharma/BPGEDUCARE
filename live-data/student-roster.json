@@ -1,6 +1,6 @@
 {
-  "revision": 130,
-  "lastUpdated": "2026-11-25T17:19:28.650Z",
+  "revision": 131,
+  "lastUpdated": "2026-11-25T17:53:33.412Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795629213412_u0tt",
+      "timestamp": "2026-11-25T17:53:33.412Z",
+      "userId": "usr_6cb3f51630c9",
+      "email": "utsavsharma647@gmail.com",
+      "actor": "utsav sharma (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795627168650_suix",
       "timestamp": "2026-11-25T17:19:28.650Z",
@@ -2068,16 +2077,23 @@
       "emailVerified": true,
       "verifiedAt": "2026-11-25T14:35:13.926Z",
       "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
+      "googleLinked": true,
+      "googleSub": "gsub_6cb3f51630c9551b",
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$485675dfe12fbffa1680d6fc3f86efcc$8e14f36f9ff2e40b1c926c989115820f4fc2ce5e858da27e2ce29b14bcbfb399e45544a88895b2fa677847d39f810d2617efd257777031f324c53f3b138bbced",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:35:13.987Z",
-      "lastModifiedBy": "utsav sharma (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-25T17:53:33.412Z",
+      "lastModifiedBy": "utsav sharma (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795629213412_ugax",
+          "timestamp": "2026-11-25T17:53:33.412Z",
+          "actor": "utsav sharma (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795617313987_eai0",
           "timestamp": "2026-11-25T14:35:13.987Z",
