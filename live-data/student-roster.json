@@ -1,6 +1,6 @@
 {
-  "revision": 40,
-  "lastUpdated": "2026-11-25T16:17:22.700Z",
+  "revision": 41,
+  "lastUpdated": "2026-11-25T16:17:48.929Z",
   "classSwitchRequests": [],
   "auditLog": [
     {
@@ -107,7 +107,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$15a628832b0a8705945cd08e5999d8fc$59d06a4ad48ad0f80cd570e5b3fd59a2359b9bfb84c19c77657833f9754c20985e19c0fe3126f721d6ea5d5563770c856137accc3fae07639a2ee5cb13124acf",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795622839468"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T16:17:22.700Z",
       "lastModifiedBy": "bishesh pahari (Google Sign-Up)",
