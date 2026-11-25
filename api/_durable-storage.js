@@ -51,7 +51,13 @@ function getGithubHeaders(token, raw = false) {
 const pendingDurableFiles = new Map(); // relativePath (under prefix) -> { contentBuffer, encoding }
 let lastHydratedCommitSha = '';
 let lastRefCheckAt = 0;
+let lastHydrationAuthoritative = false;
 const REF_CHECK_TTL_MS = 1200;
+
+function isDurableHydrationAuthoritative() {
+    const cfg = getDurableConfig();
+    return !cfg.enabled || Boolean(lastHydrationAuthoritative && lastHydratedCommitSha);
+}
 
 function queueDurableWrite(relPath, contentBufferOrStr) {
     const buf = Buffer.isBuffer(contentBufferOrStr)
@@ -340,20 +346,27 @@ function mergeLiveStateNonDestructively(cloudState, localState) {
 /**
  * Checks if `bpg-live-db` has newer state than the current container and hydrates `/tmp` and `global`.
  */
-async function ensureDurableStoreHydrated({ TMP_DB_PATH, TMP_ROSTER_PATH, TMP_ATTEMPTS_PATH, DB_PATH, ROSTER_PATH }) {
+async function ensureDurableStoreHydrated({ TMP_DB_PATH, TMP_ROSTER_PATH, TMP_ATTEMPTS_PATH, DB_PATH, ROSTER_PATH, force = false }) {
     const cfg = getDurableConfig();
-    if (!cfg.enabled) return false;
+    if (!cfg.enabled) {
+        lastHydrationAuthoritative = true;
+        return false;
+    }
 
     const now = Date.now();
-    if (lastHydratedCommitSha && (now - lastRefCheckAt) < REF_CHECK_TTL_MS && global.__BPG_ACADEMY_STATE__ && global.__BPG_STUDENT_ROSTER__) {
+    if (!force && lastHydratedCommitSha && (now - lastRefCheckAt) < REF_CHECK_TTL_MS && global.__BPG_ACADEMY_STATE__ && global.__BPG_STUDENT_ROSTER__) {
         return false;
     }
 
     try {
         const remoteSha = await getDurableBranchRef(cfg);
         lastRefCheckAt = now;
-        if (!remoteSha) return false;
+        if (!remoteSha) {
+            lastHydrationAuthoritative = false;
+            return false;
+        }
         if (remoteSha === lastHydratedCommitSha && global.__BPG_ACADEMY_STATE__ && global.__BPG_STUDENT_ROSTER__) {
+            lastHydrationAuthoritative = true;
             return false;
         }
 
@@ -389,9 +402,11 @@ async function ensureDurableStoreHydrated({ TMP_DB_PATH, TMP_ROSTER_PATH, TMP_AT
         }
 
         lastHydratedCommitSha = remoteSha;
+        lastHydrationAuthoritative = Boolean(rosterBuf || stateBuf);
         return true;
     } catch (err) {
         console.warn('[DurableStore] Hydration check warning:', err.message);
+        lastHydrationAuthoritative = false;
         return false;
     }
 }
@@ -400,6 +415,7 @@ module.exports = {
     TMP_PDF_DIR,
     LOCAL_PDF_DIR,
     getDurableConfig,
+    isDurableHydrationAuthoritative,
     queueDurableWrite,
     hasPendingDurableWrites,
     extractAndQueueDurablePdfFiles,

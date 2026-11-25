@@ -599,12 +599,16 @@ function reconcileStudentLiveSessionPayload(payload) {
 
     const session = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
     if (session && session.sessionToken) {
-        if (payload.currentUser === null) {
-            // Account was deleted or suspended on the server
-            localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
-            localStorage.removeItem('bpg_student_session');
-            if (typeof updateAuthUserPill === 'function') updateAuthUserPill();
-            if (typeof switchPortal === 'function') switchPortal('view-home');
+        if (payload.sessionRevoked === true) {
+            // Account was explicitly deleted, suspended, or token expired/invalid on the authoritative server
+            if (typeof handleSignOutSilent === 'function') {
+                handleSignOutSilent();
+            } else {
+                localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
+                localStorage.removeItem('bpg_student_session');
+                if (typeof updateAuthUserPill === 'function') updateAuthUserPill();
+                if (typeof switchPortal === 'function') switchPortal('view-home');
+            }
             return true;
         }
         if (payload.currentUser && payload.currentUser.email) {

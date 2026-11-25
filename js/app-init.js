@@ -17,15 +17,20 @@ async function syncRosterPermissionsFromServer() {
             headers: authHeaders
         });
         if (meRes.status === 401) {
-            localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
-            localStorage.removeItem('bpg_student_session');
-            updateAuthUserPill();
+            if (typeof handleSignOutSilent === 'function') handleSignOutSilent();
             return;
         }
         if (meRes.ok) {
             const meJson = await meRes.json();
+            if (meJson.sessionRevoked === true) {
+                if (typeof handleSignOutSilent === 'function') handleSignOutSilent();
+                return;
+            }
             if (Array.isArray(meJson.mySwitchRequests)) {
                 window.MY_CLASS_SWITCH_REQUESTS = meJson.mySwitchRequests;
+            }
+            if (Array.isArray(meJson.myPayments)) {
+                window.MY_PAYMENTS = meJson.myPayments;
             }
             if (meJson.account) {
                 const match = meJson.account;

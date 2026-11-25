@@ -103,11 +103,27 @@ module.exports = async function studentRosterHandler(req, res) {
                 return;
             }
 
-            const me = isAdmin ? null : resolveRequestUser(req);
+            const { resolveRequestUserStatus } = require('./_access-control');
+            const { ensureDurableStoreHydrated, isDurableHydrationAuthoritative } = require('./_durable-storage');
+            const { TMP_DB_PATH, TMP_ROSTER_PATH, DB_PATH, ROSTER_PATH } = require('./_access-control');
+
+            let me = null;
+            let sessionRevoked = false;
+            let liveRoster = roster;
+            if (!isAdmin) {
+                let status = resolveRequestUserStatus(req);
+                if (status.needsFreshCheck) {
+                    await ensureDurableStoreHydrated({ TMP_DB_PATH, TMP_ROSTER_PATH, DB_PATH, ROSTER_PATH, force: true });
+                    liveRoster = readRoster();
+                    status = resolveRequestUserStatus(req);
+                }
+                me = status.user;
+                sessionRevoked = Boolean(status.revoked || (status.needsFreshCheck && isDurableHydrationAuthoritative()));
+            }
 
             if (checkMe && !isAdmin) {
                 const mySwitchRequests = me
-                    ? (roster.classSwitchRequests || []).filter(
+                    ? (liveRoster.classSwitchRequests || []).filter(
                         r => (r.userId && r.userId === me.userId) || canonicalizeEmail(r.email) === canonicalizeEmail(me.email)
                     )
                     : [];
@@ -119,8 +135,9 @@ module.exports = async function studentRosterHandler(req, res) {
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
-                    rosterRevision: Number(roster.revision) || 0,
+                    rosterRevision: Number(liveRoster.revision) || 0,
                     account: me ? stripSensitiveAccountFields(me) : null,
+                    sessionRevoked,
                     mySwitchRequests,
                     myPayments
                 }));
@@ -209,6 +226,15 @@ module.exports = async function studentRosterHandler(req, res) {
                 let linkedExisting = false;
 
                 if (account) {
+                    if (account.accountStatus === 'suspended') {
+                        res.statusCode = 403;
+                        res.end(JSON.stringify({
+                            success: false,
+                            code: 'ACCOUNT_SUSPENDED',
+                            error: 'Your account has been suspended by an administrator. Please contact BPG EDUCARE support.'
+                        }));
+                        return;
+                    }
                     // Preserve existing profile, class access, subscription plan, and payment history under same stable userId!
                     linkedExisting = true;
                     account.userId = deriveStableUserId(canonical, account.userId);
@@ -283,13 +309,17 @@ module.exports = async function studentRosterHandler(req, res) {
                 const mySwitchRequests = (roster.classSwitchRequests || []).filter(
                     r => (r.userId && r.userId === account.userId) || canonicalizeEmail(r.email) === canonical
                 );
+                const myPayments = (Array.isArray(state.payments) ? state.payments : []).filter(
+                    p => (p.userId && p.userId === account.userId) || canonicalizeEmail(p.email) === canonical
+                );
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
                     linkedExisting,
                     sessionToken,
                     user: stripSensitiveAccountFields(account),
-                    mySwitchRequests
+                    mySwitchRequests,
+                    myPayments
                 }));
                 return;
             }
@@ -507,6 +537,15 @@ module.exports = async function studentRosterHandler(req, res) {
                     }));
                     return;
                 }
+                if (account.accountStatus === 'suspended') {
+                    res.statusCode = 403;
+                    res.end(JSON.stringify({
+                        success: false,
+                        code: 'ACCOUNT_SUSPENDED',
+                        error: 'Your account has been suspended by an administrator. Please contact BPG EDUCARE support.'
+                    }));
+                    return;
+                }
                 const expectedPass = account.passkey || '';
                 if (!verifyPassword(enteredPass, expectedPass)) {
                     res.statusCode = 401;
@@ -518,11 +557,19 @@ module.exports = async function studentRosterHandler(req, res) {
                     return;
                 }
                 const sessionToken = issueStudentSessionToken(account);
+                const mySwitchRequests = (roster.classSwitchRequests || []).filter(
+                    r => (r.userId && r.userId === account.userId) || canonicalizeEmail(r.email) === canonical
+                );
+                const myPayments = (Array.isArray(state.payments) ? state.payments : []).filter(
+                    p => (p.userId && p.userId === account.userId) || canonicalizeEmail(p.email) === canonical
+                );
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
                     sessionToken,
-                    user: stripSensitiveAccountFields(account)
+                    user: stripSensitiveAccountFields(account),
+                    mySwitchRequests,
+                    myPayments
                 }));
                 return;
             }

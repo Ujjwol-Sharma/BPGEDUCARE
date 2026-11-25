@@ -269,7 +269,8 @@ async function academyStateHandler(req, res) {
             TMP_ROSTER_PATH,
             TMP_ATTEMPTS_PATH,
             DB_PATH,
-            ROSTER_PATH
+            ROSTER_PATH,
+            force: req.method === 'POST'
         });
     }
 
@@ -324,8 +325,33 @@ async function academyStateHandler(req, res) {
 
             const rawData = readAcademyState();
             delete rawData.adminPasskey;
-            const roster = readRoster();
-            const user = isAdmin ? null : resolveRequestUser(req);
+            let roster = readRoster();
+            let user = null;
+            let sessionRevoked = false;
+            if (!isAdmin) {
+                const { resolveRequestUserStatus } = require('./_access-control');
+                const { isDurableHydrationAuthoritative } = require('./_durable-storage');
+                let userStatus = resolveRequestUserStatus(req);
+                if (userStatus.needsFreshCheck) {
+                    // Token signature is valid, but account wasn't in this container's cache — force-hydrate from bpg-live-db before deciding!
+                    await ensureDurableStoreHydrated({
+                        TMP_DB_PATH,
+                        TMP_ROSTER_PATH,
+                        TMP_ATTEMPTS_PATH,
+                        DB_PATH,
+                        ROSTER_PATH,
+                        force: true
+                    });
+                    roster = readRoster();
+                    userStatus = resolveRequestUserStatus(req);
+                }
+                user = userStatus.user;
+                // Only confirm revocation when explicitly suspended/invalid token OR confirmed absent after authoritative durable hydration
+                sessionRevoked = Boolean(
+                    userStatus.revoked ||
+                    (userStatus.needsFreshCheck && isDurableHydrationAuthoritative())
+                );
+            }
             const isLightPoll = parsedUrl.searchParams.get('light') === '1';
             const syncVersion = `${Number(rawData.revision) || 0}:${Number(roster.revision) || 0}:${rawData.lastUpdated || ''}:${roster.lastUpdated || ''}`;
 
@@ -382,6 +408,7 @@ async function academyStateHandler(req, res) {
                     rosterRevision: Number(roster.revision) || 0,
                     timestamp: rawData.lastUpdated || new Date().toISOString(),
                     currentUser: safeUser,
+                    sessionRevoked,
                     myPayments,
                     mySwitchRequests,
                     sectionLocks: rawData.sectionLocks || {},
@@ -425,6 +452,7 @@ async function academyStateHandler(req, res) {
                     stateRevision: Number(rawData.revision) || 0,
                     rosterRevision: Number(roster.revision) || 0,
                     currentUser: safeUser,
+                    sessionRevoked,
                     myPayments,
                     mySwitchRequests
                 };

@@ -4284,6 +4284,74 @@ body.in-notes-tab #contactSection {
     border-color: #f4f4f5;
 }
 
+.calc-angle-pill.mode-deg {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    border-color: #93c5fd !important;
+    font-weight: 700 !important;
+}
+
+.calc-angle-pill.mode-rad {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border-color: #fcd34d !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .calc-angle-pill.mode-deg {
+    background: #1e3a8a !important;
+    color: #bfdbfe !important;
+    border-color: #3b82f6 !important;
+}
+
+[data-theme="dark"] .calc-angle-pill.mode-rad {
+    background: #78350f !important;
+    color: #fde68a !important;
+    border-color: #f59e0b !important;
+}
+
+.calc-screen-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.calc-active-angle-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.calc-active-angle-badge.mode-deg {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.calc-active-angle-badge.mode-rad {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+[data-theme="dark"] .calc-active-angle-badge.mode-deg {
+    background: #1e3a8a;
+    color: #bfdbfe;
+}
+
+[data-theme="dark"] .calc-active-angle-badge.mode-rad {
+    background: #78350f;
+    color: #fde68a;
+}
+
 .calc-flyout-window.calc-redesigned .calc-close-btn {
     background: transparent;
     border: none;
@@ -4512,7 +4580,7 @@ body.in-notes-tab #contactSection {
 }
 
 .calc-flyout-window.calc-redesigned .calc-key.equals.calc-equals-wide {
-    grid-column: span 3;
+    grid-column: span 2;
     background: #111114 !important;
     color: #ffffff !important;
     border-color: #111114 !important;

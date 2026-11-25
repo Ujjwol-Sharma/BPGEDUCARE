@@ -152,14 +152,17 @@
             <div class="calc-header-controls">
                 <button type="button" class="calc-mode-pill active" id="calcModeBasicBtn" onclick="setCalculatorMode('basic')">Basic</button>
                 <button type="button" class="calc-mode-pill" id="calcModeSciBtn" onclick="setCalculatorMode('scientific')">Scientific</button>
-                <button type="button" class="calc-angle-pill" id="calcAngleToggleBtn" onclick="toggleMiniCalcAngle()" title="Toggle Degrees / Radians">DEG</button>
+                <button type="button" class="calc-angle-pill mode-deg" id="calcAngleToggleBtn" onclick="toggleMiniCalcAngle()" title="Angle mode: Degrees (click to switch to Radians)" aria-label="Angle mode DEG">DEG</button>
                 <button type="button" class="calc-hist-pill" id="calcHistoryToggleBtn" onclick="toggleMiniCalcHistory()" title="Calculation History" aria-label="Toggle History"><i class="fa-solid fa-clock-rotate-left"></i></button>
                 <button type="button" class="calc-close-btn" onclick="toggleMiniCalculator()" aria-label="Close Calculator"><i class="fa-solid fa-xmark"></i></button>
             </div>
         </div>
         <div class="calc-screen-area">
-            <div class="calc-history-line" id="calcHistoryLine">DEG · Basic</div>
-            <div class="calc-lcd-screen" id="calcScreen">0</div>
+            <div class="calc-screen-status-row">
+                <span class="calc-active-angle-badge mode-deg" id="calcActiveAngleBadge" onclick="toggleMiniCalcAngle()" title="Click to toggle DEG / RAD">DEG</span>
+                <div class="calc-history-line" id="calcHistoryLine">Basic Mode</div>
+            </div>
+            <div class="calc-lcd-screen" id="calcScreen" aria-live="polite">0</div>
             <div class="calc-error-line" id="calcErrorLine" role="alert" style="display:none;"></div>
         </div>
         <div class="calc-history-drawer" id="calcHistoryDrawer" style="display:none;">
@@ -172,45 +175,53 @@
             </div>
         </div>
         <div class="calc-sci-row" id="calcSciKeypad" style="display:none;">
-            <button type="button" class="calc-key sci" onclick="calcAppend('sin(')">sin</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('cos(')">cos</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('tan(')">tan</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('log(')">log</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('ln(')">ln</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('sqrt(')">&radic;</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('^')">x<sup>y</sup></button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('^2')">x&sup2;</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('pi')">&pi;</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('e')">e</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('sin(')" title="Sine">sin</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('cos(')" title="Cosine">cos</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('tan(')" title="Tangent">tan</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('log₁₀(')" title="Base-10 Logarithm">log<sub>10</sub></button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('ln(')" title="Natural Logarithm">ln</button>
+
+            <button type="button" class="calc-key sci" onclick="calcAppend('sin⁻¹(')" title="Inverse Sine">sin<sup>&minus;1</sup></button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('cos⁻¹(')" title="Inverse Cosine">cos<sup>&minus;1</sup></button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('tan⁻¹(')" title="Inverse Tangent">tan<sup>&minus;1</sup></button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('√(')" title="Square Root">&radic;</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('^')" title="Power (x to the y)">x<sup>y</sup></button>
+
+            <button type="button" class="calc-key sci" onclick="calcAppend('²')" title="Square">x&sup2;</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('³')" title="Cube">x&sup3;</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('°')" title="Degree symbol">&deg;</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('π')" title="Pi">&pi;</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('e')" title="Euler's number e">e</button>
         </div>
         <div class="calc-keypad-grid calc-basic-grid">
-            <button type="button" class="calc-key func-clear" onclick="calcClear()">AC</button>
-            <button type="button" class="calc-key func-del" onclick="calcBackspace()">DEL</button>
-            <button type="button" class="calc-key op" onclick="calcAppend('%')">%</button>
-            <button type="button" class="calc-key op" onclick="calcAppend('/')">÷</button>
+            <button type="button" class="calc-key func-clear" onclick="calcClear()" title="All Clear (Esc)">AC</button>
+            <button type="button" class="calc-key func-del" onclick="calcBackspace()" title="Backspace">DEL</button>
+            <button type="button" class="calc-key op" onclick="calcToggleSign()" title="Toggle Positive / Negative">+/&minus;</button>
+            <button type="button" class="calc-key op" onclick="calcAppend('÷')" title="Divide">&divide;</button>
 
             <button type="button" class="calc-key num" onclick="calcAppend('7')">7</button>
             <button type="button" class="calc-key num" onclick="calcAppend('8')">8</button>
             <button type="button" class="calc-key num" onclick="calcAppend('9')">9</button>
-            <button type="button" class="calc-key op" onclick="calcAppend('*')">×</button>
+            <button type="button" class="calc-key op" onclick="calcAppend('×')" title="Multiply">&times;</button>
 
             <button type="button" class="calc-key num" onclick="calcAppend('4')">4</button>
             <button type="button" class="calc-key num" onclick="calcAppend('5')">5</button>
             <button type="button" class="calc-key num" onclick="calcAppend('6')">6</button>
-            <button type="button" class="calc-key op" onclick="calcAppend('-')">−</button>
+            <button type="button" class="calc-key op" onclick="calcAppend('−')" title="Subtract">&minus;</button>
 
             <button type="button" class="calc-key num" onclick="calcAppend('1')">1</button>
             <button type="button" class="calc-key num" onclick="calcAppend('2')">2</button>
             <button type="button" class="calc-key num" onclick="calcAppend('3')">3</button>
-            <button type="button" class="calc-key op" onclick="calcAppend('+')">+</button>
+            <button type="button" class="calc-key op" onclick="calcAppend('+')" title="Add">+</button>
 
             <button type="button" class="calc-key num" onclick="calcAppend('(')">(</button>
             <button type="button" class="calc-key num" onclick="calcAppend('0')">0</button>
             <button type="button" class="calc-key num" onclick="calcAppend(')')">)</button>
             <button type="button" class="calc-key num" onclick="calcAppend('.')">.</button>
 
-            <button type="button" class="calc-key sci-ans" onclick="calcUseLastAns()">Ans</button>
-            <button type="button" class="calc-key equals calc-equals-wide" onclick="calcEvaluate()">=</button>
+            <button type="button" class="calc-key op" onclick="calcAppend('%')" title="Percent">%</button>
+            <button type="button" class="calc-key sci-ans" onclick="calcUseLastAns()" title="Last Answer">Ans</button>
+            <button type="button" class="calc-key equals calc-equals-wide" onclick="calcEvaluate()" title="Evaluate (Enter)">=</button>
         </div>
     </div>
 

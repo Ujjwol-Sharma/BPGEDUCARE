@@ -1130,7 +1130,7 @@ function readAcademyState() {
     return newestState;
 }
 
-function resolveRequestUser(req) {
+function resolveRequestUserStatus(req) {
     let token = req.headers['x-session-token'] || '';
     if (!token && req.url) {
         try {
@@ -1138,25 +1138,35 @@ function resolveRequestUser(req) {
             token = parsed.searchParams.get('token') || '';
         } catch (e) { }
     }
-    const verified = verifyStudentSessionToken(token);
-    if (verified && (verified.email || verified.userId)) {
+
+    if (token) {
+        const verified = verifyStudentSessionToken(token);
+        if (!verified || (!verified.email && !verified.userId)) {
+            return { user: null, hasToken: true, tokenValid: false, revoked: true, needsFreshCheck: false, reason: 'invalid_token' };
+        }
         const account = findAccountByEmail(verified.email, verified.userId);
         if (account) {
-            if (account.emailVerified === false || account.accountStatus === 'suspended') return null;
-            return account;
+            if (account.emailVerified === false || account.accountStatus === 'suspended') {
+                return { user: null, hasToken: true, tokenValid: true, revoked: true, needsFreshCheck: false, reason: 'suspended' };
+            }
+            return { user: account, hasToken: true, tokenValid: true, revoked: false, needsFreshCheck: false, reason: '' };
         }
-        return null;
+        return { user: null, hasToken: true, tokenValid: true, revoked: false, needsFreshCheck: true, verified, reason: 'not_found_in_cache' };
     }
 
     const headerEmail = String(req.headers['x-student-email'] || '').trim().toLowerCase();
     if (headerEmail) {
         const fallbackAccount = findAccountByEmail(headerEmail);
         if (fallbackAccount && fallbackAccount.emailVerified !== false && fallbackAccount.accountStatus !== 'suspended') {
-            return fallbackAccount;
+            return { user: fallbackAccount, hasToken: false, tokenValid: false, revoked: false, needsFreshCheck: false, reason: '' };
         }
     }
 
-    return null;
+    return { user: null, hasToken: false, tokenValid: false, revoked: false, needsFreshCheck: false, reason: '' };
+}
+
+function resolveRequestUser(req) {
+    return resolveRequestUserStatus(req).user;
 }
 
 function evaluateItemAccess(user, classKey, item, state) {
@@ -1522,6 +1532,7 @@ module.exports = {
     normalizePaymentStatusValue,
     ensureAccessModelDefaults,
     readAcademyState,
+    resolveRequestUserStatus,
     resolveRequestUser,
     evaluateItemAccess,
     sanitizeStateForStudent

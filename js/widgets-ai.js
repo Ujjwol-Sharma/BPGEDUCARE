@@ -214,12 +214,432 @@ function renderMathInGuide() {
 function toggleKaTexGuideModal() { toggleWebsiteGuide(); }
 function handleKaTexGuideChip(chipKey) { askGuideQuestion(chipKey); }
 
-// Redesigned Basic + Scientific Calculator (DEG/RAD, History, Helpful Errors, Keyboard Input)
+// Redesigned Basic + Scientific Calculator (Recursive-Descent Parser, DEG/RAD, History, Helpful Errors, Keyboard Input)
 let miniCalcExpr = '';
 let miniCalcAngleMode = 'DEG';
 let miniCalcMode = 'basic';
 let miniCalcLastAns = 0;
 let miniCalcHistory = [];
+let miniCalcJustEvaluated = false;
+let miniCalcHasError = false;
+
+const CALC_MULTI_CHAR_TOKENS = [
+    'sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(',
+    'asin(', 'acos(', 'atan(',
+    'log₁₀(', 'log10(', 'sqrt(',
+    'sin(', 'cos(', 'tan(', 'log(', 'ln(', 'abs(', '√('
+];
+
+function formatBpgCalcNumber(val) {
+    if (typeof val !== 'number' || Number.isNaN(val)) return 'Error';
+    if (!Number.isFinite(val)) return 'Undefined';
+    if (Math.abs(val) < 1e-12) return '0';
+    // Clean floating-point noise like 0.30000000000000004 or 0.49999999999999994
+    const clean = Number(val.toPrecision(12));
+    if (Math.abs(clean - Math.round(clean)) < 1e-11 && Math.abs(clean) < 1e15) {
+        return String(Math.round(clean));
+    }
+    return String(clean);
+}
+
+/**
+ * Pure recursive-descent mathematical expression evaluator.
+ * Supports exact operator precedence (+,- < *,/ < unary - < right-associative ^ < postfix %,°,!),
+ * implicit multiplication (2(3+4), (2+3)(4+1), 2π, 2sin(30), 2√81),
+ * √81 and √(81), 2³ and 2^3, log₁₀(100), ln(e), trig & inverse trig in DEG/RAD, and explicit °.
+ */
+function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
+    const mode = String(angleMode || 'DEG').toUpperCase() === 'RAD' ? 'RAD' : 'DEG';
+    const src = String(rawInput || '').trim();
+    if (!src) {
+        const err = new Error('Enter an expression to calculate.');
+        err.code = 'EMPTY';
+        throw err;
+    }
+
+    // 1. Normalize Unicode math operators & superscripts into canonical tokens
+    const normalized = src
+        .replace(/\u2212|\u2013|\u2014/g, '-')
+        .replace(/[×·✕]/g, '*')
+        .replace(/÷/g, '/')
+        .replace(/log₁₀/gi, 'log10')
+        .replace(/sin⁻¹/gi, 'asin')
+        .replace(/cos⁻¹/gi, 'acos')
+        .replace(/tan⁻¹/gi, 'atan')
+        .replace(/²/g, '^2')
+        .replace(/³/g, '^3');
+
+    // 2. Tokenize
+    const rawTokens = [];
+    let i = 0;
+    const len = normalized.length;
+
+    while (i < len) {
+        const ch = normalized[i];
+        if (/\s/.test(ch)) {
+            i++;
+            continue;
+        }
+
+        // Number literal (supports decimals and scientific notation like 1.5e-4)
+        if (/[0-9.]/.test(ch)) {
+            const start = i;
+            let dotCount = 0;
+            while (i < len && /[0-9.]/.test(normalized[i])) {
+                if (normalized[i] === '.') dotCount++;
+                i++;
+            }
+            const numCore = normalized.slice(start, i);
+            if (dotCount > 1 || numCore === '.') {
+                const err = new Error('Invalid decimal number.');
+                err.code = 'SYNTAX';
+                throw err;
+            }
+            // Optional scientific exponent (e.g. 1e-5, 2.5E+3) — only when followed by digit or +/- digit
+            if (i < len && (normalized[i] === 'e' || normalized[i] === 'E')) {
+                const expMatch = normalized.slice(i).match(/^[eE][+-]?\d+/);
+                if (expMatch) {
+                    i += expMatch[0].length;
+                }
+            }
+            const value = Number(normalized.slice(start, i));
+            if (Number.isNaN(value)) {
+                const err = new Error('Invalid number format.');
+                err.code = 'SYNTAX';
+                throw err;
+            }
+            rawTokens.push({ type: 'NUMBER', value });
+            continue;
+        }
+
+        // Unicode π and √
+        if (ch === 'π') {
+            rawTokens.push({ type: 'CONST', name: 'pi', value: Math.PI });
+            i++;
+            continue;
+        }
+        if (ch === '√') {
+            rawTokens.push({ type: 'FUNC', name: 'sqrt' });
+            i++;
+            continue;
+        }
+
+        // Single-char operators & parens
+        if ('+-*/^'.includes(ch)) {
+            rawTokens.push({ type: 'OP', value: ch });
+            i++;
+            continue;
+        }
+        if (ch === '(') {
+            rawTokens.push({ type: 'LPAREN', value: '(' });
+            i++;
+            continue;
+        }
+        if (ch === ')') {
+            rawTokens.push({ type: 'RPAREN', value: ')' });
+            i++;
+            continue;
+        }
+        if (ch === '%' || ch === '°' || ch === '!') {
+            rawTokens.push({ type: 'POSTFIX', value: ch });
+            i++;
+            continue;
+        }
+
+        // Identifiers (sin, cos, tan, asin, acos, atan, log, log10, ln, sqrt, abs, pi, e)
+        if (/[a-zA-Z]/.test(ch)) {
+            const start = i;
+            while (i < len && /[a-zA-Z0-9]/.test(normalized[i])) i++;
+            const ident = normalized.slice(start, i).toLowerCase();
+            if (ident === 'pi') {
+                rawTokens.push({ type: 'CONST', name: 'pi', value: Math.PI });
+            } else if (ident === 'e') {
+                rawTokens.push({ type: 'CONST', name: 'e', value: Math.E });
+            } else if (['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10', 'ln', 'sqrt', 'abs'].includes(ident)) {
+                rawTokens.push({ type: 'FUNC', name: ident === 'log10' ? 'log' : ident });
+            } else {
+                const err = new Error(`Unknown function or symbol "${ident}".`);
+                err.code = 'SYNTAX';
+                throw err;
+            }
+            continue;
+        }
+
+        const err = new Error(`Unexpected character "${ch}".`);
+        err.code = 'SYNTAX';
+        throw err;
+    }
+
+    // 3. Insert implicit multiplication tokens (e.g. 2(3+4), (2+3)(4+1), 2π, 2sin(30), 2√81)
+    const tokens = [];
+    for (let t = 0; t < rawTokens.length; t++) {
+        const cur = rawTokens[t];
+        if (t > 0) {
+            const prev = rawTokens[t - 1];
+            const prevEndsValue = prev.type === 'NUMBER' || prev.type === 'CONST' || prev.type === 'RPAREN' || prev.type === 'POSTFIX';
+            const curStartsValue = cur.type === 'LPAREN' || cur.type === 'CONST' || cur.type === 'FUNC' || cur.type === 'NUMBER';
+            if (prevEndsValue && curStartsValue) {
+                tokens.push({ type: 'OP', value: '*' });
+            }
+        }
+        tokens.push(cur);
+    }
+
+    // 4. Recursive-descent parser
+    let pos = 0;
+    const peek = () => tokens[pos] || null;
+    const consume = () => tokens[pos++] || null;
+
+    function parseAddSub() {
+        let left = parseMulDiv();
+        while (peek() && peek().type === 'OP' && (peek().value === '+' || peek().value === '-')) {
+            const op = consume().value;
+            const right = parseMulDiv();
+            left = op === '+' ? left + right : left - right;
+        }
+        return left;
+    }
+
+    function parseMulDiv() {
+        let left = parseUnary();
+        while (peek() && peek().type === 'OP' && (peek().value === '*' || peek().value === '/')) {
+            const op = consume().value;
+            const right = parseUnary();
+            if (op === '/') {
+                if (right === 0) {
+                    const err = new Error('Cannot divide by zero.');
+                    err.code = 'DIV_ZERO';
+                    throw err;
+                }
+                left = left / right;
+            } else {
+                left = left * right;
+            }
+        }
+        return left;
+    }
+
+    function parseUnary() {
+        const tok = peek();
+        if (tok && tok.type === 'OP' && (tok.value === '+' || tok.value === '-')) {
+            consume();
+            const val = parseUnary();
+            return tok.value === '-' ? -val : val;
+        }
+        return parsePower();
+    }
+
+    function parsePower() {
+        let base = parsePostfix();
+        if (peek() && peek().type === 'OP' && peek().value === '^') {
+            consume();
+            const exp = parseUnary(); // Right-associative & allows 2^-3
+            const res = Math.pow(base, exp);
+            if (Number.isNaN(res)) {
+                const err = new Error('Domain error — invalid power operation.');
+                err.code = 'DOMAIN';
+                throw err;
+            }
+            if (!Number.isFinite(res)) {
+                const err = new Error('Result overflow or division by zero.');
+                err.code = 'DIV_ZERO';
+                throw err;
+            }
+            return res;
+        }
+        return base;
+    }
+
+    function parsePostfix() {
+        let val = parsePrimary();
+        while (peek() && peek().type === 'POSTFIX') {
+            const sym = consume().value;
+            if (sym === '%') {
+                val = val / 100;
+            } else if (sym === '°') {
+                // In DEG mode, trig already expects degrees; in RAD mode, convert explicit degrees to radians
+                if (mode === 'RAD') {
+                    val = val * (Math.PI / 180);
+                }
+            } else if (sym === '!') {
+                if (val < 0 || !Number.isInteger(val) || val > 170) {
+                    const err = new Error('Factorial requires a whole number from 0 to 170.');
+                    err.code = 'DOMAIN';
+                    throw err;
+                }
+                let f = 1;
+                for (let k = 2; k <= val; k++) f *= k;
+                val = f;
+            }
+        }
+        return val;
+    }
+
+    function applyFunction(name, arg) {
+        const toRad = (v) => mode === 'DEG' ? (v * Math.PI / 180) : v;
+        const fromRad = (v) => mode === 'DEG' ? (v * 180 / Math.PI) : v;
+
+        switch (name) {
+            case 'sin':
+                return Math.sin(toRad(arg));
+            case 'cos':
+                return Math.cos(toRad(arg));
+            case 'tan': {
+                const rad = toRad(arg);
+                if (Math.abs(Math.cos(rad)) < 1e-12) {
+                    const err = new Error('Undefined — tan(90° + 180°k) is undefined.');
+                    err.code = 'ASYMPTOTE';
+                    throw err;
+                }
+                return Math.tan(rad);
+            }
+            case 'asin': {
+                if (arg < -1 || arg > 1) {
+                    const err = new Error('Domain error — sin⁻¹ input must be between -1 and 1.');
+                    err.code = 'DOMAIN';
+                    throw err;
+                }
+                return fromRad(Math.asin(arg));
+            }
+            case 'acos': {
+                if (arg < -1 || arg > 1) {
+                    const err = new Error('Domain error — cos⁻¹ input must be between -1 and 1.');
+                    err.code = 'DOMAIN';
+                    throw err;
+                }
+                return fromRad(Math.acos(arg));
+            }
+            case 'atan':
+                return fromRad(Math.atan(arg));
+            case 'log': {
+                if (arg <= 0) {
+                    const err = new Error('Domain error — log₁₀ requires a positive number.');
+                    err.code = 'DOMAIN';
+                    throw err;
+                }
+                return Math.log10(arg);
+            }
+            case 'ln': {
+                if (arg <= 0) {
+                    const err = new Error('Domain error — ln requires a positive number.');
+                    err.code = 'DOMAIN';
+                    throw err;
+                }
+                return Math.log(arg);
+            }
+            case 'sqrt': {
+                if (arg < 0) {
+                    const err = new Error('Domain error — square root of a negative number.');
+                    err.code = 'DOMAIN';
+                    throw err;
+                }
+                return Math.sqrt(arg);
+            }
+            case 'abs':
+                return Math.abs(arg);
+            default: {
+                const err = new Error(`Unsupported function "${name}".`);
+                err.code = 'SYNTAX';
+                throw err;
+            }
+        }
+    }
+
+    function parsePrimary() {
+        const tok = peek();
+        if (!tok) {
+            const err = new Error('Incomplete expression — finish entering your calculation.');
+            err.code = 'INCOMPLETE';
+            throw err;
+        }
+
+        if (tok.type === 'NUMBER' || tok.type === 'CONST') {
+            consume();
+            return tok.value;
+        }
+
+        if (tok.type === 'LPAREN') {
+            consume();
+            if (peek() && peek().type === 'RPAREN') {
+                const err = new Error('Empty parentheses () — enter a number inside.');
+                err.code = 'INCOMPLETE';
+                throw err;
+            }
+            const inner = parseAddSub();
+            if (!peek() || peek().type !== 'RPAREN') {
+                const err = new Error('Incomplete expression — missing closing parenthesis ")".');
+                err.code = 'INCOMPLETE';
+                throw err;
+            }
+            consume();
+            return inner;
+        }
+
+        if (tok.type === 'FUNC') {
+            const fnName = consume().name;
+            if (peek() && peek().type === 'LPAREN') {
+                consume();
+                if (peek() && peek().type === 'RPAREN') {
+                    const err = new Error(`Incomplete expression — enter a value inside ${fnName}().`);
+                    err.code = 'INCOMPLETE';
+                    throw err;
+                }
+                const arg = parseAddSub();
+                if (!peek() || peek().type !== 'RPAREN') {
+                    const err = new Error(`Incomplete expression — close parenthesis for ${fnName}().`);
+                    err.code = 'INCOMPLETE';
+                    throw err;
+                }
+                consume();
+                return applyFunction(fnName, arg);
+            }
+            // Allow prefix shorthand like √81, √-4, sin30°
+            if (!peek()) {
+                const err = new Error(`Incomplete expression — enter a number after ${fnName === 'sqrt' ? '√' : fnName}.`);
+                err.code = 'INCOMPLETE';
+                throw err;
+            }
+            const arg = parseUnary();
+            return applyFunction(fnName, arg);
+        }
+
+        if (tok.type === 'RPAREN') {
+            const err = new Error('Unexpected ")" — check parentheses.');
+            err.code = 'SYNTAX';
+            throw err;
+        }
+
+        const err = new Error('Invalid expression — check operators or syntax.');
+        err.code = 'SYNTAX';
+        throw err;
+    }
+
+    const result = parseAddSub();
+    if (pos < tokens.length) {
+        const extra = tokens[pos];
+        const err = new Error(extra.type === 'RPAREN'
+            ? 'Unmatched closing parenthesis ")".'
+            : 'Invalid expression — unexpected input at end.');
+        err.code = 'SYNTAX';
+        throw err;
+    }
+
+    if (typeof result !== 'number' || Number.isNaN(result)) {
+        const err = new Error('Invalid mathematical result.');
+        err.code = 'SYNTAX';
+        throw err;
+    }
+    if (!Number.isFinite(result)) {
+        const err = new Error('Cannot divide by zero.');
+        err.code = 'DIV_ZERO';
+        throw err;
+    }
+
+    const formatted = formatBpgCalcNumber(result);
+    return { value: Number(formatted), formatted };
+}
+
+window.evaluateBpgMathExpression = evaluateBpgMathExpression;
 
 function toggleMiniCalculator() {
     if (typeof isMaintenanceModeActive === 'function' && isMaintenanceModeActive()) {
@@ -231,6 +651,7 @@ function toggleMiniCalculator() {
     flyout.classList.toggle('open');
     if (flyout.classList.contains('open')) {
         setCalculatorMode(miniCalcMode);
+        syncMiniCalcAngleUI();
         updateMiniCalcDisplay();
         renderMiniCalcHistory();
     }
@@ -246,14 +667,46 @@ function setCalculatorMode(mode) {
     if (basicBtn) basicBtn.classList.toggle('active', miniCalcMode === 'basic');
     if (sciBtn) sciBtn.classList.toggle('active', miniCalcMode === 'scientific');
     if (flyout) flyout.classList.toggle('is-scientific', miniCalcMode === 'scientific');
-    updateMiniCalcStatusLine();
+    syncMiniCalcAngleUI();
+    if (!miniCalcJustEvaluated && !miniCalcHasError) {
+        updateMiniCalcStatusLine();
+    }
+}
+
+function syncMiniCalcAngleUI() {
+    const isRad = miniCalcAngleMode === 'RAD';
+    const btn = document.getElementById('calcAngleToggleBtn');
+    if (btn) {
+        btn.textContent = miniCalcAngleMode;
+        btn.classList.toggle('mode-deg', !isRad);
+        btn.classList.toggle('mode-rad', isRad);
+        btn.setAttribute('aria-label', `Angle mode ${miniCalcAngleMode}`);
+        btn.setAttribute('title', isRad
+            ? 'Angle mode: Radians (click to switch to Degrees)'
+            : 'Angle mode: Degrees (click to switch to Radians)');
+    }
+    const badge = document.getElementById('calcActiveAngleBadge');
+    if (badge) {
+        badge.textContent = miniCalcAngleMode;
+        badge.classList.toggle('mode-deg', !isRad);
+        badge.classList.toggle('mode-rad', isRad);
+    }
 }
 
 function toggleMiniCalcAngle() {
     miniCalcAngleMode = miniCalcAngleMode === 'DEG' ? 'RAD' : 'DEG';
-    const btn = document.getElementById('calcAngleToggleBtn');
-    if (btn) btn.textContent = miniCalcAngleMode;
-    updateMiniCalcStatusLine();
+    syncMiniCalcAngleUI();
+    if (!miniCalcJustEvaluated && !miniCalcHasError) {
+        updateMiniCalcStatusLine();
+    }
+}
+
+function setMiniCalcAngleMode(mode) {
+    miniCalcAngleMode = String(mode || 'DEG').toUpperCase() === 'RAD' ? 'RAD' : 'DEG';
+    syncMiniCalcAngleUI();
+    if (!miniCalcJustEvaluated && !miniCalcHasError) {
+        updateMiniCalcStatusLine();
+    }
 }
 
 function updateMiniCalcStatusLine(overrideExpr) {
@@ -263,8 +716,8 @@ function updateMiniCalcStatusLine(overrideExpr) {
         hist.textContent = overrideExpr;
         return;
     }
-    const modeLabel = miniCalcMode === 'scientific' ? 'Scientific' : 'Basic';
-    hist.textContent = `${miniCalcAngleMode} · ${modeLabel}`;
+    const modeLabel = miniCalcMode === 'scientific' ? 'Scientific Mode' : 'Basic Mode';
+    hist.textContent = modeLabel;
 }
 
 function showMiniCalcError(msg) {
@@ -307,6 +760,8 @@ function renderMiniCalcHistory() {
 function reuseMiniCalcHistory(idx) {
     const item = miniCalcHistory[idx];
     if (!item) return;
+    miniCalcHasError = false;
+    miniCalcJustEvaluated = false;
     showMiniCalcError('');
     miniCalcExpr = String(item.result);
     updateMiniCalcDisplay(miniCalcExpr);
@@ -319,20 +774,107 @@ function clearMiniCalcHistory() {
 
 function calcUseLastAns() {
     showMiniCalcError('');
+    miniCalcHasError = false;
+    if (miniCalcJustEvaluated) {
+        miniCalcExpr = '';
+        miniCalcJustEvaluated = false;
+    }
     miniCalcExpr += String(miniCalcLastAns);
     updateMiniCalcDisplay();
 }
 
 function calcAppend(val) {
+    if (val === undefined || val === null) return;
+    let token = String(val);
+
+    // Map ASCII shorthand into clean math symbols for display
+    if (token === '*') token = '×';
+    else if (token === '/') token = '÷';
+    else if (token === '-') token = '−';
+    else if (token === 'pi') token = 'π';
+    else if (token === 'sqrt(') token = '√(';
+    else if (token === 'log(') token = 'log₁₀(';
+    else if (token === '^2') token = '²';
+    else if (token === '^3') token = '³';
+
+    const isBinaryOrPostfix = ['+', '−', '×', '÷', '^', '²', '³', '%', '°', '!'].includes(token);
+
+    if (miniCalcHasError) {
+        showMiniCalcError('');
+        miniCalcHasError = false;
+        // Let the user continue fixing the expression in-place (or start fresh on Clear)
+    }
+
+    if (miniCalcJustEvaluated) {
+        if (!isBinaryOrPostfix) {
+            miniCalcExpr = '';
+            updateMiniCalcStatusLine();
+        } else {
+            updateMiniCalcStatusLine();
+        }
+        miniCalcJustEvaluated = false;
+    }
+
+    // Prevent two decimals in the same number segment (e.g. 3.1.2)
+    if (token === '.') {
+        const lastNumMatch = miniCalcExpr.match(/[0-9.]+$/);
+        if (lastNumMatch && lastNumMatch[0].includes('.')) {
+            return;
+        }
+        if (!lastNumMatch) {
+            token = '0.';
+        }
+    }
+
+    // If starting with binary operator on empty screen (except minus), prepend 0
+    if (!miniCalcExpr && ['+', '×', '÷', '^', '²', '³', '%'].includes(token)) {
+        miniCalcExpr = '0';
+    }
+
+    miniCalcExpr += token;
+    updateMiniCalcDisplay();
+}
+
+function calcToggleSign() {
     showMiniCalcError('');
-    if (val === 'pi') val = 'π';
-    if (val === 'e') val = 'e';
-    miniCalcExpr += val;
+    miniCalcHasError = false;
+    miniCalcJustEvaluated = false;
+
+    if (!miniCalcExpr) {
+        miniCalcExpr = '−';
+        updateMiniCalcDisplay();
+        return;
+    }
+    // If the entire expression is a single signed/unsigned number, toggle its leading minus
+    if (/^[−-]?\d+(\.\d+)?$/.test(miniCalcExpr)) {
+        miniCalcExpr = (miniCalcExpr.startsWith('−') || miniCalcExpr.startsWith('-'))
+            ? miniCalcExpr.slice(1)
+            : `−${miniCalcExpr}`;
+        updateMiniCalcDisplay();
+        return;
+    }
+    // If ending with "(−number)", unwrap back to "number"
+    const wrappedNeg = miniCalcExpr.match(/\(−(\d+(?:\.\d+)?)\)$/);
+    if (wrappedNeg) {
+        miniCalcExpr = miniCalcExpr.slice(0, -wrappedNeg[0].length) + wrappedNeg[1];
+        updateMiniCalcDisplay();
+        return;
+    }
+    // If ending with a trailing number, negate it cleanly as "(−number)"
+    const trailingNum = miniCalcExpr.match(/(\d+(?:\.\d+)?)$/);
+    if (trailingNum) {
+        miniCalcExpr = miniCalcExpr.slice(0, -trailingNum[1].length) + `(−${trailingNum[1]})`;
+        updateMiniCalcDisplay();
+        return;
+    }
+    miniCalcExpr += '−';
     updateMiniCalcDisplay();
 }
 
 function calcClear() {
     miniCalcExpr = '';
+    miniCalcJustEvaluated = false;
+    miniCalcHasError = false;
     showMiniCalcError('');
     updateMiniCalcStatusLine();
     updateMiniCalcDisplay('0');
@@ -340,196 +882,125 @@ function calcClear() {
 
 function calcBackspace() {
     showMiniCalcError('');
-    miniCalcExpr = miniCalcExpr.slice(0, -1);
+    if (miniCalcHasError) {
+        // Recover from error state cleanly: delete last token/char so user can fix the expression
+        miniCalcHasError = false;
+    }
+    miniCalcJustEvaluated = false;
+
+    if (!miniCalcExpr) {
+        updateMiniCalcStatusLine();
+        updateMiniCalcDisplay('0');
+        return;
+    }
+
+    // Delete multi-character function tokens like "sin(", "log₁₀(", "sin⁻¹(" in a single press
+    let removed = false;
+    for (const fnTok of CALC_MULTI_CHAR_TOKENS) {
+        if (miniCalcExpr.endsWith(fnTok)) {
+            miniCalcExpr = miniCalcExpr.slice(0, -fnTok.length);
+            removed = true;
+            break;
+        }
+    }
+    if (!removed) {
+        miniCalcExpr = miniCalcExpr.slice(0, -1);
+    }
+
+    if (!miniCalcExpr) {
+        updateMiniCalcStatusLine();
+    }
     updateMiniCalcDisplay(miniCalcExpr || '0');
 }
 
 function updateMiniCalcDisplay(override) {
     const scr = document.getElementById('calcScreen');
-    if (scr) scr.textContent = override !== undefined ? override : (miniCalcExpr || '0');
+    if (scr) {
+        scr.textContent = override !== undefined ? override : (miniCalcExpr || '0');
+        scr.scrollLeft = scr.scrollWidth;
+    }
 }
 
 function calcEvaluate() {
-    if (!miniCalcExpr) return;
+    if (!miniCalcExpr || !miniCalcExpr.trim()) return;
     showMiniCalcError('');
     const rawExpr = miniCalcExpr.trim();
+
     try {
-        // Balance check for parentheses
-        let depth = 0;
-        for (const ch of rawExpr) {
-            if (ch === '(') depth++;
-            else if (ch === ')') depth--;
-            if (depth < 0) throw new Error('SYNTAX');
-        }
-        if (depth !== 0) throw new Error('SYNTAX');
+        const { value, formatted } = evaluateBpgMathExpression(rawExpr, miniCalcAngleMode);
+        miniCalcLastAns = value;
+        miniCalcJustEvaluated = true;
+        miniCalcHasError = false;
 
-        const trigWrap = (fn) => miniCalcAngleMode === 'DEG'
-            ? `((v)=>Math.${fn}((v)*Math.PI/180))(`
-            : `Math.${fn}(`;
-
-        let parsed = rawExpr
-            .replace(/×/g, '*')
-            .replace(/÷/g, '/')
-            .replace(/−/g, '-')
-            .replace(/(\d|\)|π|e)(π|e|sin\(|cos\(|tan\(|log\(|ln\(|sqrt\()/g, '$1*$2')
-            .replace(/(\d)(π)/g, '$1*$2')
-            .replace(/(π|e)(\d)/g, '$1*$2')
-            .replace(/(\d+(?:\.\d+)?)%/g, '($1/100)')
-            .replace(/π/g, 'Math.PI')
-            .replace(/\be\b/g, 'Math.E')
-            .replace(/sqrt\(/g, 'Math.sqrt(')
-            .replace(/sin\(/g, trigWrap('sin'))
-            .replace(/cos\(/g, trigWrap('cos'))
-            .replace(/tan\(/g, trigWrap('tan'))
-            .replace(/log\(/g, 'Math.log10(')
-            .replace(/ln\(/g, 'Math.log(')
-            .replace(/\^/g, '**');
-
-        const res = Function(`"use strict"; return (${parsed});`)();
-        if (typeof res !== 'number' || Number.isNaN(res)) {
-            throw new Error('SYNTAX');
-        }
-        if (!Number.isFinite(res)) {
-            throw new Error('DIV_ZERO');
-        }
-        const rounded = Math.abs(res - Math.round(res)) < 1e-11
-            ? Math.round(res)
-            : Number(res.toFixed(8));
-
-        miniCalcLastAns = rounded;
-        miniCalcHistory.unshift({ expr: rawExpr, result: rounded });
+        miniCalcHistory.unshift({ expr: rawExpr, result: formatted, mode: miniCalcAngleMode });
         if (miniCalcHistory.length > 25) miniCalcHistory.pop();
         renderMiniCalcHistory();
+
         updateMiniCalcStatusLine(`${rawExpr} =`);
-        miniCalcExpr = String(rounded);
-        updateMiniCalcDisplay(miniCalcExpr);
+        miniCalcExpr = formatted;
+        updateMiniCalcDisplay(formatted);
     } catch (e) {
-        if (e && e.message === 'DIV_ZERO') {
-            showMiniCalcError('Cannot divide by zero.');
-            updateMiniCalcDisplay('Undefined');
-        } else {
-            showMiniCalcError('Invalid expression — check syntax or parentheses.');
-            updateMiniCalcDisplay('Error');
-        }
+        miniCalcHasError = true;
+        miniCalcJustEvaluated = false;
+        const msg = (e && e.message) ? e.message : 'Invalid expression — check syntax or parentheses.';
+        showMiniCalcError(msg);
+        updateMiniCalcStatusLine(rawExpr);
+        const screenLabel = (e && (e.code === 'DIV_ZERO' || e.code === 'ASYMPTOTE')) ? 'Undefined' : 'Error';
+        updateMiniCalcDisplay(screenLabel);
     }
 }
 
-
-/* --------------------------------------------------------------------------
-   4. SCIENTIFIC CALCULATOR (KEYBOARD-SUPPORTED + HISTORY DRAWER)
-   -------------------------------------------------------------------------- */
-let calcExpr = '';
-let calcAns = 0;
-let calcAngleMode = 'DEG';
-let calcHistory = [];
-
-function updateCalcDisplay(valText) {
-    document.getElementById('calcExprDisplay').textContent = calcExpr || 'Ready (Keyboard Supported)';
-    document.getElementById('calcValDisplay').textContent = valText !== undefined ? valText : (calcExpr || '0');
-}
-
-function toggleCalcAngle() {
-    calcAngleMode = calcAngleMode === 'DEG' ? 'RAD' : 'DEG';
-    document.getElementById('calcAngleBtn').textContent = calcAngleMode;
-}
-
-function toggleCalcHistoryDrawer() {
-    document.getElementById('calcHistoryDrawer')?.classList.toggle('open');
-}
-
-function renderCalcHistory() {
-    const list = document.getElementById('calcHistoryList');
-    if (!list) return;
-    if (calcHistory.length === 0) {
-        list.innerHTML = `<div class="calc-history-empty">No calculations yet. Type on your keyboard or use the keypad.</div>`;
-        return;
-    }
-    list.innerHTML = calcHistory.map((item, idx) => `
-        <div class="calc-history-item" onclick="reuseCalcHistory(${idx})" title="Click to reuse result">
-            <span>${item.expr} =</span>
-            <strong style="color:var(--accent-navy);">${item.result}</strong>
-        </div>
-    `).join('');
-}
-
-function reuseCalcHistory(idx) {
-    const item = calcHistory[idx];
-    if (!item) return;
-    calcExpr = String(item.result);
-    updateCalcDisplay(calcExpr);
-}
-
-function clearCalcHistory() {
-    calcHistory = [];
-    renderCalcHistory();
-}
-
-function appendCalc(ch) { calcExpr += ch; updateCalcDisplay(); }
-
-function toggleCalcSign() {
-    if (!calcExpr) return;
-    calcExpr = calcExpr.startsWith('-') ? calcExpr.slice(1) : `-${calcExpr}`;
-    updateCalcDisplay();
-}
-
+// Legacy compatibility aliases routed to the unified calculator
+function toggleCalcAngle() { toggleMiniCalcAngle(); }
+function toggleCalcHistoryDrawer() { toggleMiniCalcHistory(); }
+function clearCalcHistory() { clearMiniCalcHistory(); }
+function appendCalc(ch) { calcAppend(ch); }
+function toggleCalcSign() { calcToggleSign(); }
+function clearCalc() { calcClear(); }
+function backspaceCalc() { calcBackspace(); }
+function evaluateCalc() { calcEvaluate(); }
 function appendScientific(fn) {
-    const map = { sin: 'sin(', cos: 'cos(', tan: 'tan(', log: 'log(', ln: 'ln(', sqrt: '√(', sq: '^2', pow: '^', pi: 'π', e: 'e', ans: String(calcAns) };
-    calcExpr += map[fn] || '';
-    updateCalcDisplay();
-}
-
-function clearCalc() { calcExpr = ''; updateCalcDisplay('0'); }
-function backspaceCalc() { calcExpr = calcExpr.slice(0, -1); updateCalcDisplay(); }
-
-function evaluateCalc() {
-    if (!calcExpr) return;
-    const rawExpr = calcExpr;
-    try {
-        const toRad = calcAngleMode === 'DEG' ? `(Math.PI/180)*` : '';
-        const parsed = calcExpr
-            .replace(/×/g, '*').replace(/÷/g, '/')
-            .replace(/π/g, 'Math.PI').replace(/\be\b/g, 'Math.E')
-            .replace(/√\(/g, 'Math.sqrt(')
-            .replace(/sin\(/g, `Math.sin(${toRad}`)
-            .replace(/cos\(/g, `Math.cos(${toRad}`)
-            .replace(/tan\(/g, `Math.tan(${toRad}`)
-            .replace(/log\(/g, 'Math.log10(').replace(/ln\(/g, 'Math.log(')
-            .replace(/\^/g, '**');
-        const res = Function(`"use strict"; return (${parsed})`)();
-        calcAns = Number(res.toFixed(8));
-        calcHistory.unshift({ expr: rawExpr, result: calcAns });
-        if (calcHistory.length > 20) calcHistory.pop();
-        renderCalcHistory();
-        updateCalcDisplay(String(calcAns));
-    } catch (e) {
-        updateCalcDisplay('Syntax Error');
-    }
+    const map = { sin: 'sin(', cos: 'cos(', tan: 'tan(', log: 'log₁₀(', ln: 'ln(', sqrt: '√(', sq: '²', cube: '³', pow: '^', pi: 'π', e: 'e', deg: '°' };
+    if (fn === 'ans') calcUseLastAns();
+    else if (map[fn]) calcAppend(map[fn]);
 }
 
 window.addEventListener('keydown', e => {
     const widget = document.getElementById('calcFlyoutWindow') || document.getElementById('draggableCalcWidget');
     if (!widget || !widget.classList.contains('open')) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     const tag = document.activeElement?.tagName?.toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
 
-    if (/^[0-9.()+\-%^]$/.test(e.key)) {
+    if (/^[0-9.()+%^\-]$/.test(e.key)) {
         e.preventDefault();
         calcAppend(e.key);
     } else if (e.key === '*') {
         e.preventDefault();
-        calcAppend('*');
+        calcAppend('×');
     } else if (e.key === '/') {
         e.preventDefault();
-        calcAppend('/');
+        calcAppend('÷');
     } else if (e.key === 'Enter' || e.key === '=') {
         e.preventDefault();
         calcEvaluate();
     } else if (e.key === 'Backspace') {
         e.preventDefault();
         calcBackspace();
-    } else if (e.key === 'Escape') {
+    } else if (e.key === 'Escape' || e.key === 'Delete') {
         e.preventDefault();
         calcClear();
+    } else if (miniCalcMode === 'scientific') {
+        const lower = e.key.toLowerCase();
+        if (lower === 's') { e.preventDefault(); calcAppend('sin('); }
+        else if (lower === 'c') { e.preventDefault(); calcAppend('cos('); }
+        else if (lower === 't') { e.preventDefault(); calcAppend('tan('); }
+        else if (lower === 'l') { e.preventDefault(); calcAppend('log₁₀('); }
+        else if (lower === 'n') { e.preventDefault(); calcAppend('ln('); }
+        else if (lower === 'r') { e.preventDefault(); calcAppend('√('); }
+        else if (lower === 'p') { e.preventDefault(); calcAppend('π'); }
+        else if (lower === 'e') { e.preventDefault(); calcAppend('e'); }
+        else if (lower === 'd') { e.preventDefault(); calcAppend('°'); }
     }
 });
 
@@ -537,9 +1008,6 @@ function initDraggableCalculator() {
     const widget = document.getElementById('calcFlyoutWindow') || document.getElementById('draggableCalcWidget');
     if (!widget) return;
     const handle = document.getElementById('calcDragHandle');
-    const closeBtn = widget.querySelector('.calc-close-btn') || document.getElementById('calcWidgetCloseBtn');
-
-    closeBtn?.addEventListener('click', () => widget.classList.remove('open'));
 
     let isDragging = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
     const startDrag = (cx, cy) => {

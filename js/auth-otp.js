@@ -258,6 +258,9 @@ async function handleLocalGoogleSubmit(e) {
         if (Array.isArray(data.mySwitchRequests)) {
             window.MY_CLASS_SWITCH_REQUESTS = data.mySwitchRequests;
         }
+        if (Array.isArray(data.myPayments)) {
+            window.MY_PAYMENTS = data.myPayments;
+        }
         const user = Object.assign({}, data.user, {
             sessionToken: data.sessionToken,
             verified: true
@@ -517,11 +520,17 @@ async function handleSignInSubmit(e) {
             return;
         }
 
+        if (Array.isArray(data.mySwitchRequests)) {
+            window.MY_CLASS_SWITCH_REQUESTS = data.mySwitchRequests;
+        }
+        if (Array.isArray(data.myPayments)) {
+            window.MY_PAYMENTS = data.myPayments;
+        }
         const user = Object.assign({}, data.user, {
             sessionToken: data.sessionToken,
             verified: true
         });
-        finalizeVerifiedStudentAccount(user, false);
+        await finalizeVerifiedStudentAccount(user, false, true);
     } catch (err) {
         showToast('Unable to reach server. Please try again.');
     } finally {
@@ -810,7 +819,7 @@ async function handleVerifyEmailOtp(e) {
             sessionToken: data.sessionToken,
             verified: true
         });
-        finalizeVerifiedStudentAccount(user, false, true);
+        await finalizeVerifiedStudentAccount(user, false, true);
     } catch (err) {
         const msg = 'Verification error. Please check your 6-digit code.';
         if (errBanner) {

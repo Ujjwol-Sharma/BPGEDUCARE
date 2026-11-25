@@ -120,6 +120,12 @@ function handleContinueToClass() {
         switchClassTab(last.classShortKey, tab, document.getElementById(`tab-${last.classShortKey}-${tab}`));
         return;
     }
+    const myClass = getStudentRegisteredClass();
+    if (['c10', 'c11', 'c12', 'entrance'].includes(myClass) && hasAccessToClass(myClass)) {
+        switchPortal(`view-${myClass}`);
+        switchClassTab(myClass, 'notes', document.getElementById(`tab-${myClass}-notes`));
+        return;
+    }
     openClassSelectionView();
 }
 
@@ -188,11 +194,12 @@ function isUserAuthenticated() {
 
 function normalizeClassKey(key) {
     if (!key) return 'c12';
-    const k = String(key).toLowerCase().trim().replace('view-', '');
-    if (k === 'c10' || k === 'class-10' || k === 'class10' || k === '10') return 'c10';
-    if (k === 'c11' || k === 'class-11' || k === 'class11' || k === '11') return 'c11';
+    const k = String(key).toLowerCase().trim().replace('view-', '').replace(/\s+/g, '-');
+    if (k === 'c10' || k === 'class-10' || k === 'class10' || k === '10' || k.includes('10')) return 'c10';
+    if (k === 'c11' || k === 'class-11' || k === 'class11' || k === '11' || k.includes('11')) return 'c11';
     if (k === 'c12' || k === 'class-12' || k === 'class12' || k === '12') return 'c12';
-    if (k === 'entrance' || k === 'after-12' || k === 'after12' || k === 'ioe' || k === 'cee' || k === 'ku') return 'entrance';
+    if (k === 'entrance' || k === 'after-12' || k === 'after12' || k.includes('after-12') || k.includes('entrance') || k === 'ioe' || k === 'cee' || k === 'ku') return 'entrance';
+    if (k.includes('12')) return 'c12';
     if (k === 'home' || k === 'about' || k === '') return 'home';
     return k;
 }
@@ -1174,16 +1181,26 @@ function handleSwitchAccountRegister() {
 }
 
 function handleSignOutSilent() {
-    isAuthenticated = false;
-    localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
-    localStorage.removeItem('bpg_student_session');
-    localStorage.removeItem('bpg_student_class');
-    document.body.classList.remove('user-authenticated');
-    const userWrap = document.getElementById('userDropdownWrap');
-    if (userWrap) userWrap.style.display = 'none';
-    const signBtn = document.getElementById('headerGoogleBtn');
-    if (signBtn) signBtn.style.display = 'inline-flex';
+    if (typeof isAuthenticated !== 'undefined') isAuthenticated = false;
+    try {
+        localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
+        localStorage.removeItem('bpg_maths_academy_session_v1');
+        localStorage.removeItem('bpg_student_session_v2');
+        localStorage.removeItem('bpg_student_session');
+        localStorage.removeItem('bpg_student_class');
+        localStorage.removeItem(BPG_LAST_CLASS_ACTIVITY_KEY);
+    } catch (e) {}
+    window.MY_PAYMENTS = [];
+    window.MY_CLASS_SWITCH_REQUESTS = [];
+    const payBanner = document.getElementById('studentDashboardPaymentBanner');
+    if (payBanner) {
+        payBanner.style.display = 'none';
+        payBanner.innerHTML = '';
+    }
+    closeUserDropdown();
+    updateAuthUserPill();
     switchPortal('view-home');
+    try { history.replaceState(null, '', '#home'); } catch (e) {}
 }
 
 /* --------------------------------------------------------------------------
