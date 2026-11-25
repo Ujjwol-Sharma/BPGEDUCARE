@@ -1,6 +1,6 @@
 {
-  "revision": 106,
-  "lastUpdated": "2026-11-25T15:34:17.770Z",
+  "revision": 107,
+  "lastUpdated": "2026-11-25T15:37:38.014Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795621058014_awn2",
+      "timestamp": "2026-11-25T15:37:38.014Z",
+      "userId": "usr_643ae97cc185",
+      "email": "ashish.adhikari.314@gmail.com",
+      "actor": "Ashish Adhikari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795620857770_prsp",
       "timestamp": "2026-11-25T15:34:17.770Z",
@@ -642,6 +651,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_643ae97cc185",
+      "name": "Ashish Adhikari",
+      "username": "ashish.adhikari.314",
+      "email": "ashish.adhikari.314@gmail.com",
+      "canonicalEmail": "ashishadhikari314@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T15:37:37.959Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_643ae97cc185b429",
+      "avatarUrl": "",
+      "passkey": "scrypt$925fdff0fa849632a882d9431873acf3$604491467b2599f85ebd1177efc2e91aa6324595b268ad49859f96069f44acc01a5f14fde2c8190768361579c7d0a7081eceb2c846c34b62aac7418a2ce9b645",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T15:37:38.014Z",
+      "lastModifiedBy": "Ashish Adhikari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795621058014_oir8",
+          "timestamp": "2026-11-25T15:37:38.014Z",
+          "actor": "Ashish Adhikari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_5264e9c810f7",
       "name": "Dikshya Pokhrel",
