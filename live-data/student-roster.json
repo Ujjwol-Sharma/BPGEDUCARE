@@ -1,6 +1,6 @@
 {
-  "revision": 95,
-  "lastUpdated": "2026-11-25T13:44:27.813Z",
+  "revision": 96,
+  "lastUpdated": "2026-11-25T14:33:17.721Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795617197721_9ytr",
+      "timestamp": "2026-11-25T14:33:17.721Z",
+      "userId": "usr_312a69d2027b",
+      "email": "sakshyambk0@gmail.com",
+      "actor": "Sakshyam B.K. (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795614198401_cklv",
       "timestamp": "2026-11-25T13:43:18.401Z",
@@ -543,6 +552,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_312a69d2027b",
+      "name": "Sakshyam B.K.",
+      "username": "sakshyambk0",
+      "email": "sakshyambk0@gmail.com",
+      "canonicalEmail": "sakshyambk0@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T14:33:17.654Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_312a69d2027bcdc7",
+      "avatarUrl": "",
+      "passkey": "scrypt$988c9008d19dccf752dafa13ebe86f96$c8d23ae10362302469c0b5bdae27ea18b375f82613780bea2b7269ce7a03223177982c39ce447b70f77a82cee0d0b9db9fb4083fd94d7d54297d56600aa66c85",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T14:33:17.721Z",
+      "lastModifiedBy": "Sakshyam B.K. (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795617197721_yyb3",
+          "timestamp": "2026-11-25T14:33:17.721Z",
+          "actor": "Sakshyam B.K. (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_b91fd463da75",
       "name": "Soniya Dhungana",
