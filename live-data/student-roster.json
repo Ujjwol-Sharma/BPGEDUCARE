@@ -1,6 +1,6 @@
 {
-  "revision": 100,
-  "lastUpdated": "2026-11-25T14:50:08.422Z",
+  "revision": 101,
+  "lastUpdated": "2026-11-25T14:56:26.796Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795618586796_050s",
+      "timestamp": "2026-11-25T14:56:26.796Z",
+      "userId": "usr_aa332a2e92c8",
+      "email": "uniketamang8@gmail.com",
+      "actor": "Unike Tamang (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795618208422_7jhk",
       "timestamp": "2026-11-25T14:50:08.422Z",
@@ -588,6 +597,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_aa332a2e92c8",
+      "name": "Unike Tamang",
+      "username": "uniketamang8",
+      "email": "uniketamang8@gmail.com",
+      "canonicalEmail": "uniketamang8@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T14:56:26.736Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$1b9084b83bf36b4844dabbb868846612$70684749eddc52e2da3a2c12529e8e68c18b6162a1e998d6f76c354f044e7a4b5b77a49980d84d44b93d262b842715a1e33fd22a148ee728d68d94c4064e6e8f",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T14:56:26.796Z",
+      "lastModifiedBy": "Unike Tamang (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795618586796_7ewz",
+          "timestamp": "2026-11-25T14:56:26.796Z",
+          "actor": "Unike Tamang (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_253246e8adf9",
       "name": "Nabin",
