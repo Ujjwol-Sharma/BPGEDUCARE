@@ -1,6 +1,6 @@
 {
-  "revision": 96,
-  "lastUpdated": "2026-11-25T14:33:17.721Z",
+  "revision": 97,
+  "lastUpdated": "2026-11-25T14:35:13.987Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795617313987_3fi8",
+      "timestamp": "2026-11-25T14:35:13.987Z",
+      "userId": "usr_6cb3f51630c9",
+      "email": "utsavsharma647@gmail.com",
+      "actor": "utsav sharma (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795617197721_9ytr",
       "timestamp": "2026-11-25T14:33:17.721Z",
@@ -552,6 +561,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_6cb3f51630c9",
+      "name": "utsav sharma",
+      "username": "utsavsharma647",
+      "email": "utsavsharma647@gmail.com",
+      "canonicalEmail": "utsavsharma647@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T14:35:13.926Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$485675dfe12fbffa1680d6fc3f86efcc$8e14f36f9ff2e40b1c926c989115820f4fc2ce5e858da27e2ce29b14bcbfb399e45544a88895b2fa677847d39f810d2617efd257777031f324c53f3b138bbced",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T14:35:13.987Z",
+      "lastModifiedBy": "utsav sharma (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795617313987_eai0",
+          "timestamp": "2026-11-25T14:35:13.987Z",
+          "actor": "utsav sharma (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_312a69d2027b",
       "name": "Sakshyam B.K.",
