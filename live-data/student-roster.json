@@ -1,6 +1,6 @@
 {
-  "revision": 134,
-  "lastUpdated": "2026-11-25T18:01:56.203Z",
+  "revision": 135,
+  "lastUpdated": "2026-11-25T18:02:02.449Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795629722449_uuor",
+      "timestamp": "2026-11-25T18:02:02.449Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+      "details": "Creative Chess Club: DIAMOND activated via verified payment (ORD-1795629710591-0A1AE1)"
+    },
     {
       "id": "raud_1795629716203_y2qb",
       "timestamp": "2026-11-25T18:01:56.203Z",
@@ -1402,7 +1411,7 @@
       "grade": "Class 12",
       "classKey": "class-12",
       "plan": "diamond",
-      "planExpiresAt": "",
+      "planExpiresAt": "2027-11-25T18:02:02.449Z",
       "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
@@ -1419,9 +1428,16 @@
         "notif_1795622839468"
       ],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T18:01:50.592Z",
-      "lastModifiedBy": "Creative Chess Club (Student)",
+      "updatedAt": "2026-11-25T18:02:02.449Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795629722449_9wzl",
+          "timestamp": "2026-11-25T18:02:02.449Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+          "details": "Order ORD-1795629710591-0A1AE1 (Txn N/A, NPR 2999) confirmed PAID. Plan DIAMOND -> DIAMOND (expires 2027-11-25)"
+        },
         {
           "id": "aud_1795629710592_n2aw",
           "timestamp": "2026-11-25T18:01:50.592Z",
@@ -1589,13 +1605,6 @@
           "actor": "Chess Club (Student)",
           "action": "PAYMENT_PENDING",
           "details": "Order ORD-1795531610243-091C49 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795519735342_a5tf",
-          "timestamp": "2026-11-24T11:28:55.342Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_APPROVED",
-          "details": "Approved class switch from Class 11 to Class 12"
         }
       ]
     },
