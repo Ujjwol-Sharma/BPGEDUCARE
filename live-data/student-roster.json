@@ -1,6 +1,6 @@
 {
-  "revision": 121,
-  "lastUpdated": "2026-11-25T16:56:17.878Z",
+  "revision": 122,
+  "lastUpdated": "2026-11-25T16:56:47.808Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795625807808_1rdp",
+      "timestamp": "2026-11-25T16:56:47.808Z",
+      "userId": "usr_0cae2b14a0d9",
+      "email": "sulabk89@gmail.com",
+      "actor": "Sulab Kc (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795624892733_ywet",
       "timestamp": "2026-11-25T16:41:32.733Z",
@@ -810,6 +819,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_0cae2b14a0d9",
+      "name": "Sulab Kc",
+      "username": "sulabk89",
+      "email": "sulabk89@gmail.com",
+      "canonicalEmail": "sulabk89@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T16:56:47.747Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_0cae2b14a0d90af2",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$17c7010dfe51873abe3d4539e37f95d1$a5214a68e5b0c51427ef9ad5b09befc44f3befab2a3d2606eb9f9cdbaed9b7f7308e0008055068f2fcde17e3e3f3bab7de44d38153b92582ae32d1eaf5f2ad21",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T16:56:47.808Z",
+      "lastModifiedBy": "Sulab Kc (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795625807808_j1tm",
+          "timestamp": "2026-11-25T16:56:47.808Z",
+          "actor": "Sulab Kc (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_d6872f7a8cbc",
       "name": "Bishal chhetri",
