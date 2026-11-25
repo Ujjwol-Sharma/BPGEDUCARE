@@ -1,8 +1,17 @@
 {
-  "revision": 28,
-  "lastUpdated": "2026-11-25T15:54:14.358Z",
+  "revision": 29,
+  "lastUpdated": "2026-11-25T15:54:45.907Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795622085907_5o2a",
+      "timestamp": "2026-11-25T15:54:45.907Z",
+      "userId": "usr_0b94641ca0cc",
+      "email": "chirangbgyawali@gmail.com",
+      "actor": "Chiran Gyawali (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795622054358_0fa2",
       "timestamp": "2026-11-25T15:54:14.358Z",
@@ -23,6 +32,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_0b94641ca0cc",
+      "name": "Chiran Gyawali",
+      "username": "chirangbgyawali",
+      "email": "chirangbgyawali@gmail.com",
+      "canonicalEmail": "chirangbgyawali@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T15:54:45.847Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_0b94641ca0ccccdc",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$395d8fd70ffe5aaed795e9e39eeb2dec$1e819215167440db6eb71d8a9f577e95d12e448bb418f65efd8254e6da866586a8438cdea97f5ddbd88bcd6b54a3aea6d2370129dc10464b2d1301739bb4489b",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T15:54:45.907Z",
+      "lastModifiedBy": "Chiran Gyawali (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795622085907_egbe",
+          "timestamp": "2026-11-25T15:54:45.907Z",
+          "actor": "Chiran Gyawali (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_25e888886ae4",
       "name": "Creative Chess Club",
