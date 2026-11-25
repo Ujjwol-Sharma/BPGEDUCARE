@@ -1,6 +1,6 @@
 {
-  "revision": 84,
-  "lastUpdated": "2026-11-25T12:47:09.917Z",
+  "revision": 85,
+  "lastUpdated": "2026-11-25T13:10:08.494Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795612208493_dpkn",
+      "timestamp": "2026-11-25T13:10:08.493Z",
+      "userId": "usr_6c0fd6ffc46c",
+      "email": "prativapaudel95@gmail.com",
+      "actor": "Prativa Paudel (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795610756257_nzej",
       "timestamp": "2026-11-25T12:45:56.257Z",
@@ -471,6 +480,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_6c0fd6ffc46c",
+      "name": "Prativa Paudel",
+      "username": "prativapaudel95",
+      "email": "prativapaudel95@gmail.com",
+      "canonicalEmail": "prativapaudel95@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T13:10:08.433Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$fccc25fce071f02d55a15a44b1d6bd9d$889720c025521fae578404e165f27bc01a8851c9ba4a63da38ff4cdb46f4fcdfa0cb8f3b1efc18899840dc9ad9e6c2ee6703414c2186b9d0a1c54b89e412b978",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T13:10:08.493Z",
+      "lastModifiedBy": "Prativa Paudel (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795612208493_6ih1",
+          "timestamp": "2026-11-25T13:10:08.493Z",
+          "actor": "Prativa Paudel (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_82b1ff28ecc3",
       "name": "Safal",
