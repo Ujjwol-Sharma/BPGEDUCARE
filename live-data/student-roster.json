@@ -1,6 +1,6 @@
 {
-  "revision": 133,
-  "lastUpdated": "2026-11-25T18:01:50.592Z",
+  "revision": 134,
+  "lastUpdated": "2026-11-25T18:01:56.203Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795629716203_y2qb",
+      "timestamp": "2026-11-25T18:01:56.203Z",
+      "userId": "usr_ab78663f0a4c",
+      "email": "rohan.sharma@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_PLAN_CHANGE",
+      "details": "Rohan Sharma: plan changed from DIAMOND to FREE"
+    },
     {
       "id": "raud_1795629213412_u0tt",
       "timestamp": "2026-11-25T17:53:33.412Z",
@@ -1072,12 +1081,12 @@
       "canonicalEmail": "rohansharma@gmail.com",
       "grade": "Class 11",
       "classKey": "class-11",
-      "plan": "diamond",
+      "plan": "free",
       "planExpiresAt": "",
       "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "paid",
+      "paymentStatus": "none",
       "emailVerified": true,
       "verifiedAt": "2026-11-03T09:00:00.000Z",
       "verificationMethod": "google_oauth",
@@ -1088,9 +1097,16 @@
       "passkey": "bpgstudent",
       "readNotificationIds": [],
       "joinedAt": "2026-11-03",
-      "updatedAt": "2026-11-25T16:23:03.864Z",
+      "updatedAt": "2026-11-25T18:01:56.202Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795629716202_4k6g",
+          "timestamp": "2026-11-25T18:01:56.202Z",
+          "actor": "Admin Console",
+          "action": "ADMIN_PLAN_CHANGE",
+          "details": "Changed plan from DIAMOND to FREE"
+        },
         {
           "id": "aud_1795623783864_a1sn",
           "timestamp": "2026-11-25T16:23:03.864Z",
