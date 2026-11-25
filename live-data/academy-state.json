@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T04:11:08.286Z",
+  "lastUpdated": "2026-11-25T04:11:47.980Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -573,10 +573,12 @@
         },
         {
           "code": "Unit 04",
-          "name": "Analytic Geometry (Pair of Straight Lines & Circle)",
-          "hours": "20 hrs",
-          "marks": "10 Marks",
-          "focus": "1 Long (5M) + 1 Short (4M) + 1 MCQ (1M)"
+          "name": "Analytic Geometry",
+          "hours": "9 hrs",
+          "marks": "Marks",
+          "focus": "1 Long (5M) + 1 Short (4M) + 1 MCQ (1M)",
+          "domain": "Analytic Geometry",
+          "weightage": "1 Long (5M) + 1 Short (4M) + 1 MCQ (1M)"
         },
         {
           "code": "Unit 05",
@@ -913,9 +915,9 @@
             {
               "id": "class-11-math-l4",
               "code": "Unit 04",
-              "title": "Analytic Geometry (Pair of Straight Lines & Circle)",
-              "hours": "20 hrs",
-              "marks": "10 Marks",
+              "title": "Analytic Geometry",
+              "hours": "9 hrs",
+              "marks": "Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -3319,6 +3321,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 60,
+  "revision": 61,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
