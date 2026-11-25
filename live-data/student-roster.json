@@ -1,8 +1,17 @@
 {
-  "revision": 30,
-  "lastUpdated": "2026-11-25T16:02:25.159Z",
+  "revision": 31,
+  "lastUpdated": "2026-11-25T16:02:56.964Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795622576964_1d4m",
+      "timestamp": "2026-11-25T16:02:56.964Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_PLAN_CHANGE",
+      "details": "Creative Chess Club: plan changed from FREE to DIAMOND"
+    },
     {
       "id": "raud_1795622545159_dp19",
       "timestamp": "2026-11-25T16:02:25.159Z",
@@ -84,11 +93,11 @@
       "canonicalEmail": "creativechessclub01@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
+      "plan": "diamond",
+      "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "paid",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T15:54:14.300Z",
       "verificationMethod": "google_oauth",
@@ -99,9 +108,16 @@
       "passkey": "scrypt$ee9c2986e6057ec9f9dd7ff94e2832a0$39cd5074db5e0e1059517557f31b7a65d581d2146724e288d580244d78c84b0c23161bcdc781cfac9065fecd086dbe3db908b02ae7f420ce23b120dc03f58c06",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:54:14.358Z",
-      "lastModifiedBy": "Creative Chess Club (Google Sign-Up)",
+      "updatedAt": "2026-11-25T16:02:56.964Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795622576964_a35f",
+          "timestamp": "2026-11-25T16:02:56.964Z",
+          "actor": "Admin Console",
+          "action": "ADMIN_PLAN_CHANGE",
+          "details": "Changed plan from FREE to DIAMOND"
+        },
         {
           "id": "aud_1795622054358_6qve",
           "timestamp": "2026-11-25T15:54:14.358Z",
