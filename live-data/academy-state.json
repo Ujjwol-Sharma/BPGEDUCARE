@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:30:23.583Z",
+  "lastUpdated": "2026-11-25T15:31:16.963Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1618,6 +1618,10 @@
                 {
                   "id": "sub_1795620618131_2",
                   "title": "1.2 L-Hospital Rule"
+                },
+                {
+                  "id": "sub_1795620670803_3",
+                  "title": "1.3 Tangent and Normal"
                 }
               ],
               "pdfs": [],
@@ -3511,6 +3515,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 93,
+  "revision": 94,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
