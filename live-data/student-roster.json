@@ -1,6 +1,6 @@
 {
-  "revision": 78,
-  "lastUpdated": "2026-11-25T12:35:36.601Z",
+  "revision": 79,
+  "lastUpdated": "2026-11-25T12:37:48.744Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -447,7 +447,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T12:35:36.543Z",
       "verificationMethod": "google_oauth",
@@ -456,9 +456,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:35:36.601Z",
-      "lastModifiedBy": "Aradhya Paudel (Google Sign-Up)",
+      "updatedAt": "2026-11-25T12:37:48.744Z",
+      "lastModifiedBy": "Aradhya Paudel (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795610268744_r5dp",
+          "timestamp": "2026-11-25T12:37:48.744Z",
+          "actor": "Aradhya Paudel (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795610268743-FADADC (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795610136601_dhup",
           "timestamp": "2026-11-25T12:35:36.601Z",
