@@ -1,6 +1,6 @@
 {
-  "revision": 126,
-  "lastUpdated": "2026-11-25T17:09:15.027Z",
+  "revision": 127,
+  "lastUpdated": "2026-11-25T17:15:33.457Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -858,7 +858,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$2f63148828f6d19bfdd3b7470caf8b81$a399d1fd2bc0f7c82f2301618b0e80e6b504af85028565c873f6d15f1a1e1796d89e37f7f0db0da8ea43471103a565f9eccd174d818026664d16c597bdbed81a",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795622839468"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T17:09:15.027Z",
       "lastModifiedBy": "Believe Gahatraj (Google Sign-Up)",
