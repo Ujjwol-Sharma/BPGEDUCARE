@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:42:40.283Z",
+  "lastUpdated": "2026-11-25T15:56:23.485Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2852,7 +2852,10 @@
       "durationMinutes": 30,
       "minPlan": "free",
       "adminAssignedPlan": true,
-      "status": "published",
+      "status": "draft",
+      "scheduledReleaseAt": "",
+      "releasedAt": "",
+      "releaseNotifiedAt": "",
       "questions": [
         {
           "id": "q_1795513742247_0",
@@ -2889,7 +2892,7 @@
         }
       ],
       "createdAt": "2026-11-24T09:53:08.725Z",
-      "updatedAt": "2026-11-24T09:53:08.725Z"
+      "updatedAt": "2026-11-25T15:56:23.484Z"
     }
   ],
   "zoomClasses": [],
@@ -3487,6 +3490,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 106,
+  "revision": 107,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
