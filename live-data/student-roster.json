@@ -1,6 +1,6 @@
 {
-  "revision": 31,
-  "lastUpdated": "2026-11-25T16:02:56.964Z",
+  "revision": 32,
+  "lastUpdated": "2026-11-25T16:03:31.983Z",
   "classSwitchRequests": [],
   "auditLog": [
     {
@@ -146,13 +146,20 @@
       "googleLinked": true,
       "googleSub": "gsub_974c713f29dd430d",
       "avatarUrl": "",
-      "hasPassword": false,
-      "passkey": "bpgstudent",
+      "hasPassword": true,
+      "passkey": "scrypt$19f3775001ef024187700bc00c0a4f88$377c0010e0200ab4baf458bfb2c37dcb72a1747041b0d7f5de03919c84dfad42ae02cc7a9df2963d9c73c822e3bc04ae67fed62eec8290941b1bd54f9c03195a",
       "readNotificationIds": [],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T16:02:25.159Z",
-      "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
+      "updatedAt": "2026-11-25T16:03:31.983Z",
+      "lastModifiedBy": "Ujjwol Sharma (Password Reset)",
       "auditLog": [
+        {
+          "id": "aud_1795622611983_wlhi",
+          "timestamp": "2026-11-25T16:03:31.983Z",
+          "actor": "Ujjwol Sharma (Password Reset)",
+          "action": "PASSWORD_RESET",
+          "details": "Reset password via verified 6-digit email code"
+        },
         {
           "id": "aud_1795622545159_ch1p",
           "timestamp": "2026-11-25T16:02:25.159Z",
