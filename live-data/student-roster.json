@@ -1,6 +1,6 @@
 {
-  "revision": 33,
-  "lastUpdated": "2026-11-25T16:04:17.769Z",
+  "revision": 34,
+  "lastUpdated": "2026-11-25T16:07:35.764Z",
   "classSwitchRequests": [],
   "auditLog": [
     {
@@ -115,7 +115,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$ee9c2986e6057ec9f9dd7ff94e2832a0$39cd5074db5e0e1059517557f31b7a65d581d2146724e288d580244d78c84b0c23161bcdc781cfac9065fecd086dbe3db908b02ae7f420ce23b120dc03f58c06",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795622839468"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T16:02:56.964Z",
       "lastModifiedBy": "Admin Console",
