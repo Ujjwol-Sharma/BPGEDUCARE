@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T04:09:21.381Z",
+  "lastUpdated": "2026-11-25T04:10:12.580Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -587,10 +587,12 @@
         },
         {
           "code": "Unit 06",
-          "name": "Calculus (Limits, Continuity, First Principles & Integrals)",
-          "hours": "38 hrs",
-          "marks": "17 Marks",
-          "focus": "2 Long (10M) + 2 Short (5M) + 2 MCQ (2M)"
+          "name": "Calculus",
+          "hours": "36 hrs",
+          "marks": "22 Marks",
+          "focus": "1 Long (8M) + 2 Short (10M) + 4 MCQ (4M)",
+          "domain": "Calculus",
+          "weightage": "1 Long (8M) + 2 Short (10M) + 4 MCQ (4M)"
         },
         {
           "code": "Unit 07",
@@ -929,9 +931,9 @@
             {
               "id": "class-11-math-l6",
               "code": "Unit 06",
-              "title": "Calculus (Limits, Continuity, First Principles & Integrals)",
-              "hours": "38 hrs",
-              "marks": "17 Marks",
+              "title": "Calculus",
+              "hours": "36 hrs",
+              "marks": "22 Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -3315,6 +3317,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 58,
+  "revision": 59,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
