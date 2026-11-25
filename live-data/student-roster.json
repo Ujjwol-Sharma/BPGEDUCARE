@@ -1,6 +1,6 @@
 {
-  "revision": 81,
-  "lastUpdated": "2026-11-25T12:40:31.134Z",
+  "revision": 82,
+  "lastUpdated": "2026-11-25T12:45:19.931Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795610719930_or54",
+      "timestamp": "2026-11-25T12:45:19.930Z",
+      "userId": "usr_32c1a5fb30c2",
+      "email": "subedimanjul25@gmail.com",
+      "actor": "Manjul Subedi (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795610431134_7qem",
       "timestamp": "2026-11-25T12:40:31.134Z",
@@ -453,6 +462,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_32c1a5fb30c2",
+      "name": "Manjul Subedi",
+      "username": "subedimanjul25",
+      "email": "subedimanjul25@gmail.com",
+      "canonicalEmail": "subedimanjul25@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T12:45:19.877Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$732606f01916b3e2230f4bc9e33f6714$f051b2551784fd90b13a316289fdd6393bcbb4615a2014494c79523c3da2f2d9002cd9f090c714496891c3a2c5934da5787f3ff6accbfba435e8c990cf33bb88",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T12:45:19.930Z",
+      "lastModifiedBy": "Manjul Subedi (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795610719930_rfhs",
+          "timestamp": "2026-11-25T12:45:19.930Z",
+          "actor": "Manjul Subedi (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_35b207967208",
       "name": "Aradhya Paudel",
