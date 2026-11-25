@@ -1337,6 +1337,8 @@ function sanitizeStateForStudent(rawState, user) {
                 })),
                 pdfs: (Array.isArray(l.pdfs) ? l.pdfs : []).map(pdf => {
                     const check = evaluateItemAccess(user, classKey, pdf, clone);
+                    const rawUrl = String(pdf.fileUrl || '');
+                    const isInlineBase64 = rawUrl.startsWith('data:application/pdf;base64,');
                     return {
                         id: pdf.id,
                         title: pdf.title || pdf.fileName || 'PDF Document',
@@ -1346,9 +1348,10 @@ function sanitizeStateForStudent(rawState, user) {
                         subTopicTitle: pdf.subTopicTitle || '',
                         minPlan: normalizePlan(pdf.minPlan || 'free'),
                         uploadedAt: pdf.uploadedAt || '',
+                        storageKey: pdf.storageKey || '',
                         restricted: !check.allowed,
-                        hasFile: Boolean(pdf.fileUrl),
-                        fileUrl: check.allowed ? (pdf.fileUrl || '') : ''
+                        hasFile: Boolean(rawUrl || pdf.storageKey || pdf.hasFile),
+                        fileUrl: (check.allowed && !isInlineBase64) ? rawUrl : ''
                     };
                 }),
                 videos: (Array.isArray(l.videos) ? l.videos : []).map(vid => {
@@ -1385,8 +1388,9 @@ function sanitizeStateForStudent(rawState, user) {
                         fileSize: pdf.fileSize || 'PDF',
                         minPlan: normalizePlan(pdf.minPlan || 'free'),
                         uploadedAt: pdf.uploadedAt || '',
+                        storageKey: pdf.storageKey || '',
                         restricted: !pdfCheck.allowed,
-                        hasFile: Boolean(pdf.fileUrl)
+                        hasFile: Boolean(pdf.fileUrl || pdf.storageKey || pdf.hasFile)
                     };
                 });
                 if (!check.allowed) {
@@ -1403,9 +1407,18 @@ function sanitizeStateForStudent(rawState, user) {
 
         const cleanNotes = (portal.notes || []).map(n => {
             const check = evaluateItemAccess(user, classKey, n, clone);
-            const noteCopy = { ...n, minPlan: normalizePlan(n.minPlan || 'free'), restricted: !check.allowed };
-            if (!check.allowed) {
+            const rawUrl = String(n.fileUrl || '');
+            const isInlineBase64 = rawUrl.startsWith('data:application/pdf;base64,');
+            const noteCopy = {
+                ...n,
+                minPlan: normalizePlan(n.minPlan || 'free'),
+                restricted: !check.allowed,
+                hasFile: Boolean(rawUrl || n.storageKey || n.hasFile)
+            };
+            if (!check.allowed || isInlineBase64) {
                 delete noteCopy.fileUrl;
+            }
+            if (!check.allowed) {
                 delete noteCopy.url;
             }
             return noteCopy;

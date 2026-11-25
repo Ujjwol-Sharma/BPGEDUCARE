@@ -123,8 +123,14 @@ function deepMergeState(currentData, payload) {
                         const prevLesson = existingLessonMap.get(`${is.id || 'mathematics'}|${il.id}`);
                         let mergedPdfs = (il.pdfs || []).map(ip => {
                             const prev = ip && ip.id ? existingPdfMap.get(ip.id) : null;
-                            if (prev && !ip.fileUrl && prev.fileUrl) {
-                                return { ...ip, fileUrl: prev.fileUrl, storageKey: ip.storageKey || prev.storageKey };
+                            if (prev) {
+                                return {
+                                    ...ip,
+                                    fileUrl: ip.fileUrl || prev.fileUrl || '',
+                                    storageKey: ip.storageKey || prev.storageKey || '',
+                                    hasFile: Boolean(ip.fileUrl || ip.storageKey || ip.hasFile || prev.fileUrl || prev.storageKey || prev.hasFile),
+                                    fileSizeBytes: ip.fileSizeBytes || prev.fileSizeBytes || 0
+                                };
                             }
                             return ip;
                         });
@@ -418,7 +424,25 @@ async function academyStateHandler(req, res) {
                 return;
             }
 
-            const responseData = isAdmin ? rawData : sanitizeStateForStudent(rawData, user);
+            let responseData = isAdmin ? JSON.parse(JSON.stringify(rawData)) : sanitizeStateForStudent(rawData, user);
+            if (isAdmin && responseData && responseData.portals) {
+                // Keep Admin GET fast & under Vercel's 4.5MB limit by stripping inline Base64 PDFs already stored in durable pdfs/<id>.pdf
+                for (const ck of Object.keys(responseData.portals)) {
+                    const p = responseData.portals[ck];
+                    if (!p) continue;
+                    for (const s of (p.subjects || [])) {
+                        for (const l of (s.lessons || [])) {
+                            for (const pdf of (l.pdfs || [])) {
+                                if (pdf && String(pdf.fileUrl || '').startsWith('data:application/pdf;base64,')) {
+                                    pdf.hasFile = true;
+                                    pdf.storageKey = pdf.storageKey || `pdfs/${String(pdf.id).replace(/[^a-zA-Z0-9._-]/g, '_')}.pdf`;
+                                    pdf.fileUrl = '';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             let extraBundle = {};
             if (isAdmin) {

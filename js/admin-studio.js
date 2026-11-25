@@ -1853,15 +1853,37 @@ async function updateLessonItemPlan(classKey, subjectId, lessonId, itemType, ite
     await persistAcademyState({ portals: { [classKey]: { subjects } } }, 'Plan updated.');
 }
 
-function previewAdminLessonPdf(classKey, subjectId, lessonId, pdfId) {
+async function previewAdminLessonPdf(classKey, subjectId, lessonId, pdfId) {
     const subj = getAdminSubjects(classKey).find(s => s.id === subjectId);
     const lesson = (subj?.lessons || []).find(l => l.id === lessonId);
     const pdf = (lesson?.pdfs || []).find(p => p.id === pdfId);
-    if (!pdf?.fileUrl) {
+    if (!pdf) {
+        showAdminToast('PDF record not found.', 'error');
+        return;
+    }
+    let openUrl = String(pdf.fileUrl || '');
+    if (!openUrl && (pdf.storageKey || pdf.hasFile)) {
+        try {
+            showAdminToast('Loading PDF from cloud storage...', 'info');
+            const url = `/api/content-access?classKey=${encodeURIComponent(classKey)}&itemType=lesson-pdf&subjectId=${encodeURIComponent(subjectId)}&lessonId=${encodeURIComponent(lessonId)}&pdfId=${encodeURIComponent(pdfId)}&_t=${Date.now()}`;
+            const res = await fetch(url, {
+                cache: 'no-store',
+                headers: { 'x-admin-passkey': typeof getAdminPasskey === 'function' ? getAdminPasskey() : (localStorage.getItem('bpg_admin_passkey') || '') }
+            });
+            const data = await res.json();
+            if (!res.ok || !data.ok || !data.item?.fileUrl) {
+                throw new Error(data.error || 'Could not load PDF file.');
+            }
+            openUrl = String(data.item.fileUrl);
+        } catch (err) {
+            showAdminToast(err.message || 'Could not load PDF file.', 'error');
+            return;
+        }
+    }
+    if (!openUrl) {
         showAdminToast('PDF file data is missing.', 'error');
         return;
     }
-    let openUrl = pdf.fileUrl;
     if (openUrl.startsWith('data:application/pdf;base64,')) {
         const bin = atob(openUrl.slice('data:application/pdf;base64,'.length));
         const bytes = new Uint8Array(bin.length);

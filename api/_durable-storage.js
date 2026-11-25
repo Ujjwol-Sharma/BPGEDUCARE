@@ -96,6 +96,7 @@ function extractAndQueueDurablePdfFiles(state) {
             const b64 = url.slice('data:application/pdf;base64,'.length);
             const buf = Buffer.from(b64, 'base64');
             pdf.fileSizeBytes = buf.length;
+            pdf.hasFile = true;
             try {
                 fs.writeFileSync(path.join(TMP_PDF_DIR, `${safeId}.pdf`), buf);
             } catch (e) {}
@@ -106,6 +107,10 @@ function extractAndQueueDurablePdfFiles(state) {
                 queueDurableWrite(relPdfPath, buf);
                 persistedIds.add(safeId);
             }
+            // Strip multi-MB inline Base64 from academy-state.json so state stays <200KB (well below Vercel's 4.5MB limit)
+            pdf.fileUrl = '';
+        } else if (pdf.storageKey || pdf.hasFile) {
+            pdf.hasFile = true;
         }
     };
 

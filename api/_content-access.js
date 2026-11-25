@@ -132,6 +132,8 @@ module.exports = async function contentAccessHandler(req, res) {
         }));
         const pdfs = (Array.isArray(lesson.pdfs) ? lesson.pdfs : []).map(pdf => {
             const check = isAdmin ? { allowed: true } : evaluateItemAccess(user, classKey, pdf, state);
+            const rawUrl = String(pdf.fileUrl || '');
+            const isInlineBase64 = rawUrl.startsWith('data:application/pdf;base64,');
             return {
                 id: pdf.id,
                 title: pdf.title || pdf.fileName || 'PDF Document',
@@ -140,9 +142,10 @@ module.exports = async function contentAccessHandler(req, res) {
                 subTopicId: pdf.subTopicId || '',
                 subTopicTitle: pdf.subTopicTitle || '',
                 minPlan: normalizePlan(pdf.minPlan || 'free'),
+                storageKey: pdf.storageKey || '',
                 restricted: !check.allowed,
-                hasFile: Boolean(pdf.fileUrl),
-                fileUrl: check.allowed ? (pdf.fileUrl || '') : ''
+                hasFile: Boolean(rawUrl || pdf.storageKey || pdf.hasFile),
+                fileUrl: (check.allowed && !isInlineBase64) ? rawUrl : ''
             };
         });
         const videos = (Array.isArray(lesson.videos) ? lesson.videos : []).map(vid => {
@@ -322,8 +325,9 @@ module.exports = async function contentAccessHandler(req, res) {
                 fileSize: pdf.fileSize || 'PDF',
                 minPlan: normalizePlan(pdf.minPlan || 'free'),
                 uploadedAt: pdf.uploadedAt || '',
+                storageKey: pdf.storageKey || '',
                 restricted: !check.allowed,
-                hasFile: Boolean(pdf.fileUrl)
+                hasFile: Boolean(pdf.fileUrl || pdf.storageKey || pdf.hasFile)
             };
         });
 
@@ -378,12 +382,20 @@ module.exports = async function contentAccessHandler(req, res) {
             return `[${u.code}: ${u.title}] (${u.marks || ''})\n` + allowedTopics.map(t => `  * ${t.title}`).join('\n');
         }).filter(Boolean).join('\n\n');
 
+        let noteFileUrl = String(foundNote.fileUrl || '');
+        if (!noteFileUrl.startsWith('data:application/pdf;base64,') && foundNote.storageKey) {
+            const durableBuf = await readDurablePdfBuffer(foundNote.id);
+            if (durableBuf) {
+                noteFileUrl = `data:application/pdf;base64,${durableBuf.toString('base64')}`;
+            }
+        }
+
         res.statusCode = 200;
         res.end(JSON.stringify({
             ok: true,
             itemType: 'note',
             classKey,
-            item: foundNote,
+            item: Object.assign({}, foundNote, { fileUrl: noteFileUrl || foundNote.fileUrl || '' }),
             downloadSummary: `BPG EDUCARE — ${foundNote.title}\nProgram: ${portal.gradeTitle}\nScope: ${foundNote.unit || 'All Units'} | ${foundNote.pages || 'PDF'}\n\n${unitsSummary}\n\n© 2026 BPG EDUCARE.`
         }));
         return;
