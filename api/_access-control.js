@@ -325,6 +325,27 @@ const DEFAULT_CHATBOT_FAQS = [
 /* --------------------------------------------------------------------------
    1. GMAIL CANONICALIZATION & UNIQUENESS HELPERS
    -------------------------------------------------------------------------- */
+function normalizeUsername(raw) {
+    return String(raw || '').trim().toLowerCase().replace(/^@+/, '').replace(/[^a-z0-9._-]/g, '');
+}
+
+function isValidUsernameFormat(raw) {
+    const clean = normalizeUsername(raw);
+    return clean.length >= 3 && clean.length <= 30 && /^[a-z0-9][a-z0-9._-]*$/.test(clean);
+}
+
+function isGmailAddress(email) {
+    const cleaned = String(email || '').trim().toLowerCase();
+    return isValidEmailFormat(cleaned) && (cleaned.endsWith('@gmail.com') || cleaned.endsWith('@googlemail.com'));
+}
+
+function findAccountByUsername(username) {
+    const clean = normalizeUsername(username);
+    if (!clean) return null;
+    const roster = readRoster();
+    return roster.accounts.find(a => normalizeUsername(a.username) === clean) || null;
+}
+
 function canonicalizeEmail(rawEmail) {
     const cleaned = String(rawEmail || '').trim().toLowerCase();
     const atIdx = cleaned.indexOf('@');
@@ -1615,6 +1636,10 @@ module.exports = {
     DEFAULT_NOTIFICATIONS,
     DEFAULT_CHATBOT_FAQS,
     canonicalizeEmail,
+    normalizeUsername,
+    isValidUsernameFormat,
+    isGmailAddress,
+    findAccountByUsername,
     isValidEmailFormat,
     isDisposableOrFakeEmail,
     hashPassword,

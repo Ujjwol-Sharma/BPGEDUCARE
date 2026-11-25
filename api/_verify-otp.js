@@ -8,6 +8,8 @@ const crypto = require('crypto');
 const {
     OTP_SECRET,
     canonicalizeEmail,
+    normalizeUsername,
+    isValidUsernameFormat,
     hashPassword,
     getOtpStoreEntry,
     setOtpStoreEntry,
@@ -100,6 +102,7 @@ module.exports = async function handler(req, res) {
         const otp = String(body.otp || '').trim();
         const otpToken = String(body.otpToken || '').trim();
         const name = String(body.name || 'Student').trim();
+        const requestedUsername = normalizeUsername(body.username || '');
         const grade = normalizeGradeName(body.grade || 'Class 12');
         const rawMode = String(body.mode || 'signup').toLowerCase();
         const mode = rawMode === 'reset' ? 'reset' : (rawMode === 'gmail_otp' ? 'gmail_otp' : 'signup');
@@ -286,6 +289,13 @@ module.exports = async function handler(req, res) {
                 roster.accounts[existingIdx].passkey = hashPassword(newPassword);
                 roster.accounts[existingIdx].hasPassword = true;
             }
+            // Allow older accounts missing a custom username to claim one during verified recovery
+            if (requestedUsername && isValidUsernameFormat(requestedUsername)) {
+                const takenByOther = roster.accounts.some((a, i) => i !== existingIdx && normalizeUsername(a.username) === requestedUsername);
+                if (!takenByOther && (!roster.accounts[existingIdx].username || roster.accounts[existingIdx].username === roster.accounts[existingIdx].email.split('@')[0])) {
+                    roster.accounts[existingIdx].username = requestedUsername;
+                }
+            }
             roster.accounts[existingIdx].emailVerified = true;
             if (!roster.accounts[existingIdx].verifiedAt) {
                 roster.accounts[existingIdx].verifiedAt = new Date().toISOString();
@@ -328,13 +338,23 @@ module.exports = async function handler(req, res) {
             });
         }
 
-        // SIGNUP: Re-enforce canonical email uniqueness right before DB commit
+        // SIGNUP: Re-enforce canonical Gmail & unique username right before DB commit
         if (existingIdx !== -1) {
             return res.status(409).json({
                 ok: false,
                 code: 'EMAIL_EXISTS',
                 existingEmail: roster.accounts[existingIdx].email,
-                error: 'An account already exists for this email address. Please sign in or reset your password.'
+                error: 'An account already exists for this Gmail address. Please sign in or reset your password.'
+            });
+        }
+
+        const finalUsername = isValidUsernameFormat(requestedUsername) ? requestedUsername : normalizeUsername(email.split('@')[0]);
+        const usernameConflict = roster.accounts.find(a => normalizeUsername(a.username) === finalUsername);
+        if (usernameConflict) {
+            return res.status(409).json({
+                ok: false,
+                code: 'USERNAME_TAKEN',
+                error: `Username "${finalUsername}" is already taken. Please choose a different username.`
             });
         }
 
@@ -343,7 +363,7 @@ module.exports = async function handler(req, res) {
         const newAccount = {
             userId: stableUserId,
             name,
-            username: email.split('@')[0],
+            username: finalUsername,
             email,
             canonicalEmail: canonical,
             grade,

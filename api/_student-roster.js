@@ -5,6 +5,8 @@
 const crypto = require('crypto');
 const {
     canonicalizeEmail,
+    normalizeUsername,
+    isValidUsernameFormat,
     isValidEmailFormat,
     hashPassword,
     verifyPassword,
@@ -544,14 +546,16 @@ module.exports = async function studentRosterHandler(req, res) {
                 return;
             }
 
-            // 1. SIGN IN (matches canonical verified email, protects email registration privacy, never creates duplicates)
+            // 1. SIGN IN (verifies username + Gmail belong to same account, protects registration privacy, never creates duplicates)
             if (payload.action === 'SIGN_IN') {
                 const rawEmail = String(payload.email || '').trim().toLowerCase();
+                const rawUsername = String(payload.username || '').trim();
+                const normUsername = normalizeUsername(rawUsername);
                 const enteredPass = String(payload.password || payload.passkey || '');
                 const keepSignedIn = payload.keepSignedIn !== false;
                 if (!rawEmail || !isValidEmailFormat(rawEmail)) {
                     res.statusCode = 400;
-                    res.end(JSON.stringify({ success: false, code: 'INVALID_EMAIL', error: 'Please enter a valid email address.' }));
+                    res.end(JSON.stringify({ success: false, code: 'INVALID_EMAIL', error: 'Please enter a valid Gmail address.' }));
                     return;
                 }
                 if (!enteredPass) {
@@ -561,7 +565,7 @@ module.exports = async function studentRosterHandler(req, res) {
                 }
                 const canonical = canonicalizeEmail(rawEmail);
                 const account = roster.accounts.find(a => a.canonicalEmail === canonical);
-                const genericCredError = "We couldn't sign you in with that email and password. Double-check your password, try Continue with Google, sign in with a 6-digit email code, or click Forgot password?.";
+                const genericCredError = "We couldn't sign you in with that username, Gmail, and password. Check your details, try Continue with Google (for Google-linked accounts), or click Forgot password?.";
 
                 if (!account) {
                     res.statusCode = 401;
@@ -572,12 +576,25 @@ module.exports = async function studentRosterHandler(req, res) {
                     }));
                     return;
                 }
+                // Verify username and Gmail belong to the same account (with safe fallback to email prefix for legacy accounts)
+                if (rawUsername) {
+                    const accountUsername = normalizeUsername(account.username || (account.email ? account.email.split('@')[0] : ''));
+                    if (!normUsername || normUsername !== accountUsername) {
+                        res.statusCode = 401;
+                        res.end(JSON.stringify({
+                            success: false,
+                            code: 'INVALID_CREDENTIALS',
+                            error: genericCredError
+                        }));
+                        return;
+                    }
+                }
                 if (account.emailVerified === false) {
                     res.statusCode = 403;
                     res.end(JSON.stringify({
                         success: false,
                         code: 'EMAIL_NOT_VERIFIED',
-                        error: 'Your email address is not verified yet. Please complete email verification or request a new code.'
+                        error: 'Your Gmail address is not verified yet. Please complete email verification or request a new code.'
                     }));
                     return;
                 }

@@ -3469,6 +3469,9 @@ function renderMockTestsTab() {
                             </div>
                         </div>
                         <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button type="button" class="btn-adm-dark" style="padding:6px 11px; font-size:0.8rem;" onclick="openAdminMockResults('${safeId}')">
+                                <i class="fa-solid fa-trophy" aria-hidden="true"></i> Results${Number(t.submittedAttemptCount) > 0 ? ` (${Number(t.submittedAttemptCount)})` : ''}
+                            </button>
                             <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="editExistingMockTest('${safeId}')">${isSched ? 'Edit / Reschedule' : 'Edit'}</button>
                             <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="openAdminMockPreviewById('${safeId}')">Preview</button>
                             ${isSched ? `
@@ -3484,6 +3487,271 @@ function renderMockTestsTab() {
             }).join('')}
         </div>
     `;
+}
+
+/* --------------------------------------------------------------------------
+   4.6. DETAILED MOCK TEST RESULTS TAB & HISTORICAL ATTEMPT INSPECTOR
+   -------------------------------------------------------------------------- */
+let adminMockResultsState = null; // { testId, data, sortKey, sortDir, inspectedAttemptId }
+
+function formatAdminTimeTaken(sec) {
+    const s = Math.max(0, Math.round(Number(sec) || 0));
+    const m = Math.floor(s / 60);
+    const rem = s % 60;
+    return m > 0 ? `${m}m ${String(rem).padStart(2, '0')}s` : `${rem}s`;
+}
+
+async function openAdminMockResults(testId) {
+    const mount = document.getElementById('mockTestsAdminMount');
+    if (!mount) return;
+    editingMockTest = null;
+    adminMockResultsState = { testId, data: null, sortKey: 'rank', sortDir: 'asc', inspectedAttemptId: '' };
+    mount.innerHTML = `<div class="adm-card" style="padding:24px; text-align:center;">Loading mock test results...</div>`;
+
+    try {
+        const res = await fetch(`/api/mock-tests?results=1&testId=${encodeURIComponent(testId)}&_t=${Date.now()}`, {
+            cache: 'no-store',
+            headers: getAdminHeaders()
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Could not load results.');
+        adminMockResultsState.data = json;
+        renderAdminMockResultsView();
+    } catch (err) {
+        showAdminToast(err.message || 'Could not load mock test results.', 'error');
+        adminMockResultsState = null;
+        renderMockTestsTab();
+    }
+}
+
+function closeAdminMockResults() {
+    adminMockResultsState = null;
+    renderMockTestsTab();
+}
+
+function sortAdminMockResults(colKey) {
+    if (!adminMockResultsState) return;
+    if (adminMockResultsState.sortKey === colKey) {
+        adminMockResultsState.sortDir = adminMockResultsState.sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+        adminMockResultsState.sortKey = colKey;
+        adminMockResultsState.sortDir = (colKey === 'marksEarned' || colKey === 'percentage' || colKey === 'submittedAt') ? 'desc' : 'asc';
+    }
+    renderAdminMockResultsView();
+}
+
+function inspectAdminMockAttempt(attemptId) {
+    if (!adminMockResultsState) return;
+    adminMockResultsState.inspectedAttemptId = attemptId || '';
+    renderAdminMockResultsView();
+}
+
+function renderAdminMockResultsView() {
+    const mount = document.getElementById('mockTestsAdminMount');
+    if (!mount || !adminMockResultsState || !adminMockResultsState.data) return;
+
+    const { data, sortKey, sortDir, inspectedAttemptId } = adminMockResultsState;
+    const test = data.test || {};
+    const summary = data.summary || {};
+    const attempts = Array.isArray(data.attempts) ? [...data.attempts] : [];
+    const topScorers = Array.isArray(summary.topScorers) ? summary.topScorers : [];
+
+    // Sort attempts cleanly
+    const dirMul = sortDir === 'desc' ? -1 : 1;
+    attempts.sort((a, b) => {
+        if (sortKey === 'rank') {
+            const ra = a.rank || 999999;
+            const rb = b.rank || 999999;
+            return (ra - rb) * dirMul || (b.marksEarned - a.marksEarned);
+        }
+        if (sortKey === 'studentName' || sortKey === 'username' || sortKey === 'className' || sortKey === 'status') {
+            return String(a[sortKey] || '').localeCompare(String(b[sortKey] || '')) * dirMul;
+        }
+        if (sortKey === 'submittedAt') {
+            return (Date.parse(a.submittedAt || 0) - Date.parse(b.submittedAt || 0)) * dirMul;
+        }
+        return ((Number(a[sortKey]) || 0) - (Number(b[sortKey]) || 0)) * dirMul;
+    });
+
+    const sortArrow = (k) => sortKey === k ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+
+    // Attempt detail inspector view
+    const inspected = inspectedAttemptId ? attempts.find(a => a.attemptId === inspectedAttemptId) : null;
+    const inspectorHtml = inspected ? `
+        <div class="adm-card" style="margin-bottom:18px; padding:18px; border:2px solid #2563eb; background:var(--adm-surface);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+                <div>
+                    <span class="adm-status-pill open" style="margin-bottom:6px; display:inline-block;">Historical Attempt Snapshot &middot; Attempt #${inspected.attemptNumber}</span>
+                    <h3 style="margin:4px 0 2px; font-size:1.05rem;">${escapeHtml(inspected.studentName)} (@${escapeHtml(inspected.username || '—')})</h3>
+                    <div style="font-size:0.82rem; color:var(--adm-text-muted);">
+                        ${escapeHtml(inspected.className)} &middot;
+                        <strong>${inspected.marksEarned} / ${inspected.totalMarks} (${inspected.percentage}%)</strong> &middot;
+                        Time: ${formatAdminTimeTaken(inspected.timeTakenSeconds)} &middot;
+                        Submitted: ${escapeHtml(inspected.submittedAtNpt || 'In Progress')} &middot;
+                        Correct: ${inspected.correctCount} · Wrong: ${inspected.wrongCount} · Skipped: ${inspected.skippedCount}
+                    </div>
+                </div>
+                <button type="button" class="btn-topbar" onclick="inspectAdminMockAttempt('')">Close Answer Sheet</button>
+            </div>
+            ${inspected.review.length === 0 ? `
+                <div class="adm-empty-note">Detailed question breakdown is available once the attempt is submitted.</div>
+            ` : `
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    ${inspected.review.map((q, idx) => {
+                        const st = q.status || 'skipped';
+                        const badgeBg = st === 'correct' ? '#dcfce7' : (st === 'wrong' ? '#fee2e2' : '#f4f4f5');
+                        const badgeCol = st === 'correct' ? '#166534' : (st === 'wrong' ? '#991b1b' : '#52525b');
+                        const label = st === 'correct' ? 'Correct (+1)' : (st === 'wrong' ? 'Wrong (0)' : 'Skipped (0)');
+                        return `
+                            <div style="padding:12px 14px; border:1px solid var(--adm-border); border-radius:10px; background:var(--adm-bg-subtle);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
+                                    <strong>Q${idx + 1}.</strong>
+                                    <div style="display:flex; gap:8px; align-items:center;">
+                                        <span style="font-size:0.78rem; font-weight:700; padding:2px 8px; border-radius:999px; background:${badgeBg}; color:${badgeCol};">${label}</span>
+                                        <span style="font-size:0.78rem; color:var(--adm-text-muted);">Marks: <strong>${q.marksAwarded}/${q.maxMarks}</strong></span>
+                                    </div>
+                                </div>
+                                <div style="font-size:0.9rem; margin-bottom:8px;">${typeof formatAdminMathHtml === 'function' ? formatAdminMathHtml(q.text || '') : escapeHtml(q.text || '')}</div>
+                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:0.83rem;">
+                                    ${['A', 'B', 'C', 'D'].map(opt => {
+                                        const isStudent = q.selectedOption === opt;
+                                        const isCorrect = q.correctOption === opt;
+                                        let border = 'var(--adm-border)';
+                                        let bg = 'var(--adm-surface)';
+                                        if (isCorrect) { border = '#16a34a'; bg = '#f0fdf4'; }
+                                        else if (isStudent && !isCorrect) { border = '#dc2626'; bg = '#fef2f2'; }
+                                        return `
+                                            <div style="padding:6px 9px; border:1px solid ${border}; background:${bg}; border-radius:7px;">
+                                                <strong>${opt}.</strong> ${typeof formatAdminMathHtml === 'function' ? formatAdminMathHtml(q.options?.[opt] || '') : escapeHtml(q.options?.[opt] || '')}
+                                                ${isCorrect ? ' <span style="color:#15803d; font-weight:700;">✓ Correct</span>' : ''}
+                                                ${isStudent ? ` <span style="color:${isCorrect ? '#15803d' : '#dc2626'}; font-weight:700;">(Student)</span>` : ''}
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                <div style="margin-top:6px; font-size:0.78rem; color:var(--adm-text-muted);">
+                                    Student Answer: <strong>${escapeHtml(q.selectedOption || 'Skipped')}</strong> &middot;
+                                    Correct Answer: <strong>${escapeHtml(q.correctOption || '—')}</strong>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `}
+        </div>
+    ` : '';
+
+    mount.innerHTML = `
+        <div class="adm-card" style="padding:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+                <div>
+                    <button type="button" class="btn-topbar" style="padding:5px 10px; font-size:0.8rem; margin-bottom:6px;" onclick="closeAdminMockResults()">&larr; Back to Mock Tests</button>
+                    <h2 style="margin:4px 0 2px; font-size:1.18rem;">Results: ${escapeHtml(test.title || 'Mock Test')}</h2>
+                    <div style="font-size:0.82rem; color:var(--adm-text-muted);">
+                        ${escapeHtml(test.className || '')} &middot; ${test.questionCount || 0} questions &middot; ${test.durationMinutes || 30} min duration
+                    </div>
+                </div>
+                <button type="button" class="btn-topbar" onclick="openAdminMockResults('${escapeHtml(test.id)}')">
+                    <i class="fa-solid fa-rotate" aria-hidden="true"></i> Refresh Results
+                </button>
+            </div>
+
+            <!-- Summary Stats -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
+                <div style="padding:12px 14px; border:1px solid var(--adm-border); border-radius:10px; background:var(--adm-bg-subtle);">
+                    <div style="font-size:0.75rem; color:var(--adm-text-muted);">Highest Marks</div>
+                    <div style="font-size:1.35rem; font-weight:700; margin-top:2px;">
+                        ${summary.highestMarks !== null && summary.highestMarks !== undefined ? `${summary.highestMarks} / ${summary.highestTotal}` : '—'}
+                    </div>
+                </div>
+                <div style="padding:12px 14px; border:1px solid var(--adm-border); border-radius:10px; background:var(--adm-bg-subtle);">
+                    <div style="font-size:0.75rem; color:var(--adm-text-muted);">Class Average</div>
+                    <div style="font-size:1.35rem; font-weight:700; margin-top:2px;">
+                        ${summary.submittedAttempts > 0 ? `${summary.averageMarks} (${summary.averagePercentage}%)` : '—'}
+                    </div>
+                </div>
+                <div style="padding:12px 14px; border:1px solid var(--adm-border); border-radius:10px; background:var(--adm-bg-subtle);">
+                    <div style="font-size:0.75rem; color:var(--adm-text-muted);">Submitted Attempts</div>
+                    <div style="font-size:1.35rem; font-weight:700; margin-top:2px;">${summary.submittedAttempts || 0}</div>
+                </div>
+                <div style="padding:12px 14px; border:1px solid var(--adm-border); border-radius:10px; background:var(--adm-bg-subtle);">
+                    <div style="font-size:0.75rem; color:var(--adm-text-muted);">Unique Students Ranked</div>
+                    <div style="font-size:1.35rem; font-weight:700; margin-top:2px;">${summary.uniqueStudentsCompleted || 0}</div>
+                </div>
+            </div>
+
+            <!-- Highest Scorer(s) Banner (shows EVERY student tied for #1) -->
+            ${topScorers.length > 0 ? `
+                <div style="padding:12px 14px; border:1px solid #86efac; background:#f0fdf4; border-radius:10px; margin-bottom:16px; color:#14532d;">
+                    <div style="font-weight:700; font-size:0.86rem; margin-bottom:6px;">
+                        <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+                        ${topScorers.length > 1 ? `Top Scorers (Tied at ${summary.highestMarks}/${summary.highestTotal})` : `Top Scorer (${summary.highestMarks}/${summary.highestTotal})`}
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        ${topScorers.map(ts => `
+                            <button type="button" class="btn-topbar" style="background:#ffffff; border-color:#86efac; padding:5px 10px; font-size:0.8rem;" onclick="inspectAdminMockAttempt('${escapeHtml(ts.attemptId)}')">
+                                <strong>${escapeHtml(ts.studentName)}</strong> (@${escapeHtml(ts.username || '—')}) &middot; ${ts.percentage}% &middot; ${formatAdminTimeTaken(ts.timeTakenSeconds)}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            ${inspectorHtml}
+
+            <!-- Sortable Attempts Table (all attempts shown; student ranked once by best completed attempt) -->
+            ${attempts.length === 0 ? `
+                <div class="adm-empty-note" style="padding:24px; text-align:center;">No student attempts recorded for this mock test yet.</div>
+            ` : `
+                <div class="adm-table-wrap">
+                    <table class="adm-table">
+                        <thead>
+                            <tr>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('rank')">Rank${sortArrow('rank')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('studentName')">Student${sortArrow('studentName')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('username')">Username${sortArrow('username')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('className')">Class${sortArrow('className')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('marksEarned')">Marks${sortArrow('marksEarned')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('percentage')">%${sortArrow('percentage')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('attemptNumber')">Attempt #${sortArrow('attemptNumber')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('timeTakenSeconds')">Time Taken${sortArrow('timeTakenSeconds')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('submittedAt')">Submitted (NPT)${sortArrow('submittedAt')}</th>
+                                <th style="cursor:pointer;" onclick="sortAdminMockResults('status')">Status${sortArrow('status')}</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${attempts.map(r => `
+                                <tr style="${r.attemptId === inspectedAttemptId ? 'background:#eff6ff;' : ''}">
+                                    <td>
+                                        ${r.rank ? `<strong>#${r.rank}</strong>` : '—'}
+                                        ${r.isBestAttempt ? '<span style="display:block; font-size:0.68rem; color:#15803d; font-weight:600;">Best</span>' : ''}
+                                    </td>
+                                    <td><strong>${escapeHtml(r.studentName)}</strong></td>
+                                    <td><code>@${escapeHtml(r.username || '—')}</code></td>
+                                    <td>${escapeHtml(r.className)}</td>
+                                    <td><strong>${r.marksEarned}</strong> / ${r.totalMarks}</td>
+                                    <td>${r.percentage}%</td>
+                                    <td>#${r.attemptNumber}</td>
+                                    <td>${formatAdminTimeTaken(r.timeTakenSeconds)}</td>
+                                    <td style="font-size:0.8rem;">${escapeHtml(r.submittedAtNpt || '—')}</td>
+                                    <td><span class="adm-status-pill ${r.submitted ? 'open' : 'locked'}">${escapeHtml(r.status)}</span></td>
+                                    <td>
+                                        <button type="button" class="btn-topbar" style="padding:4px 9px; font-size:0.78rem;" onclick="inspectAdminMockAttempt('${escapeHtml(r.attemptId)}')">
+                                            Inspect
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `}
+        </div>
+    `;
+    if (typeof hydrateAdminMathInElement === 'function') {
+        hydrateAdminMathInElement(mount);
+    }
 }
 
 /* Interactive Student Preview Modal inside Admin */

@@ -218,8 +218,18 @@ async function flushPendingDurableCommits() {
         return { committed: false, localOnly: true };
     }
 
+    // HARD ANTI-OVERWRITE GUARD: Never commit from a container that failed to hydrate from bpg-live-db!
+    // Prevents stale bundled data/student-roster.json or data/academy-state.json from ever wiping live production records.
+    if (!lastHydrationAuthoritative || !lastHydratedCommitSha) {
+        throw new Error('Production cloud store was not hydrated before saving — refusing to overwrite live data with stale cache. Please retry.');
+    }
+
     for (let attempt = 0; attempt < 3; attempt++) {
-        const headCommitSha = await getDurableBranchRef(cfg);
+        const headCommitSha = await getDurableBranchRef(cfg, false);
+        // Protect against blind stale overwrites if another container updated bpg-live-db since we hydrated
+        if (headCommitSha && lastHydratedCommitSha && headCommitSha !== lastHydratedCommitSha) {
+            throw new Error('Live data changed on another server instance while saving. Please retry so no records are overwritten.');
+        }
         let baseTreeSha = null;
 
         if (headCommitSha) {

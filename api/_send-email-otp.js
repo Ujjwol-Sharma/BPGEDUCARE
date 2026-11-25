@@ -10,6 +10,10 @@ const tls = require('tls');
 const {
     OTP_SECRET,
     canonicalizeEmail,
+    normalizeUsername,
+    isValidUsernameFormat,
+    isGmailAddress,
+    findAccountByUsername,
     isValidEmailFormat,
     isDisposableOrFakeEmail,
     getOtpStoreEntry,
@@ -168,12 +172,26 @@ module.exports = async function handler(req, res) {
         const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
         const email = String(body.email || '').trim().toLowerCase();
         const name = String(body.name || 'Student').trim();
+        const username = normalizeUsername(body.username || '');
         const grade = String(body.grade || 'Class 12').trim();
         const rawMode = String(body.mode || 'signup').toLowerCase();
         const mode = rawMode === 'reset' ? 'reset' : (rawMode === 'gmail_otp' ? 'gmail_otp' : 'signup');
 
         if (!email || !isValidEmailFormat(email)) {
-            return res.status(400).json({ ok: false, error: 'Please provide a valid email address.' });
+            return res.status(400).json({ ok: false, error: 'Please provide a valid Gmail address.' });
+        }
+
+        if (mode === 'signup') {
+            if (!isGmailAddress(email)) {
+                return res.status(400).json({ ok: false, code: 'GMAIL_REQUIRED', error: 'Please use a valid Gmail address (@gmail.com) to create your student account.' });
+            }
+            if (!isValidUsernameFormat(username)) {
+                return res.status(400).json({ ok: false, code: 'INVALID_USERNAME', error: 'Username must be 3–30 characters using letters, numbers, dots, hyphens, or underscores.' });
+            }
+            const usernameOwner = findAccountByUsername(username);
+            if (usernameOwner && canonicalizeEmail(usernameOwner.email) !== canonicalizeEmail(email)) {
+                return res.status(409).json({ ok: false, code: 'USERNAME_TAKEN', error: `Username "${username}" is already taken. Please choose another unique username.` });
+            }
         }
 
         if (isDisposableOrFakeEmail(email)) {

@@ -248,40 +248,30 @@
 
             <!-- PANE 1: SIGN IN (RETURNING STUDENTS) -->
             <div id="authSignInContainer" class="auth-pane active">
-                <h3 class="modal-title" id="authModalActiveHeading">Welcome back</h3>
+                <h3 class="modal-title" id="authModalActiveHeading">Sign In</h3>
                 <p class="modal-sub">
-                    Sign in to return to your saved class, notes, and mock test history.
+                    Enter your username, Gmail address, and password to continue to your class.
                 </p>
-
-                <!-- Remembered Email Card (Never stores password) -->
-                <div id="rememberedAccountBanner" class="auth-remembered-card" style="display:none;">
-                    <div class="auth-remembered-info">
-                        <span class="auth-remembered-avatar" id="rememberedAccountInitial">S</span>
-                        <div style="min-width:0;">
-                            <small style="display:block; font-size:0.72rem; color:var(--text-secondary);">Remembered email on this device</small>
-                            <strong id="rememberedAccountEmailText" style="font-size:0.86rem; word-break:break-all;"></strong>
-                        </div>
-                    </div>
-                    <div class="auth-remembered-actions">
-                        <button type="button" class="btn-link-action" onclick="useAnotherAccount()">Use another account</button>
-                        <button type="button" class="btn-link-action" style="color:#dc2626;" onclick="clearRememberedEmail()">Clear remembered</button>
-                    </div>
-                </div>
 
                 <div id="googleOAuthSignInWrap" style="display:block;">
                     <button type="button" class="btn-google-oauth" id="btnGoogleSignIn" onclick="handleGoogleAuthClick('signin')">
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
                     </button>
-                    <div class="auth-or-divider"><span>or sign in with email &amp; password</span></div>
+                    <div class="auth-or-divider"><span>or sign in with username &amp; Gmail</span></div>
                 </div>
 
                 <div id="signinErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
 
                 <form id="signinForm" onsubmit="handleSignInSubmit(event)" autocomplete="on">
                     <div class="modal-field">
-                        <label for="signinEmail">Email address</label>
-                        <input type="email" id="signinEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="username" inputmode="email" required>
+                        <label for="signinUsername">Username</label>
+                        <input type="text" id="signinUsername" name="username" class="modal-input" placeholder="e.g. aarav_12" autocomplete="username" required>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="signinEmail">Gmail address</label>
+                        <input type="email" id="signinEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
                     </div>
 
                     <div class="modal-field">
@@ -297,23 +287,12 @@
                         </div>
                     </div>
 
-                    <div class="auth-checkbox-group">
-                        <label class="auth-check-item">
-                            <input type="checkbox" id="signinRememberEmail">
-                            <span>Remember my email</span>
-                        </label>
-                        <label class="auth-check-item">
-                            <input type="checkbox" id="signinKeepSignedIn" checked>
-                            <span>Keep me signed in <small style="color:var(--text-secondary);">(uncheck on shared devices)</small></span>
-                        </label>
-                    </div>
-
                     <button type="submit" class="btn-submit-action" id="btnSignInSubmit">
                         <i class="fa-solid fa-right-to-bracket" aria-hidden="true" style="margin-right:6px;"></i>Sign In
                     </button>
 
                     <div class="auth-footer-links">
-                        <button type="button" class="btn-link-action" onclick="openGmailOtpPane()">Sign in with 6-digit email code</button>
+                        <button type="button" class="btn-link-action" onclick="openGmailOtpPane()">Sign in with 6-digit Gmail code</button>
                         <button type="button" class="btn-link-action" onclick="switchAuthTab('signup')">New here? Create Account &rarr;</button>
                     </div>
                 </form>
@@ -323,7 +302,7 @@
             <div id="otpStep1Container" class="auth-pane" style="display:none;">
                 <h3 class="modal-title">Create Account</h3>
                 <p class="modal-sub">
-                    Create your free student account in under a minute. Pick your class below to open your dashboard right away.
+                    Create your student account with a unique username and verified Gmail address.
                 </p>
 
                 <div id="googleOAuthSignUpWrap" style="display:block;">
@@ -331,11 +310,11 @@
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
                     </button>
-                    <div class="auth-or-divider"><span>or create with email</span></div>
+                    <div class="auth-or-divider"><span>or create with Gmail verification</span></div>
                 </div>
 
                 <div id="signupDuplicateBanner" class="auth-inline-alert" role="alert" style="display:none;">
-                    <p id="signupDuplicateMsg" style="margin:0 0 10px 0;">You may already have an account with this email.</p>
+                    <p id="signupDuplicateMsg" style="margin:0 0 10px 0;">You may already have an account with this Gmail address.</p>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         <button type="button" class="btn btn-primary" style="padding:7px 14px; font-size:0.82rem;" onclick="switchToSignInWithEmail()">Sign In</button>
                         <button type="button" class="btn btn-secondary" style="padding:7px 14px; font-size:0.82rem;" onclick="switchToResetWithEmail()">Reset Password</button>
@@ -349,7 +328,12 @@
                     </div>
 
                     <div class="modal-field">
-                        <label for="signupEmail">Email address</label>
+                        <label for="signupUsername">Unique Username</label>
+                        <input type="text" id="signupUsername" name="username" class="modal-input" placeholder="e.g. aarav_12 (letters, numbers, . _ -)" autocomplete="username" minlength="3" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9._-]{2,29}" required>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="signupEmail">Gmail address</label>
                         <input type="email" id="signupEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
                     </div>
 
@@ -378,7 +362,7 @@
                     </div>
 
                     <button type="submit" class="btn-submit-action" id="btnSendOtpSubmit">
-                        Continue &amp; Verify Email
+                        Continue &amp; Verify Gmail
                     </button>
 
                     <div style="text-align:center; margin-top:14px; font-size:0.84rem;">

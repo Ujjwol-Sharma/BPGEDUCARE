@@ -12,9 +12,11 @@ const os = require('os');
 const {
     DATA_DIR,
     gradeToClassKey,
+    normalizeGradeName,
     normalizePlan,
     isAdminPasskeyValid,
     readAcademyState,
+    readRoster,
     resolveRequestUser,
     evaluateItemAccess,
     canonicalizeEmail,
@@ -145,6 +147,8 @@ function gradeAttempt(test, answersMap, autoSubmitted = false) {
             },
             selectedOption: selected,
             correctOption: correct,
+            marksAwarded: status === 'correct' ? 1 : 0,
+            maxMarks: 1,
             status
         };
     });
@@ -218,6 +222,193 @@ module.exports = function mockTestsHandler(req, res) {
 
         if (isAdmin) {
             const nowMs = Date.now();
+            const wantResults = parsedUrl.searchParams.get('results') === '1';
+            const targetTestId = String(parsedUrl.searchParams.get('testId') || '').trim();
+
+            if (wantResults && targetTestId) {
+                const test = state.mockTests.find(t => t.id === targetTestId);
+                if (!test) {
+                    res.statusCode = 404;
+                    res.end(JSON.stringify({ ok: false, error: 'Mock test not found.' }));
+                    return;
+                }
+                const store = readAttemptsStore();
+                const roster = readRoster();
+                const accById = new Map();
+                const accByCanon = new Map();
+                for (const a of (roster.accounts || [])) {
+                    if (a.userId) accById.set(a.userId, a);
+                    if (a.canonicalEmail) accByCanon.set(a.canonicalEmail, a);
+                }
+
+                // Finalize any expired attempts on this test before computing stats
+                const rawTestAttempts = store.attempts.filter(a => a && a.testId === targetTestId);
+                rawTestAttempts.forEach(a => finalizeExpiredAttemptIfNeeded(a, test, store));
+
+                // Sort chronologically per student to assign accurate attemptNumber (1, 2, 3...)
+                const byStudentChrono = new Map();
+                const sortedChrono = [...rawTestAttempts].sort((a, b) => Number(a.startedAt || 0) - Number(b.startedAt || 0));
+                const attemptNumMap = new Map();
+                for (const a of sortedChrono) {
+                    const key = a.userId || a.canonicalEmail || a.email || a.id;
+                    const count = (byStudentChrono.get(key) || 0) + 1;
+                    byStudentChrono.set(key, count);
+                    attemptNumMap.set(a.id, Number(a.attemptNumber) || count);
+                }
+
+                // Build detailed per-attempt rows (preserving historical review snapshots & marks!)
+                const attemptRows = rawTestAttempts.map(a => {
+                    const acc = (a.userId && accById.get(a.userId)) || (a.canonicalEmail && accByCanon.get(a.canonicalEmail)) || null;
+                    const studentKey = acc?.userId || a.userId || a.canonicalEmail || a.id;
+                    const isSubmitted = Boolean(a.submitted);
+                    const marksEarned = isSubmitted ? Number(a.result?.score ?? 0) : 0;
+                    const totalMarks = isSubmitted
+                        ? Number(a.result?.total ?? (a.result?.review?.length || (test.questions || []).length))
+                        : (test.questions || []).length;
+                    const percentage = isSubmitted
+                        ? Number(a.result?.percentage ?? (totalMarks > 0 ? Math.round((marksEarned / totalMarks) * 100) : 0))
+                        : 0;
+                    const startedMs = Number(a.startedAt || 0);
+                    const submittedMs = a.submittedAt ? Date.parse(a.submittedAt) : 0;
+                    const durationCapSec = Math.max(1, Number(test.durationMinutes || 30)) * 60;
+                    const computedSec = Number.isFinite(Number(a.timeTakenSeconds)) && Number(a.timeTakenSeconds) > 0
+                        ? Number(a.timeTakenSeconds)
+                        : (isSubmitted && startedMs && submittedMs
+                            ? Math.max(1, Math.min(durationCapSec, Math.round((submittedMs - startedMs) / 1000)))
+                            : (startedMs ? Math.max(0, Math.round((nowMs - startedMs) / 1000)) : 0));
+
+                    const statusLabel = !isSubmitted
+                        ? 'In Progress'
+                        : (a.autoSubmitted ? 'Auto-submitted' : 'Completed');
+
+                    // Preserve exact historical review items recorded when attempt was graded
+                    const review = Array.isArray(a.result?.review)
+                        ? a.result.review.map(item => ({
+                            ...item,
+                            marksAwarded: item.marksAwarded !== undefined ? item.marksAwarded : (item.status === 'correct' ? 1 : 0),
+                            maxMarks: item.maxMarks !== undefined ? item.maxMarks : 1
+                        }))
+                        : [];
+
+                    return {
+                        attemptId: a.id,
+                        studentKey,
+                        userId: acc?.userId || a.userId || '',
+                        studentName: acc?.name || a.userName || 'Student',
+                        username: acc?.username || a.username || '',
+                        className: acc?.grade || a.grade || normalizeGradeName(a.classKey || test.classKey),
+                        marksEarned,
+                        totalMarks,
+                        percentage,
+                        attemptNumber: attemptNumMap.get(a.id) || 1,
+                        timeTakenSeconds: computedSec,
+                        submittedAt: a.submittedAt || '',
+                        submittedAtNpt: a.submittedAt ? formatNepalTime(a.submittedAt) : '',
+                        status: statusLabel,
+                        submitted: isSubmitted,
+                        correctCount: a.result?.correctCount ?? 0,
+                        wrongCount: a.result?.wrongCount ?? 0,
+                        skippedCount: a.result?.skippedCount ?? 0,
+                        review
+                    };
+                });
+
+                // Compute rankings using each student's BEST completed attempt (counting each student ONCE!)
+                const completedRows = attemptRows.filter(r => r.submitted);
+                const bestByStudent = new Map();
+                for (const row of completedRows) {
+                    const prev = bestByStudent.get(row.studentKey);
+                    if (!prev
+                        || row.marksEarned > prev.marksEarned
+                        || (row.marksEarned === prev.marksEarned && row.percentage > prev.percentage)
+                        || (row.marksEarned === prev.marksEarned && row.percentage === prev.percentage && row.timeTakenSeconds < prev.timeTakenSeconds)) {
+                        bestByStudent.set(row.studentKey, row);
+                    }
+                }
+
+                // Rank distinct students by best completed marks (standard competition ranking: ties share same rank)
+                const rankedStudents = Array.from(bestByStudent.values()).sort((a, b) =>
+                    (b.marksEarned - a.marksEarned)
+                    || (b.percentage - a.percentage)
+                    || (a.timeTakenSeconds - b.timeTakenSeconds)
+                );
+
+                const rankByStudentKey = new Map();
+                const bestAttemptIdSet = new Set();
+                let currentRank = 0;
+                let lastMarks = null;
+                rankedStudents.forEach((entry, idx) => {
+                    if (lastMarks === null || entry.marksEarned < lastMarks) {
+                        currentRank = idx + 1;
+                        lastMarks = entry.marksEarned;
+                    }
+                    rankByStudentKey.set(entry.studentKey, currentRank);
+                    bestAttemptIdSet.add(entry.attemptId);
+                });
+
+                const highestMarks = rankedStudents.length > 0 ? rankedStudents[0].marksEarned : null;
+                const highestTotal = rankedStudents.length > 0 ? rankedStudents[0].totalMarks : (test.questions || []).length;
+                const topScorers = highestMarks !== null
+                    ? rankedStudents
+                        .filter(s => s.marksEarned === highestMarks)
+                        .map(s => ({
+                            userId: s.userId,
+                            studentName: s.studentName,
+                            username: s.username,
+                            className: s.className,
+                            marksEarned: s.marksEarned,
+                            totalMarks: s.totalMarks,
+                            percentage: s.percentage,
+                            attemptId: s.attemptId,
+                            attemptNumber: s.attemptNumber,
+                            timeTakenSeconds: s.timeTakenSeconds,
+                            submittedAtNpt: s.submittedAtNpt
+                        }))
+                    : [];
+
+                // Class average across completed attempts (and across unique students' best scores)
+                const avgMarks = completedRows.length > 0
+                    ? Number((completedRows.reduce((acc, r) => acc + r.marksEarned, 0) / completedRows.length).toFixed(2))
+                    : 0;
+                const avgPercentage = completedRows.length > 0
+                    ? Number((completedRows.reduce((acc, r) => acc + r.percentage, 0) / completedRows.length).toFixed(1))
+                    : 0;
+
+                const annotatedAttempts = attemptRows.map(r => ({
+                    ...r,
+                    rank: r.submitted ? (rankByStudentKey.get(r.studentKey) || null) : null,
+                    isBestAttempt: bestAttemptIdSet.has(r.attemptId)
+                }));
+
+                res.statusCode = 200;
+                res.end(JSON.stringify({
+                    ok: true,
+                    serverNow: nowMs,
+                    test: {
+                        id: test.id,
+                        title: test.title,
+                        classKey: test.classKey,
+                        className: normalizeGradeName(test.classKey),
+                        durationMinutes: Number(test.durationMinutes || 30),
+                        questionCount: (test.questions || []).length,
+                        effectiveStatus: getEffectiveMockTestStatus(test, nowMs),
+                        scheduledReleaseNpt: test.scheduledReleaseAt ? formatNepalTime(test.scheduledReleaseAt) : ''
+                    },
+                    summary: {
+                        totalAttempts: annotatedAttempts.length,
+                        submittedAttempts: completedRows.length,
+                        uniqueStudentsCompleted: rankedStudents.length,
+                        highestMarks,
+                        highestTotal,
+                        topScorers,
+                        averageMarks: avgMarks,
+                        averagePercentage: avgPercentage
+                    },
+                    attempts: annotatedAttempts
+                }));
+                return;
+            }
+
             let list = state.mockTests;
             if (rawClass) {
                 const ck = gradeToClassKey(rawClass);
@@ -226,11 +417,16 @@ module.exports = function mockTestsHandler(req, res) {
             if (subjectId) {
                 list = list.filter(t => t.subjectId === subjectId);
             }
-            const enriched = list.map(t => ({
-                ...t,
-                effectiveStatus: getEffectiveMockTestStatus(t, nowMs),
-                scheduledReleaseNpt: t.scheduledReleaseAt ? formatNepalTime(t.scheduledReleaseAt) : ''
-            }));
+            const store = readAttemptsStore();
+            const enriched = list.map(t => {
+                const subCount = store.attempts.filter(a => a.testId === t.id && a.submitted).length;
+                return {
+                    ...t,
+                    effectiveStatus: getEffectiveMockTestStatus(t, nowMs),
+                    scheduledReleaseNpt: t.scheduledReleaseAt ? formatNepalTime(t.scheduledReleaseAt) : '',
+                    submittedAttemptCount: subCount
+                };
+            });
             res.statusCode = 200;
             res.end(JSON.stringify({ ok: true, serverNow: nowMs, tests: enriched }));
             return;
@@ -573,11 +769,16 @@ module.exports = function mockTestsHandler(req, res) {
             } else {
                 const now = Date.now();
                 const durationMs = Math.max(1, Number(test.durationMinutes || 30)) * 60 * 1000;
+                const priorCount = store.attempts.filter(a => a.testId === test.id && ownsAttempt(a)).length;
                 active = {
                     id: `att_${now}_${Math.floor(Math.random() * 10000)}`,
                     clientRequestId: clientRequestId || '',
+                    attemptNumber: priorCount + 1,
                     testId: test.id,
                     userId,
+                    userName: user.name || 'Student',
+                    username: user.username || '',
+                    grade: user.grade || normalizeGradeName(test.classKey),
                     canonicalEmail: userCanonical,
                     email: user.email,
                     classKey: test.classKey,
@@ -586,6 +787,7 @@ module.exports = function mockTestsHandler(req, res) {
                     answers: {},
                     submitted: false,
                     submittedAt: null,
+                    timeTakenSeconds: 0,
                     autoSubmitted: false,
                     result: null
                 };
@@ -694,8 +896,13 @@ module.exports = function mockTestsHandler(req, res) {
                     });
                 }
                 const timedOut = Boolean(body.autoSubmitted) || Date.now() >= Number(attempt.finishAt || 0);
+                const nowMs = Date.now();
+                const maxDurSec = Math.max(1, Number(test.durationMinutes || 30)) * 60;
                 attempt.submitted = true;
-                attempt.submittedAt = new Date().toISOString();
+                attempt.submittedAt = new Date(nowMs).toISOString();
+                attempt.timeTakenSeconds = attempt.startedAt
+                    ? Math.max(1, Math.min(maxDurSec, Math.round((nowMs - Number(attempt.startedAt)) / 1000)))
+                    : 0;
                 attempt.autoSubmitted = timedOut;
                 attempt.result = gradeAttempt(test, attempt.answers, timedOut);
                 writeAttemptsStore(store);
