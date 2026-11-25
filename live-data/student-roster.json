@@ -1,8 +1,17 @@
 {
-  "revision": 41,
-  "lastUpdated": "2026-11-25T16:17:48.929Z",
+  "revision": 42,
+  "lastUpdated": "2026-11-25T16:22:30.730Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795623750730_7k57",
+      "timestamp": "2026-11-25T16:22:30.730Z",
+      "userId": "usr_cc8442ff9a9c",
+      "email": "aayush.kc@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_CLASS_CHANGE",
+      "details": "Aayush KC: class changed from Class 10 to Class 11"
+    },
     {
       "id": "raud_1795623442700_jvrp",
       "timestamp": "2026-11-25T16:17:22.700Z",
@@ -390,8 +399,8 @@
       "username": "aayush.kc",
       "email": "aayush.kc@gmail.com",
       "canonicalEmail": "aayushkc@gmail.com",
-      "grade": "Class 10",
-      "classKey": "class-10",
+      "grade": "Class 11",
+      "classKey": "class-11",
       "plan": "free",
       "planExplicitlySet": false,
       "legacyAccess": true,
@@ -407,9 +416,17 @@
       "passkey": "bpgstudent",
       "readNotificationIds": [],
       "joinedAt": "2026-11-04",
-      "updatedAt": "2026-11-23T15:00:00.000Z",
-      "lastModifiedBy": "Recovered from Roster Backup",
-      "auditLog": []
+      "updatedAt": "2026-11-25T16:22:30.730Z",
+      "lastModifiedBy": "Admin Console",
+      "auditLog": [
+        {
+          "id": "aud_1795623750730_a6gz",
+          "timestamp": "2026-11-25T16:22:30.730Z",
+          "actor": "Admin Console",
+          "action": "ADMIN_CLASS_CHANGE",
+          "details": "Changed class from Class 10 to Class 11"
+        }
+      ]
     },
     {
       "userId": "usr_d967e7372695",
