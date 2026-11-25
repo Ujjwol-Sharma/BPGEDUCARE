@@ -1,6 +1,6 @@
 {
-  "revision": 86,
-  "lastUpdated": "2026-11-25T13:23:28.021Z",
+  "revision": 87,
+  "lastUpdated": "2026-11-25T13:23:52.673Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795613032672_rsn4",
+      "timestamp": "2026-11-25T13:23:52.672Z",
+      "userId": "usr_86f4da6c35bb",
+      "email": "nisthasthakhawas@gmail.com",
+      "actor": "Nistha thakuri (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795613008021_w5r2",
       "timestamp": "2026-11-25T13:23:28.021Z",
@@ -489,6 +498,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_86f4da6c35bb",
+      "name": "Nistha thakuri",
+      "username": "nisthasthakhawas",
+      "email": "nisthasthakhawas@gmail.com",
+      "canonicalEmail": "nisthasthakhawas@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T13:23:52.619Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_86f4da6c35bb321f",
+      "avatarUrl": "",
+      "passkey": "scrypt$5623cb90e0b99ba3e1f28a22ce5db41f$ff009bd38f36ca7c606d860aaeef770d2b278b622989f992c06c4151db721d9a024477ce9cd701d72dacf361893b8c7b459a7991a9f58a19ee00d7b9d7a88da2",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T13:23:52.672Z",
+      "lastModifiedBy": "Nistha thakuri (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795613032672_3s7s",
+          "timestamp": "2026-11-25T13:23:52.672Z",
+          "actor": "Nistha thakuri (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_1128fb26d860",
       "name": "Aasika Tamang",
