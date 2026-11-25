@@ -1,6 +1,6 @@
 {
-  "revision": 139,
-  "lastUpdated": "2026-11-25T18:09:29.552Z",
+  "revision": 140,
+  "lastUpdated": "2026-11-25T18:10:37.338Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -1446,7 +1446,7 @@
       "canonicalEmail": "creativechessclub01@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "gold",
+      "plan": "diamond",
       "planExpiresAt": "2027-11-25T18:03:05.601Z",
       "planExplicitlySet": true,
       "legacyAccess": false,
@@ -1464,9 +1464,16 @@
         "notif_1795622839468"
       ],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T18:03:05.601Z",
+      "updatedAt": "2026-11-25T18:10:37.338Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795630237338_dlzp",
+          "timestamp": "2026-11-25T18:10:37.338Z",
+          "actor": "Admin Console",
+          "action": "ENTITLEMENT_RECONCILED",
+          "details": "Reconciled DIAMOND access from verified payment ORD-1795629710591-0A1AE1"
+        },
         {
           "id": "aud_1795629785601_mckd",
           "timestamp": "2026-11-25T18:03:05.601Z",
@@ -1634,13 +1641,6 @@
           "actor": "Chess Club (Student)",
           "action": "CLASS_SWITCH_REQUESTED",
           "details": "Requested switch from Class 12 to Class 11"
-        },
-        {
-          "id": "aud_1795531613133_7gao",
-          "timestamp": "2026-11-24T14:46:53.133Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795531613133-AD4BC7 (Padandas, NPR 1499) is pending"
         }
       ]
     },
