@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T13:44:27.812Z",
+  "lastUpdated": "2026-11-25T14:37:23.466Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3360,33 +3360,8 @@
       "updatedAt": "2026-11-24T11:10:20.384Z",
       "reviewedAt": "2026-11-24T11:10:20.384Z",
       "verifiedBy": "Admin Console"
-    },
-    {
-      "id": "pay_1795341224049_r8ow",
-      "orderId": "ORD-1795341224049",
-      "userId": "usr_ab78663f0a4c",
-      "fullName": "Rohan Sharma",
-      "username": "rohan.sharma",
-      "email": "rohan.sharma@gmail.com",
-      "canonicalEmail": "rohansharma@gmail.com",
-      "classKey": "class-11",
-      "className": "Class 11",
-      "planId": "diamond",
-      "planName": "Topper",
-      "amount": "Rs. 2,999",
-      "expectedAmount": 2999,
-      "currency": "NPR",
-      "transactionId": "GW999",
-      "method": "esewa_gateway",
-      "status": "paid",
-      "adminNote": "Recovered verified Diamond subscription payment.",
-      "createdAt": "2026-11-22T10:15:00.000Z",
-      "updatedAt": "2026-11-22T10:15:00.000Z",
-      "reviewedAt": "2026-11-22T10:15:00.000Z",
-      "activatedAt": "2026-11-22T10:15:00.000Z",
-      "activationCount": 1
     }
   ],
-  "revision": 76,
+  "revision": 77,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
