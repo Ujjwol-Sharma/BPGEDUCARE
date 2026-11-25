@@ -36,17 +36,26 @@ async function syncRosterPermissionsFromServer() {
                 const match = meJson.account;
                 const gradeChanged = match.grade && match.grade !== session.grade;
                 const planChanged = match.plan && match.plan !== session.plan;
+                const expiryChanged = (match.planExpiresAt || '') !== (session.planExpiresAt || '');
+                const usernameChanged = match.username && match.username !== session.username;
                 const legacyChanged = Boolean(match.legacyAccess) !== Boolean(session.legacyAccess);
 
-                if (gradeChanged || planChanged || legacyChanged) {
+                if (gradeChanged || planChanged || expiryChanged || usernameChanged || legacyChanged) {
                     session.grade = match.grade || session.grade;
                     session.classKey = normalizeClassKey(session.grade);
+                    session.username = match.username || session.username;
                     session.plan = match.plan || 'free';
+                    session.planExpiresAt = match.planExpiresAt || '';
+                    session.paymentStatus = match.paymentStatus || (session.plan !== 'free' ? 'paid' : 'none');
                     session.legacyAccess = Boolean(match.legacyAccess);
                     session.planExplicitlySet = Boolean(match.planExplicitlySet);
-                    localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
-                    localStorage.setItem('bpg_student_session', JSON.stringify(session));
-                    localStorage.setItem('bpg_student_class', session.classKey);
+                    if (typeof saveStoredStudentSession === 'function') {
+                        saveStoredStudentSession(session, session.keepSignedIn !== false);
+                    } else {
+                        localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+                        localStorage.setItem('bpg_student_session', JSON.stringify(session));
+                        localStorage.setItem('bpg_student_class', session.classKey);
+                    }
                     updateAuthUserPill();
                     syncWithServerDatabase();
                     if (gradeChanged) openMyClassWorkspace();

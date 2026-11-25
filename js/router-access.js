@@ -1522,7 +1522,8 @@ function updateAuthUserPill() {
         const dropFull = document.getElementById('dropdownFullName');
         if (dropFull) dropFull.textContent = `${name} (${role} · ${planLabel})`;
         const dropEmail = document.getElementById('dropdownEmail');
-        if (dropEmail) dropEmail.textContent = session.email || 'student@bpgeducare.edu.np';
+        const unameTag = session.username ? `@${session.username} · ` : '';
+        if (dropEmail) dropEmail.textContent = `${unameTag}${session.email || 'student@bpgeducare.edu.np'}`;
 
         const memIcon = document.getElementById('headerMembershipIcon');
         const memBtn = document.getElementById('headerMembershipBtn');

@@ -543,9 +543,10 @@ function getPlansConfig() {
 function getStudentAuthHeaders() {
     const headers = { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
     try {
-        const raw = localStorage.getItem(BPG_STUDENT_SESSION_KEY) || localStorage.getItem('bpg_student_session');
-        if (raw) {
-            const s = JSON.parse(raw);
+        const s = typeof getStoredStudentSession === 'function'
+            ? getStoredStudentSession()
+            : JSON.parse(sessionStorage.getItem(BPG_STUDENT_SESSION_KEY) || localStorage.getItem(BPG_STUDENT_SESSION_KEY) || localStorage.getItem('bpg_student_session') || 'null');
+        if (s && typeof s === 'object') {
             if (s.sessionToken) headers['x-session-token'] = s.sessionToken;
             if (s.email) headers['x-student-email'] = s.email;
         }

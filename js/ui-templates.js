@@ -266,12 +266,12 @@
                 <form id="signinForm" onsubmit="handleSignInSubmit(event)" autocomplete="on">
                     <div class="modal-field">
                         <label for="signinUsername">Username</label>
-                        <input type="text" id="signinUsername" name="username" class="modal-input" placeholder="e.g. aarav_12" autocomplete="username" required>
+                        <input type="text" id="signinUsername" name="bpg_handle" class="modal-input" placeholder="Your saved username (e.g. aarav_12)" autocomplete="off" autocapitalize="none" spellcheck="false" required>
                     </div>
 
                     <div class="modal-field">
                         <label for="signinEmail">Gmail address</label>
-                        <input type="email" id="signinEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
+                        <input type="email" id="signinEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="username email" inputmode="email" required>
                     </div>
 
                     <div class="modal-field">
@@ -292,7 +292,7 @@
                     </button>
 
                     <div class="auth-footer-links">
-                        <button type="button" class="btn-link-action" onclick="openGmailOtpPane()">Sign in with 6-digit Gmail code</button>
+                        <button type="button" class="btn-link-action" onclick="openGmailOtpPane()">Sign in with Gmail code</button>
                         <button type="button" class="btn-link-action" onclick="switchAuthTab('signup')">New here? Create Account &rarr;</button>
                     </div>
                 </form>

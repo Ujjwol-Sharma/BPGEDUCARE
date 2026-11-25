@@ -21,6 +21,7 @@ const {
     issueStudentSessionToken,
     readRoster,
     writeRoster,
+    readAcademyState,
     deriveStableUserId,
     appendAccountAuditEntry,
     appendRosterAuditEntry
@@ -307,6 +308,13 @@ module.exports = async function handler(req, res) {
             });
             writeRoster(roster);
             const acc = roster.accounts[existingIdx];
+            const state = readAcademyState();
+            const mySwitchRequests = (roster.classSwitchRequests || []).filter(
+                r => (r.userId && r.userId === acc.userId) || canonicalizeEmail(r.email) === canonical
+            );
+            const myPayments = (Array.isArray(state.payments) ? state.payments : []).filter(
+                p => (p.userId && p.userId === acc.userId) || canonicalizeEmail(p.email) === canonical
+            );
             const sessionToken = issueStudentSessionToken(acc, { keepSignedIn });
             const { passkey, ...safeUser } = acc;
             return res.status(200).json({
@@ -315,16 +323,40 @@ module.exports = async function handler(req, res) {
                 mode: 'reset',
                 sessionToken,
                 user: { ...safeUser, verified: true, emailVerified: true },
+                mySwitchRequests,
+                myPayments,
                 message: 'Password updated! Signed in to your workspace.'
             });
         }
 
-        // GMAIL_OTP: Sign in if account exists, otherwise create verified account
-        if (mode === 'gmail_otp' && existingIdx !== -1) {
+        // GMAIL_OTP: Always sign into the existing original account (never create duplicate accounts on login)
+        if (mode === 'gmail_otp') {
+            if (existingIdx === -1) {
+                return res.status(404).json({
+                    ok: false,
+                    code: 'ACCOUNT_NOT_FOUND',
+                    error: 'No existing account was found for this Gmail address. Please use Create Account.'
+                });
+            }
             const acc = roster.accounts[existingIdx];
+            if (acc.accountStatus === 'suspended') {
+                return res.status(403).json({
+                    ok: false,
+                    code: 'ACCOUNT_SUSPENDED',
+                    error: 'Your account has been suspended by an administrator. Please contact BPG EDUCARE support.'
+                });
+            }
             acc.emailVerified = true;
+            if (acc.accountStatus === 'pending_verification') acc.accountStatus = 'active';
             if (!acc.verifiedAt) acc.verifiedAt = new Date().toISOString();
             writeRoster(roster);
+            const state = readAcademyState();
+            const mySwitchRequests = (roster.classSwitchRequests || []).filter(
+                r => (r.userId && r.userId === acc.userId) || canonicalizeEmail(r.email) === canonical
+            );
+            const myPayments = (Array.isArray(state.payments) ? state.payments : []).filter(
+                p => (p.userId && p.userId === acc.userId) || canonicalizeEmail(p.email) === canonical
+            );
             const sessionToken = issueStudentSessionToken(acc, { keepSignedIn });
             const { passkey, ...safeUser } = acc;
             return res.status(200).json({
@@ -334,6 +366,8 @@ module.exports = async function handler(req, res) {
                 mode: 'gmail_otp',
                 sessionToken,
                 user: { ...safeUser, verified: true, emailVerified: true },
+                mySwitchRequests,
+                myPayments,
                 message: `Email verified! Signed in to your existing ${acc.grade} account.`
             });
         }

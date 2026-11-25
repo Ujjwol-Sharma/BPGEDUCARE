@@ -309,6 +309,7 @@ async function flushPendingDurableCommits() {
             });
             if (refResp.ok) {
                 lastHydratedCommitSha = newCommitJson.sha;
+                lastRefEtag = '';
                 lastRefCheckAt = Date.now();
                 return { committed: true, sha: newCommitJson.sha };
             }
@@ -382,7 +383,7 @@ async function ensureDurableStoreHydrated({ TMP_DB_PATH, TMP_ROSTER_PATH, TMP_AT
     }
 
     try {
-        const remoteSha = await getDurableBranchRef(cfg, true);
+        const remoteSha = await getDurableBranchRef(cfg, !force);
         lastRefCheckAt = now;
         if (!remoteSha) {
             lastHydrationAuthoritative = false;

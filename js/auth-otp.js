@@ -598,15 +598,11 @@ async function handleSignInSubmit(e) {
         if (!res.ok || !data.success) {
             const msg = data.error || "We couldn't sign you in with that username, Gmail, and password.";
             if (errBanner) {
-                const showRecoveryActions = data.code === 'INVALID_CREDENTIALS' || res.status === 401;
+                const isVerifyPending = data.code === 'EMAIL_NOT_VERIFIED';
                 errBanner.innerHTML = `
-                    <p style="margin:0 0 ${showRecoveryActions ? '10px' : '0'} 0;">${msg}</p>
-                    ${showRecoveryActions ? `
-                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                            <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="handleGoogleAuthClick('signin')">Continue with Google</button>
-                            <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="openForgotPasswordFromSignIn()">Forgot password?</button>
-                            <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="openGmailOtpPane()">6-digit Gmail code</button>
-                        </div>
+                    <p style="margin:0${isVerifyPending ? ' 0 8px 0' : ''};">${msg}</p>
+                    ${isVerifyPending ? `
+                        <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="openGmailOtpPane()">Verify with Gmail code</button>
                     ` : ''}
                 `;
                 errBanner.style.display = 'block';
@@ -945,6 +941,12 @@ async function handleVerifyEmailOtp(e) {
         }
 
         clearOtpTimers();
+        if (Array.isArray(data.mySwitchRequests)) {
+            window.MY_CLASS_SWITCH_REQUESTS = data.mySwitchRequests;
+        }
+        if (Array.isArray(data.myPayments)) {
+            window.MY_PAYMENTS = data.myPayments;
+        }
         const user = Object.assign({}, data.user, {
             sessionToken: data.sessionToken,
             verified: true
@@ -979,6 +981,7 @@ async function finalizeVerifiedStudentAccount(userObj, shouldPostToRoster = fals
         grade: grade,
         classKey: normKey,
         plan: plan,
+        planExpiresAt: userObj.planExpiresAt || '',
         accountStatus: userObj.accountStatus || 'active',
         paymentStatus: userObj.paymentStatus || (plan !== 'free' ? 'paid' : 'none'),
         legacyAccess: Boolean(userObj.legacyAccess),
