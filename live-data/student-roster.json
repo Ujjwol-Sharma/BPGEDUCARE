@@ -1,8 +1,17 @@
 {
-  "revision": 38,
-  "lastUpdated": "2026-11-25T16:14:57.855Z",
+  "revision": 39,
+  "lastUpdated": "2026-11-25T16:15:26.530Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795623326530_korz",
+      "timestamp": "2026-11-25T16:15:26.530Z",
+      "userId": "usr_8e8ce14819bd",
+      "email": "parajulemijal23@gmail.com",
+      "actor": "Mijal Parajuli (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795623010336_2l5l",
       "timestamp": "2026-11-25T16:10:10.336Z",
@@ -68,6 +77,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_8e8ce14819bd",
+      "name": "Mijal Parajuli",
+      "username": "parajulemijal23",
+      "email": "parajulemijal23@gmail.com",
+      "canonicalEmail": "parajulemijal23@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T16:15:26.470Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_8e8ce14819bdd9fc",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$73f42d38b3aacbf2e1a8455ece2724db$23549c8a0f47e1333622dc8cb25370e8407b5eddb130b652fc453c2aaaeb8eba78efa84910669cc589ab2b2721ae39a855b74bf2b28747b2f02dc5d84a470774",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T16:15:26.530Z",
+      "lastModifiedBy": "Mijal Parajuli (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795623326530_esud",
+          "timestamp": "2026-11-25T16:15:26.530Z",
+          "actor": "Mijal Parajuli (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_81477cddc864",
       "name": "Binita Lamichhane",
