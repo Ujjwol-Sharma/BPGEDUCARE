@@ -1,6 +1,6 @@
 {
-  "revision": 76,
-  "lastUpdated": "2026-11-25T12:23:55.408Z",
+  "revision": 77,
+  "lastUpdated": "2026-11-25T12:27:08.987Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795609628987_cbpo",
+      "timestamp": "2026-11-25T12:27:08.987Z",
+      "userId": "usr_5bf8c263fc69",
+      "email": "sauravkunwar231@gmail.com",
+      "actor": "Saurav Kunwar (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795609435407_7ca9",
       "timestamp": "2026-11-25T12:23:55.407Z",
@@ -417,6 +426,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_5bf8c263fc69",
+      "name": "Saurav Kunwar",
+      "username": "sauravkunwar231",
+      "email": "sauravkunwar231@gmail.com",
+      "canonicalEmail": "sauravkunwar231@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T12:27:08.933Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$eae5e48c4989b95358b89c3207541dc3$e673d64c97aae2d6713d941f9fe8a184d72687438989dca6999fcc9d581077adf82ffaab8cda31c3b258fb365bdb05c98737041b987ccd218b471132fc9d3754",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T12:27:08.987Z",
+      "lastModifiedBy": "Saurav Kunwar (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795609628987_g7px",
+          "timestamp": "2026-11-25T12:27:08.987Z",
+          "actor": "Saurav Kunwar (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_219268db8c0d",
       "name": "Spandan Gorkhali",
