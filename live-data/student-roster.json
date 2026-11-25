@@ -1,6 +1,6 @@
 {
-  "revision": 101,
-  "lastUpdated": "2026-11-25T14:56:26.796Z",
+  "revision": 102,
+  "lastUpdated": "2026-11-25T14:58:50.652Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795618730652_vx37",
+      "timestamp": "2026-11-25T14:58:50.652Z",
+      "userId": "usr_dd6b92875358",
+      "email": "subashpoudel925@gmail.com",
+      "actor": "subashpoudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795618586796_050s",
       "timestamp": "2026-11-25T14:56:26.796Z",
@@ -597,6 +606,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_dd6b92875358",
+      "name": "subashpoudel",
+      "username": "subashpoudel925",
+      "email": "subashpoudel925@gmail.com",
+      "canonicalEmail": "subashpoudel925@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T14:58:50.585Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_dd6b92875358cc38",
+      "avatarUrl": "",
+      "passkey": "scrypt$26a707831126dbd94b665753a5b98890$e0c50f65d9471e90e8dc1b78f9af3b0c1ccc116cd1fb69694cd77abcf618eba2246da8ba2b3c352ff37b882bf1d791c0d191628591cf1ad81aad0e8aa6d86a22",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T14:58:50.652Z",
+      "lastModifiedBy": "subashpoudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795618730652_rhv2",
+          "timestamp": "2026-11-25T14:58:50.652Z",
+          "actor": "subashpoudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_aa332a2e92c8",
       "name": "Unike Tamang",
