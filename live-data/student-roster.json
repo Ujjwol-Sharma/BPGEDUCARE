@@ -1,6 +1,6 @@
 {
-  "revision": 98,
-  "lastUpdated": "2026-11-25T14:39:41.133Z",
+  "revision": 99,
+  "lastUpdated": "2026-11-25T14:45:31.268Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795617931268_4rmn",
+      "timestamp": "2026-11-25T14:45:31.268Z",
+      "userId": "usr_253246e8adf9",
+      "email": "nabinkc1031@gmail.com",
+      "actor": "Nabin (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795617581133_03be",
       "timestamp": "2026-11-25T14:39:41.133Z",
@@ -570,6 +579,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_253246e8adf9",
+      "name": "Nabin",
+      "username": "nabinkc1031",
+      "email": "nabinkc1031@gmail.com",
+      "canonicalEmail": "nabinkc1031@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T14:45:31.197Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$2a7870337698eff2e3a4d4e9fb9275ea$4e732d07ae7e8c9c7857f83d3d25c763b3e8fe316f32f825ef28c09fa6fe77efc19a8e5fb1dcb64e404cf260218dc6d70ead795a128d72dd76f904a21ff0e84b",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T14:45:31.268Z",
+      "lastModifiedBy": "Nabin (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795617931268_2jml",
+          "timestamp": "2026-11-25T14:45:31.268Z",
+          "actor": "Nabin (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_3eae5fab89e5",
       "name": "RatBnl",
