@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T18:17:37.377Z",
+  "lastUpdated": "2026-11-25T18:18:54.057Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3204,7 +3204,18 @@
     "esewaMerchantName": "BPG EDUCARE",
     "googleClientId": ""
   },
-  "notifications": [],
+  "notifications": [
+    {
+      "id": "notif_1795630727465",
+      "title": "Opening Ceremony - 7:00 AM Onwards 🎉",
+      "body": "Join us for the Official Website Opening Ceremony of BPG EDUCARE from 7:00 AM onwards at Galaxy Party Palace, 17 Birauta, Pokhara, Gandaki Province 33700. Don't miss the live launch & giveaway competition!",
+      "category": "Announcement",
+      "scope": "sitewide",
+      "published": true,
+      "createdAt": "2026-11-25T18:18:47.465Z",
+      "updatedAt": "2026-11-25T18:18:47.465Z"
+    }
+  ],
   "chatbotFaqs": [
     {
       "id": "faq_1795618720244",
@@ -3969,6 +3980,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 152,
+  "revision": 153,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
