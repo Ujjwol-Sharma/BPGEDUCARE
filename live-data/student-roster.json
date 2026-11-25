@@ -1,6 +1,6 @@
 {
-  "revision": 70,
-  "lastUpdated": "2026-11-25T10:43:12.358Z",
+  "revision": 71,
+  "lastUpdated": "2026-11-25T10:43:15.217Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795603395217_sx8n",
+      "timestamp": "2026-11-25T10:43:15.217Z",
+      "userId": "usr_5d0c6b99f8a6",
+      "email": "verify.session.live@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Live Verify Student (verify.session.live@gmail.com)"
+    },
     {
       "id": "raud_1795603392358_oa51",
       "timestamp": "2026-11-25T10:43:12.358Z",
@@ -363,46 +372,6 @@
     }
   ],
   "accounts": [
-    {
-      "userId": "usr_5d0c6b99f8a6",
-      "name": "Live Verify Student",
-      "username": "verify.session.live",
-      "email": "verify.session.live@gmail.com",
-      "canonicalEmail": "verifysessionlive@gmail.com",
-      "grade": "Class 11",
-      "classKey": "class-11",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T10:43:07.617Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_5d0c6b99f8a6c53e",
-      "avatarUrl": "",
-      "passkey": "scrypt$c7288f58c3acfbd9dfb9cc24d7f73885$63037eb6d607086323df597b7eaee77959b2e3a174aa28ee3d4c4f778e2daf645dd24dfab4de69bca060c8b768934e3fb93ddaba31679262016c6781ec087204",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T10:43:12.358Z",
-      "lastModifiedBy": "Live Verify Student (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795603392358_4o4x",
-          "timestamp": "2026-11-25T10:43:12.358Z",
-          "actor": "Live Verify Student (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795603387684_dant",
-          "timestamp": "2026-11-25T10:43:07.684Z",
-          "actor": "Live Verify Student (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 11"
-        }
-      ]
-    },
     {
       "userId": "usr_a52d77942f5a",
       "name": "Abhinav Parajuli",
