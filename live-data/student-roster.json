@@ -1,6 +1,6 @@
 {
-  "revision": 73,
-  "lastUpdated": "2026-11-25T12:01:45.503Z",
+  "revision": 74,
+  "lastUpdated": "2026-11-25T12:13:56.672Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795608836672_z1bi",
+      "timestamp": "2026-11-25T12:13:56.672Z",
+      "userId": "usr_0f1bb6e4792c",
+      "email": "sumitach321@gmail.com",
+      "actor": "Sumit Acharya (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795608105503_itxq",
       "timestamp": "2026-11-25T12:01:45.503Z",
@@ -390,6 +399,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_0f1bb6e4792c",
+      "name": "Sumit Acharya",
+      "username": "sumitach321",
+      "email": "sumitach321@gmail.com",
+      "canonicalEmail": "sumitach321@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T12:13:56.613Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_0f1bb6e4792cea33",
+      "avatarUrl": "",
+      "passkey": "scrypt$6a8087080bbb03c72ff78889937a26f6$acf507d1c5460571cb4731409df2abe63bfa2ed55a3b0694fe26d3c64f6d189aec451bab58d3a7e64c4b603d4f49dc46377df7e77531dfff5632743c2c03a282",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T12:13:56.672Z",
+      "lastModifiedBy": "Sumit Acharya (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795608836672_4he0",
+          "timestamp": "2026-11-25T12:13:56.672Z",
+          "actor": "Sumit Acharya (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_03f7b735f6ec",
       "name": "Aaditya Khatri",
