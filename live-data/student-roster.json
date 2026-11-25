@@ -1,6 +1,6 @@
 {
-  "revision": 141,
-  "lastUpdated": "2026-11-25T18:12:23.428Z",
+  "revision": 142,
+  "lastUpdated": "2026-11-25T18:12:42.639Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -1464,9 +1464,16 @@
         "notif_1795622839468"
       ],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T18:12:23.428Z",
+      "updatedAt": "2026-11-25T18:12:42.639Z",
       "lastModifiedBy": "Creative Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795630362639_l9gb",
+          "timestamp": "2026-11-25T18:12:42.639Z",
+          "actor": "Creative Chess Club (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795630362639-1BE1A1 (Padandas, NPR 1999) is pending"
+        },
         {
           "id": "aud_1795630343428_3m1q",
           "timestamp": "2026-11-25T18:12:23.428Z",
@@ -1634,13 +1641,6 @@
           "actor": "Admin Console (Provider Status Check)",
           "action": "PAYMENT_AWAITING_CONFIRMATION",
           "details": "Order ORD-1795531613133-AD4BC7 (Padandas, NPR 1499) is awaiting confirmation"
-        },
-        {
-          "id": "aud_1795532308589_ownu",
-          "timestamp": "2026-11-24T14:58:28.589Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_REJECTED",
-          "details": "Rejected class switch to Class 11"
         }
       ]
     },
