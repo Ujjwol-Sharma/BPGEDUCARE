@@ -1,6 +1,6 @@
 {
-  "revision": 114,
-  "lastUpdated": "2026-11-25T16:36:07.684Z",
+  "revision": 115,
+  "lastUpdated": "2026-11-25T16:37:34.635Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -813,7 +813,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$44f3d457a9e433632dd2dc308386f891$d03dc683e37c0ad33250b9304ee930d749703e1e3bf5ddaabe109d4ea8a60e8ef7fd8c3df3272a2ed02b97664fccd2a4314da6b7c1c15343c557497f44f69425",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795622839468"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T16:36:07.684Z",
       "lastModifiedBy": "Mridul Jung Pande (Google Sign-Up)",
