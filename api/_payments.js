@@ -164,8 +164,22 @@ function applyPaymentLifecycleTransition({ state, roster, payment, nextStatus, a
         a => (payment.userId && a.userId === payment.userId) || a.canonicalEmail === canonical
     );
 
-    // Idempotency guard: if already paid and transition is 'paid', do not re-activate or duplicate audit logs
+    // Idempotency guard: if already paid and transition is 'paid', never double-extend expiry or duplicate audit logs!
+    // If the account somehow lost its Premium plan (reconciliation), restore plan & original expiry without extending twice.
     if (prevStatus === 'paid' && normalizedNext === 'paid' && payment.activatedAt) {
+        const targetPlan = normalizePlan(payment.planId || 'gold');
+        if (acc && (PLAN_RANK[acc.plan] || 0) < (PLAN_RANK[targetPlan] || 0)) {
+            acc.plan = targetPlan;
+            acc.planExplicitlySet = true;
+            acc.paymentStatus = 'paid';
+            if (payment.expiresAt && !acc.planExpiresAt) acc.planExpiresAt = payment.expiresAt;
+            appendAccountAuditEntry(acc, {
+                actor,
+                action: 'ENTITLEMENT_RECONCILED',
+                details: `Reconciled missing ${targetPlan.toUpperCase()} access from verified order ${payment.orderId || payment.id} (original expiry preserved)`
+            });
+            writeRoster(roster);
+        }
         return {
             idempotentReplay: true,
             payment,
@@ -177,9 +191,15 @@ function applyPaymentLifecycleTransition({ state, roster, payment, nextStatus, a
     payment.updatedAt = nowIso;
     if (note) payment.adminNote = String(note).trim();
 
+    const durationDays = Math.max(1, Number(payment.durationDays || 365));
     if (normalizedNext === 'paid') {
         payment.reviewedAt = nowIso;
         payment.activatedAt = payment.activatedAt || nowIso;
+        payment.durationDays = durationDays;
+        if (!payment.expiresAt) {
+            const baseMs = Date.parse(payment.activatedAt) || Date.now();
+            payment.expiresAt = new Date(baseMs + durationDays * 24 * 60 * 60 * 1000).toISOString();
+        }
         payment.verifiedBy = actor;
         payment.activationCount = (Number(payment.activationCount) || 0) + 1;
     } else if (normalizedNext === 'failed' || normalizedNext === 'refunded') {
@@ -199,10 +219,11 @@ function applyPaymentLifecycleTransition({ state, roster, payment, nextStatus, a
             acc.planExplicitlySet = true;
             acc.legacyAccess = false;
             acc.paymentStatus = 'paid';
+            acc.planExpiresAt = payment.expiresAt || acc.planExpiresAt || new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
             appendAccountAuditEntry(acc, {
                 actor,
                 action: 'PAYMENT_CONFIRMED_PLAN_ACTIVATED',
-                details: `Order ${payment.orderId || payment.id} (Txn ${payment.transactionId || 'N/A'}, NPR ${payment.expectedAmount}) confirmed PAID. Plan ${String(prevPlan).toUpperCase()} -> ${targetPlan.toUpperCase()}`
+                details: `Order ${payment.orderId || payment.id} (Txn ${payment.transactionId || 'N/A'}, NPR ${payment.expectedAmount}) confirmed PAID. Plan ${String(prevPlan).toUpperCase()} -> ${targetPlan.toUpperCase()} (expires ${acc.planExpiresAt.split('T')[0]})`
             });
             appendRosterAuditEntry(roster, {
                 userId: acc.userId,
@@ -669,6 +690,7 @@ module.exports = async function paymentsHandler(req, res) {
                 planName,
                 expectedAmount,
                 currency,
+                durationDays: Number(payment.durationDays || 365),
                 orderSignature,
                 esewaForm: {
                     amount: expectedAmount,
@@ -899,7 +921,73 @@ module.exports = async function paymentsHandler(req, res) {
     }
 
     // -------------------------------------------------------------------------
-    // 3. ADMIN ACTIONS: VERIFY, REJECT/FAIL, REFUND, CHECK PROVIDER, DELETE
+    // 2B. STUDENT: CHECK PENDING PAYMENT STATUS WITHOUT PAYING AGAIN
+    // -------------------------------------------------------------------------
+    if (action === 'CHECK_MY_PAYMENT_STATUS') {
+        const user = resolveRequestUser(req);
+        if (!user || !user.email) {
+            res.statusCode = 401;
+            res.end(JSON.stringify({ ok: false, error: 'Please sign in to check your payment status.' }));
+            return;
+        }
+        const canonical = canonicalizeEmail(user.email);
+        const orderId = String(body.orderId || body.paymentId || '').trim();
+        const myPayments = (state.payments || []).filter(
+            p => (p.userId && p.userId === user.userId) || p.canonicalEmail === canonical
+        );
+        const payment = orderId
+            ? myPayments.find(p => p.id === orderId || p.orderId === orderId)
+            : myPayments[0];
+        if (!payment) {
+            res.statusCode = 404;
+            res.end(JSON.stringify({ ok: false, error: 'Payment order not found for your account.' }));
+            return;
+        }
+        const currentSt = normalizePaymentStatusValue(payment.status);
+        if (currentSt === 'paid' || currentSt === 'refunded') {
+            res.statusCode = 200;
+            res.end(JSON.stringify({ ok: true, payment, myPayments, status: currentSt, message: currentSt === 'paid' ? 'Payment is confirmed and your plan is active.' : 'Payment was refunded.' }));
+            return;
+        }
+        const check = await queryEsewaProviderStatus({
+            esewaCfg,
+            payment,
+            simulatedStatus: body.simulatedStatus || ''
+        });
+        payment.lastProviderCheckAt = new Date().toISOString();
+        payment.lastProviderStatus = check.providerStatus;
+        const roster = readRoster();
+        const transition = applyPaymentLifecycleTransition({
+            state,
+            roster,
+            payment,
+            nextStatus: check.mappedStatus,
+            actor: `${user.name || 'Student'} (Status Check)`,
+            note: check.providerReachable
+                ? `Provider returned ${check.providerStatus} (NPR ${check.totalAmount}).`
+                : 'Still pending confirmation — no need to pay again.',
+            transactionId: check.refId || payment.transactionId
+        });
+        const updatedUser = transition.account ? (({ passkey, ...safe }) => safe)(transition.account) : null;
+        const sessionToken = transition.account ? issueStudentSessionToken(transition.account) : '';
+        res.statusCode = 200;
+        res.end(JSON.stringify({
+            ok: true,
+            payment: transition.payment,
+            status: transition.payment.status,
+            user: updatedUser,
+            sessionToken,
+            message: transition.payment.status === 'paid'
+                ? 'Payment confirmed! Your Premium plan is now active.'
+                : (transition.payment.status === 'failed'
+                    ? 'Payment was unsuccessful. You can safely retry checkout.'
+                    : 'Payment is still pending confirmation. You do not need to pay again.')
+        }));
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. ADMIN ACTIONS: VERIFY, REJECT/FAIL, REFUND, CHECK PROVIDER, RECONCILE, DELETE
     // -------------------------------------------------------------------------
     if (!isAdmin) {
         res.statusCode = 401;
@@ -909,6 +997,55 @@ module.exports = async function paymentsHandler(req, res) {
 
     const paymentId = String(body.paymentId || body.orderId || '').trim();
     const adminActor = String(body.adminActor || req.headers['x-admin-actor'] || 'Admin Console').trim();
+
+    if (action === 'ADMIN_RECONCILE_ENTITLEMENTS') {
+        const roster = readRoster();
+        let reconciledCount = 0;
+        const reconciledEmails = [];
+        for (const p of (state.payments || [])) {
+            if (!p || normalizePaymentStatusValue(p.status) !== 'paid') continue;
+            const targetPlan = normalizePlan(p.planId || 'gold');
+            const canonical = canonicalizeEmail(p.email);
+            const acc = roster.accounts.find(a => (p.userId && a.userId === p.userId) || a.canonicalEmail === canonical);
+            if (!acc) continue;
+            const needsPlan = (PLAN_RANK[acc.plan] || 0) < (PLAN_RANK[targetPlan] || 0);
+            const needsExpiry = Boolean(p.expiresAt && !acc.planExpiresAt);
+            if (needsPlan || needsExpiry) {
+                if (needsPlan) {
+                    acc.plan = targetPlan;
+                    acc.planExplicitlySet = true;
+                    acc.paymentStatus = 'paid';
+                }
+                if (!p.expiresAt) {
+                    const baseMs = Date.parse(p.activatedAt || p.reviewedAt || p.createdAt) || Date.now();
+                    p.expiresAt = new Date(baseMs + (Number(p.durationDays || 365) * 24 * 60 * 60 * 1000)).toISOString();
+                }
+                acc.planExpiresAt = acc.planExpiresAt || p.expiresAt;
+                appendAccountAuditEntry(acc, {
+                    actor: adminActor,
+                    action: 'ENTITLEMENT_RECONCILED',
+                    details: `Reconciled ${targetPlan.toUpperCase()} access from verified payment ${p.orderId || p.id}`
+                });
+                reconciledCount++;
+                reconciledEmails.push(acc.userId);
+            }
+        }
+        if (reconciledCount > 0) {
+            writeRoster(roster);
+            writeStateToDisk(state);
+        }
+        res.statusCode = 200;
+        res.end(JSON.stringify({
+            ok: true,
+            reconciledCount,
+            reconciledUserIds: reconciledEmails,
+            payments: state.payments,
+            message: reconciledCount > 0
+                ? `Reconciled ${reconciledCount} confirmed payment entitlement(s).`
+                : 'All confirmed payments already have active Premium entitlements.'
+        }));
+        return;
+    }
 
     if (action === 'ADMIN_DELETE_PAYMENT') {
         state.payments = state.payments.filter(p => p.id !== paymentId && p.orderId !== paymentId);

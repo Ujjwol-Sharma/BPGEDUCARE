@@ -146,7 +146,7 @@ function isAdminTypingInUsersOrPayments() {
     if (!active) return false;
     const tag = (active.tagName || '').toUpperCase();
     if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') return false;
-    if (active.id === 'userSearchInput') return false; // Search input value is preserved across renderUsersTab
+    if (active.id === 'userSearchInput' || active.id === 'paymentSearchInput') return false; // Search input value is preserved across live poll renders
     return Boolean(active.closest('#pane-users, #pane-payments, #pane-switches'));
 }
 
@@ -804,10 +804,13 @@ function openStudentDetailModal(email) {
     );
     const auditLogs = Array.isArray(acc.auditLog) ? acc.auditLog : [];
     const plan = (acc.plan || 'free').toLowerCase();
+    const expiryText = acc.planExpiresAt
+        ? new Date(acc.planExpiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+        : (plan !== 'free' ? 'Active (Academic Year)' : '—');
 
     mount.innerHTML = `
         <div style="position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9990; display:flex; align-items:center; justify-content:center; padding:16px;" onclick="if(event.target===this) closeStudentDetailModal()">
-            <div class="adm-card" style="width:100%; max-width:740px; max-height:88vh; overflow-y:auto; margin:0; padding:24px;">
+            <div class="adm-card" style="width:100%; max-width:780px; max-height:88vh; overflow-y:auto; margin:0; padding:24px;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px;">
                     <div>
                         <h3 style="margin:0; font-size:1.2rem;">${escapeHtml(acc.name || 'Student')}</h3>
@@ -818,7 +821,7 @@ function openStudentDetailModal(email) {
                     <button type="button" class="btn-topbar" onclick="closeStudentDetailModal()">Close</button>
                 </div>
 
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:10px; margin-bottom:18px; padding:14px; border-radius:10px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:18px; padding:14px; border-radius:10px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
                     <div>
                         <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Active Class</div>
                         <div style="font-weight:700; margin-top:2px;">${escapeHtml(acc.grade || acc.classKey)}</div>
@@ -828,6 +831,10 @@ function openStudentDetailModal(email) {
                         <div style="font-weight:700; margin-top:2px; text-transform:uppercase; color:${plan === 'free' ? 'inherit' : '#16a34a'};">${escapeHtml(plan)} ${plan !== 'free' ? '(PAID)' : ''}</div>
                     </div>
                     <div>
+                        <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Plan Expiry</div>
+                        <div style="font-weight:600; margin-top:2px;">${escapeHtml(expiryText)}</div>
+                    </div>
+                    <div>
                         <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Account Status</div>
                         <div style="font-weight:600; margin-top:2px; text-transform:capitalize;">${escapeHtml((acc.accountStatus || 'active').replace('_', ' '))}</div>
                     </div>
@@ -835,6 +842,13 @@ function openStudentDetailModal(email) {
                         <div style="font-size:0.72rem; color:var(--adm-text-muted); text-transform:uppercase;">Last Updated</div>
                         <div style="font-weight:600; margin-top:2px;">${formatRelativeOrLocalTime(acc.updatedAt || acc.joinedAt)}</div>
                         <div style="font-size:0.72rem; color:var(--adm-text-muted);">by ${escapeHtml(acc.lastModifiedBy || 'System')}</div>
+                    </div>
+                </div>
+
+                <h4 style="margin:0 0 8px 0; font-size:0.95rem;">Mock Test History &amp; Progress</h4>
+                <div id="studentDetailMockHistoryMount" style="margin-bottom:16px;">
+                    <div style="padding:12px; border:1px dashed var(--adm-border); border-radius:8px; color:var(--adm-text-muted); font-size:0.84rem;">
+                        Loading mock test history...
                     </div>
                 </div>
 
@@ -944,6 +958,69 @@ function openStudentDetailModal(email) {
             </div>
         </div>
     `;
+
+    loadStudentDetailMockHistory(acc.email, acc.userId);
+}
+
+async function loadStudentDetailMockHistory(email, userId) {
+    const box = document.getElementById('studentDetailMockHistoryMount');
+    if (!box) return;
+    try {
+        const qs = new URLSearchParams({ studentDetail: '1' });
+        if (userId) qs.set('userId', userId);
+        if (email) qs.set('email', email);
+        const res = await fetch('/api/student-roster?' + qs.toString(), {
+            cache: 'no-store',
+            headers: getAdminHeaders()
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.error || 'Could not load test history.');
+        const attempts = Array.isArray(json.mockAttempts) ? json.mockAttempts : [];
+        if (attempts.length === 0) {
+            box.innerHTML = `<div style="padding:12px; border:1px dashed var(--adm-border); border-radius:8px; color:var(--adm-text-muted); font-size:0.84rem;">No mock test attempts recorded for this student yet.</div>`;
+            return;
+        }
+        const submitted = attempts.filter(a => a.status === 'submitted');
+        const bestPct = submitted.length ? Math.max(...submitted.map(a => Number(a.percentage) || 0)) : 0;
+        const avgPct = submitted.length ? Math.round((submitted.reduce((s, a) => s + (Number(a.percentage) || 0), 0) / submitted.length) * 10) / 10 : 0;
+        box.innerHTML = `
+            <div style="display:flex; gap:14px; flex-wrap:wrap; font-size:0.8rem; color:var(--adm-text-muted); margin-bottom:8px;">
+                <span>Total Attempts: <strong>${attempts.length}</strong></span>
+                <span>Submitted: <strong>${submitted.length}</strong></span>
+                <span>Best Score: <strong>${bestPct}%</strong></span>
+                <span>Average: <strong>${avgPct}%</strong></span>
+            </div>
+            <div class="adm-table-wrap" style="max-height:200px; overflow-y:auto;">
+                <table class="adm-table">
+                    <thead>
+                        <tr>
+                            <th>Mock Test</th>
+                            <th>Score</th>
+                            <th>Breakdown</th>
+                            <th>Submitted</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${attempts.map(a => `
+                            <tr>
+                                <td>
+                                    <strong>${escapeHtml(a.testTitle || a.testId)}</strong><br>
+                                    <small style="color:var(--adm-text-muted);">${escapeHtml(a.classKey || '')}</small>
+                                </td>
+                                <td><strong>${a.marksEarned} / ${a.totalMarks}</strong> (${a.percentage}%)</td>
+                                <td><small>C: ${a.correctCount} · W: ${a.wrongCount} · S: ${a.skippedCount}</small></td>
+                                <td><small>${escapeHtml(a.submittedAtNpt || (a.submittedAt ? new Date(a.submittedAt).toLocaleString() : 'In Progress'))}</small></td>
+                                <td><span class="adm-status-pill ${a.status === 'submitted' ? 'open' : ''}">${escapeHtml(a.status === 'submitted' ? 'Submitted' : 'In Progress')}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    } catch (err) {
+        box.innerHTML = `<div style="padding:12px; border:1px dashed var(--adm-border); border-radius:8px; color:var(--adm-text-muted); font-size:0.84rem;">${escapeHtml(err.message || 'Could not load mock test history.')}</div>`;
+    }
 }
 
 function closeStudentDetailModal() {
@@ -3594,7 +3671,7 @@ function renderAdminMockResultsView() {
                 <button type="button" class="btn-topbar" onclick="inspectAdminMockAttempt('')">Close Answer Sheet</button>
             </div>
             ${inspected.review.length === 0 ? `
-                <div class="adm-empty-note">Detailed question breakdown is available once the attempt is submitted.</div>
+                <div class="adm-empty-note">${inspected.status === 'submitted' ? 'Historical question-by-question breakdown was not recorded for this older attempt; original score and percentage are preserved.' : 'Detailed question breakdown is available once the attempt is submitted.'}</div>
             ` : `
                 <div style="display:flex; flex-direction:column; gap:10px;">
                     ${inspected.review.map((q, idx) => {
@@ -4798,6 +4875,9 @@ async function loadAdminPayments() {
     } catch (e) {}
 }
 
+let adminPaymentSearchQuery = '';
+let adminPaymentStatusFilter = 'all';
+
 function renderPaymentsTab() {
     const mount = document.getElementById('paymentsAdminMount');
     const badge = document.getElementById('paymentsPendingBadge');
@@ -4813,19 +4893,61 @@ function renderPaymentsTab() {
     }
     if (!mount) return;
 
-    if (list.length === 0) {
-        mount.innerHTML = `<div style="padding:24px; text-align:center; color:var(--adm-text-muted);">No plan purchases submitted yet.</div>`;
-        return;
-    }
+    const existingSearch = document.getElementById('paymentSearchInput');
+    if (existingSearch) adminPaymentSearchQuery = existingSearch.value;
+    const existingFilter = document.getElementById('paymentStatusFilter');
+    if (existingFilter) adminPaymentStatusFilter = existingFilter.value;
+
+    const q = String(adminPaymentSearchQuery || '').trim().toLowerCase();
+    const stFilter = String(adminPaymentStatusFilter || 'all').toLowerCase();
+
+    const filtered = list.filter(p => {
+        const normSt = normalizeAdminPayStatus(p.status);
+        if (stFilter === 'pending' && normSt !== 'pending' && normSt !== 'awaiting_confirmation') return false;
+        if (stFilter === 'paid' && normSt !== 'paid') return false;
+        if (stFilter === 'failed' && normSt !== 'failed') return false;
+        if (stFilter === 'refunded' && normSt !== 'refunded') return false;
+        if (!q) return true;
+        const hay = `${p.fullName || ''} ${p.username || ''} ${p.email || ''} ${p.userId || ''} ${p.orderId || ''} ${p.id || ''} ${p.transactionId || ''} ${p.planName || ''}`.toLowerCase();
+        return hay.includes(q);
+    });
+
+    const paidCount = list.filter(p => normalizeAdminPayStatus(p.status) === 'paid').length;
+    const failedCount = list.filter(p => normalizeAdminPayStatus(p.status) === 'failed').length;
+
+    const hadFocus = document.activeElement && document.activeElement.id === 'paymentSearchInput';
+    const selStart = hadFocus ? document.activeElement.selectionStart : null;
 
     mount.innerHTML = `
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
+            <input type="search" id="paymentSearchInput" class="adm-input" style="flex:1; min-width:220px;"
+                placeholder="Search by student, username, Gmail, order ID, or txn ref..."
+                value="${escapeHtml(adminPaymentSearchQuery)}"
+                oninput="adminPaymentSearchQuery = this.value; renderPaymentsTab();">
+            <select id="paymentStatusFilter" class="adm-select compact" onchange="adminPaymentStatusFilter = this.value; renderPaymentsTab();">
+                <option value="all" ${stFilter === 'all' ? 'selected' : ''}>All Payments (${list.length})</option>
+                <option value="pending" ${stFilter === 'pending' ? 'selected' : ''}>Pending (${pendingCount})</option>
+                <option value="paid" ${stFilter === 'paid' ? 'selected' : ''}>Confirmed (${paidCount})</option>
+                <option value="failed" ${stFilter === 'failed' ? 'selected' : ''}>Unsuccessful (${failedCount})</option>
+                <option value="refunded" ${stFilter === 'refunded' ? 'selected' : ''}>Refunded</option>
+            </select>
+        </div>
+        <div style="font-size:0.82rem; color:var(--adm-text-muted); margin-bottom:10px;">
+            Showing <strong>${filtered.length}</strong> of <strong>${list.length}</strong> payment records &middot;
+            Confirmed: <strong>${paidCount}</strong> &middot; Pending: <strong>${pendingCount}</strong> &middot; Unsuccessful: <strong>${failedCount}</strong>
+        </div>
+        ${filtered.length === 0 ? `
+            <div style="padding:24px; text-align:center; color:var(--adm-text-muted); border:1px dashed var(--adm-border); border-radius:10px;">
+                ${list.length === 0 ? 'No plan purchases submitted yet.' : 'No payment records match your search/filter.'}
+            </div>
+        ` : `
         <div class="adm-table-wrap">
             <table class="adm-table">
                 <thead>
                     <tr>
                         <th>Student &amp; Member ID</th>
                         <th>Class</th>
-                        <th>Order, Plan &amp; Amount</th>
+                        <th>Order, Plan &amp; Expiry</th>
                         <th>eSewa Txn ID</th>
                         <th>Submitted / Updated</th>
                         <th>Status</th>
@@ -4833,9 +4955,10 @@ function renderPaymentsTab() {
                     </tr>
                 </thead>
                 <tbody>
-                    ${list.map(p => {
+                    ${filtered.map(p => {
                         const normSt = normalizeAdminPayStatus(p.status);
                         const isPendingOrAwaiting = normSt === 'pending' || normSt === 'awaiting_confirmation';
+                        const expLabel = p.expiresAt ? new Date(p.expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
                         return `
                             <tr>
                                 <td>
@@ -4847,6 +4970,7 @@ function renderPaymentsTab() {
                                 <td>
                                     <strong>${escapeHtml(p.planName)}</strong> (${escapeHtml(p.amount)})<br>
                                     <code style="font-size:0.72rem;">${escapeHtml(p.orderId || p.id)}</code>
+                                    ${expLabel ? `<div style="font-size:0.72rem; color:#16a34a; margin-top:2px;">Expires: ${escapeHtml(expLabel)}</div>` : ''}
                                 </td>
                                 <td><code>${escapeHtml(p.transactionId || 'Not provided')}</code></td>
                                 <td>
@@ -4865,7 +4989,7 @@ function renderPaymentsTab() {
                                             ` : ''}
                                             ${isPendingOrAwaiting ? `
                                                 <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminCheckProviderStatus('${escapeHtml(p.id)}')" title="Check transaction status against eSewa provider">Check Provider</button>
-                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', false)">Mark Failed</button>
+                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', false)">Mark Unsuccessful</button>
                                             ` : ''}
                                             ${normSt === 'paid' ? `
                                                 <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminRefundPayment('${escapeHtml(p.id)}')">Refund</button>
@@ -4880,7 +5004,39 @@ function renderPaymentsTab() {
                 </tbody>
             </table>
         </div>
+        `}
     `;
+
+    if (hadFocus) {
+        const nextInput = document.getElementById('paymentSearchInput');
+        if (nextInput) {
+            nextInput.focus();
+            if (typeof selStart === 'number') {
+                try { nextInput.setSelectionRange(selStart, selStart); } catch (e) {}
+            }
+        }
+    }
+}
+
+async function handleAdminReconcilePayments() {
+    setSaveStatus('Reconciling...');
+    try {
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({ action: 'ADMIN_RECONCILE_ENTITLEMENTS' })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Reconciliation failed');
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        setSaveStatus('Saved', true);
+        showAdminToast(json.message || 'Confirmed payments reconciled.');
+        broadcastUpdate('PERMISSIONS_UPDATE');
+        await pollAdminLiveUpdates(true);
+    } catch (err) {
+        setSaveStatus('Error');
+        showAdminToast(err.message || 'Could not reconcile confirmed payments.', 'error');
+    }
 }
 
 async function handleAdminCheckProviderStatus(paymentId) {

@@ -480,19 +480,26 @@ let activeCheckoutOrder = null;
 
 function formatPaymentStatusDisplay(status) {
     const s = String(status || '').trim().toLowerCase();
-    if (s === 'paid' || s === 'verified' || s === 'complete') {
-        return { key: 'paid', label: 'Paid', color: '#16a34a', bg: 'rgba(22,163,74,0.12)', desc: 'Verified by server. Your subscription is active.' };
+    if (s === 'paid' || s === 'verified' || s === 'complete' || s === 'confirmed') {
+        return { key: 'paid', label: 'Confirmed', color: '#16a34a', bg: 'rgba(22,163,74,0.12)', desc: 'Payment confirmed on server. Your Premium plan is active.' };
     }
     if (s === 'awaiting_confirmation' || s === 'awaiting') {
-        return { key: 'awaiting_confirmation', label: 'Awaiting confirmation', color: '#d97706', bg: 'rgba(217,119,6,0.14)', desc: 'Your payment reference is being verified with eSewa / Admin. This page updates automatically within 1–2 seconds of confirmation.' };
+        return { key: 'awaiting_confirmation', label: 'Pending', color: '#d97706', bg: 'rgba(217,119,6,0.14)', desc: 'Payment submitted and awaiting confirmation. Tap "Check Pending Status" to refresh without paying again.' };
     }
-    if (s === 'failed' || s === 'rejected') {
-        return { key: 'failed', label: 'Failed', color: '#dc2626', bg: 'rgba(220,38,38,0.12)', desc: 'Payment verification failed or could not be matched. Please check your eSewa Transaction ID or contact support.' };
+    if (s === 'failed' || s === 'rejected' || s === 'unsuccessful') {
+        return { key: 'failed', label: 'Unsuccessful', color: '#dc2626', bg: 'rgba(220,38,38,0.12)', desc: 'Payment was unsuccessful or could not be matched. You can safely retry your payment.' };
     }
     if (s === 'refunded') {
         return { key: 'refunded', label: 'Refunded', color: '#6366f1', bg: 'rgba(99,102,241,0.12)', desc: 'This payment was refunded and subscription access was adjusted.' };
     }
-    return { key: 'pending', label: 'Pending', color: '#b45309', bg: 'rgba(245,158,11,0.12)', desc: 'Order created on server. Scan the eSewa QR and enter your Transaction ID to confirm.' };
+    return { key: 'pending', label: 'Pending', color: '#b45309', bg: 'rgba(245,158,11,0.12)', desc: 'Order ready. Complete eSewa payment and submit your Transaction ID, or check pending status.' };
+}
+
+function formatPlanExpiryDateDisplay(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 function buildPaymentRemarksText(session, planName, orderId = '') {
@@ -527,9 +534,11 @@ async function openCheckoutModal(planId = 'gold') {
     const session = getStoredStudentSession();
 
     const titleEl = document.getElementById('checkoutPlanTitle');
-    if (titleEl) titleEl.textContent = `Buy ${cfg.name} Plan`;
+    if (titleEl) titleEl.textContent = `Upgrade to ${cfg.name} Plan`;
     const priceEl = document.getElementById('checkoutPlanPriceLine');
-    if (priceEl) priceEl.textContent = `Amount: ${cfg.price || '—'} (NPR)${cfg.period ? ` · ${cfg.period}` : ''}`;
+    if (priceEl) priceEl.textContent = `${cfg.price || '—'} (NPR)`;
+    const durationEl = document.getElementById('checkoutPlanDurationLine');
+    if (durationEl) durationEl.textContent = cfg.period || '12 Months (Full Academic Year)';
 
     const qrImg = document.getElementById('checkoutEsewaQrImg');
     const rawQrUrl = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.esewaQrUrl)
@@ -704,9 +713,83 @@ async function submitStaticEsewaPayment() {
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> I&rsquo;ve Paid &mdash; Continue to WhatsApp';
+            btn.innerHTML = '<i class="fa-solid fa-lock" aria-hidden="true" style="margin-right:6px;"></i> Pay Now &amp; Confirm via eSewa / WhatsApp';
         }
     }
+}
+
+async function checkStudentPendingPaymentStatus(orderId = '', triggerBtn = null) {
+    if (!isUserAuthenticated()) {
+        openAuthModal('signin');
+        return;
+    }
+    const origHtml = triggerBtn ? triggerBtn.innerHTML : '';
+    if (triggerBtn) {
+        triggerBtn.disabled = true;
+        triggerBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+    }
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/payments', {
+            method: 'POST',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'CHECK_MY_PAYMENT_STATUS',
+                orderId: orderId || ''
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+            throw new Error(data.error || 'Could not check payment status.');
+        }
+
+        if (Array.isArray(data.myPayments)) {
+            window.MY_PAYMENTS = data.myPayments;
+        } else if (data.payment) {
+            const idx = (window.MY_PAYMENTS || []).findIndex(p => p.id === data.payment.id || p.orderId === data.payment.orderId);
+            if (idx >= 0) window.MY_PAYMENTS[idx] = data.payment;
+            else window.MY_PAYMENTS = [data.payment, ...(window.MY_PAYMENTS || [])];
+        }
+
+        if (data.user) {
+            const session = getStoredStudentSession() || {};
+            session.plan = data.user.plan || session.plan;
+            session.paymentStatus = data.user.paymentStatus || session.paymentStatus;
+            session.planExpiresAt = data.user.planExpiresAt || session.planExpiresAt || '';
+            if (data.sessionToken) session.sessionToken = data.sessionToken;
+            if (typeof saveStoredStudentSession === 'function') {
+                saveStoredStudentSession(session, session.keepSignedIn !== false);
+            } else {
+                localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+                localStorage.setItem('bpg_student_session', JSON.stringify(session));
+            }
+            updateAuthUserPill();
+        }
+
+        refreshOpenCheckoutStatusLive();
+        renderStudentDashboardPaymentBanner();
+        if (document.getElementById('studentProfileModal')?.classList.contains('open')) {
+            renderStudentProfileModalContent();
+        }
+        if (data.payment?.status === 'paid' && typeof syncWithServerDatabase === 'function') {
+            await syncWithServerDatabase(false);
+        }
+        showToast(data.message || 'Payment status refreshed.');
+    } catch (err) {
+        showToast(err.message || 'Could not check payment status right now.');
+    } finally {
+        if (triggerBtn) {
+            triggerBtn.disabled = false;
+            triggerBtn.innerHTML = origHtml;
+        }
+    }
+}
+
+function checkActiveCheckoutPaymentStatus() {
+    const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
+    const targetOrderId = activeCheckoutOrder?.orderId || myPays[0]?.orderId || myPays[0]?.id || '';
+    const btn = document.getElementById('btnCheckoutCheckPending');
+    return checkStudentPendingPaymentStatus(targetOrderId, btn);
 }
 
 async function handleGatewayPaymentReturn() {
@@ -735,6 +818,7 @@ async function handleGatewayPaymentReturn() {
                 const session = getStoredStudentSession() || {};
                 session.plan = data.user.plan;
                 session.paymentStatus = data.user.paymentStatus || 'paid';
+                session.planExpiresAt = data.user.planExpiresAt || session.planExpiresAt || '';
                 session.sessionToken = data.sessionToken;
                 localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
                 localStorage.setItem('bpg_student_session', JSON.stringify(session));
@@ -771,6 +855,10 @@ function renderStudentDashboardPaymentBanner() {
     const safeOrder = escapeHtml ? escapeHtml(latest.orderId || latest.id || '') : (latest.orderId || '');
     const safeTxn = escapeHtml ? escapeHtml(latest.transactionId || 'Not submitted yet') : (latest.transactionId || '');
 
+    const isPending = st.key === 'pending' || st.key === 'awaiting_confirmation';
+    const isFailed = st.key === 'failed';
+    const safePlanId = escapeHtml ? escapeHtml(latest.planId || 'gold') : (latest.planId || 'gold');
+
     mount.style.display = 'block';
     mount.innerHTML = `
         <div style="padding:14px 18px; border-radius:12px; border:1px solid ${st.color}; background:${st.bg}; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
@@ -784,9 +872,13 @@ function renderStudentDashboardPaymentBanner() {
                     ${st.desc} &middot; Txn Ref: <code>${safeTxn}</code>
                 </div>
             </div>
-            <button type="button" class="btn btn-secondary" onclick="openStudentProfileModal()" style="padding:6px 12px; font-size:0.78rem;">
-                View Details
-            </button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                ${isPending ? `<button type="button" class="btn btn-secondary" onclick="checkStudentPendingPaymentStatus('${safeOrder}', this)" style="padding:6px 12px; font-size:0.78rem;">Check Status</button>` : ''}
+                ${isFailed ? `<button type="button" class="btn btn-primary" onclick="openCheckoutModal('${safePlanId}')" style="padding:6px 12px; font-size:0.78rem;">Retry Payment</button>` : ''}
+                <button type="button" class="btn btn-secondary" onclick="openStudentProfileModal()" style="padding:6px 12px; font-size:0.78rem;">
+                    My Plan
+                </button>
+            </div>
         </div>
     `;
 }
@@ -810,35 +902,49 @@ function renderStudentProfileModalContent() {
     const session = getStoredStudentSession() || {};
     const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
     const latestPay = myPays[0] || null;
+    const latestConfirmedPay = myPays.find(p => String(p.status || '').toLowerCase() === 'paid' || String(p.status || '').toLowerCase() === 'verified') || null;
     const payDisplay = latestPay
         ? formatPaymentStatusDisplay(latestPay.status)
         : (session.plan && session.plan !== 'free'
             ? formatPaymentStatusDisplay('paid')
-            : { label: 'Free (No active payment)', color: 'var(--text-secondary)', bg: 'var(--surface-soft)' });
+            : { label: 'Free Plan', color: 'var(--text-secondary)', bg: 'var(--surface-soft)' });
+
+    const planName = String(session.plan || 'free').toLowerCase();
+    const expiryIso = session.planExpiresAt || (latestConfirmedPay && latestConfirmedPay.expiresAt) || '';
+    const expiryLabel = planName === 'free'
+        ? 'No active subscription'
+        : (formatPlanExpiryDateDisplay(expiryIso) || 'Active (Academic Year)');
 
     const safeEsc = (v) => (typeof escapeHtml === 'function' ? escapeHtml(v) : String(v || ''));
 
     body.innerHTML = `
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:10px; padding:12px 14px; border-radius:10px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-soft, #e5e7eb); margin-bottom:16px; font-size:0.82rem;">
-            <div>
-                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Member ID</div>
-                <code style="font-weight:700;">${safeEsc(session.userId || 'Assigned')}</code>
-            </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; padding:14px; border-radius:12px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-soft, #e5e7eb); margin-bottom:14px; font-size:0.82rem;">
             <div>
                 <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Current Plan</div>
-                <strong style="text-transform:uppercase;">${safeEsc(session.plan || 'free')}</strong>
+                <strong style="text-transform:uppercase; font-size:0.95rem; color:${planName === 'free' ? 'var(--text-primary)' : '#16a34a'};">${safeEsc(planName)}</strong>
             </div>
             <div>
-                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Account Status</div>
-                <strong style="color:#16a34a; text-transform:capitalize;">${safeEsc((session.accountStatus || 'active').replace('_', ' '))}</strong>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Plan Expiry</div>
+                <strong>${safeEsc(expiryLabel)}</strong>
             </div>
             <div>
                 <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Payment Status</div>
                 <strong style="color:${payDisplay.color};">${safeEsc(payDisplay.label)}</strong>
             </div>
+            <div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Member ID</div>
+                <code style="font-weight:700;">${safeEsc(session.userId || 'Assigned')}</code>
+            </div>
         </div>
 
-        <form onsubmit="handleStudentProfileSave(event)" style="margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+            <small style="color:var(--text-secondary);">Active Class: <strong>${safeEsc(session.grade || 'Class 12')}</strong> &middot; Account: <strong>${safeEsc((session.accountStatus || 'active').replace('_', ' '))}</strong></small>
+            <button type="button" class="btn btn-primary" onclick="closeStudentProfileModal(); openPlanComparisonModal('', '');" style="padding:7px 14px; font-size:0.82rem;">
+                <i class="fa-solid fa-crown" aria-hidden="true" style="margin-right:5px;"></i> ${planName === 'diamond' ? 'Renew / View Plans' : 'Upgrade Plan'}
+            </button>
+        </div>
+
+        <form onsubmit="handleStudentProfileSave(event)" style="margin-bottom:18px; padding-top:12px; border-top:1px solid var(--border-soft, #e5e7eb);">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
                 <div class="modal-field" style="margin:0;">
                     <label for="profileEditName">Full Name</label>
@@ -850,37 +956,42 @@ function renderStudentProfileModalContent() {
                 </div>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-                <small style="color:var(--text-secondary);">Email: <strong>${safeEsc(session.email || '')}</strong> &middot; Class: <strong>${safeEsc(session.grade || 'Class 12')}</strong></small>
-                <button type="submit" class="btn btn-primary" id="btnSaveStudentProfile" style="padding:8px 16px; font-size:0.84rem;">
-                    Save Profile Changes
+                <small style="color:var(--text-secondary);">Gmail: <strong>${safeEsc(session.email || '')}</strong></small>
+                <button type="submit" class="btn btn-secondary" id="btnSaveStudentProfile" style="padding:7px 14px; font-size:0.82rem;">
+                    Save Profile
                 </button>
             </div>
         </form>
 
-        <h4 style="font-size:0.94rem; margin:0 0 8px 0;">Payment &amp; Order History (${myPays.length})</h4>
+        <h4 style="font-size:0.94rem; margin:0 0 8px 0;">Payment History (${myPays.length})</h4>
         ${myPays.length === 0 ? `
             <div style="padding:12px; border:1px dashed var(--border-soft); border-radius:8px; font-size:0.83rem; color:var(--text-secondary);">
-                No payment orders yet. Click <strong>Plans</strong> to upgrade to Gold or Diamond.
+                No payment orders yet. Click <strong>Upgrade Plan</strong> above to choose Gold or Diamond.
             </div>
         ` : `
-            <div style="max-height:210px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:10px;">
+            <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:10px;">
                 <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
                     <thead>
                         <tr style="background:var(--surface-soft); text-align:left;">
                             <th style="padding:8px 10px;">Order / Plan</th>
                             <th style="padding:8px 10px;">Amount</th>
-                            <th style="padding:8px 10px;">Txn Ref</th>
-                            <th style="padding:8px 10px;">Status</th>
+                            <th style="padding:8px 10px;">Reference</th>
+                            <th style="padding:8px 10px;">Status &amp; Expiry</th>
+                            <th style="padding:8px 10px;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${myPays.map(p => {
                             const st = formatPaymentStatusDisplay(p.status);
+                            const isPending = st.key === 'pending' || st.key === 'awaiting_confirmation';
+                            const isFailed = st.key === 'failed';
+                            const ordEsc = safeEsc(p.orderId || p.id);
+                            const expText = p.expiresAt ? formatPlanExpiryDateDisplay(p.expiresAt) : '';
                             return `
                                 <tr style="border-top:1px solid var(--border-soft);">
                                     <td style="padding:8px 10px;">
                                         <strong>${safeEsc(p.planName || p.planId)}</strong><br>
-                                        <code style="font-size:0.72rem;">${safeEsc(p.orderId || p.id)}</code>
+                                        <code style="font-size:0.72rem;">${ordEsc}</code>
                                     </td>
                                     <td style="padding:8px 10px;">${safeEsc(p.amount)}</td>
                                     <td style="padding:8px 10px;"><code>${safeEsc(p.transactionId || '—')}</code></td>
@@ -888,6 +999,12 @@ function renderStudentProfileModalContent() {
                                         <span style="padding:2px 8px; border-radius:999px; font-weight:600; font-size:0.74rem; color:${st.color}; background:${st.bg};">
                                             ${safeEsc(st.label)}
                                         </span>
+                                        ${expText ? `<div style="font-size:0.71rem; color:var(--text-secondary); margin-top:3px;">Exp: ${safeEsc(expText)}</div>` : ''}
+                                    </td>
+                                    <td style="padding:8px 10px;">
+                                        ${isPending ? `<button type="button" class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="checkStudentPendingPaymentStatus('${ordEsc}', this)">Check Status</button>` : ''}
+                                        ${isFailed ? `<button type="button" class="btn btn-primary" style="padding:4px 8px; font-size:0.72rem;" onclick="closeStudentProfileModal(); openCheckoutModal('${safeEsc(p.planId || 'gold')}')">Retry</button>` : ''}
+                                        ${(!isPending && !isFailed) ? '<span style="color:var(--text-secondary); font-size:0.75rem;">—</span>' : ''}
                                     </td>
                                 </tr>
                             `;

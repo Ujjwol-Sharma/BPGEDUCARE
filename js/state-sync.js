@@ -632,7 +632,7 @@ function reconcileStudentLiveSessionPayload(payload) {
             const usernameChanged = u.username && u.username !== session.username;
             const planChanged = nextPlan !== prevPlan;
             const gradeChanged = nextGrade !== prevGrade || nextNormClass !== session.classKey;
-            const statusChanged = u.accountStatus !== session.accountStatus || u.paymentStatus !== session.paymentStatus;
+            const statusChanged = u.accountStatus !== session.accountStatus || u.paymentStatus !== session.paymentStatus || (u.planExpiresAt || '') !== (session.planExpiresAt || '');
             const idChanged = u.userId && u.userId !== session.userId;
             const readNotifsChanged = Array.isArray(u.readNotificationIds) && JSON.stringify(u.readNotificationIds) !== JSON.stringify(session.readNotificationIds || []);
 
@@ -645,6 +645,7 @@ function reconcileStudentLiveSessionPayload(payload) {
                 session.plan = nextPlan;
                 session.accountStatus = u.accountStatus || 'active';
                 session.paymentStatus = u.paymentStatus || (nextPlan !== 'free' ? 'paid' : 'none');
+                session.planExpiresAt = u.planExpiresAt || '';
                 session.legacyAccess = Boolean(u.legacyAccess);
                 session.planExplicitlySet = Boolean(u.planExplicitlySet);
                 session.readNotificationIds = Array.isArray(u.readNotificationIds) ? u.readNotificationIds : (session.readNotificationIds || []);

@@ -257,7 +257,10 @@
                             <p class="adm-card-subtitle">Review pending eSewa / WhatsApp purchases, record payment
                                 verification, and activate student plans.</p>
                         </div>
-                        <button type="button" class="btn-topbar" onclick="loadAdminPayments()">Refresh Payments</button>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button type="button" class="btn-adm-dark" onclick="handleAdminReconcilePayments()" title="Ensure every confirmed payment has its Premium plan and expiry active">Reconcile Confirmed Payments</button>
+                            <button type="button" class="btn-topbar" onclick="loadAdminPayments()">Refresh Payments</button>
+                        </div>
                     </div>
                     <div id="paymentsAdminMount"></div>
                 </div>
@@ -586,7 +589,7 @@
 
     <div id="adminToastContainer" class="adm-toast-container"></div>
 
-    <script src="./js/admin-studio.js?v=20261125v3"></script>
+    <script src="./js/admin-studio.js?v=20261125v4"></script>
 </body>
 
 </html>

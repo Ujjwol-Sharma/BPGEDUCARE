@@ -549,14 +549,26 @@
     </div>
 
     <!-- ==========================================================================
-         SIGNED-IN ESEWA + WHATSAPP CHECKOUT MODAL (QR SHOWN ONLY HERE)
+         SIGNED-IN CHECKOUT MODAL (SHORT FLOW: PLAN, TOTAL IN NPR, DURATION, PAY NOW)
          ========================================================================== -->
     <div class="modal-backdrop" id="checkoutModal" role="dialog" aria-modal="true">
         <div class="modal-card checkout-modal-card" style="max-width:560px; padding:28px;">
             <button class="btn-modal-dismiss" onclick="closeCheckoutModal()"><i class="fa-solid fa-xmark"></i></button>
-            <span class="modal-head-tag" style="margin-bottom:10px; display:inline-block;">Checkout &middot; eSewa &amp; WhatsApp</span>
+            <span class="modal-head-tag" style="margin-bottom:10px; display:inline-block;">Secure Checkout &middot; eSewa &amp; WhatsApp</span>
             <h3 id="checkoutPlanTitle" style="font-size:1.25rem; font-weight:700; margin:0 0 6px 0;">Upgrade Plan</h3>
-            <p id="checkoutPlanPriceLine" style="font-size:0.95rem; font-weight:600; color:var(--text-primary); margin:0 0 16px 0;"></p>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; border-radius:10px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-subtle, #e4e4e7); margin:0 0 14px 0;">
+                <div>
+                    <div style="font-size:0.74rem; color:var(--text-secondary); text-transform:uppercase;">Total (NPR)</div>
+                    <strong id="checkoutPlanPriceLine" style="font-size:1.05rem; color:var(--text-primary);"></strong>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:0.74rem; color:var(--text-secondary); text-transform:uppercase;">Plan Duration</div>
+                    <strong id="checkoutPlanDurationLine" style="font-size:0.9rem; color:var(--text-primary);">12 Months (Full Academic Year)</strong>
+                </div>
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">
+                Available payment methods: <strong>eSewa QR / Wallet</strong> (verified on server via eSewa &amp; WhatsApp confirmation).
+            </div>
 
             <div class="checkout-qr-box" id="checkoutQrBox">
                 <img id="checkoutEsewaQrImg" src="" alt="eSewa Payment QR" class="checkout-qr-img" onerror="this.style.display='none'">
@@ -582,12 +594,17 @@
             <div id="checkoutStatusBanner" class="auth-inline-alert" style="display:none; margin-bottom:12px;"></div>
 
             <div style="display:flex; flex-direction:column; gap:10px; margin-top:14px;">
-                <button type="button" id="btnCheckoutWhatsappConfirm" class="btn btn-primary" onclick="submitStaticEsewaPayment()" style="justify-content:center; padding:11px 16px; font-size:0.9rem;">
-                    <i class="fa-brands fa-whatsapp"></i> I&rsquo;ve Paid &mdash; Continue to WhatsApp
+                <button type="button" id="btnCheckoutWhatsappConfirm" class="btn btn-primary" onclick="submitStaticEsewaPayment()" style="justify-content:center; padding:11px 16px; font-size:0.92rem;">
+                    <i class="fa-solid fa-lock" aria-hidden="true" style="margin-right:6px;"></i> Pay Now &amp; Confirm via eSewa / WhatsApp
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="closeCheckoutModal()" style="justify-content:center; padding:9px 16px; font-size:0.85rem;">
-                    Cancel
-                </button>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button type="button" id="btnCheckoutCheckPending" class="btn btn-secondary" onclick="checkActiveCheckoutPaymentStatus()" style="flex:1; justify-content:center; padding:9px 12px; font-size:0.82rem;">
+                        <i class="fa-solid fa-rotate" aria-hidden="true" style="margin-right:5px;"></i> Check Pending Status
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeCheckoutModal()" style="justify-content:center; padding:9px 16px; font-size:0.84rem;">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -697,14 +714,14 @@
         </div>
     </div>
 
-    <!-- Student Profile, Account Status & Live Payment History Modal -->
+    <!-- My Plan, Profile & Payment History Modal -->
     <div class="modal-backdrop" id="studentProfileModal" role="dialog" aria-modal="true">
-        <div class="modal-card" style="max-width: 600px; padding: 26px;">
+        <div class="modal-card" style="max-width: 640px; padding: 26px;">
             <button class="btn-modal-dismiss" onclick="closeStudentProfileModal()"><i class="fa-solid fa-xmark"></i></button>
-            <span class="modal-head-tag" style="margin-bottom:8px; display:inline-block;">Member Profile &middot; Real-Time Sync</span>
-            <h3 style="font-size:1.22rem; font-weight:700; margin:0 0 6px 0;">My Profile &amp; Subscription Status</h3>
+            <span class="modal-head-tag" style="margin-bottom:8px; display:inline-block;">My Plan &amp; Account</span>
+            <h3 style="font-size:1.22rem; font-weight:700; margin:0 0 6px 0;">My Plan, Expiry &amp; Payment History</h3>
             <p style="font-size:0.86rem; color:var(--text-secondary); margin:0 0 16px 0;">
-                Changes to your profile, class, and payments sync automatically with the Admin Console within 1&ndash;2 seconds.
+                View your active plan, expiry date, and verified payment records, or check a pending payment without paying again.
             </p>
             <div id="studentProfileModalBody"></div>
         </div>

@@ -98,6 +98,81 @@ module.exports = async function studentRosterHandler(req, res) {
             const isAdmin = isAdminPasskeyValid(req.headers['x-admin-passkey']);
             const parsedUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
             const checkMe = parsedUrl.searchParams.get('me') === '1';
+            const wantStudentDetail = isAdmin && parsedUrl.searchParams.get('studentDetail') === '1';
+
+            if (wantStudentDetail) {
+                const targetUserId = String(parsedUrl.searchParams.get('userId') || '').trim();
+                const targetEmail = String(parsedUrl.searchParams.get('email') || '').trim().toLowerCase();
+                const targetCanon = targetEmail ? canonicalizeEmail(targetEmail) : '';
+                const acc = (roster.accounts || []).find(
+                    a => (targetUserId && a.userId === targetUserId) || (targetCanon && a.canonicalEmail === targetCanon)
+                );
+                if (!acc) {
+                    res.statusCode = 404;
+                    res.end(JSON.stringify({ success: false, error: 'Student account not found.' }));
+                    return;
+                }
+                const state = readAcademyState();
+                const { formatNepalTime } = require('./_access-control');
+                const fs = require('fs');
+                const path = require('path');
+                const os = require('os');
+                let attempts = [];
+                if (global.__BPG_MOCK_ATTEMPTS__ && Array.isArray(global.__BPG_MOCK_ATTEMPTS__.attempts)) {
+                    attempts = global.__BPG_MOCK_ATTEMPTS__.attempts;
+                } else {
+                    for (const p of [path.join(os.tmpdir(), 'bpg-mock-attempts.json'), path.join(__dirname, '..', 'data', 'mock-attempts.json')]) {
+                        try {
+                            if (fs.existsSync(p)) {
+                                const parsed = JSON.parse(fs.readFileSync(p, 'utf8'));
+                                if (Array.isArray(parsed.attempts)) { attempts = parsed.attempts; break; }
+                            }
+                        } catch (e) {}
+                    }
+                }
+                const testById = new Map((state.mockTests || []).map(t => [t.id, t]));
+                const studentAttempts = attempts
+                    .filter(a => a && ((acc.userId && a.userId === acc.userId) || canonicalizeEmail(a.email || a.canonicalEmail) === acc.canonicalEmail))
+                    .sort((a, b) => Number(b.startedAt || 0) - Number(a.startedAt || 0))
+                    .map(a => {
+                        const t = testById.get(a.testId);
+                        const isSubmitted = Boolean(a.submitted);
+                        const marksEarned = a.result?.score ?? 0;
+                        const totalMarks = a.result?.total ?? (t?.questions?.length || 0);
+                        return {
+                            attemptId: a.id,
+                            testId: a.testId,
+                            testTitle: t?.title || 'Mock Test',
+                            classKey: t?.classKey || a.classKey || '',
+                            submitted: isSubmitted,
+                            status: isSubmitted ? 'submitted' : 'in_progress',
+                            score: marksEarned,
+                            total: totalMarks,
+                            marksEarned,
+                            totalMarks,
+                            correctCount: a.result?.correctCount ?? marksEarned,
+                            wrongCount: a.result?.wrongCount ?? 0,
+                            skippedCount: a.result?.skippedCount ?? Math.max(0, totalMarks - marksEarned),
+                            percentage: a.result?.percentage ?? 0,
+                            submittedAt: a.submittedAt || '',
+                            submittedAtNpt: a.submittedAt ? formatNepalTime(a.submittedAt) : 'In Progress'
+                        };
+                    });
+                const studentPayments = (state.payments || []).filter(
+                    p => (acc.userId && p.userId === acc.userId) || canonicalizeEmail(p.email) === acc.canonicalEmail
+                );
+                const safeAccount = stripSensitiveAccountFields(acc);
+                res.statusCode = 200;
+                res.end(JSON.stringify({
+                    success: true,
+                    account: safeAccount,
+                    student: safeAccount,
+                    attempts: studentAttempts,
+                    mockAttempts: studentAttempts,
+                    payments: studentPayments
+                }));
+                return;
+            }
 
             if (req.method === 'HEAD') {
                 res.statusCode = 200;
