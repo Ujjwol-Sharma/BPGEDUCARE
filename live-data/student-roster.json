@@ -1,6 +1,6 @@
 {
-  "revision": 82,
-  "lastUpdated": "2026-11-25T12:45:19.931Z",
+  "revision": 83,
+  "lastUpdated": "2026-11-25T12:45:56.257Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795610756257_nzej",
+      "timestamp": "2026-11-25T12:45:56.257Z",
+      "userId": "usr_82b1ff28ecc3",
+      "email": "safalpaudel0600@gmail.com",
+      "actor": "Safal (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795610719930_or54",
       "timestamp": "2026-11-25T12:45:19.930Z",
@@ -462,6 +471,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_82b1ff28ecc3",
+      "name": "Safal",
+      "username": "safalpaudel0600",
+      "email": "safalpaudel0600@gmail.com",
+      "canonicalEmail": "safalpaudel0600@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T12:45:56.202Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$c40421d5388c3e68d6e62293e883533f$f31857ab3fcdf097cfd760a456f2a0538e0905d3326c89b03cc9349b2268517a05e7a473c19a99353b14f4c08251f4c35554968b3213faf9c2092525e18af142",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T12:45:56.257Z",
+      "lastModifiedBy": "Safal (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795610756257_etz7",
+          "timestamp": "2026-11-25T12:45:56.257Z",
+          "actor": "Safal (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_32c1a5fb30c2",
       "name": "Manjul Subedi",
