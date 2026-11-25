@@ -1,6 +1,6 @@
 {
-  "revision": 117,
-  "lastUpdated": "2026-11-25T16:39:30.044Z",
+  "revision": 118,
+  "lastUpdated": "2026-11-25T16:40:35.331Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -813,7 +813,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T16:39:29.989Z",
       "verificationMethod": "google_oauth",
@@ -824,9 +824,16 @@
       "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T16:39:30.043Z",
-      "lastModifiedBy": "Bishal chhetri (Google Sign-Up)",
+      "updatedAt": "2026-11-25T16:40:35.331Z",
+      "lastModifiedBy": "Bishal chhetri (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795624835331_yafv",
+          "timestamp": "2026-11-25T16:40:35.331Z",
+          "actor": "Bishal chhetri (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795624835330-0A0C50 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795624770043_mcpe",
           "timestamp": "2026-11-25T16:39:30.043Z",
