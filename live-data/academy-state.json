@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T17:47:11.876Z",
+  "lastUpdated": "2026-11-25T17:47:59.541Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2936,7 +2936,7 @@
     "gold": {
       "id": "gold",
       "name": "Padandas",
-      "price": "Rs. 1,499",
+      "price": "Rs. 1,999",
       "period": "Per academic year",
       "description": "Includes all Free content plus Gold questions, full answers, and study PDFs."
     },
@@ -3874,6 +3874,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 139,
+  "revision": 140,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
