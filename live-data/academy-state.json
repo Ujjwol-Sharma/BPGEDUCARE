@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:29:25.622Z",
+  "lastUpdated": "2026-11-25T15:30:23.583Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1614,6 +1614,10 @@
                 {
                   "id": "sub_1795620559358_1",
                   "title": "1.1 Derivative of hyperbolic functions"
+                },
+                {
+                  "id": "sub_1795620618131_2",
+                  "title": "1.2 L-Hospital Rule"
                 }
               ],
               "pdfs": [],
@@ -3507,6 +3511,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 92,
+  "revision": 93,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
