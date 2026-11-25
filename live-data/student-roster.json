@@ -1,6 +1,6 @@
 {
-  "revision": 66,
-  "lastUpdated": "2026-11-25T02:43:46.563Z",
+  "revision": 67,
+  "lastUpdated": "2026-11-25T03:04:11.507Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795575851507_b5mw",
+      "timestamp": "2026-11-25T03:04:11.507Z",
+      "userId": "usr_4eb8560d0956",
+      "email": "prashillamichhane123@gmail.com",
+      "actor": "Prashil Lamichhane (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795574626563_fise",
       "timestamp": "2026-11-25T02:43:46.563Z",
@@ -327,6 +336,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_4eb8560d0956",
+      "name": "Prashil Lamichhane",
+      "username": "prashillamichhane123",
+      "email": "prashillamichhane123@gmail.com",
+      "canonicalEmail": "prashillamichhane123@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T03:04:11.442Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_4eb8560d09563436",
+      "avatarUrl": "",
+      "passkey": "scrypt$7f1aa4a36df409cbe9cd9b225a20bddc$1924222851221530929980d5399ac1859ec5774c0633596df106e10245e49210bce87ac35b0f7996ee685f44953c2d8a94d256d9c55a6c1cac774bf5e5d19c4f",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T03:04:11.507Z",
+      "lastModifiedBy": "Prashil Lamichhane (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795575851507_fdfn",
+          "timestamp": "2026-11-25T03:04:11.507Z",
+          "actor": "Prashil Lamichhane (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_358b294bfb3b",
       "name": "Binisa Gautam",
