@@ -1,6 +1,6 @@
 {
-  "revision": 104,
-  "lastUpdated": "2026-11-25T15:17:49.242Z",
+  "revision": 105,
+  "lastUpdated": "2026-11-25T15:28:15.866Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795620495866_2xp9",
+      "timestamp": "2026-11-25T15:28:15.866Z",
+      "userId": "usr_5264e9c810f7",
+      "email": "pokhreldikshya66@gmail.com",
+      "actor": "Dikshya Pokhrel (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795619869242_wa0e",
       "timestamp": "2026-11-25T15:17:49.242Z",
@@ -624,6 +633,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_5264e9c810f7",
+      "name": "Dikshya Pokhrel",
+      "username": "pokhreldikshya66",
+      "email": "pokhreldikshya66@gmail.com",
+      "canonicalEmail": "pokhreldikshya66@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T15:28:15.805Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$26cbb80f8784cf940b45dad94155ff07$b4e04ddc370fa7afb2d16a7389e28b3260888505bfcc42b08f88ddd97efc10309b5d7d2ca2be8013cd9129f13d66b1167628582d2fae68d931dcbbf995ed7ed8",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T15:28:15.866Z",
+      "lastModifiedBy": "Dikshya Pokhrel (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795620495866_sq0m",
+          "timestamp": "2026-11-25T15:28:15.866Z",
+          "actor": "Dikshya Pokhrel (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_54947c9c748f",
       "name": "Avipsa Bhattarai",
