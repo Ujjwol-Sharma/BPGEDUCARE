@@ -1,6 +1,6 @@
 {
-  "revision": 128,
-  "lastUpdated": "2026-11-25T17:18:07.017Z",
+  "revision": 129,
+  "lastUpdated": "2026-11-25T17:19:13.200Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -2262,9 +2262,16 @@
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T17:18:07.017Z",
-      "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
+      "updatedAt": "2026-11-25T17:19:13.200Z",
+      "lastModifiedBy": "Aradhya Paudel (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795627153200_1hf1",
+          "timestamp": "2026-11-25T17:19:13.200Z",
+          "actor": "Aradhya Paudel (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795627153199-6EECC3 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795627087017_kh4h",
           "timestamp": "2026-11-25T17:18:07.017Z",
