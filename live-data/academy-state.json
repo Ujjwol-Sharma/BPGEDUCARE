@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:41:23.402Z",
+  "lastUpdated": "2026-11-25T15:41:26.047Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3403,8 +3403,8 @@
       "status": "failed",
       "adminNote": "Payment verification failed or rejected by Admin.",
       "createdAt": "2026-11-25T13:44:27.812Z",
-      "updatedAt": "2026-11-25T15:41:23.402Z",
-      "reviewedAt": "2026-11-25T15:41:23.402Z",
+      "updatedAt": "2026-11-25T15:41:26.047Z",
+      "reviewedAt": "2026-11-25T15:41:26.047Z",
       "verifiedBy": "Admin Console"
     },
     {
@@ -3532,6 +3532,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 99,
+  "revision": 100,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
