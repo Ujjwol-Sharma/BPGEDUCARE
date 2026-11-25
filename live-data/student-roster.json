@@ -1,6 +1,6 @@
 {
-  "revision": 36,
-  "lastUpdated": "2026-11-25T16:10:10.336Z",
+  "revision": 37,
+  "lastUpdated": "2026-11-25T16:10:33.444Z",
   "classSwitchRequests": [],
   "auditLog": [
     {
@@ -89,7 +89,9 @@
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$a4350d90a9c2cbe48aa34f39dcd90bd0$25e7dbe6a5174fa0d05e6c6c427c12a49ac9e7eb402149729ac258b645454f6d85af062568892891384e77dea4dfaf67ebe592d61dfcc4834d53daf14cc33f30",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795622839468"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T16:10:10.336Z",
       "lastModifiedBy": "Binita Lamichhane (Email OTP Sign-Up)",
