@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:41:33.849Z",
+  "lastUpdated": "2026-11-25T15:42:25.771Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1476,7 +1476,12 @@
               "title": "Trigonometry",
               "hours": "9 hrs",
               "marks": "6Marks",
-              "subTopics": [],
+              "subTopics": [
+                {
+                  "id": "sub_1795621343016_1",
+                  "title": "1.1 Properties of Triangle"
+                }
+              ],
               "pdfs": [
                 {
                   "id": "lpdf_1795618953644_0",
@@ -3507,6 +3512,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 101,
+  "revision": 102,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
