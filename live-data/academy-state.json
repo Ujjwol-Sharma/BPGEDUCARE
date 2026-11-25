@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T17:46:57.714Z",
+  "lastUpdated": "2026-11-25T17:47:11.876Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3125,6 +3125,15 @@
       "role": "",
       "photoUrl": "",
       "bio": ""
+    },
+    {
+      "id": "team_1795628825256",
+      "slot": "member",
+      "initial": "D",
+      "name": "Dipson Paudel",
+      "role": "",
+      "photoUrl": "",
+      "bio": ""
     }
   ],
   "homepageContent": {
@@ -3865,6 +3874,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 138,
+  "revision": 139,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
