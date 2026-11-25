@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T03:05:35.969Z",
+  "lastUpdated": "2026-11-25T04:08:47.213Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -594,10 +594,12 @@
         },
         {
           "code": "Unit 07",
-          "name": "Probability & Statistics (Skewness & Dispersion)",
-          "hours": "26 hrs",
-          "marks": "11 Marks",
-          "focus": "1 Long (5M) + 1 Short (4M) + 2 MCQ (2M)"
+          "name": "Statistics  and Mechaniccs(Skewness & Dispersion)",
+          "hours": "9 hrs",
+          "marks": "6Marks",
+          "focus": "1 Short (5M) + 1 MCQ (1M)",
+          "domain": "Statistics  and Mechaniccs(Skewness & Dispersion)",
+          "weightage": "1 Short (5M) + 1 MCQ (1M)"
         }
       ],
       "units": [
@@ -937,9 +939,9 @@
             {
               "id": "class-11-math-l7",
               "code": "Unit 07",
-              "title": "Probability & Statistics (Skewness & Dispersion)",
-              "hours": "26 hrs",
-              "marks": "11 Marks",
+              "title": "Statistics  and Mechaniccs(Skewness & Dispersion)",
+              "hours": "9 hrs",
+              "marks": "6Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -3313,6 +3315,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 56,
+  "revision": 57,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
