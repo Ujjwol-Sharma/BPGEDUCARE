@@ -1,6 +1,6 @@
 {
-  "revision": 65,
-  "lastUpdated": "2026-11-25T02:40:45.407Z",
+  "revision": 66,
+  "lastUpdated": "2026-11-25T02:43:46.563Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795574626563_fise",
+      "timestamp": "2026-11-25T02:43:46.563Z",
+      "userId": "usr_358b294bfb3b",
+      "email": "bishnupdgautam2@gmail.com",
+      "actor": "Binisa Gautam (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795574445407_4w4y",
       "timestamp": "2026-11-25T02:40:45.407Z",
@@ -339,9 +348,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$4988442cf5fa84c2942eb6d96688f534$b1240f527d2bf00f3f78dde20ec2b184afd856d725476e50c85732112c8e8b9bc81419ff9bce7eb655617f1ca41eed2b0a8bab5c3e9bc510dae6ab02ce8c4814",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T02:40:45.407Z",
-      "lastModifiedBy": "Binisa Gautam (Google Sign-Up)",
+      "updatedAt": "2026-11-25T02:43:46.563Z",
+      "lastModifiedBy": "Binisa Gautam (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795574626563_u6e9",
+          "timestamp": "2026-11-25T02:43:46.563Z",
+          "actor": "Binisa Gautam (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795574445407_yazo",
           "timestamp": "2026-11-25T02:40:45.407Z",
