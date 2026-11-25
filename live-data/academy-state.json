@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:32:29.466Z",
+  "lastUpdated": "2026-11-25T15:33:13.764Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1626,6 +1626,10 @@
                 {
                   "id": "sub_1795620743371_4",
                   "title": "1.4 Differential Approximation"
+                },
+                {
+                  "id": "sub_1795620789597_5",
+                  "title": "1.5 Rate Measure"
                 }
               ],
               "pdfs": [],
@@ -3519,6 +3523,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 95,
+  "revision": 96,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
