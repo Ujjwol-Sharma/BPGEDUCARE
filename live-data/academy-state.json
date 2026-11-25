@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T09:58:03.425Z",
+  "lastUpdated": "2026-11-25T09:58:08.522Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3210,30 +3210,6 @@
   ],
   "payments": [
     {
-      "id": "pay_1795531610243_rd2k",
-      "orderId": "ORD-1795531610243-091C49",
-      "userId": "usr_25e888886ae4",
-      "fullName": "Chess Club",
-      "username": "creativechessclub01",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
-      "classKey": "class-12",
-      "className": "Class 12",
-      "planId": "gold",
-      "planName": "Padandas",
-      "amount": "Rs. 1,499",
-      "expectedAmount": 1499,
-      "currency": "NPR",
-      "transactionId": "",
-      "orderSignature": "adda65ab57b0cc01972baa492044548db1f6899bdc08d588520ff0c7809f5f7e",
-      "method": "esewa_qr",
-      "status": "pending",
-      "adminNote": "Order created on server; awaiting eSewa payment.",
-      "createdAt": "2026-11-24T14:46:50.243Z",
-      "updatedAt": "2026-11-24T14:46:50.244Z",
-      "reviewedAt": ""
-    },
-    {
       "id": "pay_1795518561321_0cma",
       "orderId": "ORD-1795518561321-571F30",
       "userId": "usr_25e888886ae4",
@@ -3309,6 +3285,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 67,
+  "revision": 68,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
