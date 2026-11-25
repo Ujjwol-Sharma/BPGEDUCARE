@@ -1,6 +1,6 @@
 {
-  "revision": 113,
-  "lastUpdated": "2026-11-25T16:35:59.101Z",
+  "revision": 114,
+  "lastUpdated": "2026-11-25T16:36:07.684Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795624567684_5x7y",
+      "timestamp": "2026-11-25T16:36:07.684Z",
+      "userId": "usr_aba8f2cb0d91",
+      "email": "mriduljungpande0095@gmail.com",
+      "actor": "Mridul Jung Pande (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (After 12 Entrance)"
+    },
     {
       "id": "raud_1795624559101_exzo",
       "timestamp": "2026-11-25T16:35:59.101Z",
@@ -783,6 +792,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_aba8f2cb0d91",
+      "name": "Mridul Jung Pande",
+      "username": "mriduljungpande0095",
+      "email": "mriduljungpande0095@gmail.com",
+      "canonicalEmail": "mriduljungpande0095@gmail.com",
+      "grade": "After 12 Entrance",
+      "classKey": "after-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T16:36:07.615Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_aba8f2cb0d913d5f",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$44f3d457a9e433632dd2dc308386f891$d03dc683e37c0ad33250b9304ee930d749703e1e3bf5ddaabe109d4ea8a60e8ef7fd8c3df3272a2ed02b97664fccd2a4314da6b7c1c15343c557497f44f69425",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T16:36:07.684Z",
+      "lastModifiedBy": "Mridul Jung Pande (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795624567684_kbgr",
+          "timestamp": "2026-11-25T16:36:07.684Z",
+          "actor": "Mridul Jung Pande (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in After 12 Entrance"
+        }
+      ]
+    },
     {
       "userId": "usr_ab78663f0a4c",
       "name": "Rohan Sharma",
