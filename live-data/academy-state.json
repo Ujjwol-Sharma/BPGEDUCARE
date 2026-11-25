@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T02:14:29.549Z",
+  "lastUpdated": "2026-11-25T02:15:16.289Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1392,6 +1392,10 @@
                 {
                   "id": "sub_1795572869294_4",
                   "title": "1.4 Sequence and Series"
+                },
+                {
+                  "id": "sub_1795572915020_5",
+                  "title": "1.5 Matrix Based System of linear equations"
                 }
               ],
               "pdfs": [],
@@ -3266,6 +3270,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 51,
+  "revision": 52,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
