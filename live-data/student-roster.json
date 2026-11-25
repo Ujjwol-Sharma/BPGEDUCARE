@@ -1,6 +1,6 @@
 {
-  "revision": 64,
-  "lastUpdated": "2026-11-25T02:25:13.893Z",
+  "revision": 65,
+  "lastUpdated": "2026-11-25T02:40:45.407Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795574445407_4w4y",
+      "timestamp": "2026-11-25T02:40:45.407Z",
+      "userId": "usr_358b294bfb3b",
+      "email": "bishnupdgautam2@gmail.com",
+      "actor": "Binisa Gautam (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795573513893_h7et",
       "timestamp": "2026-11-25T02:25:13.893Z",
@@ -309,6 +318,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_358b294bfb3b",
+      "name": "Binisa Gautam",
+      "username": "bishnupdgautam2",
+      "email": "bishnupdgautam2@gmail.com",
+      "canonicalEmail": "bishnupdgautam2@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T02:40:45.343Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_358b294bfb3b5ca4",
+      "avatarUrl": "",
+      "passkey": "scrypt$4988442cf5fa84c2942eb6d96688f534$b1240f527d2bf00f3f78dde20ec2b184afd856d725476e50c85732112c8e8b9bc81419ff9bce7eb655617f1ca41eed2b0a8bab5c3e9bc510dae6ab02ce8c4814",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T02:40:45.407Z",
+      "lastModifiedBy": "Binisa Gautam (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795574445407_yazo",
+          "timestamp": "2026-11-25T02:40:45.407Z",
+          "actor": "Binisa Gautam (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_b2f5d1fbcf97",
       "name": "Binod Timilsina",
