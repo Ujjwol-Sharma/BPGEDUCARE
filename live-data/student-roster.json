@@ -1,6 +1,6 @@
 {
-  "revision": 102,
-  "lastUpdated": "2026-11-25T14:58:50.652Z",
+  "revision": 103,
+  "lastUpdated": "2026-11-25T15:05:01.405Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795619101405_9avb",
+      "timestamp": "2026-11-25T15:05:01.405Z",
+      "userId": "usr_54947c9c748f",
+      "email": "avipsame@gmail.com",
+      "actor": "Avipsa Bhattarai (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795618730652_vx37",
       "timestamp": "2026-11-25T14:58:50.652Z",
@@ -606,6 +615,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_54947c9c748f",
+      "name": "Avipsa Bhattarai",
+      "username": "avipsame",
+      "email": "avipsame@gmail.com",
+      "canonicalEmail": "avipsame@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T15:05:01.352Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$b5fa5680e42a66b1b867c507b8862d4d$00a9daecfeb34322cdd5406028a9bd1a7b529fb99b311acdf929cd4aca95c1b50a4cb354692560fbb97673d4fd7b8e20899e317a4708afab5c2d81e6701b027c",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T15:05:01.405Z",
+      "lastModifiedBy": "Avipsa Bhattarai (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795619101405_mcpl",
+          "timestamp": "2026-11-25T15:05:01.405Z",
+          "actor": "Avipsa Bhattarai (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_dd6b92875358",
       "name": "subashpoudel",
