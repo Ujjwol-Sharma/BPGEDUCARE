@@ -1,6 +1,6 @@
 {
-  "revision": 138,
-  "lastUpdated": "2026-11-25T18:09:26.748Z",
+  "revision": 139,
+  "lastUpdated": "2026-11-25T18:09:29.552Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795630169552_vdzs",
+      "timestamp": "2026-11-25T18:09:29.552Z",
+      "userId": "usr_b312fe6586f8",
+      "email": "bpg.verify.mwwfu3hj@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Live Verify Student (bpg.verify.mwwfu3hj@gmail.com)"
+    },
     {
       "id": "raud_1795630166748_sotu",
       "timestamp": "2026-11-25T18:09:26.748Z",
@@ -909,49 +918,6 @@
     }
   ],
   "accounts": [
-    {
-      "userId": "usr_b312fe6586f8",
-      "name": "Live Verify Student",
-      "username": "verify_mwwfu3hj",
-      "email": "bpg.verify.mwwfu3hj@gmail.com",
-      "canonicalEmail": "bpgverifymwwfu3hj@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "diamond",
-      "planExpiresAt": "",
-      "planExplicitlySet": true,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "paid",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T18:09:26.747Z",
-      "verificationMethod": "",
-      "googleLinked": true,
-      "googleSub": "gsub_b312fe6586f82221",
-      "avatarUrl": "",
-      "hasPassword": true,
-      "passkey": "VerifyMath#mwwfu3hj9",
-      "readNotificationIds": [],
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T18:09:26.747Z",
-      "lastModifiedBy": "Live Verify Student (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795630166747_wfkk",
-          "timestamp": "2026-11-25T18:09:26.747Z",
-          "actor": "Live Verify Student (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795630161377_e1c8",
-          "timestamp": "2026-11-25T18:09:21.377Z",
-          "actor": "Admin Console",
-          "action": "ADMIN_CREATED_STUDENT",
-          "details": "Created student in Class 12 with DIAMOND plan"
-        }
-      ]
-    },
     {
       "userId": "usr_10456a19783f",
       "name": "Believe Gahatraj",
