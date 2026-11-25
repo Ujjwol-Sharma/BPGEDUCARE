@@ -214,23 +214,28 @@ function applyPaymentLifecycleTransition({ state, roster, payment, nextStatus, a
         payment.userId = acc.userId;
         if (normalizedNext === 'paid') {
             const targetPlan = normalizePlan(payment.planId || 'gold');
-            const prevPlan = acc.plan;
-            acc.plan = targetPlan;
+            const prevPlan = normalizePlan(acc.plan || 'free');
+            // Never downgrade an already-active higher tier (e.g. Diamond) when confirming an older lower-tier (e.g. Gold) order
+            const effectivePlan = (PLAN_RANK[prevPlan] || 0) > (PLAN_RANK[targetPlan] || 0) ? prevPlan : targetPlan;
+            acc.plan = effectivePlan;
             acc.planExplicitlySet = true;
             acc.legacyAccess = false;
             acc.paymentStatus = 'paid';
-            acc.planExpiresAt = payment.expiresAt || acc.planExpiresAt || new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+            const candidateExp = payment.expiresAt || new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+            const curExpMs = Date.parse(acc.planExpiresAt || '') || 0;
+            const nextExpMs = Date.parse(candidateExp) || 0;
+            acc.planExpiresAt = nextExpMs >= curExpMs ? candidateExp : acc.planExpiresAt;
             appendAccountAuditEntry(acc, {
                 actor,
                 action: 'PAYMENT_CONFIRMED_PLAN_ACTIVATED',
-                details: `Order ${payment.orderId || payment.id} (Txn ${payment.transactionId || 'N/A'}, NPR ${payment.expectedAmount}) confirmed PAID. Plan ${String(prevPlan).toUpperCase()} -> ${targetPlan.toUpperCase()} (expires ${acc.planExpiresAt.split('T')[0]})`
+                details: `Order ${payment.orderId || payment.id} (Txn ${payment.transactionId || 'N/A'}, NPR ${payment.expectedAmount}) confirmed PAID. Plan ${String(prevPlan).toUpperCase()} -> ${effectivePlan.toUpperCase()} (expires ${acc.planExpiresAt.split('T')[0]})`
             });
             appendRosterAuditEntry(roster, {
                 userId: acc.userId,
                 email: acc.email,
                 actor,
                 action: 'PAYMENT_CONFIRMED_PLAN_ACTIVATED',
-                details: `${acc.name}: ${targetPlan.toUpperCase()} activated via verified payment (${payment.transactionId || payment.orderId})`
+                details: `${acc.name}: ${effectivePlan.toUpperCase()} active via verified payment (${payment.transactionId || payment.orderId})`
             });
         } else if (normalizedNext === 'refunded') {
             // Check if member has any other active paid payment
