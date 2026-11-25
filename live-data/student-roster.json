@@ -1,6 +1,6 @@
 {
-  "revision": 93,
-  "lastUpdated": "2026-11-25T13:42:08.881Z",
+  "revision": 94,
+  "lastUpdated": "2026-11-25T13:43:18.401Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795614198401_cklv",
+      "timestamp": "2026-11-25T13:43:18.401Z",
+      "userId": "usr_b91fd463da75",
+      "email": "dhunganasoniya43@gmail.com",
+      "actor": "Soniya Dhungana (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795614128881_bmlv",
       "timestamp": "2026-11-25T13:42:08.881Z",
@@ -534,6 +543,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_b91fd463da75",
+      "name": "Soniya Dhungana",
+      "username": "dhunganasoniya43",
+      "email": "dhunganasoniya43@gmail.com",
+      "canonicalEmail": "dhunganasoniya43@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T13:43:18.342Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$1d0cef15b4f175e2ea494b253c6b7670$9840073ece7d235d08179362759afe23acc948912eb51241ca720f5e32e6345a81c8572c662f632907bc7527a3793c8b8e6386e5315154e2492db8d8e6dc6231",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T13:43:18.401Z",
+      "lastModifiedBy": "Soniya Dhungana (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795614198401_9nc4",
+          "timestamp": "2026-11-25T13:43:18.401Z",
+          "actor": "Soniya Dhungana (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_102017d9b135",
       "name": "Shirish Tripathi",
