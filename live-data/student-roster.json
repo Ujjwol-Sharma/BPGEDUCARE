@@ -1,6 +1,6 @@
 {
-  "revision": 103,
-  "lastUpdated": "2026-11-25T15:05:01.405Z",
+  "revision": 104,
+  "lastUpdated": "2026-11-25T15:17:49.242Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795619869242_wa0e",
+      "timestamp": "2026-11-25T15:17:49.242Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Ujjwol Sharma (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · DIAMOND)"
+    },
     {
       "id": "raud_1795619101405_9avb",
       "timestamp": "2026-11-25T15:05:01.405Z",
@@ -1742,9 +1751,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$a2555dd4546f28d2d4077e9e99eb57c4$58ea8aed30de6f5abed51b775f93d995db1a6edaee161bc127830f34b1cea63b18987fc2c84a9573b11ab2d9768f4bd4838ef269d1c15b4d6f8876c1870cdabc",
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T13:26:17.802Z",
-      "lastModifiedBy": "Ujjwol Sharma (Student)",
+      "updatedAt": "2026-11-25T15:17:49.242Z",
+      "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795619869242_l1cg",
+          "timestamp": "2026-11-25T15:17:49.242Z",
+          "actor": "Ujjwol Sharma (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795613177802_xf0u",
           "timestamp": "2026-11-25T13:26:17.802Z",
