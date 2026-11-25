@@ -1,8 +1,17 @@
 {
-  "revision": 35,
-  "lastUpdated": "2026-11-25T16:07:37.309Z",
+  "revision": 36,
+  "lastUpdated": "2026-11-25T16:10:10.336Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795623010336_2l5l",
+      "timestamp": "2026-11-25T16:10:10.336Z",
+      "userId": "usr_81477cddc864",
+      "email": "binilc09@gmail.com",
+      "actor": "Binita Lamichhane (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795622657769_bnv9",
       "timestamp": "2026-11-25T16:04:17.769Z",
@@ -59,6 +68,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_81477cddc864",
+      "name": "Binita Lamichhane",
+      "username": "binilc09",
+      "email": "binilc09@gmail.com",
+      "canonicalEmail": "binilc09@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T16:10:10.271Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$a4350d90a9c2cbe48aa34f39dcd90bd0$25e7dbe6a5174fa0d05e6c6c427c12a49ac9e7eb402149729ac258b645454f6d85af062568892891384e77dea4dfaf67ebe592d61dfcc4834d53daf14cc33f30",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T16:10:10.336Z",
+      "lastModifiedBy": "Binita Lamichhane (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795623010336_9nw8",
+          "timestamp": "2026-11-25T16:10:10.336Z",
+          "actor": "Binita Lamichhane (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_0b94641ca0cc",
       "name": "Chiran Gyawali",
