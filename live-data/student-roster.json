@@ -1,6 +1,6 @@
 {
-  "revision": 89,
-  "lastUpdated": "2026-11-25T13:32:55.247Z",
+  "revision": 90,
+  "lastUpdated": "2026-11-25T13:34:00.346Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795613640346_q3lf",
+      "timestamp": "2026-11-25T13:34:00.346Z",
+      "userId": "usr_35b207967208",
+      "email": "poudlearadhya@gmail.com",
+      "actor": "Aradhya Paudel (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795613575247_qfau",
       "timestamp": "2026-11-25T13:32:55.247Z",
@@ -700,9 +709,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:32:55.247Z",
+      "updatedAt": "2026-11-25T13:34:00.345Z",
       "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795613640346_xu62",
+          "timestamp": "2026-11-25T13:34:00.345Z",
+          "actor": "Aradhya Paudel (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795613575247_4dh3",
           "timestamp": "2026-11-25T13:32:55.247Z",
