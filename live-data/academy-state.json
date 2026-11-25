@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:05:41.220Z",
+  "lastUpdated": "2026-11-25T15:06:18.774Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1501,7 +1501,12 @@
               "title": "Analytic Geometry",
               "hours": "15 hrs",
               "marks": "9 Marks",
-              "subTopics": [],
+              "subTopics": [
+                {
+                  "id": "sub_1795619166413_1",
+                  "title": "1.1 Circle"
+                }
+              ],
               "pdfs": [],
               "videos": []
             },
@@ -3413,6 +3418,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 81,
+  "revision": 82,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
