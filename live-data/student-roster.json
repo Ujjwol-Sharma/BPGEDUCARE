@@ -1,6 +1,6 @@
 {
-  "revision": 105,
-  "lastUpdated": "2026-11-25T15:28:15.866Z",
+  "revision": 106,
+  "lastUpdated": "2026-11-25T15:34:17.770Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795620857770_prsp",
+      "timestamp": "2026-11-25T15:34:17.770Z",
+      "userId": "usr_5264e9c810f7",
+      "email": "pokhreldikshya66@gmail.com",
+      "actor": "Dikshya Pokhrel (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795620495866_2xp9",
       "timestamp": "2026-11-25T15:28:15.866Z",
@@ -649,14 +658,21 @@
       "emailVerified": true,
       "verifiedAt": "2026-11-25T15:28:15.805Z",
       "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
+      "googleLinked": true,
+      "googleSub": "gsub_5264e9c810f786a0",
       "avatarUrl": "",
       "passkey": "scrypt$26cbb80f8784cf940b45dad94155ff07$b4e04ddc370fa7afb2d16a7389e28b3260888505bfcc42b08f88ddd97efc10309b5d7d2ca2be8013cd9129f13d66b1167628582d2fae68d931dcbbf995ed7ed8",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:28:15.866Z",
-      "lastModifiedBy": "Dikshya Pokhrel (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-25T15:34:17.770Z",
+      "lastModifiedBy": "Dikshya Pokhrel (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795620857770_tbb6",
+          "timestamp": "2026-11-25T15:34:17.770Z",
+          "actor": "Dikshya Pokhrel (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795620495866_sq0m",
           "timestamp": "2026-11-25T15:28:15.866Z",
