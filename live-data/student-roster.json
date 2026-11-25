@@ -1,6 +1,6 @@
 {
-  "revision": 67,
-  "lastUpdated": "2026-11-25T03:04:11.507Z",
+  "revision": 68,
+  "lastUpdated": "2026-11-25T06:04:07.843Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795586647843_f0zw",
+      "timestamp": "2026-11-25T06:04:07.843Z",
+      "userId": "usr_a52d77942f5a",
+      "email": "parajuliabhinav205@gmail.com",
+      "actor": "Abhinav Parajuli (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795575851507_b5mw",
       "timestamp": "2026-11-25T03:04:11.507Z",
@@ -336,6 +345,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_a52d77942f5a",
+      "name": "Abhinav Parajuli",
+      "username": "parajuliabhinav205",
+      "email": "parajuliabhinav205@gmail.com",
+      "canonicalEmail": "parajuliabhinav205@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T06:04:07.769Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_a52d77942f5a2328",
+      "avatarUrl": "",
+      "passkey": "scrypt$18d5766697ea6af85db720ea211f8b22$ea1305c8465e6bf8a95538d726a99dbae7604901d5e7452419222a9cc868776e5e492934f103a59df071388d47893587507395e216272675be475a0fd000c523",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T06:04:07.842Z",
+      "lastModifiedBy": "Abhinav Parajuli (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795586647842_r58l",
+          "timestamp": "2026-11-25T06:04:07.842Z",
+          "actor": "Abhinav Parajuli (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_4eb8560d0956",
       "name": "Prashil Lamichhane",
