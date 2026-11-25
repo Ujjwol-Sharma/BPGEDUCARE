@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T02:11:50.122Z",
+  "lastUpdated": "2026-11-25T02:13:01.463Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1376,7 +1376,12 @@
               "title": "Algebra",
               "hours": "33 hrs",
               "marks": "20 Marks",
-              "subTopics": [],
+              "subTopics": [
+                {
+                  "id": "sub_1795572781188_1",
+                  "title": "1.1 Permutation and Combination"
+                }
+              ],
               "pdfs": [],
               "videos": []
             },
@@ -3249,6 +3254,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 46,
+  "revision": 47,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
