@@ -1,8 +1,17 @@
 {
-  "revision": 29,
-  "lastUpdated": "2026-11-25T15:54:45.907Z",
+  "revision": 30,
+  "lastUpdated": "2026-11-25T16:02:25.159Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795622545159_dp19",
+      "timestamp": "2026-11-25T16:02:25.159Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Ujjwol Sharma (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795622085907_5o2a",
       "timestamp": "2026-11-25T15:54:45.907Z",
@@ -125,9 +134,16 @@
       "passkey": "bpgstudent",
       "readNotificationIds": [],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T15:54:06.931Z",
+      "updatedAt": "2026-11-25T16:02:25.159Z",
       "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795622545159_ch1p",
+          "timestamp": "2026-11-25T16:02:25.159Z",
+          "actor": "Ujjwol Sharma (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795622046931_4ruw",
           "timestamp": "2026-11-25T15:54:06.931Z",
