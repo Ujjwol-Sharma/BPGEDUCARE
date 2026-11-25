@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T04:10:13.394Z",
+  "lastUpdated": "2026-11-25T04:11:08.286Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -580,10 +580,12 @@
         },
         {
           "code": "Unit 05",
-          "name": "Vectors (Scalar Product & Vector Algebra)",
-          "hours": "16 hrs",
-          "marks": "8 Marks",
-          "focus": "1 Short (4M) + 1 Short (2M) + 2 MCQ (2M)"
+          "name": "Vectors",
+          "hours": "9 hrs",
+          "marks": "6 Marks",
+          "focus": "1 MCQ (1M)+1 S.Q",
+          "domain": "Vectors",
+          "weightage": "1 MCQ (1M)+1 S.Q"
         },
         {
           "code": "Unit 06",
@@ -921,9 +923,9 @@
             {
               "id": "class-11-math-l5",
               "code": "Unit 05",
-              "title": "Vectors (Scalar Product & Vector Algebra)",
-              "hours": "16 hrs",
-              "marks": "8 Marks",
+              "title": "Vectors",
+              "hours": "9 hrs",
+              "marks": "6 Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
