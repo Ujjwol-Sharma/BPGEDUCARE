@@ -1,6 +1,6 @@
 {
-  "revision": 112,
-  "lastUpdated": "2026-11-25T16:31:54.089Z",
+  "revision": 113,
+  "lastUpdated": "2026-11-25T16:35:59.101Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795624559101_exzo",
+      "timestamp": "2026-11-25T16:35:59.101Z",
+      "userId": "usr_03f7b735f6ec",
+      "email": "aadityakhatri234@gmail.com",
+      "actor": "Aaditya Khatri (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "timestamp": "2026-11-25T16:31:54.089Z",
       "actor": "System Recovery",
@@ -972,7 +981,9 @@
       "googleLinked": true,
       "googleSub": "gsub_974c713f29dd430d",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "bpgstudent",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-25T16:04:17.769Z",
       "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
@@ -1068,8 +1079,7 @@
           "action": "ADMIN_PLAN_CHANGE",
           "details": "Changed plan from FREE to DIAMOND"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_25e888886ae4",
@@ -1090,7 +1100,11 @@
       "googleLinked": true,
       "googleSub": "gsub_25e888886ae4fdd5",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
+      "readNotificationIds": [
+        "notif_1795622839468"
+      ],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-25T16:02:56.964Z",
       "lastModifiedBy": "Admin Console (Provider Status Check)",
@@ -1270,9 +1284,6 @@
           "action": "CLASS_SWITCH_APPROVED",
           "details": "Approved class switch from Class 12 to Class 11 (Ok man)"
         }
-      ],
-      "readNotificationIds": [
-        "notif_1795622839468"
       ]
     },
     {
@@ -1336,7 +1347,9 @@
       "googleLinked": true,
       "googleSub": "gsub_643ae97cc185b429",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$925fdff0fa849632a882d9431873acf3$604491467b2599f85ebd1177efc2e91aa6324595b268ad49859f96069f44acc01a5f14fde2c8190768361579c7d0a7081eceb2c846c34b62aac7418a2ce9b645",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T15:42:40.284Z",
       "lastModifiedBy": "Ashish Adhikari (Student)",
@@ -1376,7 +1389,9 @@
       "googleLinked": true,
       "googleSub": "gsub_102017d9b135e030",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$a7f86031ef810770aef0f04f3117d56f$dd58e390db4d952f40137be62366262d596892acab248acafa80e35976ebfecb297d7b64275ead4e20571e17919b7cc1c5ba22865814eaaf0fd2f7eeaea55eda",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T15:41:26.047Z",
       "lastModifiedBy": "Admin Console",
@@ -1423,8 +1438,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_5264e9c810f7",
@@ -1445,7 +1459,9 @@
       "googleLinked": true,
       "googleSub": "gsub_5264e9c810f786a0",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$26cbb80f8784cf940b45dad94155ff07$b4e04ddc370fa7afb2d16a7389e28b3260888505bfcc42b08f88ddd97efc10309b5d7d2ca2be8013cd9129f13d66b1167628582d2fae68d931dcbbf995ed7ed8",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T15:34:17.770Z",
       "lastModifiedBy": "Dikshya Pokhrel (Google Sign-In)",
@@ -1478,8 +1494,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_54947c9c748f",
@@ -1500,7 +1515,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$b5fa5680e42a66b1b867c507b8862d4d$00a9daecfeb34322cdd5406028a9bd1a7b529fb99b311acdf929cd4aca95c1b50a4cb354692560fbb97673d4fd7b8e20899e317a4708afab5c2d81e6701b027c",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T15:05:01.405Z",
       "lastModifiedBy": "Avipsa Bhattarai (Email OTP Sign-Up)",
@@ -1519,8 +1536,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_dd6b92875358",
@@ -1541,7 +1557,9 @@
       "googleLinked": true,
       "googleSub": "gsub_dd6b92875358cc38",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$26a707831126dbd94b665753a5b98890$e0c50f65d9471e90e8dc1b78f9af3b0c1ccc116cd1fb69694cd77abcf618eba2246da8ba2b3c352ff37b882bf1d791c0d191628591cf1ad81aad0e8aa6d86a22",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T14:58:50.652Z",
       "lastModifiedBy": "subashpoudel (Google Sign-Up)",
@@ -1560,8 +1578,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_aa332a2e92c8",
@@ -1582,7 +1599,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$1b9084b83bf36b4844dabbb868846612$70684749eddc52e2da3a2c12529e8e68c18b6162a1e998d6f76c354f044e7a4b5b77a49980d84d44b93d262b842715a1e33fd22a148ee728d68d94c4064e6e8f",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T14:56:26.796Z",
       "lastModifiedBy": "Unike Tamang (Email OTP Sign-Up)",
@@ -1601,8 +1620,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_03f7b735f6ec",
@@ -1623,11 +1641,20 @@
       "googleLinked": true,
       "googleSub": "gsub_03f7b735f6ecc39b",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$41f1287a5025f52638caf88c42e90647$3c7cb4ee8878ae283c68b3dcc784db0a6d195d3237bbaa18eda7793d651ccb65f08ce97e9fd4163b40c37c7ad9c7f70b3ebed85e2bd6036165ffcecdf2c8c74b",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:50:08.421Z",
+      "updatedAt": "2026-11-25T16:35:59.101Z",
       "lastModifiedBy": "Aaditya Khatri (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795624559101_blkj",
+          "timestamp": "2026-11-25T16:35:59.101Z",
+          "actor": "Aaditya Khatri (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795618208421_t916",
           "timestamp": "2026-11-25T14:50:08.421Z",
@@ -1670,8 +1697,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_253246e8adf9",
@@ -1692,7 +1718,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$2a7870337698eff2e3a4d4e9fb9275ea$4e732d07ae7e8c9c7857f83d3d25c763b3e8fe316f32f825ef28c09fa6fe77efc19a8e5fb1dcb64e404cf260218dc6d70ead795a128d72dd76f904a21ff0e84b",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T14:45:31.268Z",
       "lastModifiedBy": "Nabin (Email OTP Sign-Up)",
@@ -1711,8 +1739,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_3eae5fab89e5",
@@ -1733,7 +1760,9 @@
       "googleLinked": true,
       "googleSub": "gsub_3eae5fab89e54a24",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$a679789b5db68d27192cda9a8a899fc9$6e2d8ab457e54fa0a18f25f4f8f8b6cf9ec1dae57526afc7c3eaf033fb170f5764ae2dfec2f4775c5eeb1f828db97486ae57850b599d333f72ea5c0caa30c009",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T14:39:41.133Z",
       "lastModifiedBy": "RatBnl (Google Sign-Up)",
@@ -1752,8 +1781,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_6cb3f51630c9",
@@ -1774,7 +1802,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$485675dfe12fbffa1680d6fc3f86efcc$8e14f36f9ff2e40b1c926c989115820f4fc2ce5e858da27e2ce29b14bcbfb399e45544a88895b2fa677847d39f810d2617efd257777031f324c53f3b138bbced",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T14:35:13.987Z",
       "lastModifiedBy": "utsav sharma (Email OTP Sign-Up)",
@@ -1793,8 +1823,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_312a69d2027b",
@@ -1815,7 +1844,9 @@
       "googleLinked": true,
       "googleSub": "gsub_312a69d2027bcdc7",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$988c9008d19dccf752dafa13ebe86f96$c8d23ae10362302469c0b5bdae27ea18b375f82613780bea2b7269ce7a03223177982c39ce447b70f77a82cee0d0b9db9fb4083fd94d7d54297d56600aa66c85",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T14:33:17.721Z",
       "lastModifiedBy": "Sakshyam B.K. (Google Sign-Up)",
@@ -1834,8 +1865,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_b91fd463da75",
@@ -1856,7 +1886,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$1d0cef15b4f175e2ea494b253c6b7670$9840073ece7d235d08179362759afe23acc948912eb51241ca720f5e32e6345a81c8572c662f632907bc7527a3793c8b8e6386e5315154e2492db8d8e6dc6231",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T13:43:18.401Z",
       "lastModifiedBy": "Soniya Dhungana (Email OTP Sign-Up)",
@@ -1875,8 +1907,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_32c1a5fb30c2",
@@ -1897,7 +1928,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$732606f01916b3e2230f4bc9e33f6714$f051b2551784fd90b13a316289fdd6393bcbb4615a2014494c79523c3da2f2d9002cd9f090c714496891c3a2c5934da5787f3ff6accbfba435e8c990cf33bb88",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T13:38:23.119Z",
       "lastModifiedBy": "Admin Console (Provider Status Check)",
@@ -1944,8 +1977,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_35b207967208",
@@ -1966,7 +1998,9 @@
       "googleLinked": true,
       "googleSub": "gsub_35b2079672087220",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T13:34:19.454Z",
       "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
@@ -2069,8 +2103,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_86f4da6c35bb",
@@ -2091,7 +2124,9 @@
       "googleLinked": true,
       "googleSub": "gsub_86f4da6c35bb321f",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$5623cb90e0b99ba3e1f28a22ce5db41f$ff009bd38f36ca7c606d860aaeef770d2b278b622989f992c06c4151db721d9a024477ce9cd701d72dacf361893b8c7b459a7991a9f58a19ee00d7b9d7a88da2",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T13:23:52.672Z",
       "lastModifiedBy": "Nistha thakuri (Google Sign-Up)",
@@ -2110,8 +2145,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_1128fb26d860",
@@ -2132,7 +2166,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$1cd052cf273c8a6391ea9658df208012$75bf75e5f6aa0e9be6dde5914729b2d497947c105759da6da5c46dfef5363bb2823a4af891cd03a6498a674da419863d05562291fc805f4fd9fb2278a91ecc49",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T13:23:28.020Z",
       "lastModifiedBy": "Aasika Tamang (Email OTP Sign-Up)",
@@ -2151,8 +2187,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_6c0fd6ffc46c",
@@ -2173,7 +2208,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$fccc25fce071f02d55a15a44b1d6bd9d$889720c025521fae578404e165f27bc01a8851c9ba4a63da38ff4cdb46f4fcdfa0cb8f3b1efc18899840dc9ad9e6c2ee6703414c2186b9d0a1c54b89e412b978",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T13:10:08.493Z",
       "lastModifiedBy": "Prativa Paudel (Email OTP Sign-Up)",
@@ -2192,8 +2229,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_82b1ff28ecc3",
@@ -2214,7 +2250,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$c40421d5388c3e68d6e62293e883533f$f31857ab3fcdf097cfd760a456f2a0538e0905d3326c89b03cc9349b2268517a05e7a473c19a99353b14f4c08251f4c35554968b3213faf9c2092525e18af142",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T12:45:56.257Z",
       "lastModifiedBy": "Safal (Email OTP Sign-Up)",
@@ -2233,8 +2271,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_5bf8c263fc69",
@@ -2255,7 +2292,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$eae5e48c4989b95358b89c3207541dc3$e673d64c97aae2d6713d941f9fe8a184d72687438989dca6999fcc9d581077adf82ffaab8cda31c3b258fb365bdb05c98737041b987ccd218b471132fc9d3754",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T12:27:08.987Z",
       "lastModifiedBy": "Saurav Kunwar (Email OTP Sign-Up)",
@@ -2274,8 +2313,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_219268db8c0d",
@@ -2296,7 +2334,9 @@
       "googleLinked": true,
       "googleSub": "gsub_219268db8c0dd428",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$3712dcc866d423c4f91dd98536fad283$c1ff33719f3cff2b934260cca9a45f4b5b31c6b09f2630e8b70296d49b67964be91299ac1f261b0666c3ebd97d715e34b8790761fbb0ab77157737bb718d1ff2",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T12:23:55.407Z",
       "lastModifiedBy": "Spandan Gorkhali (Google Sign-Up)",
@@ -2315,8 +2355,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_b779167fbeb3",
@@ -2337,7 +2376,9 @@
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
+      "hasPassword": true,
       "passkey": "scrypt$03a10943f8be7ad6d84aac229792e3c7$ac11de6a36d2bde769e0f7e26ef761d9f1b59499c2941aae09d1376e931b3f9681e8f9bcd2cf7073028552353f383187190d77da0456cc5ac29f09fe69de18bf",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T12:19:35.280Z",
       "lastModifiedBy": "Pradip Ranabhat (Email OTP Sign-Up)",
@@ -2356,8 +2397,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_0f1bb6e4792c",
@@ -2378,7 +2418,9 @@
       "googleLinked": true,
       "googleSub": "gsub_0f1bb6e4792cea33",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$6a8087080bbb03c72ff78889937a26f6$acf507d1c5460571cb4731409df2abe63bfa2ed55a3b0694fe26d3c64f6d189aec451bab58d3a7e64c4b603d4f49dc46377df7e77531dfff5632743c2c03a282",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T12:13:56.672Z",
       "lastModifiedBy": "Sumit Acharya (Google Sign-Up)",
@@ -2397,8 +2439,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_a52d77942f5a",
@@ -2419,7 +2460,9 @@
       "googleLinked": true,
       "googleSub": "gsub_a52d77942f5a2328",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$18d5766697ea6af85db720ea211f8b22$ea1305c8465e6bf8a95538d726a99dbae7604901d5e7452419222a9cc868776e5e492934f103a59df071388d47893587507395e216272675be475a0fd000c523",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T06:04:07.842Z",
       "lastModifiedBy": "Abhinav Parajuli (Google Sign-Up)",
@@ -2438,8 +2481,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_4eb8560d0956",
@@ -2460,7 +2502,9 @@
       "googleLinked": true,
       "googleSub": "gsub_4eb8560d09563436",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$7f1aa4a36df409cbe9cd9b225a20bddc$1924222851221530929980d5399ac1859ec5774c0633596df106e10245e49210bce87ac35b0f7996ee685f44953c2d8a94d256d9c55a6c1cac774bf5e5d19c4f",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T03:04:11.507Z",
       "lastModifiedBy": "Prashil Lamichhane (Google Sign-Up)",
@@ -2479,8 +2523,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_358b294bfb3b",
@@ -2501,7 +2544,9 @@
       "googleLinked": true,
       "googleSub": "gsub_358b294bfb3b5ca4",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$4988442cf5fa84c2942eb6d96688f534$b1240f527d2bf00f3f78dde20ec2b184afd856d725476e50c85732112c8e8b9bc81419ff9bce7eb655617f1ca41eed2b0a8bab5c3e9bc510dae6ab02ce8c4814",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T02:43:46.563Z",
       "lastModifiedBy": "Binisa Gautam (Google Sign-In)",
@@ -2534,8 +2579,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_b2f5d1fbcf97",
@@ -2556,7 +2600,9 @@
       "googleLinked": true,
       "googleSub": "gsub_b2f5d1fbcf979b2c",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$cabb6a8a988a0b2a75279cc2f9b0241f$7fb02ed4b91ea3793525c1d7ef9af9c6b9eaea86eacc0ded3a97dc5ac8a138a166a02419bb15401217e575d88a72314a42cb2ed80835c54ae34a4992ef6cb19f",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T02:25:13.893Z",
       "lastModifiedBy": "Binod Timilsina (Google Sign-Up)",
@@ -2575,8 +2621,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_1b558269b9fa",
@@ -2597,7 +2642,9 @@
       "googleLinked": true,
       "googleSub": "gsub_1b558269b9fae18a",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "bpgstudent",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-24T13:35:51.400Z",
       "lastModifiedBy": "Paribesh Thapa (Google Sign-Up)",
@@ -2616,8 +2663,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_8e81abd1d7f6",
@@ -2638,7 +2684,9 @@
       "googleLinked": true,
       "googleSub": "gsub_8e81abd1d7f63c16",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$28a8e8ade8c7f8bdba543cb80d9b6098$2d26db5b1c89ddd3b2785dc36af640b2593d30029b476cc5ca72c9f0ceaf21907b0337e90039cd4fa4a2ad72b614488ca6abfe8c6b39d853e70e58d8ab8a8283",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-24T10:08:22.553Z",
       "lastModifiedBy": "Dipson Poudel (Google Sign-Up)",
@@ -2657,8 +2705,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_3fb71be3b31a",
@@ -2679,7 +2726,9 @@
       "googleLinked": true,
       "googleSub": "gsub_3fb71be3b31a82ad",
       "avatarUrl": "",
+      "hasPassword": false,
       "passkey": "scrypt$f0157121f8cc1e22ee43f216e4cfe6c9$9ddf53e6252f20956cfafb283010d0d24f30e9f0d187a61228544659a1c9a7515e36224dd8fdcb7d7823f163179bbb8b2ecd14ab33b285488bc8f028d280237b",
+      "readNotificationIds": [],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-24T10:06:41.914Z",
       "lastModifiedBy": "Dipson Poudel (Google Sign-In)",
@@ -2712,8 +2761,7 @@
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
-      ],
-      "readNotificationIds": []
+      ]
     },
     {
       "userId": "usr_d967e7372695",
