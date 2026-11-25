@@ -1,6 +1,6 @@
 {
-  "revision": 85,
-  "lastUpdated": "2026-11-25T13:10:08.494Z",
+  "revision": 86,
+  "lastUpdated": "2026-11-25T13:23:28.021Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795613008021_w5r2",
+      "timestamp": "2026-11-25T13:23:28.021Z",
+      "userId": "usr_1128fb26d860",
+      "email": "aashikat2009@gmail.com",
+      "actor": "Aasika Tamang (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795612208493_dpkn",
       "timestamp": "2026-11-25T13:10:08.493Z",
@@ -480,6 +489,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1128fb26d860",
+      "name": "Aasika Tamang",
+      "username": "aashikat2009",
+      "email": "aashikat2009@gmail.com",
+      "canonicalEmail": "aashikat2009@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T13:23:27.966Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "passkey": "scrypt$1cd052cf273c8a6391ea9658df208012$75bf75e5f6aa0e9be6dde5914729b2d497947c105759da6da5c46dfef5363bb2823a4af891cd03a6498a674da419863d05562291fc805f4fd9fb2278a91ecc49",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T13:23:28.020Z",
+      "lastModifiedBy": "Aasika Tamang (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795613008020_yfen",
+          "timestamp": "2026-11-25T13:23:28.020Z",
+          "actor": "Aasika Tamang (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_6c0fd6ffc46c",
       "name": "Prativa Paudel",
