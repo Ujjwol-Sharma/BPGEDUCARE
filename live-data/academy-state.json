@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T02:13:57.588Z",
+  "lastUpdated": "2026-11-25T02:14:29.549Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1388,6 +1388,10 @@
                 {
                   "id": "sub_1795572837330_3",
                   "title": "1.3 Complex Number"
+                },
+                {
+                  "id": "sub_1795572869294_4",
+                  "title": "1.4 Sequence and Series"
                 }
               ],
               "pdfs": [],
@@ -3262,6 +3266,6 @@
       "activationCount": 1
     }
   ],
-  "revision": 50,
+  "revision": 51,
   "explicitDeleteUploadId": "lpdf_1795513733901_0"
 }
