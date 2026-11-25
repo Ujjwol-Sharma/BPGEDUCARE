@@ -1,6 +1,6 @@
 {
-  "revision": 136,
-  "lastUpdated": "2026-11-25T18:03:05.602Z",
+  "revision": 137,
+  "lastUpdated": "2026-11-25T18:09:21.378Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795630161377_35sv",
+      "timestamp": "2026-11-25T18:09:21.377Z",
+      "userId": "usr_b312fe6586f8",
+      "email": "bpg.verify.mwwfu3hj@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_CREATED_STUDENT",
+      "details": "Added Live Verify Student (Class 12 · DIAMOND)"
+    },
     {
       "id": "raud_1795629785601_d4yi",
       "timestamp": "2026-11-25T18:03:05.601Z",
@@ -891,6 +900,42 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_b312fe6586f8",
+      "name": "Live Verify Student",
+      "username": "verify_mwwfu3hj",
+      "email": "bpg.verify.mwwfu3hj@gmail.com",
+      "canonicalEmail": "bpgverifymwwfu3hj@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "diamond",
+      "planExpiresAt": "",
+      "planExplicitlySet": true,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "paid",
+      "emailVerified": true,
+      "verifiedAt": "",
+      "verificationMethod": "",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "VerifyMath#mwwfu3hj9",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T18:09:21.377Z",
+      "lastModifiedBy": "Admin Console",
+      "auditLog": [
+        {
+          "id": "aud_1795630161377_e1c8",
+          "timestamp": "2026-11-25T18:09:21.377Z",
+          "actor": "Admin Console",
+          "action": "ADMIN_CREATED_STUDENT",
+          "details": "Created student in Class 12 with DIAMOND plan"
+        }
+      ]
+    },
     {
       "userId": "usr_10456a19783f",
       "name": "Believe Gahatraj",
