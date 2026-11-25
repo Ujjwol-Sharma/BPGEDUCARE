@@ -1,720 +1,25 @@
 {
-  "revision": 110,
-  "lastUpdated": "2026-11-25T15:42:40.284Z",
-  "classSwitchRequests": [
-    {
-      "id": "csr_1795532266168_ch1h",
-      "userId": "usr_25e888886ae4",
-      "studentName": "Chess Club",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
-      "currentClassKey": "class-12",
-      "currentGrade": "Class 12",
-      "requestedClassKey": "class-11",
-      "requestedGrade": "Class 11",
-      "reason": "Plkease sir",
-      "status": "rejected",
-      "adminNote": "",
-      "submittedAt": "2026-11-24T14:57:46.169Z",
-      "reviewedAt": "2026-11-24T14:58:28.589Z",
-      "reviewedBy": "Admin Console"
-    },
-    {
-      "id": "csr_1795519732507_ygnh",
-      "userId": "usr_25e888886ae4",
-      "studentName": "Chess Club",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
-      "currentClassKey": "class-11",
-      "currentGrade": "Class 11",
-      "requestedClassKey": "class-12",
-      "requestedGrade": "Class 12",
-      "reason": "sir please",
-      "status": "approved",
-      "adminNote": "",
-      "submittedAt": "2026-11-24T11:28:52.507Z",
-      "reviewedAt": "2026-11-24T11:28:55.342Z",
-      "reviewedBy": "Admin Console"
-    },
-    {
-      "id": "csr_1795519694219_u72j",
-      "userId": "usr_25e888886ae4",
-      "studentName": "Chess Club",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
-      "currentClassKey": "class-12",
-      "currentGrade": "Class 12",
-      "requestedClassKey": "class-11",
-      "requestedGrade": "Class 11",
-      "reason": "sir please",
-      "status": "approved",
-      "adminNote": "Ok man",
-      "submittedAt": "2026-11-24T11:28:14.219Z",
-      "reviewedAt": "2026-11-24T11:28:33.189Z",
-      "reviewedBy": "Admin Console"
-    }
-  ],
+  "revision": 27,
+  "lastUpdated": "2026-11-25T15:54:06.931Z",
+  "classSwitchRequests": [],
   "auditLog": [
     {
-      "id": "raud_1795621286047_j7wn",
-      "timestamp": "2026-11-25T15:41:26.047Z",
-      "userId": "usr_102017d9b135",
-      "email": "shirishtripathi49@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
-    },
-    {
-      "id": "raud_1795621283403_hupb",
-      "timestamp": "2026-11-25T15:41:23.403Z",
-      "userId": "usr_102017d9b135",
-      "email": "shirishtripathi49@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
-    },
-    {
-      "id": "raud_1795621058014_awn2",
-      "timestamp": "2026-11-25T15:37:38.014Z",
-      "userId": "usr_643ae97cc185",
-      "email": "ashish.adhikari.314@gmail.com",
-      "actor": "Ashish Adhikari (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795620857770_prsp",
-      "timestamp": "2026-11-25T15:34:17.770Z",
-      "userId": "usr_5264e9c810f7",
-      "email": "pokhreldikshya66@gmail.com",
-      "actor": "Dikshya Pokhrel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795620495866_2xp9",
-      "timestamp": "2026-11-25T15:28:15.866Z",
-      "userId": "usr_5264e9c810f7",
-      "email": "pokhreldikshya66@gmail.com",
-      "actor": "Dikshya Pokhrel (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795619869242_wa0e",
-      "timestamp": "2026-11-25T15:17:49.242Z",
+      "id": "raud_1795622046931_3o5j",
+      "timestamp": "2026-11-25T15:54:06.931Z",
       "userId": "usr_974c713f29dd",
       "email": "intumintuchintu76@gmail.com",
       "actor": "Ujjwol Sharma (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · DIAMOND)"
-    },
-    {
-      "id": "raud_1795619101405_9avb",
-      "timestamp": "2026-11-25T15:05:01.405Z",
-      "userId": "usr_54947c9c748f",
-      "email": "avipsame@gmail.com",
-      "actor": "Avipsa Bhattarai (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795618730652_vx37",
-      "timestamp": "2026-11-25T14:58:50.652Z",
-      "userId": "usr_dd6b92875358",
-      "email": "subashpoudel925@gmail.com",
-      "actor": "subashpoudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795618586796_050s",
-      "timestamp": "2026-11-25T14:56:26.796Z",
-      "userId": "usr_aa332a2e92c8",
-      "email": "uniketamang8@gmail.com",
-      "actor": "Unike Tamang (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795618208422_7jhk",
-      "timestamp": "2026-11-25T14:50:08.422Z",
-      "userId": "usr_03f7b735f6ec",
-      "email": "aadityakhatri234@gmail.com",
-      "actor": "Aaditya Khatri (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795617931268_4rmn",
-      "timestamp": "2026-11-25T14:45:31.268Z",
-      "userId": "usr_253246e8adf9",
-      "email": "nabinkc1031@gmail.com",
-      "actor": "Nabin (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795617581133_03be",
-      "timestamp": "2026-11-25T14:39:41.133Z",
-      "userId": "usr_3eae5fab89e5",
-      "email": "trrguuzzsfyhhz@gmail.com",
-      "actor": "RatBnl (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795617313987_3fi8",
-      "timestamp": "2026-11-25T14:35:13.987Z",
-      "userId": "usr_6cb3f51630c9",
-      "email": "utsavsharma647@gmail.com",
-      "actor": "utsav sharma (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795617197721_9ytr",
-      "timestamp": "2026-11-25T14:33:17.721Z",
-      "userId": "usr_312a69d2027b",
-      "email": "sakshyambk0@gmail.com",
-      "actor": "Sakshyam B.K. (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795614198401_cklv",
-      "timestamp": "2026-11-25T13:43:18.401Z",
-      "userId": "usr_b91fd463da75",
-      "email": "dhunganasoniya43@gmail.com",
-      "actor": "Soniya Dhungana (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795614128881_bmlv",
-      "timestamp": "2026-11-25T13:42:08.881Z",
-      "userId": "usr_102017d9b135",
-      "email": "shirishtripathi49@gmail.com",
-      "actor": "Shirish Tripathi (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795613659454_mt8w",
-      "timestamp": "2026-11-25T13:34:19.454Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795613640346_q3lf",
-      "timestamp": "2026-11-25T13:34:00.346Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795613575247_qfau",
-      "timestamp": "2026-11-25T13:32:55.247Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795613032672_rsn4",
-      "timestamp": "2026-11-25T13:23:52.672Z",
-      "userId": "usr_86f4da6c35bb",
-      "email": "nisthasthakhawas@gmail.com",
-      "actor": "Nistha thakuri (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795613008021_w5r2",
-      "timestamp": "2026-11-25T13:23:28.021Z",
-      "userId": "usr_1128fb26d860",
-      "email": "aashikat2009@gmail.com",
-      "actor": "Aasika Tamang (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795612208493_dpkn",
-      "timestamp": "2026-11-25T13:10:08.493Z",
-      "userId": "usr_6c0fd6ffc46c",
-      "email": "prativapaudel95@gmail.com",
-      "actor": "Prativa Paudel (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795610756257_nzej",
-      "timestamp": "2026-11-25T12:45:56.257Z",
-      "userId": "usr_82b1ff28ecc3",
-      "email": "safalpaudel0600@gmail.com",
-      "actor": "Safal (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795610719930_or54",
-      "timestamp": "2026-11-25T12:45:19.930Z",
-      "userId": "usr_32c1a5fb30c2",
-      "email": "subedimanjul25@gmail.com",
-      "actor": "Manjul Subedi (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795610431134_7qem",
-      "timestamp": "2026-11-25T12:40:31.134Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795610414668_w38l",
-      "timestamp": "2026-11-25T12:40:14.668Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795610136601_0mtb",
-      "timestamp": "2026-11-25T12:35:36.601Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795609628987_cbpo",
-      "timestamp": "2026-11-25T12:27:08.987Z",
-      "userId": "usr_5bf8c263fc69",
-      "email": "sauravkunwar231@gmail.com",
-      "actor": "Saurav Kunwar (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795609435407_7ca9",
-      "timestamp": "2026-11-25T12:23:55.407Z",
-      "userId": "usr_219268db8c0d",
-      "email": "spandan.pkr@gmail.com",
-      "actor": "Spandan Gorkhali (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795609175280_9c8e",
-      "timestamp": "2026-11-25T12:19:35.280Z",
-      "userId": "usr_b779167fbeb3",
-      "email": "pradipranabhat19@gmail.com",
-      "actor": "Pradip Ranabhat (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795608836672_z1bi",
-      "timestamp": "2026-11-25T12:13:56.672Z",
-      "userId": "usr_0f1bb6e4792c",
-      "email": "sumitach321@gmail.com",
-      "actor": "Sumit Acharya (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795608105503_itxq",
-      "timestamp": "2026-11-25T12:01:45.503Z",
-      "userId": "usr_03f7b735f6ec",
-      "email": "aadityakhatri234@gmail.com",
-      "actor": "Aaditya Khatri (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795607944037_uxu1",
-      "timestamp": "2026-11-25T11:59:04.037Z",
-      "userId": "usr_03f7b735f6ec",
-      "email": "aadityakhatri234@gmail.com",
-      "actor": "Aaditya Khatri (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795603395217_sx8n",
-      "timestamp": "2026-11-25T10:43:15.217Z",
-      "userId": "usr_5d0c6b99f8a6",
-      "email": "verify.session.live@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Live Verify Student (verify.session.live@gmail.com)"
-    },
-    {
-      "id": "raud_1795603392358_oa51",
-      "timestamp": "2026-11-25T10:43:12.358Z",
-      "userId": "usr_5d0c6b99f8a6",
-      "email": "verify.session.live@gmail.com",
-      "actor": "Live Verify Student (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 11 · FREE)"
-    },
-    {
-      "id": "raud_1795603387684_xhy3",
-      "timestamp": "2026-11-25T10:43:07.684Z",
-      "userId": "usr_5d0c6b99f8a6",
-      "email": "verify.session.live@gmail.com",
-      "actor": "Live Verify Student (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 11)"
-    },
-    {
-      "id": "raud_1795586647843_f0zw",
-      "timestamp": "2026-11-25T06:04:07.843Z",
-      "userId": "usr_a52d77942f5a",
-      "email": "parajuliabhinav205@gmail.com",
-      "actor": "Abhinav Parajuli (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795575851507_b5mw",
-      "timestamp": "2026-11-25T03:04:11.507Z",
-      "userId": "usr_4eb8560d0956",
-      "email": "prashillamichhane123@gmail.com",
-      "actor": "Prashil Lamichhane (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795574626563_fise",
-      "timestamp": "2026-11-25T02:43:46.563Z",
-      "userId": "usr_358b294bfb3b",
-      "email": "bishnupdgautam2@gmail.com",
-      "actor": "Binisa Gautam (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795574445407_4w4y",
-      "timestamp": "2026-11-25T02:40:45.407Z",
-      "userId": "usr_358b294bfb3b",
-      "email": "bishnupdgautam2@gmail.com",
-      "actor": "Binisa Gautam (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795573513893_h7et",
-      "timestamp": "2026-11-25T02:25:13.893Z",
-      "userId": "usr_b2f5d1fbcf97",
-      "email": "binodtimilsina06@gmail.com",
-      "actor": "Binod Timilsina (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795543508465_qol4",
-      "timestamp": "2026-11-24T18:05:08.465Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "Ujjwol Sharma (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · DIAMOND)"
-    },
-    {
-      "id": "raud_1795532308589_g0i6",
-      "timestamp": "2026-11-24T14:58:28.589Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "CLASS_SWITCH_REJECTED",
-      "details": "Chess Club: switch to Class 11 rejected"
-    },
-    {
-      "id": "raud_1795532266169_fc7e",
-      "timestamp": "2026-11-24T14:57:46.169Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Student)",
-      "action": "CLASS_SWITCH_REQUESTED",
-      "details": "Requested switch from Class 12 to Class 11"
-    },
-    {
-      "id": "raud_1795527351400_dyma",
-      "timestamp": "2026-11-24T13:35:51.400Z",
-      "userId": "usr_1b558269b9fa",
-      "email": "thapaparibesh01@gmail.com",
-      "actor": "Paribesh Thapa (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795519735342_pj8a",
-      "timestamp": "2026-11-24T11:28:55.342Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "CLASS_SWITCH_APPROVED",
-      "details": "Chess Club: switch approved Class 11 -> Class 12"
-    },
-    {
-      "id": "raud_1795519732507_o5hw",
-      "timestamp": "2026-11-24T11:28:52.507Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Student)",
-      "action": "CLASS_SWITCH_REQUESTED",
-      "details": "Requested switch from Class 11 to Class 12"
-    },
-    {
-      "id": "raud_1795519713189_y6b5",
-      "timestamp": "2026-11-24T11:28:33.189Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "CLASS_SWITCH_APPROVED",
-      "details": "Chess Club: switch approved Class 12 -> Class 11"
-    },
-    {
-      "id": "raud_1795519694219_xe6t",
-      "timestamp": "2026-11-24T11:28:14.219Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Student)",
-      "action": "CLASS_SWITCH_REQUESTED",
-      "details": "Requested switch from Class 12 to Class 11"
-    },
-    {
-      "id": "raud_1795518620384_ok6o",
-      "timestamp": "2026-11-24T11:10:20.384Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Chess Club: payment ORD-1795518544717-1E3DF3 marked FAILED"
-    },
-    {
-      "id": "raud_1795518618910_l0m8",
-      "timestamp": "2026-11-24T11:10:18.910Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Chess Club: payment ORD-1795518561321-571F30 marked FAILED"
-    },
-    {
-      "id": "raud_1795514902554_gu2g",
-      "timestamp": "2026-11-24T10:08:22.554Z",
-      "userId": "usr_8e81abd1d7f6",
-      "email": "deepsonking444@gmail.com",
-      "actor": "Dipson Poudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795514801914_11q4",
-      "timestamp": "2026-11-24T10:06:41.914Z",
-      "userId": "usr_3fb71be3b31a",
-      "email": "deepsonpaudel9@gmail.com",
-      "actor": "Dipson Poudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795514697750_m5hx",
-      "timestamp": "2026-11-24T10:04:57.750Z",
-      "userId": "usr_3fb71be3b31a",
-      "email": "deepsonpaudel9@gmail.com",
-      "actor": "Dipson Poudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795513650895_v6to",
-      "timestamp": "2026-11-24T09:47:30.895Z",
-      "userId": "usr_1b558269b9fa",
-      "email": "thapaparibesh01@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Paribesh Thapa (thapaparibesh01@gmail.com)"
-    },
-    {
-      "id": "raud_1795513648289_qv5t",
-      "timestamp": "2026-11-24T09:47:28.289Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_PLAN_CHANGE",
-      "details": "Ujjwol Sharma: plan changed from FREE to DIAMOND"
-    },
-    {
-      "id": "raud_1795513573381_8a0p",
-      "timestamp": "2026-11-24T09:46:13.381Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795513540405_x815",
-      "timestamp": "2026-11-24T09:45:40.405Z",
-      "userId": "usr_ab78663f0a4c",
-      "email": "rohan.sharma@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Rohan Sharma (rohan.sharma@gmail.com)"
-    },
-    {
-      "id": "raud_1795513538402_9j4n",
-      "timestamp": "2026-11-24T09:45:38.402Z",
-      "userId": "usr_57ca72c99775",
-      "email": "suman@bpgacademy.edu.np",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Suman Sharma (suman@bpgacademy.edu.np)"
-    },
-    {
-      "id": "raud_1795513532481_yk0r",
-      "timestamp": "2026-11-24T09:45:32.481Z",
-      "userId": "usr_cc8442ff9a9c",
-      "email": "aayush.kc@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Aayush KC (aayush.kc@gmail.com)"
-    },
-    {
-      "id": "raud_1795513529336_tzg2",
-      "timestamp": "2026-11-24T09:45:29.336Z",
-      "userId": "usr_d967e7372695",
-      "email": "prabhat.entrance@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Prabhat Paudel (prabhat.entrance@gmail.com)"
-    },
-    {
-      "id": "raud_1795513525444_bbry",
-      "timestamp": "2026-11-24T09:45:25.444Z",
-      "userId": "usr_ef3068f04640",
-      "email": "scholar@bpgacademy.edu.np",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Creative Scholar (scholar@bpgacademy.edu.np)"
-    },
-    {
-      "id": "raud_1795513047952_tpe5",
-      "timestamp": "2026-11-24T09:37:27.952Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Redeploy Test Scholar (redeploy.verify@gmail.com)"
-    },
-    {
-      "id": "raud_1795513027705_q1vi",
-      "timestamp": "2026-11-24T09:37:07.705Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "Redeploy Test Scholar (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 11 · GOLD)"
-    },
-    {
-      "id": "raud_1795512560471_2vr0",
-      "timestamp": "2026-11-24T09:29:20.471Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "Redeploy Test Scholar (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 11 · GOLD)"
-    },
-    {
-      "id": "raud_1795512411494_7efc",
-      "timestamp": "2026-11-24T09:26:51.494Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "eSewa Provider Verification",
-      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-      "details": "Redeploy Test Scholar: GOLD activated via verified payment (ESW-REDEPLOY-777)"
-    },
-    {
-      "id": "raud_1795512405470_yzzn",
-      "timestamp": "2026-11-24T09:26:45.470Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "Redeploy Verifier",
-      "action": "ADMIN_CLASS_CHANGE",
-      "details": "Redeploy Test Scholar: class changed from Class 12 to Class 11"
-    },
-    {
-      "id": "raud_1795512402109_cat7",
-      "timestamp": "2026-11-24T09:26:42.109Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "Redeploy Test Scholar (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
     {
-      "userId": "usr_643ae97cc185",
-      "name": "Ashish Adhikari",
-      "username": "ashish.adhikari.314",
-      "email": "ashish.adhikari.314@gmail.com",
-      "canonicalEmail": "ashishadhikari314@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "pending",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T15:37:37.959Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_643ae97cc185b429",
-      "avatarUrl": "",
-      "passkey": "scrypt$925fdff0fa849632a882d9431873acf3$604491467b2599f85ebd1177efc2e91aa6324595b268ad49859f96069f44acc01a5f14fde2c8190768361579c7d0a7081eceb2c846c34b62aac7418a2ce9b645",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:42:40.284Z",
-      "lastModifiedBy": "Ashish Adhikari (Student)",
-      "auditLog": [
-        {
-          "id": "aud_1795621360284_cn1j",
-          "timestamp": "2026-11-25T15:42:40.284Z",
-          "actor": "Ashish Adhikari (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795621360283-428EB3 (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795621058014_oir8",
-          "timestamp": "2026-11-25T15:37:38.014Z",
-          "actor": "Ashish Adhikari (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_5264e9c810f7",
-      "name": "Dikshya Pokhrel",
-      "username": "pokhreldikshya66",
-      "email": "pokhreldikshya66@gmail.com",
-      "canonicalEmail": "pokhreldikshya66@gmail.com",
+      "userId": "usr_974c713f29dd",
+      "name": "Ujjwol Sharma",
+      "username": "intumintuchintu76",
+      "email": "intumintuchintu76@gmail.com",
+      "canonicalEmail": "intumintuchintu76@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
       "plan": "free",
@@ -723,919 +28,24 @@
       "accountStatus": "active",
       "paymentStatus": "none",
       "emailVerified": true,
-      "verifiedAt": "2026-11-25T15:28:15.805Z",
-      "verificationMethod": "email_otp",
+      "verifiedAt": "2026-11-24T08:21:17.668Z",
+      "verificationMethod": "google_oauth",
       "googleLinked": true,
-      "googleSub": "gsub_5264e9c810f786a0",
+      "googleSub": "gsub_974c713f29dd430d",
       "avatarUrl": "",
-      "passkey": "scrypt$26cbb80f8784cf940b45dad94155ff07$b4e04ddc370fa7afb2d16a7389e28b3260888505bfcc42b08f88ddd97efc10309b5d7d2ca2be8013cd9129f13d66b1167628582d2fae68d931dcbbf995ed7ed8",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:34:17.770Z",
-      "lastModifiedBy": "Dikshya Pokhrel (Google Sign-In)",
+      "hasPassword": false,
+      "passkey": "bpgstudent",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-24",
+      "updatedAt": "2026-11-25T15:54:06.931Z",
+      "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
       "auditLog": [
         {
-          "id": "aud_1795620857770_tbb6",
-          "timestamp": "2026-11-25T15:34:17.770Z",
-          "actor": "Dikshya Pokhrel (Google Sign-In)",
+          "id": "aud_1795622046931_4ruw",
+          "timestamp": "2026-11-25T15:54:06.931Z",
+          "actor": "Ujjwol Sharma (Google Sign-In)",
           "action": "GOOGLE_SIGN_IN",
           "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795620495866_sq0m",
-          "timestamp": "2026-11-25T15:28:15.866Z",
-          "actor": "Dikshya Pokhrel (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_54947c9c748f",
-      "name": "Avipsa Bhattarai",
-      "username": "avipsame",
-      "email": "avipsame@gmail.com",
-      "canonicalEmail": "avipsame@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T15:05:01.352Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$b5fa5680e42a66b1b867c507b8862d4d$00a9daecfeb34322cdd5406028a9bd1a7b529fb99b311acdf929cd4aca95c1b50a4cb354692560fbb97673d4fd7b8e20899e317a4708afab5c2d81e6701b027c",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:05:01.405Z",
-      "lastModifiedBy": "Avipsa Bhattarai (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795619101405_mcpl",
-          "timestamp": "2026-11-25T15:05:01.405Z",
-          "actor": "Avipsa Bhattarai (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_dd6b92875358",
-      "name": "subashpoudel",
-      "username": "subashpoudel925",
-      "email": "subashpoudel925@gmail.com",
-      "canonicalEmail": "subashpoudel925@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T14:58:50.585Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_dd6b92875358cc38",
-      "avatarUrl": "",
-      "passkey": "scrypt$26a707831126dbd94b665753a5b98890$e0c50f65d9471e90e8dc1b78f9af3b0c1ccc116cd1fb69694cd77abcf618eba2246da8ba2b3c352ff37b882bf1d791c0d191628591cf1ad81aad0e8aa6d86a22",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:58:50.652Z",
-      "lastModifiedBy": "subashpoudel (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795618730652_rhv2",
-          "timestamp": "2026-11-25T14:58:50.652Z",
-          "actor": "subashpoudel (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_aa332a2e92c8",
-      "name": "Unike Tamang",
-      "username": "uniketamang8",
-      "email": "uniketamang8@gmail.com",
-      "canonicalEmail": "uniketamang8@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T14:56:26.736Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$1b9084b83bf36b4844dabbb868846612$70684749eddc52e2da3a2c12529e8e68c18b6162a1e998d6f76c354f044e7a4b5b77a49980d84d44b93d262b842715a1e33fd22a148ee728d68d94c4064e6e8f",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:56:26.796Z",
-      "lastModifiedBy": "Unike Tamang (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795618586796_7ewz",
-          "timestamp": "2026-11-25T14:56:26.796Z",
-          "actor": "Unike Tamang (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_253246e8adf9",
-      "name": "Nabin",
-      "username": "nabinkc1031",
-      "email": "nabinkc1031@gmail.com",
-      "canonicalEmail": "nabinkc1031@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T14:45:31.197Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$2a7870337698eff2e3a4d4e9fb9275ea$4e732d07ae7e8c9c7857f83d3d25c763b3e8fe316f32f825ef28c09fa6fe77efc19a8e5fb1dcb64e404cf260218dc6d70ead795a128d72dd76f904a21ff0e84b",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:45:31.268Z",
-      "lastModifiedBy": "Nabin (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795617931268_2jml",
-          "timestamp": "2026-11-25T14:45:31.268Z",
-          "actor": "Nabin (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_3eae5fab89e5",
-      "name": "RatBnl",
-      "username": "trrguuzzsfyhhz",
-      "email": "trrguuzzsfyhhz@gmail.com",
-      "canonicalEmail": "trrguuzzsfyhhz@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T14:39:41.054Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_3eae5fab89e54a24",
-      "avatarUrl": "",
-      "passkey": "scrypt$a679789b5db68d27192cda9a8a899fc9$6e2d8ab457e54fa0a18f25f4f8f8b6cf9ec1dae57526afc7c3eaf033fb170f5764ae2dfec2f4775c5eeb1f828db97486ae57850b599d333f72ea5c0caa30c009",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:39:41.133Z",
-      "lastModifiedBy": "RatBnl (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795617581133_f6fi",
-          "timestamp": "2026-11-25T14:39:41.133Z",
-          "actor": "RatBnl (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_6cb3f51630c9",
-      "name": "utsav sharma",
-      "username": "utsavsharma647",
-      "email": "utsavsharma647@gmail.com",
-      "canonicalEmail": "utsavsharma647@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T14:35:13.926Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$485675dfe12fbffa1680d6fc3f86efcc$8e14f36f9ff2e40b1c926c989115820f4fc2ce5e858da27e2ce29b14bcbfb399e45544a88895b2fa677847d39f810d2617efd257777031f324c53f3b138bbced",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:35:13.987Z",
-      "lastModifiedBy": "utsav sharma (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795617313987_eai0",
-          "timestamp": "2026-11-25T14:35:13.987Z",
-          "actor": "utsav sharma (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_312a69d2027b",
-      "name": "Sakshyam B.K.",
-      "username": "sakshyambk0",
-      "email": "sakshyambk0@gmail.com",
-      "canonicalEmail": "sakshyambk0@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T14:33:17.654Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_312a69d2027bcdc7",
-      "avatarUrl": "",
-      "passkey": "scrypt$988c9008d19dccf752dafa13ebe86f96$c8d23ae10362302469c0b5bdae27ea18b375f82613780bea2b7269ce7a03223177982c39ce447b70f77a82cee0d0b9db9fb4083fd94d7d54297d56600aa66c85",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:33:17.721Z",
-      "lastModifiedBy": "Sakshyam B.K. (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795617197721_yyb3",
-          "timestamp": "2026-11-25T14:33:17.721Z",
-          "actor": "Sakshyam B.K. (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_b91fd463da75",
-      "name": "Soniya Dhungana",
-      "username": "dhunganasoniya43",
-      "email": "dhunganasoniya43@gmail.com",
-      "canonicalEmail": "dhunganasoniya43@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T13:43:18.342Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$1d0cef15b4f175e2ea494b253c6b7670$9840073ece7d235d08179362759afe23acc948912eb51241ca720f5e32e6345a81c8572c662f632907bc7527a3793c8b8e6386e5315154e2492db8d8e6dc6231",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:43:18.401Z",
-      "lastModifiedBy": "Soniya Dhungana (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795614198401_9nc4",
-          "timestamp": "2026-11-25T13:43:18.401Z",
-          "actor": "Soniya Dhungana (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_102017d9b135",
-      "name": "Shirish Tripathi",
-      "username": "shirishtripathi49",
-      "email": "shirishtripathi49@gmail.com",
-      "canonicalEmail": "shirishtripathi49@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "failed",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T13:42:08.828Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_102017d9b135e030",
-      "avatarUrl": "",
-      "passkey": "scrypt$a7f86031ef810770aef0f04f3117d56f$dd58e390db4d952f40137be62366262d596892acab248acafa80e35976ebfecb297d7b64275ead4e20571e17919b7cc1c5ba22865814eaaf0fd2f7eeaea55eda",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:41:26.047Z",
-      "lastModifiedBy": "Admin Console",
-      "auditLog": [
-        {
-          "id": "aud_1795621286047_ch95",
-          "timestamp": "2026-11-25T15:41:26.047Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795614267812-FE5B4D marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795621283403_war5",
-          "timestamp": "2026-11-25T15:41:23.403Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795614267812-FE5B4D marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795614267813_fdhj",
-          "timestamp": "2026-11-25T13:44:27.813Z",
-          "actor": "Shirish Tripathi (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795614267812-FE5B4D (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795614128881_6o0a",
-          "timestamp": "2026-11-25T13:42:08.881Z",
-          "actor": "Shirish Tripathi (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_86f4da6c35bb",
-      "name": "Nistha thakuri",
-      "username": "nisthasthakhawas",
-      "email": "nisthasthakhawas@gmail.com",
-      "canonicalEmail": "nisthasthakhawas@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T13:23:52.619Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_86f4da6c35bb321f",
-      "avatarUrl": "",
-      "passkey": "scrypt$5623cb90e0b99ba3e1f28a22ce5db41f$ff009bd38f36ca7c606d860aaeef770d2b278b622989f992c06c4151db721d9a024477ce9cd701d72dacf361893b8c7b459a7991a9f58a19ee00d7b9d7a88da2",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:23:52.672Z",
-      "lastModifiedBy": "Nistha thakuri (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795613032672_3s7s",
-          "timestamp": "2026-11-25T13:23:52.672Z",
-          "actor": "Nistha thakuri (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_1128fb26d860",
-      "name": "Aasika Tamang",
-      "username": "aashikat2009",
-      "email": "aashikat2009@gmail.com",
-      "canonicalEmail": "aashikat2009@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T13:23:27.966Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$1cd052cf273c8a6391ea9658df208012$75bf75e5f6aa0e9be6dde5914729b2d497947c105759da6da5c46dfef5363bb2823a4af891cd03a6498a674da419863d05562291fc805f4fd9fb2278a91ecc49",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:23:28.020Z",
-      "lastModifiedBy": "Aasika Tamang (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795613008020_yfen",
-          "timestamp": "2026-11-25T13:23:28.020Z",
-          "actor": "Aasika Tamang (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_6c0fd6ffc46c",
-      "name": "Prativa Paudel",
-      "username": "prativapaudel95",
-      "email": "prativapaudel95@gmail.com",
-      "canonicalEmail": "prativapaudel95@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T13:10:08.433Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$fccc25fce071f02d55a15a44b1d6bd9d$889720c025521fae578404e165f27bc01a8851c9ba4a63da38ff4cdb46f4fcdfa0cb8f3b1efc18899840dc9ad9e6c2ee6703414c2186b9d0a1c54b89e412b978",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:10:08.493Z",
-      "lastModifiedBy": "Prativa Paudel (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795612208493_6ih1",
-          "timestamp": "2026-11-25T13:10:08.493Z",
-          "actor": "Prativa Paudel (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_82b1ff28ecc3",
-      "name": "Safal",
-      "username": "safalpaudel0600",
-      "email": "safalpaudel0600@gmail.com",
-      "canonicalEmail": "safalpaudel0600@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T12:45:56.202Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$c40421d5388c3e68d6e62293e883533f$f31857ab3fcdf097cfd760a456f2a0538e0905d3326c89b03cc9349b2268517a05e7a473c19a99353b14f4c08251f4c35554968b3213faf9c2092525e18af142",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:45:56.257Z",
-      "lastModifiedBy": "Safal (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795610756257_etz7",
-          "timestamp": "2026-11-25T12:45:56.257Z",
-          "actor": "Safal (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_32c1a5fb30c2",
-      "name": "Manjul Subedi",
-      "username": "subedimanjul25",
-      "email": "subedimanjul25@gmail.com",
-      "canonicalEmail": "subedimanjul25@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "awaiting_confirmation",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T12:45:19.877Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$732606f01916b3e2230f4bc9e33f6714$f051b2551784fd90b13a316289fdd6393bcbb4615a2014494c79523c3da2f2d9002cd9f090c714496891c3a2c5934da5787f3ff6accbfba435e8c990cf33bb88",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:38:23.119Z",
-      "lastModifiedBy": "Admin Console (Provider Status Check)",
-      "auditLog": [
-        {
-          "id": "aud_1795613903119_ns9u",
-          "timestamp": "2026-11-25T13:38:23.119Z",
-          "actor": "Admin Console (Provider Status Check)",
-          "action": "PAYMENT_AWAITING_CONFIRMATION",
-          "details": "Order ORD-1795610829916-3D9F45 (Topper, NPR 2999) is awaiting confirmation"
-        },
-        {
-          "id": "aud_1795610829917_lqh4",
-          "timestamp": "2026-11-25T12:47:09.917Z",
-          "actor": "Manjul Subedi (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795610829916-3D9F45 (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795610719930_rfhs",
-          "timestamp": "2026-11-25T12:45:19.930Z",
-          "actor": "Manjul Subedi (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_35b207967208",
-      "name": "Aradhya Paudel",
-      "username": "poudlearadhya",
-      "email": "poudlearadhya@gmail.com",
-      "canonicalEmail": "poudlearadhya@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "pending",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T12:35:36.543Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_35b2079672087220",
-      "avatarUrl": "",
-      "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:34:19.454Z",
-      "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795613659454_oxep",
-          "timestamp": "2026-11-25T13:34:19.454Z",
-          "actor": "Aradhya Paudel (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795613640346_xu62",
-          "timestamp": "2026-11-25T13:34:00.345Z",
-          "actor": "Aradhya Paudel (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795613575247_4dh3",
-          "timestamp": "2026-11-25T13:32:55.247Z",
-          "actor": "Aradhya Paudel (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795610431134_2p1t",
-          "timestamp": "2026-11-25T12:40:31.134Z",
-          "actor": "Aradhya Paudel (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795610414668_r3vo",
-          "timestamp": "2026-11-25T12:40:14.668Z",
-          "actor": "Aradhya Paudel (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795610268744_r5dp",
-          "timestamp": "2026-11-25T12:37:48.744Z",
-          "actor": "Aradhya Paudel (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795610268743-FADADC (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795610136601_dhup",
-          "timestamp": "2026-11-25T12:35:36.601Z",
-          "actor": "Aradhya Paudel (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_5bf8c263fc69",
-      "name": "Saurav Kunwar",
-      "username": "sauravkunwar231",
-      "email": "sauravkunwar231@gmail.com",
-      "canonicalEmail": "sauravkunwar231@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T12:27:08.933Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$eae5e48c4989b95358b89c3207541dc3$e673d64c97aae2d6713d941f9fe8a184d72687438989dca6999fcc9d581077adf82ffaab8cda31c3b258fb365bdb05c98737041b987ccd218b471132fc9d3754",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:27:08.987Z",
-      "lastModifiedBy": "Saurav Kunwar (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795609628987_g7px",
-          "timestamp": "2026-11-25T12:27:08.987Z",
-          "actor": "Saurav Kunwar (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_219268db8c0d",
-      "name": "Spandan Gorkhali",
-      "username": "spandan.pkr",
-      "email": "spandan.pkr@gmail.com",
-      "canonicalEmail": "spandanpkr@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T12:23:55.353Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_219268db8c0dd428",
-      "avatarUrl": "",
-      "passkey": "scrypt$3712dcc866d423c4f91dd98536fad283$c1ff33719f3cff2b934260cca9a45f4b5b31c6b09f2630e8b70296d49b67964be91299ac1f261b0666c3ebd97d715e34b8790761fbb0ab77157737bb718d1ff2",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:23:55.407Z",
-      "lastModifiedBy": "Spandan Gorkhali (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795609435407_dvo5",
-          "timestamp": "2026-11-25T12:23:55.407Z",
-          "actor": "Spandan Gorkhali (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_b779167fbeb3",
-      "name": "Pradip Ranabhat",
-      "username": "pradipranabhat19",
-      "email": "pradipranabhat19@gmail.com",
-      "canonicalEmail": "pradipranabhat19@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T12:19:35.222Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": false,
-      "googleSub": "",
-      "avatarUrl": "",
-      "passkey": "scrypt$03a10943f8be7ad6d84aac229792e3c7$ac11de6a36d2bde769e0f7e26ef761d9f1b59499c2941aae09d1376e931b3f9681e8f9bcd2cf7073028552353f383187190d77da0456cc5ac29f09fe69de18bf",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:19:35.280Z",
-      "lastModifiedBy": "Pradip Ranabhat (Email OTP Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795609175280_z7dw",
-          "timestamp": "2026-11-25T12:19:35.280Z",
-          "actor": "Pradip Ranabhat (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_0f1bb6e4792c",
-      "name": "Sumit Acharya",
-      "username": "sumitach321",
-      "email": "sumitach321@gmail.com",
-      "canonicalEmail": "sumitach321@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T12:13:56.613Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_0f1bb6e4792cea33",
-      "avatarUrl": "",
-      "passkey": "scrypt$6a8087080bbb03c72ff78889937a26f6$acf507d1c5460571cb4731409df2abe63bfa2ed55a3b0694fe26d3c64f6d189aec451bab58d3a7e64c4b603d4f49dc46377df7e77531dfff5632743c2c03a282",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:13:56.672Z",
-      "lastModifiedBy": "Sumit Acharya (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795608836672_4he0",
-          "timestamp": "2026-11-25T12:13:56.672Z",
-          "actor": "Sumit Acharya (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_03f7b735f6ec",
-      "name": "Aaditya Khatri",
-      "username": "aadityakhatri234",
-      "email": "aadityakhatri234@gmail.com",
-      "canonicalEmail": "aadityakhatri234@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T11:59:03.978Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_03f7b735f6ecc39b",
-      "avatarUrl": "",
-      "passkey": "scrypt$41f1287a5025f52638caf88c42e90647$3c7cb4ee8878ae283c68b3dcc784db0a6d195d3237bbaa18eda7793d651ccb65f08ce97e9fd4163b40c37c7ad9c7f70b3ebed85e2bd6036165ffcecdf2c8c74b",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T14:50:08.421Z",
-      "lastModifiedBy": "Aaditya Khatri (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795618208421_t916",
-          "timestamp": "2026-11-25T14:50:08.421Z",
-          "actor": "Aaditya Khatri (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795608105503_9myj",
-          "timestamp": "2026-11-25T12:01:45.503Z",
-          "actor": "Aaditya Khatri (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795607944037_qzuy",
-          "timestamp": "2026-11-25T11:59:04.037Z",
-          "actor": "Aaditya Khatri (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_a52d77942f5a",
-      "name": "Abhinav Parajuli",
-      "username": "parajuliabhinav205",
-      "email": "parajuliabhinav205@gmail.com",
-      "canonicalEmail": "parajuliabhinav205@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T06:04:07.769Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_a52d77942f5a2328",
-      "avatarUrl": "",
-      "passkey": "scrypt$18d5766697ea6af85db720ea211f8b22$ea1305c8465e6bf8a95538d726a99dbae7604901d5e7452419222a9cc868776e5e492934f103a59df071388d47893587507395e216272675be475a0fd000c523",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T06:04:07.842Z",
-      "lastModifiedBy": "Abhinav Parajuli (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795586647842_r58l",
-          "timestamp": "2026-11-25T06:04:07.842Z",
-          "actor": "Abhinav Parajuli (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_4eb8560d0956",
-      "name": "Prashil Lamichhane",
-      "username": "prashillamichhane123",
-      "email": "prashillamichhane123@gmail.com",
-      "canonicalEmail": "prashillamichhane123@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T03:04:11.442Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_4eb8560d09563436",
-      "avatarUrl": "",
-      "passkey": "scrypt$7f1aa4a36df409cbe9cd9b225a20bddc$1924222851221530929980d5399ac1859ec5774c0633596df106e10245e49210bce87ac35b0f7996ee685f44953c2d8a94d256d9c55a6c1cac774bf5e5d19c4f",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T03:04:11.507Z",
-      "lastModifiedBy": "Prashil Lamichhane (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795575851507_fdfn",
-          "timestamp": "2026-11-25T03:04:11.507Z",
-          "actor": "Prashil Lamichhane (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_358b294bfb3b",
-      "name": "Binisa Gautam",
-      "username": "bishnupdgautam2",
-      "email": "bishnupdgautam2@gmail.com",
-      "canonicalEmail": "bishnupdgautam2@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T02:40:45.343Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_358b294bfb3b5ca4",
-      "avatarUrl": "",
-      "passkey": "scrypt$4988442cf5fa84c2942eb6d96688f534$b1240f527d2bf00f3f78dde20ec2b184afd856d725476e50c85732112c8e8b9bc81419ff9bce7eb655617f1ca41eed2b0a8bab5c3e9bc510dae6ab02ce8c4814",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T02:43:46.563Z",
-      "lastModifiedBy": "Binisa Gautam (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795574626563_u6e9",
-          "timestamp": "2026-11-25T02:43:46.563Z",
-          "actor": "Binisa Gautam (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795574445407_yazo",
-          "timestamp": "2026-11-25T02:40:45.407Z",
-          "actor": "Binisa Gautam (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_b2f5d1fbcf97",
-      "name": "Binod Timilsina",
-      "username": "binodtimilsina06",
-      "email": "binodtimilsina06@gmail.com",
-      "canonicalEmail": "binodtimilsina06@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T02:25:13.805Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_b2f5d1fbcf979b2c",
-      "avatarUrl": "",
-      "passkey": "scrypt$cabb6a8a988a0b2a75279cc2f9b0241f$7fb02ed4b91ea3793525c1d7ef9af9c6b9eaea86eacc0ded3a97dc5ac8a138a166a02419bb15401217e575d88a72314a42cb2ed80835c54ae34a4992ef6cb19f",
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T02:25:13.893Z",
-      "lastModifiedBy": "Binod Timilsina (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795573513893_gk3i",
-          "timestamp": "2026-11-25T02:25:13.893Z",
-          "actor": "Binod Timilsina (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
         }
       ]
     },
@@ -1649,279 +59,157 @@
       "classKey": "class-12",
       "plan": "free",
       "planExplicitlySet": false,
-      "legacyAccess": false,
+      "legacyAccess": true,
       "accountStatus": "active",
       "paymentStatus": "none",
       "emailVerified": true,
-      "verifiedAt": "2026-11-24T13:35:51.321Z",
+      "verifiedAt": "2026-11-22T12:00:00.000Z",
       "verificationMethod": "google_oauth",
       "googleLinked": true,
       "googleSub": "gsub_1b558269b9fae18a",
       "avatarUrl": "",
-      "passkey": "scrypt$6fac398401e3f1b2276ff7b511f02a1f$bfd9c7d684579bbda687d5f369db16255dea5653f73a13cd9b3caa558d700546446bdd9d954c427fa28923d76b6227e7a8dd785f24f678b0fb038adc7b25b62d",
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T13:35:51.400Z",
-      "lastModifiedBy": "Paribesh Thapa (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795527351400_akef",
-          "timestamp": "2026-11-24T13:35:51.400Z",
-          "actor": "Paribesh Thapa (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
+      "hasPassword": false,
+      "passkey": "bpgstudent",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-22",
+      "updatedAt": "2026-11-23T15:32:48.362Z",
+      "lastModifiedBy": "Recovered from Chrome & Git Backup",
+      "auditLog": []
     },
     {
-      "userId": "usr_8e81abd1d7f6",
-      "name": "Dipson Poudel",
-      "username": "deepsonking444",
-      "email": "deepsonking444@gmail.com",
-      "canonicalEmail": "deepsonking444@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
+      "userId": "usr_ab78663f0a4c",
+      "name": "Rohan Sharma",
+      "username": "rohan.sharma",
+      "email": "rohan.sharma@gmail.com",
+      "canonicalEmail": "rohansharma@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "diamond",
+      "planExplicitlySet": true,
+      "legacyAccess": true,
+      "accountStatus": "active",
+      "paymentStatus": "paid",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-03T09:00:00.000Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_ab78663f0a4ce1ca",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "bpgstudent",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-03",
+      "updatedAt": "2026-11-23T15:00:00.000Z",
+      "lastModifiedBy": "Recovered with Verified Diamond Payment (GW999)",
+      "auditLog": []
+    },
+    {
+      "userId": "usr_cc8442ff9a9c",
+      "name": "Aayush KC",
+      "username": "aayush.kc",
+      "email": "aayush.kc@gmail.com",
+      "canonicalEmail": "aayushkc@gmail.com",
+      "grade": "Class 10",
+      "classKey": "class-10",
       "plan": "free",
       "planExplicitlySet": false,
-      "legacyAccess": false,
+      "legacyAccess": true,
       "accountStatus": "active",
       "paymentStatus": "none",
       "emailVerified": true,
-      "verifiedAt": "2026-11-24T10:08:22.500Z",
+      "verifiedAt": "2026-11-04T09:00:00.000Z",
       "verificationMethod": "google_oauth",
       "googleLinked": true,
-      "googleSub": "gsub_8e81abd1d7f63c16",
+      "googleSub": "gsub_cc8442ff9a9cc31d",
       "avatarUrl": "",
-      "passkey": "scrypt$28a8e8ade8c7f8bdba543cb80d9b6098$2d26db5b1c89ddd3b2785dc36af640b2593d30029b476cc5ca72c9f0ceaf21907b0337e90039cd4fa4a2ad72b614488ca6abfe8c6b39d853e70e58d8ab8a8283",
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T10:08:22.553Z",
-      "lastModifiedBy": "Dipson Poudel (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795514902554_qavi",
-          "timestamp": "2026-11-24T10:08:22.553Z",
-          "actor": "Dipson Poudel (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
+      "hasPassword": false,
+      "passkey": "bpgstudent",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-04",
+      "updatedAt": "2026-11-23T15:00:00.000Z",
+      "lastModifiedBy": "Recovered from Roster Backup",
+      "auditLog": []
     },
     {
-      "userId": "usr_3fb71be3b31a",
-      "name": "Dipson Poudel",
-      "username": "deepsonpaudel9",
-      "email": "deepsonpaudel9@gmail.com",
-      "canonicalEmail": "deepsonpaudel9@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
+      "userId": "usr_d967e7372695",
+      "name": "Prabhat Paudel",
+      "username": "prabhat.entrance",
+      "email": "prabhat.entrance@gmail.com",
+      "canonicalEmail": "prabhatentrance@gmail.com",
+      "grade": "After 12 Entrance",
+      "classKey": "after-12",
       "plan": "free",
       "planExplicitlySet": false,
-      "legacyAccess": false,
+      "legacyAccess": true,
       "accountStatus": "active",
       "paymentStatus": "none",
       "emailVerified": true,
-      "verifiedAt": "2026-11-24T10:04:57.696Z",
+      "verifiedAt": "2026-11-05T09:00:00.000Z",
       "verificationMethod": "google_oauth",
       "googleLinked": true,
-      "googleSub": "gsub_3fb71be3b31a82ad",
+      "googleSub": "gsub_d967e7372695f2fe",
       "avatarUrl": "",
-      "passkey": "scrypt$f0157121f8cc1e22ee43f216e4cfe6c9$9ddf53e6252f20956cfafb283010d0d24f30e9f0d187a61228544659a1c9a7515e36224dd8fdcb7d7823f163179bbb8b2ecd14ab33b285488bc8f028d280237b",
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T10:06:41.914Z",
-      "lastModifiedBy": "Dipson Poudel (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795514801914_u0oh",
-          "timestamp": "2026-11-24T10:06:41.914Z",
-          "actor": "Dipson Poudel (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795514697750_6bwt",
-          "timestamp": "2026-11-24T10:04:57.750Z",
-          "actor": "Dipson Poudel (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
+      "hasPassword": false,
+      "passkey": "bpgstudent",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-05",
+      "updatedAt": "2026-11-23T15:00:00.000Z",
+      "lastModifiedBy": "Recovered from Roster Backup",
+      "auditLog": []
     },
     {
-      "userId": "usr_25e888886ae4",
-      "name": "Chess Club",
-      "username": "creativechessclub01",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
+      "userId": "usr_57ca72c99775",
+      "name": "Suman Sharma",
+      "username": "suman",
+      "email": "suman@bpgacademy.edu.np",
+      "canonicalEmail": "suman@bpgacademy.edu.np",
       "grade": "Class 12",
       "classKey": "class-12",
       "plan": "free",
       "planExplicitlySet": false,
-      "legacyAccess": false,
+      "legacyAccess": true,
       "accountStatus": "active",
-      "paymentStatus": "awaiting_confirmation",
+      "paymentStatus": "none",
       "emailVerified": true,
-      "verifiedAt": "2026-11-24T09:46:13.317Z",
+      "verifiedAt": "2026-11-14T09:00:00.000Z",
       "verificationMethod": "email_otp",
       "googleLinked": false,
       "googleSub": "",
       "avatarUrl": "",
-      "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-24T16:38:42.387Z",
-      "lastModifiedBy": "Admin Console (Provider Status Check)",
-      "auditLog": [
-        {
-          "id": "aud_1795538322387_mp0k",
-          "timestamp": "2026-11-24T16:38:42.387Z",
-          "actor": "Admin Console (Provider Status Check)",
-          "action": "PAYMENT_AWAITING_CONFIRMATION",
-          "details": "Order ORD-1795531613133-AD4BC7 (Padandas, NPR 1499) is awaiting confirmation"
-        },
-        {
-          "id": "aud_1795532308589_ownu",
-          "timestamp": "2026-11-24T14:58:28.589Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_REJECTED",
-          "details": "Rejected class switch to Class 11"
-        },
-        {
-          "id": "aud_1795532266169_ypnk",
-          "timestamp": "2026-11-24T14:57:46.169Z",
-          "actor": "Chess Club (Student)",
-          "action": "CLASS_SWITCH_REQUESTED",
-          "details": "Requested switch from Class 12 to Class 11"
-        },
-        {
-          "id": "aud_1795531613133_7gao",
-          "timestamp": "2026-11-24T14:46:53.133Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795531613133-AD4BC7 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795531610244_h10t",
-          "timestamp": "2026-11-24T14:46:50.244Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795531610243-091C49 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795519735342_a5tf",
-          "timestamp": "2026-11-24T11:28:55.342Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_APPROVED",
-          "details": "Approved class switch from Class 11 to Class 12"
-        },
-        {
-          "id": "aud_1795519732507_ztos",
-          "timestamp": "2026-11-24T11:28:52.507Z",
-          "actor": "Chess Club (Student)",
-          "action": "CLASS_SWITCH_REQUESTED",
-          "details": "Requested switch from Class 11 to Class 12"
-        },
-        {
-          "id": "aud_1795519713189_7kpp",
-          "timestamp": "2026-11-24T11:28:33.189Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_APPROVED",
-          "details": "Approved class switch from Class 12 to Class 11 (Ok man)"
-        },
-        {
-          "id": "aud_1795519694219_r1k0",
-          "timestamp": "2026-11-24T11:28:14.219Z",
-          "actor": "Chess Club (Student)",
-          "action": "CLASS_SWITCH_REQUESTED",
-          "details": "Requested switch from Class 12 to Class 11"
-        },
-        {
-          "id": "aud_1795518620384_mv9n",
-          "timestamp": "2026-11-24T11:10:20.384Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795518544717-1E3DF3 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795518618910_4wq0",
-          "timestamp": "2026-11-24T11:10:18.910Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795518561321-571F30 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795518561322_k1g9",
-          "timestamp": "2026-11-24T11:09:21.322Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795518561321-571F30 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795518544717_elt0",
-          "timestamp": "2026-11-24T11:09:04.717Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795518544717-1E3DF3 (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795513573381_p1t6",
-          "timestamp": "2026-11-24T09:46:13.381Z",
-          "actor": "Chess Club (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
+      "hasPassword": true,
+      "passkey": "bpgstudent",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-14",
+      "updatedAt": "2026-11-23T15:00:00.000Z",
+      "lastModifiedBy": "Recovered from Chrome LevelDB Backup",
+      "auditLog": []
     },
     {
-      "userId": "usr_974c713f29dd",
-      "name": "Ujjwol Sharma",
-      "username": "intumintuchintu76",
-      "email": "intumintuchintu76@gmail.com",
-      "canonicalEmail": "intumintuchintu76@gmail.com",
+      "userId": "usr_ef3068f04640",
+      "name": "Creative Scholar",
+      "username": "creative.scholar",
+      "email": "scholar@bpgacademy.edu.np",
+      "canonicalEmail": "scholar@bpgacademy.edu.np",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "diamond",
-      "planExplicitlySet": true,
-      "legacyAccess": false,
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": true,
       "accountStatus": "active",
-      "paymentStatus": "paid",
+      "paymentStatus": "none",
       "emailVerified": true,
-      "verifiedAt": "2026-11-24T08:21:17.668Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_974c713f29dd430d",
+      "verifiedAt": "2026-11-01T09:00:00.000Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
       "avatarUrl": "",
-      "passkey": "scrypt$a2555dd4546f28d2d4077e9e99eb57c4$58ea8aed30de6f5abed51b775f93d995db1a6edaee161bc127830f34b1cea63b18987fc2c84a9573b11ab2d9768f4bd4838ef269d1c15b4d6f8876c1870cdabc",
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T15:17:49.242Z",
-      "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795619869242_l1cg",
-          "timestamp": "2026-11-25T15:17:49.242Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795613177802_xf0u",
-          "timestamp": "2026-11-25T13:26:17.802Z",
-          "actor": "Ujjwol Sharma (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795613177801-485BF2 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795543508465_4tus",
-          "timestamp": "2026-11-24T18:05:08.465Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795513648289_9kwv",
-          "timestamp": "2026-11-24T09:47:28.289Z",
-          "actor": "Admin Console",
-          "action": "ADMIN_PLAN_CHANGE",
-          "details": "Changed plan from FREE to DIAMOND"
-        }
-      ]
+      "hasPassword": true,
+      "passkey": "bpgstudent",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-01",
+      "updatedAt": "2026-11-23T15:00:00.000Z",
+      "lastModifiedBy": "Recovered from Initial Roster Backup",
+      "auditLog": []
     }
   ]
 }
