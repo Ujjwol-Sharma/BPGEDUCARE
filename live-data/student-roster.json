@@ -1,6 +1,6 @@
 {
-  "revision": 119,
-  "lastUpdated": "2026-11-25T16:41:32.733Z",
+  "revision": 120,
+  "lastUpdated": "2026-11-25T16:46:52.967Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -833,9 +833,16 @@
       "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T16:40:35.331Z",
+      "updatedAt": "2026-11-25T16:46:52.966Z",
       "lastModifiedBy": "Bishal chhetri (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795625212966_utyv",
+          "timestamp": "2026-11-25T16:46:52.966Z",
+          "actor": "Bishal chhetri (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795625212966-0A48E0 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795624835331_yafv",
           "timestamp": "2026-11-25T16:40:35.331Z",
