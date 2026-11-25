@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:06:18.774Z",
+  "lastUpdated": "2026-11-25T15:07:19.947Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1505,6 +1505,10 @@
                 {
                   "id": "sub_1795619166413_1",
                   "title": "1.1 Circle"
+                },
+                {
+                  "id": "sub_1795619228229_2",
+                  "title": "1.2 Conic Section (Parabola)"
                 }
               ],
               "pdfs": [],
@@ -3418,6 +3422,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 82,
+  "revision": 83,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
