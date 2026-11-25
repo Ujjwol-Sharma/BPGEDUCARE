@@ -1,6 +1,6 @@
 {
-  "revision": 69,
-  "lastUpdated": "2026-11-25T10:43:07.685Z",
+  "revision": 70,
+  "lastUpdated": "2026-11-25T10:43:12.358Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795603392358_oa51",
+      "timestamp": "2026-11-25T10:43:12.358Z",
+      "userId": "usr_5d0c6b99f8a6",
+      "email": "verify.session.live@gmail.com",
+      "actor": "Live Verify Student (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 11 · FREE)"
+    },
     {
       "id": "raud_1795603387684_xhy3",
       "timestamp": "2026-11-25T10:43:07.684Z",
@@ -375,9 +384,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$c7288f58c3acfbd9dfb9cc24d7f73885$63037eb6d607086323df597b7eaee77959b2e3a174aa28ee3d4c4f778e2daf645dd24dfab4de69bca060c8b768934e3fb93ddaba31679262016c6781ec087204",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T10:43:07.684Z",
-      "lastModifiedBy": "Live Verify Student (Google Sign-Up)",
+      "updatedAt": "2026-11-25T10:43:12.358Z",
+      "lastModifiedBy": "Live Verify Student (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795603392358_4o4x",
+          "timestamp": "2026-11-25T10:43:12.358Z",
+          "actor": "Live Verify Student (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795603387684_dant",
           "timestamp": "2026-11-25T10:43:07.684Z",
