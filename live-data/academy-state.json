@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:27:52.312Z",
+  "lastUpdated": "2026-11-25T15:29:25.622Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1610,7 +1610,12 @@
               "title": "Calculus",
               "hours": "36 hrs",
               "marks": "22 Marks",
-              "subTopics": [],
+              "subTopics": [
+                {
+                  "id": "sub_1795620559358_1",
+                  "title": "1.1 Derivative of hyperbolic functions"
+                }
+              ],
               "pdfs": [],
               "videos": []
             },
@@ -3502,6 +3507,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 91,
+  "revision": 92,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
