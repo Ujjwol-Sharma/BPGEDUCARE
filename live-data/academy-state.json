@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T16:14:57.855Z",
+  "lastUpdated": "2026-11-25T16:31:54.095Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2948,7 +2948,55 @@
       "description": "Unlocks every question, solution, and PDF across all open sections."
     }
   },
-  "mockTests": [],
+  "mockTests": [
+    {
+      "id": "mt_1795513988725",
+      "classKey": "class-12",
+      "subjectId": "mathematics",
+      "title": "Mock",
+      "durationMinutes": 30,
+      "minPlan": "free",
+      "adminAssignedPlan": true,
+      "status": "published",
+      "questions": [
+        {
+          "id": "q_1795513742247_0",
+          "text": "Evaluate the indefinite integral $\\int \\frac{dx}{1 + \\tan x}$.",
+          "options": {
+            "A": "$\\frac{x}{2} + \\frac{1}{2}\\ln\\vert{}\\sin x + \\cos x\\vert{} + C$",
+            "B": "$\\frac{x}{2} - \\frac{1}{2}\\ln\\vert{}\\sin x + \\cos x\\vert{} + C$",
+            "C": "$\\ln\\vert{}\\sin x + \\cos x\\vert{} + C$",
+            "D": "$x + \\ln\\vert{}\\cos x\\vert{} + C$"
+          },
+          "correctOption": "A"
+        },
+        {
+          "id": "q_1795513875612_1",
+          "text": "What is the general solution of the differential equation $\\frac{dy}{dx} = e^{x - y} + x^2 e^{-y}$?",
+          "options": {
+            "A": "$e^y = e^x + \\frac{x^3}{3} + C$",
+            "B": "$e^{-y} = e^x + \\frac{x^3}{3} + C$",
+            "C": "$e^y = e^x + 3x^3 + C$",
+            "D": "$y = e^x + \\frac{x^3}{3} + C$"
+          },
+          "correctOption": "A"
+        },
+        {
+          "id": "q_1795513924195_2",
+          "text": "A problem in mathematics is given to three students A, B, and C whose probabilities of solving it are $\\frac{1}{2}, \\frac{1}{3},$ and $\\frac{1}{4}$ respectively. What is the probability that the problem is solved?",
+          "options": {
+            "A": "$\\frac{1}{4}$",
+            "B": "$\\frac{3}{4}$",
+            "C": "$\\frac{1}{24}$",
+            "D": "$\\frac{23}{24}$"
+          },
+          "correctOption": "B"
+        }
+      ],
+      "createdAt": "2026-11-24T09:53:08.725Z",
+      "updatedAt": "2026-11-24T09:53:08.725Z"
+    }
+  ],
   "zoomClasses": [],
   "teamMembers": [
     {
@@ -3555,8 +3603,81 @@
       "updatedAt": "2026-11-24T11:10:20.384Z",
       "reviewedAt": "2026-11-24T11:10:20.384Z",
       "verifiedBy": "Admin Console"
+    },
+    {
+      "id": "pay_1795614267812_mb67",
+      "orderId": "ORD-1795614267812-FE5B4D",
+      "userId": "usr_102017d9b135",
+      "fullName": "Shirish Tripathi",
+      "username": "shirishtripathi49",
+      "email": "shirishtripathi49@gmail.com",
+      "canonicalEmail": "shirishtripathi49@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planId": "diamond",
+      "planName": "Topper",
+      "amount": "Rs. 2,999",
+      "expectedAmount": 2999,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "964af420916c73ee59ff5687d23f1e56aa3f6e2fbb53d88af59d32e9ab1349f5",
+      "method": "esewa_qr",
+      "status": "pending",
+      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "createdAt": "2026-11-25T13:44:27.812Z",
+      "updatedAt": "2026-11-25T13:44:27.812Z",
+      "reviewedAt": ""
+    },
+    {
+      "id": "pay_1795610268744_7x2j",
+      "orderId": "ORD-1795610268743-FADADC",
+      "userId": "usr_35b207967208",
+      "fullName": "Aradhya Paudel",
+      "username": "poudlearadhya",
+      "email": "poudlearadhya@gmail.com",
+      "canonicalEmail": "poudlearadhya@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planId": "diamond",
+      "planName": "Topper",
+      "amount": "Rs. 2,999",
+      "expectedAmount": 2999,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "b426047e5cd9075c049ad3a759abe896a11caa729515595b8a70650d49bb6dfe",
+      "method": "esewa_qr",
+      "status": "pending",
+      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "createdAt": "2026-11-25T12:37:48.744Z",
+      "updatedAt": "2026-11-25T12:37:48.744Z",
+      "reviewedAt": ""
+    },
+    {
+      "id": "pay_1795518561321_0cma",
+      "orderId": "ORD-1795518561321-571F30",
+      "userId": "usr_25e888886ae4",
+      "fullName": "Chess Club",
+      "username": "creativechessclub01",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planId": "gold",
+      "planName": "Padandas",
+      "amount": "Rs. 1,499",
+      "expectedAmount": 1499,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "6baa903d72201d5b9984baeed71ce0cb13cce02ac695d37c3b263979b683c261",
+      "method": "esewa_qr",
+      "status": "failed",
+      "adminNote": "Payment verification failed or rejected by Admin.",
+      "createdAt": "2026-11-24T11:09:21.321Z",
+      "updatedAt": "2026-11-24T11:10:18.910Z",
+      "reviewedAt": "2026-11-24T11:10:18.910Z",
+      "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 119,
+  "revision": 121,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
