@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:34:38.036Z",
+  "lastUpdated": "2026-11-25T15:35:46.569Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1634,6 +1634,10 @@
                 {
                   "id": "sub_1795620874150_6",
                   "title": "2.1  Integration"
+                },
+                {
+                  "id": "sub_1795620942895_7",
+                  "title": "3.1 Differential Equations"
                 }
               ],
               "pdfs": [],
@@ -3527,6 +3531,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 97,
+  "revision": 98,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
