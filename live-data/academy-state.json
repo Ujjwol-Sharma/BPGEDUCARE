@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:33:13.764Z",
+  "lastUpdated": "2026-11-25T15:34:38.036Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1630,6 +1630,10 @@
                 {
                   "id": "sub_1795620789597_5",
                   "title": "1.5 Rate Measure"
+                },
+                {
+                  "id": "sub_1795620874150_6",
+                  "title": "2.1  Integration"
                 }
               ],
               "pdfs": [],
@@ -3523,6 +3527,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 96,
+  "revision": 97,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
