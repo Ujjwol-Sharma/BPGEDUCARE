@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T16:03:26.199Z",
+  "lastUpdated": "2026-11-25T16:03:54.842Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1715,7 +1715,12 @@
               "title": "Computational Methods",
               "hours": "9hrs",
               "marks": "6 Marks",
-              "subTopics": [],
+              "subTopics": [
+                {
+                  "id": "sub_1795622632115_1",
+                  "title": "1.1 LPP"
+                }
+              ],
               "pdfs": [
                 {
                   "id": "lpdf_1795622603319_0",
@@ -3524,6 +3529,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 111,
+  "revision": 112,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
