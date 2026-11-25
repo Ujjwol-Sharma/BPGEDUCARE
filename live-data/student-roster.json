@@ -1,6 +1,6 @@
 {
-  "revision": 116,
-  "lastUpdated": "2026-11-25T16:37:37.362Z",
+  "revision": 117,
+  "lastUpdated": "2026-11-25T16:39:30.044Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795624770043_0jyo",
+      "timestamp": "2026-11-25T16:39:30.043Z",
+      "userId": "usr_d6872f7a8cbc",
+      "email": "bishalchhetri0099@gmail.com",
+      "actor": "Bishal chhetri (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795624567684_5x7y",
       "timestamp": "2026-11-25T16:36:07.684Z",
@@ -792,6 +801,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_d6872f7a8cbc",
+      "name": "Bishal chhetri",
+      "username": "bishalchhetri0099",
+      "email": "bishalchhetri0099@gmail.com",
+      "canonicalEmail": "bishalchhetri0099@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T16:39:29.989Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_d6872f7a8cbc38d3",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T16:39:30.043Z",
+      "lastModifiedBy": "Bishal chhetri (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795624770043_mcpe",
+          "timestamp": "2026-11-25T16:39:30.043Z",
+          "actor": "Bishal chhetri (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_aba8f2cb0d91",
       "name": "Mridul Jung Pande",
