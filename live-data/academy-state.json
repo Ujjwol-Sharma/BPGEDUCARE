@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T14:37:26.554Z",
+  "lastUpdated": "2026-11-25T14:54:46.818Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2864,6 +2864,24 @@
   "notifications": [],
   "chatbotFaqs": [
     {
+      "id": "faq_1795618479918",
+      "question": "How does Google sign-in and account linking work?",
+      "keywords": [
+        "google",
+        "sign in",
+        "login",
+        "gmail",
+        "link",
+        "account",
+        "oauth",
+        "continue with google"
+      ],
+      "answer": "Click **Sign In** or **Get Started**, then choose **Continue with Google**. Each Gmail address maps to one BPG EDUCARE account. If you already registered with that Gmail, signing in with Google securely links to your existing profile, class access, and plan without creating a duplicate account.",
+      "links": [],
+      "published": true,
+      "updatedAt": "2026-11-25T14:54:39.918Z"
+    },
+    {
       "id": "faq-google-signin",
       "question": "How does Google sign-in and account linking work?",
       "keywords": [
@@ -3362,6 +3380,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 77,
+  "revision": 78,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
