@@ -1,6 +1,89 @@
 /* BPG Academy — Gmail-Unique Auth, Password Reset & OTP Engine (js/auth-otp.js) */
 
 var BPG_ACCOUNTS_KEY = window.BPG_ACCOUNTS_KEY || 'bpg_maths_academy_accounts_v2';
+const BPG_REMEMBERED_EMAIL_KEY = 'bpg_remembered_email_v1';
+let authRequestInFlight = false;
+
+function togglePasswordVisibility(inputId, btnEl) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    if (btnEl) {
+        btnEl.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+        btnEl.setAttribute('title', isHidden ? 'Hide password' : 'Show password');
+        btnEl.innerHTML = isHidden
+            ? '<i class="fa-regular fa-eye-slash" aria-hidden="true"></i>'
+            : '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
+    }
+}
+
+function updatePasswordRequirementsUI(val, listId = 'signupPwdReqs') {
+    const list = document.getElementById(listId);
+    if (!list) return;
+    const s = String(val || '');
+    const checks = {
+        len: s.length >= 6,
+        mix: /[A-Za-z]/.test(s) && /\d/.test(s)
+    };
+    list.querySelectorAll('li[data-req]').forEach(li => {
+        const key = li.getAttribute('data-req');
+        const ok = Boolean(checks[key]);
+        li.classList.toggle('is-met', ok);
+        const icon = li.querySelector('i');
+        if (icon) icon.className = ok ? 'fa-solid fa-circle-check' : 'fa-regular fa-circle';
+    });
+}
+
+function loadRememberedEmailUI() {
+    let remembered = '';
+    try { remembered = String(localStorage.getItem(BPG_REMEMBERED_EMAIL_KEY) || '').trim(); } catch (e) {}
+    const banner = document.getElementById('rememberedAccountBanner');
+    const emailTxt = document.getElementById('rememberedAccountEmailText');
+    const initialEl = document.getElementById('rememberedAccountInitial');
+    const emailInput = document.getElementById('signinEmail');
+    const remChk = document.getElementById('signinRememberEmail');
+
+    if (remembered) {
+        if (banner) banner.style.display = 'flex';
+        if (emailTxt) emailTxt.textContent = remembered;
+        if (initialEl) initialEl.textContent = remembered.charAt(0).toUpperCase();
+        if (emailInput && !emailInput.value) emailInput.value = remembered;
+        if (remChk) remChk.checked = true;
+    } else {
+        if (banner) banner.style.display = 'none';
+        if (remChk) remChk.checked = false;
+    }
+}
+
+function useAnotherAccount() {
+    const emailInput = document.getElementById('signinEmail');
+    const pwdInput = document.getElementById('signinPassword');
+    const banner = document.getElementById('rememberedAccountBanner');
+    if (banner) banner.style.display = 'none';
+    if (emailInput) { emailInput.value = ''; emailInput.focus(); }
+    if (pwdInput) pwdInput.value = '';
+}
+
+function clearRememberedEmail() {
+    try { localStorage.removeItem(BPG_REMEMBERED_EMAIL_KEY); } catch (e) {}
+    const remChk = document.getElementById('signinRememberEmail');
+    if (remChk) remChk.checked = false;
+    useAnotherAccount();
+    showToast('Remembered email cleared from this device.');
+}
+
+function openForgotPasswordFromSignIn() {
+    const email = (document.getElementById('signinEmail')?.value || '').trim();
+    switchAuthTab('reset');
+    const resetInput = document.getElementById('resetEmail');
+    if (resetInput && email) {
+        resetInput.value = email;
+        document.getElementById('resetNewPassword')?.focus();
+    } else {
+        resetInput?.focus();
+    }
+}
 
 let pendingOtpSession = {
     name: '',
@@ -38,6 +121,7 @@ function openAuthModal(initialTab = 'signin', targetClass = null) {
     }
 
     clearAuthInlineAlerts();
+    loadRememberedEmailUI();
     switchAuthTab(initialTab);
     modal.classList.add('open');
 }
@@ -218,9 +302,11 @@ function openInteractiveGoogleChooser(mode = 'signin') {
 
 async function handleLocalGoogleSubmit(e) {
     if (e) e.preventDefault();
+    if (authRequestInFlight) return;
     const name = (document.getElementById('googleChooserName')?.value || '').trim() || 'Student';
     const email = (document.getElementById('googleChooserEmail')?.value || '').trim().toLowerCase();
     const grade = document.getElementById('googleChooserGrade')?.value || getSelectedSignupGradeForGoogle();
+    const keepSignedIn = document.getElementById('googleKeepSignedIn')?.checked !== false;
     const err = document.getElementById('googleChooserErrorBanner');
     if (err) err.style.display = 'none';
 
@@ -229,10 +315,11 @@ async function handleLocalGoogleSubmit(e) {
         return;
     }
 
+    authRequestInFlight = true;
     const btn = document.getElementById('btnGoogleChooserSubmit');
     if (btn) {
         btn.disabled = true;
-        btn.textContent = 'Signing in with Google...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true" style="margin-right:6px;"></i>Signing in with Google...';
     }
 
     try {
@@ -243,7 +330,8 @@ async function handleLocalGoogleSubmit(e) {
                 action: 'GOOGLE_SIGN_IN',
                 googleChooserEmail: email,
                 name,
-                grade
+                grade,
+                keepSignedIn
             })
         });
         const data = await res.json();
@@ -263,15 +351,21 @@ async function handleLocalGoogleSubmit(e) {
         }
         const user = Object.assign({}, data.user, {
             sessionToken: data.sessionToken,
+            keepSignedIn,
             verified: true
         });
         await finalizeVerifiedStudentAccount(user, false, true);
         if (data.linkedExisting) {
-            showToast(`Signed in with Google — linked to your existing ${user.grade} account (${user.userId}).`);
+            showToast(`Signed in with Google — linked to your existing ${user.grade} account.`);
         }
     } catch (err2) {
-        showToast('Could not complete Google Sign-In.');
+        if (err) {
+            err.innerHTML = '<p style="margin:0;">Unable to reach server. Please check your internet connection and try again.</p>';
+            err.style.display = 'block';
+        }
+        showToast('Could not reach server for Google Sign-In.');
     } finally {
+        authRequestInFlight = false;
         if (btn) {
             btn.disabled = false;
             btn.textContent = 'Continue with Google Account';
@@ -486,8 +580,12 @@ function saveStoredAccounts(list) {
 
 async function handleSignInSubmit(e) {
     if (e) e.preventDefault();
+    if (authRequestInFlight) return;
+
     const email = (document.getElementById('signinEmail')?.value || '').trim().toLowerCase();
-    const password = (document.getElementById('signinPassword')?.value || '').trim();
+    const password = String(document.getElementById('signinPassword')?.value || '');
+    const rememberEmail = Boolean(document.getElementById('signinRememberEmail')?.checked);
+    const keepSignedIn = document.getElementById('signinKeepSignedIn')?.checked !== false;
     const errBanner = document.getElementById('signinErrorBanner');
 
     if (errBanner) errBanner.style.display = 'none';
@@ -496,29 +594,63 @@ async function handleSignInSubmit(e) {
         showToast('Please enter your email address.');
         return;
     }
+    if (!password) {
+        showToast('Please enter your password.');
+        return;
+    }
 
+    authRequestInFlight = true;
     const btn = document.getElementById('btnSignInSubmit');
     if (btn) {
         btn.disabled = true;
-        btn.textContent = 'Signing in...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true" style="margin-right:6px;"></i>Signing in...';
     }
 
     try {
         const res = await fetch('/api/student-roster', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'SIGN_IN', email, password })
+            body: JSON.stringify({ action: 'SIGN_IN', email, password, keepSignedIn })
         });
-        const data = await res.json();
 
-        if (!res.ok || !data.success) {
+        let data = {};
+        try { data = await res.json(); } catch (parseErr) {}
+
+        if (res.status >= 500) {
+            const msg = 'Temporary server issue while signing in. Your password may be fine — please try again in a moment.';
             if (errBanner) {
-                errBanner.innerHTML = `<p style="margin:0;">${data.error || 'Could not sign in.'}</p>`;
+                errBanner.innerHTML = `<p style="margin:0;">${msg}</p>`;
                 errBanner.style.display = 'block';
             }
-            showToast(data.error || 'Sign in failed.');
+            showToast(msg);
             return;
         }
+
+        if (!res.ok || !data.success) {
+            const msg = data.error || "We couldn't sign you in with that email and password.";
+            if (errBanner) {
+                const showRecoveryActions = data.code === 'INVALID_CREDENTIALS' || res.status === 401;
+                errBanner.innerHTML = `
+                    <p style="margin:0 0 ${showRecoveryActions ? '10px' : '0'} 0;">${msg}</p>
+                    ${showRecoveryActions ? `
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="handleGoogleAuthClick('signin')">Continue with Google</button>
+                            <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="openForgotPasswordFromSignIn()">Forgot password?</button>
+                            <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="openGmailOtpPane()">Email 6-digit code</button>
+                        </div>
+                    ` : ''}
+                `;
+                errBanner.style.display = 'block';
+            }
+            showToast(msg);
+            return;
+        }
+
+        // Remember ONLY email (never raw password!)
+        try {
+            if (rememberEmail) localStorage.setItem(BPG_REMEMBERED_EMAIL_KEY, email);
+            else localStorage.removeItem(BPG_REMEMBERED_EMAIL_KEY);
+        } catch (e2) {}
 
         if (Array.isArray(data.mySwitchRequests)) {
             window.MY_CLASS_SWITCH_REQUESTS = data.mySwitchRequests;
@@ -528,15 +660,22 @@ async function handleSignInSubmit(e) {
         }
         const user = Object.assign({}, data.user, {
             sessionToken: data.sessionToken,
+            keepSignedIn,
             verified: true
         });
         await finalizeVerifiedStudentAccount(user, false, true);
     } catch (err) {
-        showToast('Unable to reach server. Please try again.');
+        const netMsg = 'Could not reach the server. Check your internet connection and try again — your password was not rejected.';
+        if (errBanner) {
+            errBanner.innerHTML = `<p style="margin:0;">${netMsg}</p>`;
+            errBanner.style.display = 'block';
+        }
+        showToast(netMsg);
     } finally {
+        authRequestInFlight = false;
         if (btn) {
             btn.disabled = false;
-            btn.textContent = 'Sign In';
+            btn.innerHTML = '<i class="fa-solid fa-right-to-bracket" aria-hidden="true" style="margin-right:6px;"></i>Sign In';
         }
     }
 }
@@ -568,15 +707,21 @@ function handleOtpBoxKeydown(idx, e) {
 
 async function handleRequestEmailOtp(e) {
     if (e) e.preventDefault();
+    if (authRequestInFlight) return;
     const name = document.getElementById('signupName')?.value.trim() || 'Student';
     const email = (document.getElementById('signupEmail')?.value || '').trim().toLowerCase();
     const grade = document.getElementById('signupGrade')?.value || 'Class 12';
-    const password = (document.getElementById('signupPassword')?.value || '').trim() || 'bpgstudent';
+    const password = String(document.getElementById('signupPassword')?.value || '');
 
     clearAuthInlineAlerts();
 
     if (!email) {
         showToast('Please enter a valid email address.');
+        return;
+    }
+    if (password.length < 6) {
+        showToast('Password must be at least 6 characters long.');
+        document.getElementById('signupPassword')?.focus();
         return;
     }
 
@@ -588,10 +733,11 @@ async function handleRequestEmailOtp(e) {
         return;
     }
 
+    authRequestInFlight = true;
     const btn = document.getElementById('btnSendOtpSubmit');
     if (btn) {
         btn.disabled = true;
-        btn.textContent = 'Sending code...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true" style="margin-right:6px;"></i>Sending verification email...';
     }
 
     try {
@@ -658,31 +804,39 @@ async function handleRequestEmailOtp(e) {
         setTimeout(() => document.getElementById('otpDigit0')?.focus(), 80);
         showToast(data.message || `Verification code sent to ${email}`);
     } catch (err) {
-        showToast('Could not connect to server to verify Gmail uniqueness. Please try again.');
+        showToast('Could not connect to server to send verification code. Please try again.');
     } finally {
+        authRequestInFlight = false;
         if (btn) {
             btn.disabled = false;
-            btn.textContent = 'Send Verification Code';
+            btn.textContent = 'Continue & Verify Email';
         }
     }
 }
 
 async function handleRequestPasswordResetOtp(e) {
     if (e) e.preventDefault();
+    if (authRequestInFlight) return;
     const email = (document.getElementById('resetEmail')?.value || '').trim().toLowerCase();
-    const newPassword = (document.getElementById('resetNewPassword')?.value || '').trim();
+    const newPassword = String(document.getElementById('resetNewPassword')?.value || '');
     const errBanner = document.getElementById('resetErrorBanner');
     if (errBanner) errBanner.style.display = 'none';
 
-    if (!email || !newPassword) {
-        showToast('Please enter your email and a new password.');
+    if (!email) {
+        showToast('Please enter your email address.');
+        return;
+    }
+    if (newPassword.length < 6) {
+        showToast('New password must be at least 6 characters long.');
+        document.getElementById('resetNewPassword')?.focus();
         return;
     }
 
+    authRequestInFlight = true;
     const btn = document.getElementById('btnResetOtpSubmit');
     if (btn) {
         btn.disabled = true;
-        btn.textContent = 'Sending reset code...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true" style="margin-right:6px;"></i>Sending reset code...';
     }
 
     try {
@@ -698,7 +852,7 @@ async function handleRequestPasswordResetOtp(e) {
                 startResendCooldown(data.retryAfterSeconds);
             }
             if (errBanner) {
-                errBanner.innerHTML = `<p style="margin:0;">${data.error || 'No account found for this email.'}</p>`;
+                errBanner.innerHTML = `<p style="margin:0;">${data.error || 'Could not send reset code right now.'}</p>`;
                 errBanner.style.display = 'block';
             }
             showToast(data.error || 'Could not send reset code.');
@@ -718,7 +872,9 @@ async function handleRequestPasswordResetOtp(e) {
         document.getElementById('authResetContainer').style.display = 'none';
         document.getElementById('otpStep2Container').style.display = 'block';
         const head = document.getElementById('otpStep2Heading');
-        if (head) head.textContent = 'Verify Reset Code';
+        if (head) head.textContent = 'Check Your Email for Reset Code';
+        const sub = document.getElementById('otpStep2Subtitle');
+        if (sub) sub.textContent = "If an account exists for this email, we've sent a 6-digit code. Enter it below to finish updating your password.";
         document.getElementById('otpTargetEmailBadge').textContent = email;
         const otpErr = document.getElementById('otpVerifyErrorBanner');
         if (otpErr) otpErr.style.display = 'none';
@@ -728,9 +884,11 @@ async function handleRequestPasswordResetOtp(e) {
 
         clearOtpDigitBoxes();
         setTimeout(() => document.getElementById('otpDigit0')?.focus(), 80);
+        showToast("If an account exists for this email, we've sent a 6-digit reset code.");
     } catch (err) {
-        showToast('Unable to send reset code. Please try again.');
+        showToast('Unable to send reset code. Please check your connection and try again.');
     } finally {
+        authRequestInFlight = false;
         if (btn) {
             btn.disabled = false;
             btn.textContent = 'Send Reset Code';
@@ -855,6 +1013,8 @@ async function finalizeVerifiedStudentAccount(userObj, shouldPostToRoster = fals
         planExplicitlySet: Boolean(userObj.planExplicitlySet),
         googleLinked: Boolean(userObj.googleLinked),
         avatarUrl: userObj.avatarUrl || '',
+        readNotificationIds: Array.isArray(userObj.readNotificationIds) ? userObj.readNotificationIds : [],
+        keepSignedIn: userObj.keepSignedIn !== false,
         sessionToken: userObj.sessionToken || '',
         verified: true,
         joinedAt: userObj.joinedAt || userObj.verifiedAt || new Date().toISOString().split('T')[0],
@@ -862,9 +1022,16 @@ async function finalizeVerifiedStudentAccount(userObj, shouldPostToRoster = fals
         lastModifiedBy: userObj.lastModifiedBy || 'Student'
     };
 
-    localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(record));
-    localStorage.setItem('bpg_student_session', JSON.stringify(record));
-    localStorage.setItem('bpg_student_class', normKey);
+    if (typeof saveStoredStudentSession === 'function') {
+        saveStoredStudentSession(record, record.keepSignedIn);
+    } else {
+        localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(record));
+        localStorage.setItem('bpg_student_session', JSON.stringify(record));
+        localStorage.setItem('bpg_student_class', normKey);
+    }
+    if (typeof renderHeaderNotificationsBell === 'function') {
+        renderHeaderNotificationsBell();
+    }
 
     if (typeof broadcastStudentMutation === 'function') {
         broadcastStudentMutation('STUDENT_ROSTER_UPDATED', { email: record.email, userId: record.userId });

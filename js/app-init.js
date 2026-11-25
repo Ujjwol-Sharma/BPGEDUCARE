@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof syncSectionLockBadges === 'function') syncSectionLockBadges();
     renderEntireStudentPortal();
     updateAuthUserPill();
+    if (typeof renderHeaderNotificationsBell === 'function') renderHeaderNotificationsBell();
     if (typeof initDraggableCalculator === 'function') initDraggableCalculator();
     if (typeof initScrollRevealAnimations === 'function') initScrollRevealAnimations();
     if (typeof initRoamingWidgets === 'function') initRoamingWidgets();
@@ -181,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial Unified Database, Member Profile & Payment Hydration on Load
     syncWithServerDatabase(false).then(() => {
+        if (typeof renderHeaderNotificationsBell === 'function') renderHeaderNotificationsBell();
         if (typeof handleGatewayPaymentReturn === 'function') {
             handleGatewayPaymentReturn();
         }

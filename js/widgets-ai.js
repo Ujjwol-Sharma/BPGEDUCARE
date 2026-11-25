@@ -214,10 +214,26 @@ function renderMathInGuide() {
 function toggleKaTexGuideModal() { toggleWebsiteGuide(); }
 function handleKaTexGuideChip(chipKey) { askGuideQuestion(chipKey); }
 
-// Redesigned Basic + Scientific Calculator (Recursive-Descent Parser, DEG/RAD, History, Helpful Errors, Keyboard Input)
+// Redesigned Basic + Scientific Calculator (Recursive-Descent Parser, DEG/RAD persisted per user, History, Helpful Errors, Keyboard Input)
+const BPG_CALC_ANGLE_STORAGE_KEY = 'bpg_calc_angle_mode_v1';
+const BPG_CALC_MODE_STORAGE_KEY = 'bpg_calc_mode_v1';
 let miniCalcExpr = '';
-let miniCalcAngleMode = 'DEG';
-let miniCalcMode = 'basic';
+let miniCalcAngleMode = (() => {
+    try {
+        const saved = localStorage.getItem(BPG_CALC_ANGLE_STORAGE_KEY);
+        return saved === 'RAD' ? 'RAD' : 'DEG';
+    } catch (e) {
+        return 'DEG';
+    }
+})();
+let miniCalcMode = (() => {
+    try {
+        const saved = localStorage.getItem(BPG_CALC_MODE_STORAGE_KEY);
+        return saved === 'scientific' ? 'scientific' : 'basic';
+    } catch (e) {
+        return 'basic';
+    }
+})();
 let miniCalcLastAns = 0;
 let miniCalcHistory = [];
 let miniCalcJustEvaluated = false;
@@ -659,6 +675,7 @@ function toggleMiniCalculator() {
 
 function setCalculatorMode(mode) {
     miniCalcMode = mode === 'scientific' ? 'scientific' : 'basic';
+    try { localStorage.setItem(BPG_CALC_MODE_STORAGE_KEY, miniCalcMode); } catch (e) {}
     const sciRow = document.getElementById('calcSciKeypad');
     const basicBtn = document.getElementById('calcModeBasicBtn');
     const sciBtn = document.getElementById('calcModeSciBtn');
@@ -695,6 +712,7 @@ function syncMiniCalcAngleUI() {
 
 function toggleMiniCalcAngle() {
     miniCalcAngleMode = miniCalcAngleMode === 'DEG' ? 'RAD' : 'DEG';
+    try { localStorage.setItem(BPG_CALC_ANGLE_STORAGE_KEY, miniCalcAngleMode); } catch (e) {}
     syncMiniCalcAngleUI();
     if (!miniCalcJustEvaluated && !miniCalcHasError) {
         updateMiniCalcStatusLine();
@@ -703,6 +721,7 @@ function toggleMiniCalcAngle() {
 
 function setMiniCalcAngleMode(mode) {
     miniCalcAngleMode = String(mode || 'DEG').toUpperCase() === 'RAD' ? 'RAD' : 'DEG';
+    try { localStorage.setItem(BPG_CALC_ANGLE_STORAGE_KEY, miniCalcAngleMode); } catch (e) {}
     syncMiniCalcAngleUI();
     if (!miniCalcJustEvaluated && !miniCalcHasError) {
         updateMiniCalcStatusLine();

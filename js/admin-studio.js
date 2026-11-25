@@ -2334,12 +2334,75 @@ function cancelEditMockTest() {
     renderMockTestsTab();
 }
 
+const ADMIN_NEPAL_OFFSET_MS = (5 * 60 + 45) * 60 * 1000;
+
+function utcIsoToNptInputs(isoStr) {
+    const ms = Date.parse(String(isoStr || ''));
+    if (!Number.isFinite(ms)) return { date: '', time: '' };
+    const npt = new Date(ms + ADMIN_NEPAL_OFFSET_MS);
+    const yyyy = npt.getUTCFullYear();
+    const mm = String(npt.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(npt.getUTCDate()).padStart(2, '0');
+    const hh = String(npt.getUTCHours()).padStart(2, '0');
+    const mi = String(npt.getUTCMinutes()).padStart(2, '0');
+    return { date: `${yyyy}-${mm}-${dd}`, time: `${hh}:${mi}` };
+}
+
+function nptInputsToUtcIso(dateStr, timeStr) {
+    if (!dateStr || !timeStr) return '';
+    const dParts = String(dateStr).split('-').map(Number);
+    const tParts = String(timeStr).split(':').map(Number);
+    if (dParts.length !== 3 || tParts.length < 2) return '';
+    const utcMs = Date.UTC(dParts[0], dParts[1] - 1, dParts[2], tParts[0], tParts[1], 0) - ADMIN_NEPAL_OFFSET_MS;
+    if (!Number.isFinite(utcMs)) return '';
+    return new Date(utcMs).toISOString();
+}
+
+function formatAdminNepalTime(isoStr) {
+    const ms = Date.parse(String(isoStr || ''));
+    if (!Number.isFinite(ms)) return '';
+    try {
+        return new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Kathmandu',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        }).format(new Date(ms)) + ' NPT';
+    } catch (e) {
+        const { date, time } = utcIsoToNptInputs(isoStr);
+        return `${date} ${time} NPT`;
+    }
+}
+
+function getAdminEffectiveMockStatus(t) {
+    if (!t) return 'draft';
+    if (t.effectiveStatus) return t.effectiveStatus;
+    if (t.status === 'published') return 'live';
+    if (t.status === 'scheduled') {
+        const ms = Date.parse(t.scheduledReleaseAt || '');
+        if (!Number.isFinite(ms)) return 'draft';
+        return Date.now() >= ms ? 'live' : 'scheduled';
+    }
+    return 'draft';
+}
+
 function syncMockEditorInputsToState() {
     if (!editingMockTest) return;
     const titleEl = document.getElementById('mockEditorTitle');
     const planEl = document.getElementById('mockEditorMinPlan');
+    const schedDateEl = document.getElementById('mockScheduleDateNpt');
+    const schedTimeEl = document.getElementById('mockScheduleTimeNpt');
     if (titleEl) editingMockTest.title = titleEl.value;
     if (planEl) editingMockTest.minPlan = planEl.value;
+    if (schedDateEl && schedTimeEl) {
+        editingMockTest._nptDate = schedDateEl.value;
+        editingMockTest._nptTime = schedTimeEl.value;
+        const iso = nptInputsToUtcIso(schedDateEl.value, schedTimeEl.value);
+        if (iso) editingMockTest.scheduledReleaseAt = iso;
+    }
 
     (editingMockTest.questions || []).forEach((q, idx) => {
         const qText = document.getElementById(`mcqText_${idx}`);
@@ -2421,21 +2484,43 @@ async function saveAdminMockTest(targetStatus) {
         return;
     }
 
-    if (targetStatus === 'published') {
+    if (targetStatus === 'published' || targetStatus === 'scheduled') {
         const qs = editingMockTest.questions || [];
         if (qs.length === 0) {
-            showAdminToast('Add at least one MCQ question before publishing.', 'error');
+            showAdminToast('Add at least one MCQ question before publishing or scheduling.', 'error');
             return;
         }
         const incompleteIdx = qs.findIndex(q => !String(q.text || '').trim() || ['A', 'B', 'C', 'D'].some(l => !String(q.options?.[l] || '').trim()));
         if (incompleteIdx >= 0) {
-            showAdminToast(`Complete Question ${incompleteIdx + 1} and all four options (A, B, C, D) before publishing.`, 'error');
+            showAdminToast(`Complete Question ${incompleteIdx + 1} and all four options (A, B, C, D) first.`, 'error');
             return;
         }
     }
 
-    const payloadTest = Object.assign({}, editingMockTest, { status: targetStatus });
-    setSaveStatus(targetStatus === 'published' ? 'Publishing...' : 'Saving draft...');
+    let scheduledReleaseAt = '';
+    if (targetStatus === 'scheduled') {
+        const dateVal = document.getElementById('mockScheduleDateNpt')?.value || editingMockTest._nptDate || '';
+        const timeVal = document.getElementById('mockScheduleTimeNpt')?.value || editingMockTest._nptTime || '';
+        scheduledReleaseAt = nptInputsToUtcIso(dateVal, timeVal);
+        if (!scheduledReleaseAt) {
+            showAdminToast('Select both a release date and time in Nepal Time (Asia/Kathmandu).', 'error');
+            document.getElementById('mockScheduleDateNpt')?.focus();
+            return;
+        }
+        if (Date.parse(scheduledReleaseAt) <= Date.now()) {
+            showAdminToast('Choose a future date/time in Nepal Time, or click Publish Now.', 'error');
+            return;
+        }
+    }
+
+    const payloadTest = Object.assign({}, editingMockTest, {
+        status: targetStatus,
+        scheduledReleaseAt: targetStatus === 'scheduled' ? scheduledReleaseAt : ''
+    });
+    delete payloadTest._nptDate;
+    delete payloadTest._nptTime;
+
+    setSaveStatus(targetStatus === 'published' ? 'Publishing...' : (targetStatus === 'scheduled' ? 'Scheduling...' : 'Saving draft...'));
     try {
         const res = await fetch('/api/mock-tests', {
             method: 'POST',
@@ -2449,12 +2534,42 @@ async function saveAdminMockTest(targetStatus) {
         ADMIN_MOCK_TESTS = Array.isArray(json.tests) ? json.tests : ADMIN_MOCK_TESTS;
         editingMockTest = JSON.parse(JSON.stringify(json.test));
         setSaveStatus('Saved', true);
-        showAdminToast(targetStatus === 'published' ? 'Mock test published!' : 'Draft saved.');
+        showAdminToast(
+            targetStatus === 'published'
+                ? 'Mock test published live!'
+                : (targetStatus === 'scheduled'
+                    ? `Mock test scheduled for ${formatAdminNepalTime(json.test?.scheduledReleaseAt)}!`
+                    : 'Draft saved.')
+        );
         broadcastUpdate('DATA_UPDATED');
         renderMockTestsTab();
     } catch (err) {
         setSaveStatus('Save error');
         showAdminToast(err.message || 'Save failed.', 'error');
+    }
+}
+
+async function cancelMockTestSchedule(testId) {
+    if (!confirm('Cancel scheduled release and move this mock test back to Draft?')) return;
+    setSaveStatus('Cancelling schedule...');
+    try {
+        const res = await fetch('/api/mock-tests', {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({ action: 'CANCEL_SCHEDULE', testId })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Could not cancel schedule.');
+        ADMIN_MOCK_TESTS = json.tests || ADMIN_MOCK_TESTS;
+        if (editingMockTest && editingMockTest.id === testId) {
+            editingMockTest = JSON.parse(JSON.stringify(json.test));
+        }
+        setSaveStatus('Saved', true);
+        showAdminToast('Schedule cancelled — test moved back to Draft.');
+        broadcastUpdate('DATA_UPDATED');
+        renderMockTestsTab();
+    } catch (err) {
+        showAdminToast(err.message || 'Could not cancel schedule.', 'error');
     }
 }
 
@@ -3258,6 +3373,35 @@ function renderMockTestsTab() {
                     </button>
                 </div>
 
+                <!-- SCHEDULED RELEASE IN NEPAL TIME (SEPARATE FROM TEST DURATION) -->
+                <div class="adm-card" style="margin:0 0 16px 0; padding:14px 16px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+                        <div>
+                            <strong style="font-size:0.88rem;"><i class="fa-regular fa-calendar-clock" aria-hidden="true"></i> Release Schedule (Nepal Time &middot; Asia/Kathmandu, UTC+05:45)</strong>
+                            <div style="font-size:0.78rem; color:var(--adm-text-muted); margin-top:2px;">
+                                Separate from the ${Number(t.durationMinutes || 30)}-minute completion timer. Scheduled tests go live automatically even when no admin is online.
+                            </div>
+                        </div>
+                        ${getAdminEffectiveMockStatus(t) === 'scheduled' ? `<span class="adm-status-pill" style="background:#fef3c7; color:#92400e;">Scheduled: ${escapeHtml(formatAdminNepalTime(t.scheduledReleaseAt))}</span>` : ''}
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+                        <div>
+                            <label class="adm-label" for="mockScheduleDateNpt">Release Date (NPT)</label>
+                            <input type="date" id="mockScheduleDateNpt" class="adm-input" style="width:170px;" value="${escapeHtml(t._nptDate || utcIsoToNptInputs(t.scheduledReleaseAt).date)}">
+                        </div>
+                        <div>
+                            <label class="adm-label" for="mockScheduleTimeNpt">Release Time (NPT)</label>
+                            <input type="time" id="mockScheduleTimeNpt" class="adm-input" style="width:140px;" value="${escapeHtml(t._nptTime || utcIsoToNptInputs(t.scheduledReleaseAt).time)}">
+                        </div>
+                        <button type="button" class="btn-topbar" style="padding:8px 14px;" onclick="saveAdminMockTest('scheduled')">
+                            <i class="fa-regular fa-clock" aria-hidden="true"></i> ${getAdminEffectiveMockStatus(t) === 'scheduled' ? 'Reschedule Release' : 'Schedule Release (NPT)'}
+                        </button>
+                        ${getAdminEffectiveMockStatus(t) === 'scheduled' && t.id ? `
+                            <button type="button" class="btn-topbar danger" style="padding:8px 12px;" onclick="cancelMockTestSchedule('${escapeHtml(t.id)}')">Cancel Schedule</button>
+                        ` : ''}
+                    </div>
+                </div>
+
                 <div class="adm-mock-editor-actions">
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         <button type="button" class="btn-topbar" onclick="openAdminMockPreviewFromEditor()">
@@ -3268,7 +3412,7 @@ function renderMockTestsTab() {
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         <button type="button" class="btn-topbar" onclick="saveAdminMockTest('draft')">Save Draft</button>
                         <button type="button" class="btn-adm-dark" onclick="saveAdminMockTest('published')">
-                            ${t.status === 'published' ? 'Update Published Test' : 'Publish'}
+                            ${getAdminEffectiveMockStatus(t) === 'live' ? 'Update Live Test' : 'Publish Now'}
                         </button>
                     </div>
                 </div>
@@ -3302,25 +3446,37 @@ function renderMockTestsTab() {
                 </div>
             ` : filteredTests.map(t => {
                 const qCount = (t.questions || []).length;
-                const isPub = t.status === 'published';
+                const eff = getAdminEffectiveMockStatus(t);
+                const isLive = eff === 'live';
+                const isSched = eff === 'scheduled';
                 const safeId = escapeHtml(t.id);
+                const statusBadgeHtml = isLive
+                    ? `<span class="adm-status-pill open">Live</span>`
+                    : (isSched
+                        ? `<span class="adm-status-pill" style="background:#fef3c7; color:#92400e;">Scheduled &middot; ${escapeHtml(t.scheduledReleaseNpt || formatAdminNepalTime(t.scheduledReleaseAt))}</span>`
+                        : `<span class="adm-status-pill locked">Draft</span>`);
                 return `
                     <div class="adm-mock-row">
                         <div>
                             <div class="adm-mock-row-title">
                                 <span>${escapeHtml(t.title)}</span>
-                                <span class="adm-status-pill ${isPub ? 'open' : 'locked'}">${isPub ? 'Published' : 'Draft'}</span>
+                                ${statusBadgeHtml}
                                 <span class="adm-type-pill">${escapeHtml((t.minPlan || 'free').toUpperCase())}</span>
                             </div>
                             <div class="adm-mock-row-meta">
                                 <span>${qCount} ${qCount === 1 ? 'Question' : 'Questions'}</span>
-                                <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ${Number(t.durationMinutes || 30)} min</span>
+                                <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ${Number(t.durationMinutes || 30)} min duration</span>
                             </div>
                         </div>
                         <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                            <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="editExistingMockTest('${safeId}')">Edit</button>
+                            <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="editExistingMockTest('${safeId}')">${isSched ? 'Edit / Reschedule' : 'Edit'}</button>
                             <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="openAdminMockPreviewById('${safeId}')">Preview</button>
-                            <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="quickTogglePublishMockTest('${safeId}', '${isPub ? 'draft' : 'published'}')">${isPub ? 'Unpublish' : 'Publish'}</button>
+                            ${isSched ? `
+                                <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="quickTogglePublishMockTest('${safeId}', 'published')">Publish Now</button>
+                                <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="cancelMockTestSchedule('${safeId}')">Cancel Schedule</button>
+                            ` : `
+                                <button type="button" class="btn-topbar" style="padding:6px 11px; font-size:0.8rem;" onclick="quickTogglePublishMockTest('${safeId}', '${isLive ? 'draft' : 'published'}')">${isLive ? 'Move to Draft' : 'Publish Now'}</button>
+                            `}
                             <button type="button" class="btn-topbar danger" style="padding:6px 11px; font-size:0.8rem;" onclick="deleteAdminMockTest('${safeId}')">Delete</button>
                         </div>
                     </div>
@@ -4581,11 +4737,22 @@ function renderNotificationsTab() {
                 <div>
                     <label class="adm-label">Audience Scope</label>
                     <select id="notifFormScope" class="adm-select">
-                        <option value="sitewide" ${editingNotification.scope === 'sitewide' ? 'selected' : ''}>Sitewide (Everyone)</option>
+                        <option value="sitewide" ${editingNotification.scope === 'sitewide' ? 'selected' : ''}>Sitewide (All Students)</option>
                         <option value="class-12" ${editingNotification.scope === 'class-12' ? 'selected' : ''}>Class 12 Only</option>
                         <option value="class-11" ${editingNotification.scope === 'class-11' ? 'selected' : ''}>Class 11 Only</option>
                         <option value="class-10" ${editingNotification.scope === 'class-10' ? 'selected' : ''}>Class 10 Only</option>
                         <option value="after-12" ${editingNotification.scope === 'after-12' ? 'selected' : ''}>Entrance Prep Only</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="adm-label">Link Page (Optional)</label>
+                    <select id="notifFormLinkTarget" class="adm-select">
+                        <option value="none" ${(!editingNotification.linkTarget || editingNotification.linkTarget === 'none') ? 'selected' : ''}>No Link</option>
+                        <option value="mocktests" ${editingNotification.linkTarget === 'mocktests' ? 'selected' : ''}>Mock Tests</option>
+                        <option value="notes" ${editingNotification.linkTarget === 'notes' ? 'selected' : ''}>Lessons &amp; PDFs</option>
+                        <option value="live" ${editingNotification.linkTarget === 'live' ? 'selected' : ''}>Live Class Calendar</option>
+                        <option value="syllabus" ${editingNotification.linkTarget === 'syllabus' ? 'selected' : ''}>Syllabus Grid</option>
+                        <option value="plans" ${editingNotification.linkTarget === 'plans' ? 'selected' : ''}>Membership Plans</option>
                     </select>
                 </div>
             </div>
@@ -4673,6 +4840,7 @@ async function saveNotificationForm() {
     const body = document.getElementById('notifFormBody')?.value.trim();
     const category = document.getElementById('notifFormCategory')?.value || 'Announcement';
     const scope = document.getElementById('notifFormScope')?.value || 'sitewide';
+    const linkTarget = document.getElementById('notifFormLinkTarget')?.value || 'none';
     const published = Boolean(document.getElementById('notifFormPublished')?.checked);
     if (!title || !body) {
         showAdminToast('Title and message are required.', 'error');
@@ -4680,13 +4848,20 @@ async function saveNotificationForm() {
     }
     const list = JSON.parse(JSON.stringify(ADMIN_STATE?.notifications || []));
     const now = new Date().toISOString();
+    const dedupeKey = `admin_${scope}_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}_${body.slice(0, 40).toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
     if (editingNotification && editingNotification.id) {
         const idx = list.findIndex(n => n.id === editingNotification.id);
         if (idx >= 0) {
-            list[idx] = { ...list[idx], title, body, category, scope, published, updatedAt: now };
+            list[idx] = { ...list[idx], title, body, category, scope, linkTarget, published, updatedAt: now };
         }
     } else {
-        list.unshift({ id: 'notif_' + Date.now(), title, body, category, scope, published, createdAt: now, updatedAt: now });
+        // Prevent duplicate notification if admin double-clicks or retries the exact same announcement
+        const existingDup = list.find(n => n && n.dedupeKey === dedupeKey);
+        if (existingDup) {
+            Object.assign(existingDup, { title, body, category, scope, linkTarget, published, updatedAt: now });
+        } else {
+            list.unshift({ id: 'notif_' + Date.now(), dedupeKey, title, body, category, scope, linkTarget, published, createdAt: now, updatedAt: now });
+        }
     }
     editingNotification = null;
     await persistAcademyState({ notifications: list }, 'Notification saved.');

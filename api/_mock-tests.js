@@ -18,6 +18,9 @@ const {
     resolveRequestUser,
     evaluateItemAccess,
     canonicalizeEmail,
+    getEffectiveMockTestStatus,
+    formatNepalTime,
+    reconcileScheduledMockTests,
     DB_PATH,
     LEGACY_CMS_PATH,
     TMP_DB_PATH
@@ -191,6 +194,9 @@ module.exports = function mockTestsHandler(req, res) {
     const isAdmin = isAdminPasskeyValid(req.headers['x-admin-passkey'] || body.adminPasskey);
     const state = readAcademyState();
     if (!Array.isArray(state.mockTests)) state.mockTests = [];
+    if (reconcileScheduledMockTests(state)) {
+        persistMockTestsToAcademyState(state);
+    }
 
     // Enforce Maintenance Mode for all non-admin mock test requests
     if (!isAdmin && state.maintenanceMode?.enabled) {
@@ -211,6 +217,7 @@ module.exports = function mockTestsHandler(req, res) {
         const subjectId = parsedUrl.searchParams.get('subjectId') || '';
 
         if (isAdmin) {
+            const nowMs = Date.now();
             let list = state.mockTests;
             if (rawClass) {
                 const ck = gradeToClassKey(rawClass);
@@ -219,8 +226,13 @@ module.exports = function mockTestsHandler(req, res) {
             if (subjectId) {
                 list = list.filter(t => t.subjectId === subjectId);
             }
+            const enriched = list.map(t => ({
+                ...t,
+                effectiveStatus: getEffectiveMockTestStatus(t, nowMs),
+                scheduledReleaseNpt: t.scheduledReleaseAt ? formatNepalTime(t.scheduledReleaseAt) : ''
+            }));
             res.statusCode = 200;
-            res.end(JSON.stringify({ ok: true, tests: list }));
+            res.end(JSON.stringify({ ok: true, serverNow: nowMs, tests: enriched }));
             return;
         }
 
@@ -250,17 +262,24 @@ module.exports = function mockTestsHandler(req, res) {
 
         const store = readAttemptsStore();
         const userCanonical = user ? canonicalizeEmail(user.email) : '';
+        const userId = user?.userId || '';
+        const nowMs = Date.now();
 
-        const published = state.mockTests
-            .filter(t => t.status === 'published' && t.classKey === classKey && (!subjectId || t.subjectId === subjectId))
+        const visibleTests = state.mockTests
+            .filter(t => {
+                const eff = getEffectiveMockTestStatus(t, nowMs);
+                return (eff === 'live' || eff === 'scheduled') && t.classKey === classKey && (!subjectId || t.subjectId === subjectId);
+            })
             .map(t => {
+                const eff = getEffectiveMockTestStatus(t, nowMs);
+                const isScheduled = eff === 'scheduled';
                 const accessCheck = evaluateItemAccess(user, classKey, t, state);
                 let activeAttempt = null;
                 let latestSubmitted = null;
 
-                if (userCanonical) {
+                if (!isScheduled && (userId || userCanonical)) {
                     const userAttempts = store.attempts
-                        .filter(a => a.testId === t.id && a.canonicalEmail === userCanonical)
+                        .filter(a => a.testId === t.id && ((userId && a.userId === userId) || (userCanonical && a.canonicalEmail === userCanonical)))
                         .sort((a, b) => Number(b.startedAt || 0) - Number(a.startedAt || 0));
 
                     const openAtt = userAttempts.find(a => !a.submitted);
@@ -295,6 +314,10 @@ module.exports = function mockTestsHandler(req, res) {
                     durationMinutes: Number(t.durationMinutes || 30),
                     questionCount: (t.questions || []).length,
                     minPlan: normalizePlan(t.minPlan || 'free'),
+                    effectiveStatus: eff,
+                    comingSoon: isScheduled,
+                    scheduledReleaseAt: t.scheduledReleaseAt || '',
+                    scheduledReleaseNpt: t.scheduledReleaseAt ? formatNepalTime(t.scheduledReleaseAt) : '',
                     restricted: !accessCheck.allowed,
                     activeAttempt,
                     latestSubmitted
@@ -302,7 +325,7 @@ module.exports = function mockTestsHandler(req, res) {
             });
 
         res.statusCode = 200;
-        res.end(JSON.stringify({ ok: true, classKey, subjectId, serverNow: Date.now(), tests: published }));
+        res.end(JSON.stringify({ ok: true, classKey, subjectId, serverNow: nowMs, tests: visibleTests }));
         return;
     }
 
@@ -324,14 +347,30 @@ module.exports = function mockTestsHandler(req, res) {
             const subjectId = String(incoming.subjectId || 'mathematics').trim();
             const title = String(incoming.title || '').trim();
             const durationMinutes = Math.max(1, Math.min(300, Number(incoming.durationMinutes) || 30));
-            const status = incoming.status === 'published' ? 'published' : 'draft';
+            const rawStatus = String(incoming.status || 'draft').toLowerCase();
+            let status = rawStatus === 'published' ? 'published' : (rawStatus === 'scheduled' ? 'scheduled' : 'draft');
             const minPlan = normalizePlan(incoming.minPlan || 'free');
             const rawQs = Array.isArray(incoming.questions) ? incoming.questions : [];
+            let scheduledReleaseAt = '';
 
             if (!title) {
                 res.statusCode = 400;
                 res.end(JSON.stringify({ ok: false, error: 'Test title is required.' }));
                 return;
+            }
+
+            if (status === 'scheduled') {
+                const parsedMs = Date.parse(String(incoming.scheduledReleaseAt || ''));
+                if (!Number.isFinite(parsedMs)) {
+                    res.statusCode = 400;
+                    res.end(JSON.stringify({ ok: false, error: 'Select a valid release date and time in Nepal Time (Asia/Kathmandu).' }));
+                    return;
+                }
+                scheduledReleaseAt = new Date(parsedMs).toISOString();
+                // If scheduled time is already in the past/now, immediately treat as published
+                if (parsedMs <= Date.now()) {
+                    status = 'published';
+                }
             }
 
             const cleanQuestions = rawQs.map((q, idx) => {
@@ -349,15 +388,16 @@ module.exports = function mockTestsHandler(req, res) {
                 };
             });
 
-            if (status === 'published' && cleanQuestions.length === 0) {
+            if ((status === 'published' || status === 'scheduled') && cleanQuestions.length === 0) {
                 res.statusCode = 400;
-                res.end(JSON.stringify({ ok: false, error: 'Add at least one question before publishing.' }));
+                res.end(JSON.stringify({ ok: false, error: 'Add at least one question before publishing or scheduling.' }));
                 return;
             }
 
             const nowIso = new Date().toISOString();
             const testId = incoming.id || `mt_${Date.now()}`;
             const existingIdx = state.mockTests.findIndex(t => t.id === testId);
+            const existingRecord = existingIdx >= 0 ? state.mockTests[existingIdx] : null;
 
             const record = {
                 id: testId,
@@ -368,8 +408,11 @@ module.exports = function mockTestsHandler(req, res) {
                 minPlan,
                 adminAssignedPlan: true,
                 status,
+                scheduledReleaseAt: status === 'scheduled' ? scheduledReleaseAt : '',
+                releasedAt: status === 'published' ? (existingRecord?.releasedAt || nowIso) : '',
+                releaseNotifiedAt: status === 'scheduled' ? '' : (existingRecord?.releaseNotifiedAt || ''),
                 questions: cleanQuestions,
-                createdAt: existingIdx >= 0 ? (state.mockTests[existingIdx].createdAt || nowIso) : nowIso,
+                createdAt: existingRecord ? (existingRecord.createdAt || nowIso) : nowIso,
                 updatedAt: nowIso
             };
 
@@ -379,9 +422,53 @@ module.exports = function mockTestsHandler(req, res) {
                 state.mockTests.unshift(record);
             }
 
+            reconcileScheduledMockTests(state);
             persistMockTestsToAcademyState(state);
             res.statusCode = 200;
-            res.end(JSON.stringify({ ok: true, test: record, tests: state.mockTests }));
+            res.end(JSON.stringify({
+                ok: true,
+                test: {
+                    ...record,
+                    effectiveStatus: getEffectiveMockTestStatus(record),
+                    scheduledReleaseNpt: record.scheduledReleaseAt ? formatNepalTime(record.scheduledReleaseAt) : ''
+                },
+                tests: state.mockTests.map(t => ({
+                    ...t,
+                    effectiveStatus: getEffectiveMockTestStatus(t),
+                    scheduledReleaseNpt: t.scheduledReleaseAt ? formatNepalTime(t.scheduledReleaseAt) : ''
+                }))
+            }));
+            return;
+        }
+
+        // ADMIN: CANCEL_SCHEDULE (moves scheduled test back to draft, preserving all questions & past attempts)
+        if (action === 'CANCEL_SCHEDULE') {
+            if (!isAdmin) {
+                res.statusCode = 401;
+                res.end(JSON.stringify({ ok: false, error: 'Unauthorized: Admin passkey required.' }));
+                return;
+            }
+            const testId = String(body.testId || '');
+            const found = state.mockTests.find(t => t.id === testId);
+            if (!found) {
+                res.statusCode = 404;
+                res.end(JSON.stringify({ ok: false, error: 'Mock test not found.' }));
+                return;
+            }
+            found.status = 'draft';
+            found.scheduledReleaseAt = '';
+            found.updatedAt = new Date().toISOString();
+            persistMockTestsToAcademyState(state);
+            res.statusCode = 200;
+            res.end(JSON.stringify({
+                ok: true,
+                test: { ...found, effectiveStatus: 'draft', scheduledReleaseNpt: '' },
+                tests: state.mockTests.map(t => ({
+                    ...t,
+                    effectiveStatus: getEffectiveMockTestStatus(t),
+                    scheduledReleaseNpt: t.scheduledReleaseAt ? formatNepalTime(t.scheduledReleaseAt) : ''
+                }))
+            }));
             return;
         }
 
@@ -409,12 +496,26 @@ module.exports = function mockTestsHandler(req, res) {
         }
 
         const userCanonical = canonicalizeEmail(user.email);
+        const userId = user.userId || '';
         const testId = String(body.testId || '');
         const test = state.mockTests.find(t => t.id === testId);
+        const effStatus = getEffectiveMockTestStatus(test);
 
-        if (!test || test.status !== 'published') {
+        if (!test || effStatus === 'draft') {
             res.statusCode = 404;
             res.end(JSON.stringify({ ok: false, code: 'NOT_FOUND', error: 'Mock test not found or not published.' }));
+            return;
+        }
+
+        if (effStatus === 'scheduled') {
+            res.statusCode = 403;
+            res.end(JSON.stringify({
+                ok: false,
+                code: 'TEST_NOT_YET_LIVE',
+                scheduledReleaseAt: test.scheduledReleaseAt || '',
+                scheduledReleaseNpt: formatNepalTime(test.scheduledReleaseAt),
+                error: `This mock test is scheduled to go live on ${formatNepalTime(test.scheduledReleaseAt)}. Questions cannot be accessed early.`
+            }));
             return;
         }
 
@@ -436,12 +537,17 @@ module.exports = function mockTestsHandler(req, res) {
 
         const store = readAttemptsStore();
 
-        // STUDENT: START_ATTEMPT (or resume existing active attempt without resetting timer!)
+        // STUDENT: START_ATTEMPT (or resume existing active attempt without resetting timer; idempotent on retries!)
         if (action === 'START_ATTEMPT') {
             const forceNew = Boolean(body.retake);
-            let active = !forceNew
-                ? store.attempts.find(a => a.testId === test.id && a.canonicalEmail === userCanonical && !a.submitted)
+            const clientRequestId = String(body.clientRequestId || '').trim();
+            const ownsAttempt = (a) => (userId && a.userId === userId) || a.canonicalEmail === userCanonical;
+            let active = clientRequestId
+                ? store.attempts.find(a => a.clientRequestId === clientRequestId && a.testId === test.id && ownsAttempt(a))
                 : null;
+            if (!active && !forceNew) {
+                active = store.attempts.find(a => a.testId === test.id && ownsAttempt(a) && !a.submitted) || null;
+            }
 
             if (active) {
                 finalizeExpiredAttemptIfNeeded(active, test, store);
@@ -469,7 +575,9 @@ module.exports = function mockTestsHandler(req, res) {
                 const durationMs = Math.max(1, Number(test.durationMinutes || 30)) * 60 * 1000;
                 active = {
                     id: `att_${now}_${Math.floor(Math.random() * 10000)}`,
+                    clientRequestId: clientRequestId || '',
                     testId: test.id,
+                    userId,
                     canonicalEmail: userCanonical,
                     email: user.email,
                     classKey: test.classKey,

@@ -228,61 +228,102 @@
     <!-- ==========================================================================
          AUTHENTICATION & STRICT SINGLE-CLASS REGISTRATION MODAL
          ========================================================================== -->
-    <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalActiveHeading">
         <div class="modal-card auth-modal-card">
-            <button class="btn-modal-dismiss" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" class="btn-modal-dismiss" onclick="closeAuthModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
 
-            <!-- Tab Switcher -->
-            <div class="auth-tabs-nav" role="tablist">
+            <div class="auth-brand-strip">
+                <img src="images/bpg-educare-logo.jpg" alt="" class="auth-brand-logo" onerror="this.style.display='none'">
+                <div>
+                    <strong class="auth-brand-title">BPG EDUCARE</strong>
+                    <span class="auth-brand-sub">Student Portal</span>
+                </div>
+            </div>
+
+            <!-- Distinct Screen Switcher -->
+            <div class="auth-tabs-nav" role="tablist" aria-label="Authentication mode">
                 <button type="button" class="auth-tab-btn active" id="authTabSignIn" onclick="switchAuthTab('signin')" role="tab" aria-selected="true">Sign In</button>
                 <button type="button" class="auth-tab-btn" id="authTabSignUp" onclick="switchAuthTab('signup')" role="tab" aria-selected="false">Create Account</button>
             </div>
 
-            <!-- PANE 1: SIGN IN -->
+            <!-- PANE 1: SIGN IN (RETURNING STUDENTS) -->
             <div id="authSignInContainer" class="auth-pane active">
-                <h3 class="modal-title">Sign In</h3>
+                <h3 class="modal-title" id="authModalActiveHeading">Welcome back</h3>
                 <p class="modal-sub">
-                    Sign in with your registered email and password.
+                    Sign in to return to your saved class, notes, and mock test history.
                 </p>
+
+                <!-- Remembered Email Card (Never stores password) -->
+                <div id="rememberedAccountBanner" class="auth-remembered-card" style="display:none;">
+                    <div class="auth-remembered-info">
+                        <span class="auth-remembered-avatar" id="rememberedAccountInitial">S</span>
+                        <div style="min-width:0;">
+                            <small style="display:block; font-size:0.72rem; color:var(--text-secondary);">Remembered email on this device</small>
+                            <strong id="rememberedAccountEmailText" style="font-size:0.86rem; word-break:break-all;"></strong>
+                        </div>
+                    </div>
+                    <div class="auth-remembered-actions">
+                        <button type="button" class="btn-link-action" onclick="useAnotherAccount()">Use another account</button>
+                        <button type="button" class="btn-link-action" style="color:#dc2626;" onclick="clearRememberedEmail()">Clear remembered</button>
+                    </div>
+                </div>
 
                 <div id="googleOAuthSignInWrap" style="display:block;">
                     <button type="button" class="btn-google-oauth" id="btnGoogleSignIn" onclick="handleGoogleAuthClick('signin')">
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
                     </button>
-                    <div class="auth-or-divider"><span>or with email</span></div>
+                    <div class="auth-or-divider"><span>or sign in with email &amp; password</span></div>
                 </div>
 
-                <div id="signinErrorBanner" class="auth-inline-alert" style="display:none;"></div>
+                <div id="signinErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
 
-                <form onsubmit="handleSignInSubmit(event)">
+                <form id="signinForm" onsubmit="handleSignInSubmit(event)" autocomplete="on">
                     <div class="modal-field">
-                        <label for="signinEmail">Email</label>
-                        <input type="email" id="signinEmail" class="modal-input" placeholder="student@gmail.com" required>
+                        <label for="signinEmail">Email address</label>
+                        <input type="email" id="signinEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="username" inputmode="email" required>
                     </div>
 
                     <div class="modal-field">
-                        <label for="signinPassword">Password</label>
-                        <input type="password" id="signinPassword" class="modal-input" placeholder="Enter your password" required>
+                        <div class="auth-label-row">
+                            <label for="signinPassword">Password</label>
+                            <button type="button" class="btn-link-action auth-forgot-link" onclick="openForgotPasswordFromSignIn()">Forgot password?</button>
+                        </div>
+                        <div class="auth-password-wrap">
+                            <input type="password" id="signinPassword" name="password" class="modal-input auth-password-input" placeholder="Enter your password" autocomplete="current-password" required>
+                            <button type="button" class="auth-pwd-toggle" onclick="togglePasswordVisibility('signinPassword', this)" aria-label="Show password" title="Show password">
+                                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="auth-checkbox-group">
+                        <label class="auth-check-item">
+                            <input type="checkbox" id="signinRememberEmail">
+                            <span>Remember my email</span>
+                        </label>
+                        <label class="auth-check-item">
+                            <input type="checkbox" id="signinKeepSignedIn" checked>
+                            <span>Keep me signed in <small style="color:var(--text-secondary);">(uncheck on shared devices)</small></span>
+                        </label>
                     </div>
 
                     <button type="submit" class="btn-submit-action" id="btnSignInSubmit">
                         <i class="fa-solid fa-right-to-bracket" aria-hidden="true" style="margin-right:6px;"></i>Sign In
                     </button>
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:0.84rem; gap:8px; flex-wrap:wrap;">
-                        <button type="button" class="btn-link-action" onclick="openGmailOtpPane()">Sign in with Email Code</button>
-                        <button type="button" class="btn-link-action" onclick="switchAuthTab('reset')">Reset password</button>
-                        <button type="button" class="btn-link-action" onclick="switchAuthTab('signup')">Create account &rarr;</button>
+                    <div class="auth-footer-links">
+                        <button type="button" class="btn-link-action" onclick="openGmailOtpPane()">Sign in with 6-digit email code</button>
+                        <button type="button" class="btn-link-action" onclick="switchAuthTab('signup')">New here? Create Account &rarr;</button>
                     </div>
                 </form>
             </div>
 
-            <!-- PANE 2: CREATE ACCOUNT (ONE ACCOUNT PER GMAIL, STARTS ON FREE) -->
+            <!-- PANE 2: CREATE ACCOUNT (NEW STUDENTS) -->
             <div id="otpStep1Container" class="auth-pane" style="display:none;">
                 <h3 class="modal-title">Create Account</h3>
                 <p class="modal-sub">
-                    New accounts start on the Free plan. One account is allowed per Gmail inbox.
+                    Create your free student account in under a minute. Pick your class below to open your dashboard right away.
                 </p>
 
                 <div id="googleOAuthSignUpWrap" style="display:block;">
@@ -290,25 +331,44 @@
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
                     </button>
-                    <div class="auth-or-divider"><span>or sign up with email OTP</span></div>
+                    <div class="auth-or-divider"><span>or create with email</span></div>
                 </div>
 
-                <div id="signupDuplicateBanner" class="auth-inline-alert" style="display:none;">
-                    <p id="signupDuplicateMsg" style="margin:0 0 10px 0;">An account already exists for this Gmail address.</p>
+                <div id="signupDuplicateBanner" class="auth-inline-alert" role="alert" style="display:none;">
+                    <p id="signupDuplicateMsg" style="margin:0 0 10px 0;">You may already have an account with this email.</p>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         <button type="button" class="btn btn-primary" style="padding:7px 14px; font-size:0.82rem;" onclick="switchToSignInWithEmail()">Sign In</button>
                         <button type="button" class="btn btn-secondary" style="padding:7px 14px; font-size:0.82rem;" onclick="switchToResetWithEmail()">Reset Password</button>
                     </div>
                 </div>
 
-                <form onsubmit="handleRequestEmailOtp(event)">
+                <form id="signupForm" onsubmit="handleRequestEmailOtp(event)" autocomplete="on">
                     <div class="modal-field">
                         <label for="signupName">Full Name</label>
-                        <input type="text" id="signupName" class="modal-input" placeholder="Your name" required>
+                        <input type="text" id="signupName" name="name" class="modal-input" placeholder="Your full name" autocomplete="name" required>
                     </div>
 
                     <div class="modal-field">
-                        <label for="signupGrade">Class</label>
+                        <label for="signupEmail">Email address</label>
+                        <input type="email" id="signupEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="signupPassword">Create Password</label>
+                        <div class="auth-password-wrap">
+                            <input type="password" id="signupPassword" name="new-password" class="modal-input auth-password-input" placeholder="At least 6 characters" autocomplete="new-password" minlength="6" oninput="updatePasswordRequirementsUI(this.value, 'signupPwdReqs')" required>
+                            <button type="button" class="auth-pwd-toggle" onclick="togglePasswordVisibility('signupPassword', this)" aria-label="Show password" title="Show password">
+                                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <ul class="auth-pwd-reqs" id="signupPwdReqs" aria-live="polite">
+                            <li data-req="len"><i class="fa-regular fa-circle" aria-hidden="true"></i> At least 6 characters (required)</li>
+                            <li data-req="mix"><i class="fa-regular fa-circle" aria-hidden="true"></i> Include letters &amp; numbers (recommended)</li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="signupGrade">Select Your Class</label>
                         <select id="signupGrade" class="modal-input" required>
                             <option value="Class 12" selected>Class 12 (NEB Mat. 102)</option>
                             <option value="Class 11">Class 11 (NEB Mat. 101)</option>
@@ -317,22 +377,12 @@
                         </select>
                     </div>
 
-                    <div class="modal-field">
-                        <label for="signupEmail">Gmail / Email</label>
-                        <input type="email" id="signupEmail" class="modal-input" placeholder="student@gmail.com" required>
-                    </div>
-
-                    <div class="modal-field">
-                        <label for="signupPassword">Password</label>
-                        <input type="password" id="signupPassword" class="modal-input" placeholder="Create a password" minlength="4" required>
-                    </div>
-
                     <button type="submit" class="btn-submit-action" id="btnSendOtpSubmit">
-                        Send Verification Code
+                        Continue &amp; Verify Email
                     </button>
 
                     <div style="text-align:center; margin-top:14px; font-size:0.84rem;">
-                        <button type="button" class="btn-link-action" onclick="switchAuthTab('signin')">Already registered? Sign In</button>
+                        <button type="button" class="btn-link-action" onclick="switchAuthTab('signin')">Already have an account? Sign In</button>
                     </div>
                 </form>
             </div>
@@ -343,21 +393,21 @@
                 <p class="modal-sub" id="googlePaneSubtitle">
                     Sign in or create your account with your Google email. Existing accounts link automatically to the same member ID without creating duplicates.
                 </p>
-                <div id="googleChooserErrorBanner" class="auth-inline-alert" style="display:none;"></div>
+                <div id="googleChooserErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
                 <div id="googleOfficialBtnContainer" style="display:none; justify-content:center; margin:18px 0;"></div>
 
                 <!-- Interactive Google Account Chooser Form -->
                 <form id="googleAccountQuickForm" onsubmit="handleLocalGoogleSubmit(event)">
                     <div class="modal-field">
                         <label for="googleChooserName">Google Account Name</label>
-                        <input type="text" id="googleChooserName" class="modal-input" placeholder="Your full name" required>
+                        <input type="text" id="googleChooserName" class="modal-input" placeholder="Your full name" autocomplete="name" required>
                     </div>
                     <div class="modal-field">
                         <label for="googleChooserEmail">Gmail Address</label>
-                        <input type="email" id="googleChooserEmail" class="modal-input" placeholder="student@gmail.com" required>
+                        <input type="email" id="googleChooserEmail" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
                     </div>
                     <div class="modal-field" id="googleChooserGradeWrap">
-                        <label for="googleChooserGrade">Enrolled Class</label>
+                        <label for="googleChooserGrade">Enrolled Class (for new accounts)</label>
                         <select id="googleChooserGrade" class="modal-input">
                             <option value="Class 12" selected>Class 12 (NEB Mat. 102)</option>
                             <option value="Class 11">Class 11 (NEB Mat. 101)</option>
@@ -365,6 +415,10 @@
                             <option value="After 12">Entrance Prep (IOE / CEE / KU)</option>
                         </select>
                     </div>
+                    <label class="auth-check-item" style="margin-bottom:14px;">
+                        <input type="checkbox" id="googleKeepSignedIn" checked>
+                        <span>Keep me signed in on this device</span>
+                    </label>
                     <button type="submit" class="btn-submit-action" id="btnGoogleChooserSubmit">
                         Continue with Google Account
                     </button>
@@ -374,7 +428,7 @@
                 <form id="googleGmailOtpForm" onsubmit="handleGmailOtpSubmit(event)" style="display:none;">
                     <div class="modal-field">
                         <label for="googleLocalEmail">Registered Email</label>
-                        <input type="email" id="googleLocalEmail" class="modal-input" placeholder="student@gmail.com" required>
+                        <input type="email" id="googleLocalEmail" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
                     </div>
                     <button type="submit" class="btn-submit-action" id="btnGoogleLocalSubmit">
                         Send 6-Digit Login Code
@@ -385,24 +439,33 @@
                 </div>
             </div>
 
-            <!-- PANE 3: RESET PASSWORD (REQUEST 6-DIGIT OTP) -->
+            <!-- PANE 3: FORGOT / RESET PASSWORD (REQUEST 6-DIGIT OTP) -->
             <div id="authResetContainer" class="auth-pane" style="display:none;">
                 <h3 class="modal-title">Reset Password</h3>
                 <p class="modal-sub">
-                    Enter your registered Gmail address and a new password. We will verify it with a 6-digit code.
+                    Enter your email address and choose a new password. If an account matches, we'll send a 6-digit verification code to confirm the change.
                 </p>
 
-                <div id="resetErrorBanner" class="auth-inline-alert" style="display:none;"></div>
+                <div id="resetErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
 
-                <form onsubmit="handleRequestPasswordResetOtp(event)">
+                <form onsubmit="handleRequestPasswordResetOtp(event)" autocomplete="on">
                     <div class="modal-field">
-                        <label for="resetEmail">Registered Email</label>
-                        <input type="email" id="resetEmail" class="modal-input" placeholder="student@gmail.com" required>
+                        <label for="resetEmail">Email address</label>
+                        <input type="email" id="resetEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="username" inputmode="email" required>
                     </div>
 
                     <div class="modal-field">
                         <label for="resetNewPassword">New Password</label>
-                        <input type="password" id="resetNewPassword" class="modal-input" placeholder="Enter a new password" minlength="4" required>
+                        <div class="auth-password-wrap">
+                            <input type="password" id="resetNewPassword" name="new-password" class="modal-input auth-password-input" placeholder="At least 6 characters" autocomplete="new-password" minlength="6" oninput="updatePasswordRequirementsUI(this.value, 'resetPwdReqs')" required>
+                            <button type="button" class="auth-pwd-toggle" onclick="togglePasswordVisibility('resetNewPassword', this)" aria-label="Show password" title="Show password">
+                                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <ul class="auth-pwd-reqs" id="resetPwdReqs" aria-live="polite">
+                            <li data-req="len"><i class="fa-regular fa-circle" aria-hidden="true"></i> At least 6 characters (required)</li>
+                            <li data-req="mix"><i class="fa-regular fa-circle" aria-hidden="true"></i> Include letters &amp; numbers (recommended)</li>
+                        </ul>
                     </div>
 
                     <button type="submit" class="btn-submit-action" id="btnResetOtpSubmit">
@@ -419,14 +482,14 @@
             <div id="otpStep2Container" class="auth-pane" style="display:none;">
                 <h3 class="modal-title" id="otpStep2Heading">Verify Your Email</h3>
                 <p class="modal-sub" id="otpStep2Subtitle">
-                    We've sent a 6-digit verification code to your email address. Enter the code to activate your account.
+                    Next step: open your inbox (and check Spam/Promotions), copy the 6-digit code, and enter it below to continue.
                 </p>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; padding:10px 12px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-subtle, #e6e6eb); border-radius:10px; font-size:0.82rem;">
                     <strong id="otpTargetEmailBadge" style="color:var(--text-primary); word-break:break-all;">your email</strong>
                     <span id="otpExpiryTimer" style="font-weight:600; color:var(--accent-primary, #4f46e5); white-space:nowrap;">Expires in 05:00</span>
                 </div>
 
-                <div id="otpVerifyErrorBanner" class="auth-inline-alert" style="display:none;"></div>
+                <div id="otpVerifyErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
 
                 <form onsubmit="handleVerifyEmailOtp(event)">
                     <div class="otp-boxes-grid" id="otpBoxesWrap">
@@ -600,21 +663,41 @@
                 </div>
                 <button class="btn-modal-dismiss static" onclick="closePdfViewerModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
+            <div class="bpg-protected-rule-bar" role="note">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                <span>Screenshots and screen recordings are prohibited.</span>
+                <span class="bpg-watermark-chip" id="pdfModalWatermarkId"></span>
+            </div>
             <p id="pdfModalMeta" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; display:none;"></p>
             <div id="pdfCaptureShieldOverlay" class="bpg-capture-shield-overlay" style="display:none;" onclick="dismissScreenshotBlurShield()">
                 <div class="bpg-capture-shield-box">
                     <i class="fa-solid fa-eye-slash" style="font-size:1.8rem; margin-bottom:8px;"></i>
                     <strong id="pdfCaptureShieldTitle">Protected Study Material</strong>
-                    <p id="pdfCaptureShieldMsg" style="margin:6px 0 12px; font-size:0.84rem;">Screenshots, screen recording, and downloads are disabled on BPG EDUCARE. Click here to resume reading.</p>
+                    <p id="pdfCaptureShieldMsg" style="margin:6px 0 12px; font-size:0.84rem;">Screenshots and screen recordings are prohibited. Click below to resume reading.</p>
                     <button type="button" class="btn btn-primary" style="font-size:0.82rem; padding:7px 14px;">Resume Reading</button>
                 </div>
             </div>
             <div id="pdfModalBody" class="pdf-embed-wrapper bpg-protected-content" style="max-height: 74vh; overflow-y: auto; margin-bottom: 14px; position: relative;" oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;"></div>
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--border-soft);">
                 <span style="font-size: 0.76rem; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Protected View &middot; Downloads &amp; Screenshots Restricted
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i> Screenshots and screen recordings are prohibited.
                 </span>
                 <button class="btn btn-primary" onclick="closePdfViewerModal()" style="font-size: 0.82rem; padding: 8px 14px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- First-Time Protected Content Rule Notice Modal -->
+    <div class="modal-backdrop" id="protectedContentRuleModal" role="dialog" aria-modal="true" aria-labelledby="protectedRuleHeading">
+        <div class="modal-card" style="max-width:460px; padding:28px 24px; text-align:left;">
+            <span class="modal-head-tag" style="margin-bottom:10px; display:inline-block;"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Study Material Policy</span>
+            <h3 id="protectedRuleHeading" style="font-size:1.18rem; font-weight:700; color:var(--text-primary); margin:0 0 10px;">Screenshots and screen recordings are prohibited.</h3>
+            <p style="font-size:0.9rem; line-height:1.6; color:var(--text-secondary); margin:0 0 14px;">
+                Lesson PDFs and mock tests on BPG EDUCARE are licensed for your personal study only. Pages include a subtle masked student ID watermark in the margin.
+            </p>
+            <div style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; margin-top:16px;">
+                <button type="button" class="btn btn-secondary" onclick="cancelProtectedContentRuleModal()" style="padding:9px 14px; font-size:0.86rem;">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnAcceptProtectedRule" onclick="acceptProtectedContentRuleModal()" style="padding:9px 16px; font-size:0.86rem;">I Understand &mdash; Continue</button>
             </div>
         </div>
     </div>

@@ -117,19 +117,30 @@ async function loadAndRenderStudentMockTests(classKey) {
     }
 }
 
+let mockScheduleRefreshTimer = null;
+
+function clearMockScheduleRefreshTimer() {
+    if (mockScheduleRefreshTimer) {
+        clearTimeout(mockScheduleRefreshTimer);
+        mockScheduleRefreshTimer = null;
+    }
+}
+
 function renderMockTestsList(container, classKey, subjectId, tests, serverNow) {
+    clearMockScheduleRefreshTimer();
     if (!tests || tests.length === 0) {
         container.innerHTML = `
             <div class="mock-empty-card">
                 <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i>
                 <h3>No mock tests published yet</h3>
-                <p>Published timed MCQ tests for this subject will appear here.</p>
+                <p>Published and scheduled timed MCQ tests for this subject will appear here.</p>
             </div>
         `;
         return;
     }
 
     const offsetMs = (serverNow || Date.now()) - Date.now();
+    let soonestReleaseMs = Infinity;
 
     container.innerHTML = `
         <div class="mock-tests-grid">
@@ -142,14 +153,21 @@ function renderMockTestsList(container, classKey, subjectId, tests, serverNow) {
                 const plan = (test.minPlan || 'free').toLowerCase();
                 const planLabel = typeof formatPlanLabel === 'function' ? formatPlanLabel(plan) : plan;
                 const isRestricted = Boolean(test.restricted);
-                const hasActive = Boolean(test.activeAttempt && !isRestricted);
+                const isComingSoon = Boolean(test.comingSoon || test.effectiveStatus === 'scheduled');
+                const releaseMs = isComingSoon ? Date.parse(test.scheduledReleaseAt || '') : NaN;
+                const msUntilRelease = Number.isFinite(releaseMs) ? (releaseMs - (Date.now() + offsetMs)) : 0;
+                if (isComingSoon && msUntilRelease > 0 && msUntilRelease < soonestReleaseMs) {
+                    soonestReleaseMs = msUntilRelease;
+                }
+                const hasActive = Boolean(!isComingSoon && test.activeAttempt && !isRestricted);
                 const remainingMs = hasActive ? (Number(test.activeAttempt.finishAt) - (Date.now() + offsetMs)) : 0;
 
                 return `
-                    <div class="mock-test-card ${isRestricted ? 'is-restricted-item' : ''}">
+                    <div class="mock-test-card ${isRestricted ? 'is-restricted-item' : ''} ${isComingSoon ? 'is-scheduled-item' : ''}">
                         <div class="mock-card-top">
                             <div class="mock-card-badges">
                                 <span class="mock-plan-pill ${plan}">${escapeHtml(planLabel)}</span>
+                                ${isComingSoon ? `<span class="mock-scheduled-pill"><i class="fa-regular fa-calendar-clock" aria-hidden="true"></i> Coming soon</span>` : ''}
                                 ${hasActive ? `<span class="mock-live-pill"><i class="fa-regular fa-clock"></i> In Progress (${formatCountdownMs(remainingMs)})</span>` : ''}
                             </div>
                             ${test.latestSubmitted ? `
@@ -161,11 +179,22 @@ function renderMockTestsList(container, classKey, subjectId, tests, serverNow) {
 
                         <div class="mock-card-meta">
                             <span><i class="fa-regular fa-circle-question" aria-hidden="true"></i> ${qCount} ${qCount === 1 ? 'Question' : 'Questions'}</span>
-                            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ${mins} min</span>
+                            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ${mins} min duration</span>
                         </div>
 
+                        ${isComingSoon ? `
+                            <div class="mock-release-schedule-box">
+                                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                                <span>Opens: <strong>${escapeHtml(test.scheduledReleaseNpt || test.scheduledReleaseAt || 'Scheduled')}</strong></span>
+                            </div>
+                        ` : ''}
+
                         <div class="mock-card-actions">
-                            ${isRestricted ? `
+                            ${isComingSoon ? `
+                                <button type="button" class="btn btn-secondary mock-start-btn" disabled style="opacity:0.75; cursor:not-allowed;">
+                                    <i class="fa-regular fa-clock" aria-hidden="true"></i> Coming Soon
+                                </button>
+                            ` : (isRestricted ? `
                                 <button type="button" class="btn btn-secondary mock-start-btn" onclick="openPlanComparisonModal('${escapeHtml(plan)}', '${jsTitle}')">
                                     <i class="fa-solid fa-lock" aria-hidden="true"></i> Level up to unlock
                                 </button>
@@ -174,13 +203,20 @@ function renderMockTestsList(container, classKey, subjectId, tests, serverNow) {
                                     <i class="fa-solid ${hasActive ? 'fa-play' : 'fa-clipboard-check'}" aria-hidden="true"></i>
                                     ${hasActive ? 'Resume Test' : 'Start Test'}
                                 </button>
-                            `}
+                            `)}
                         </div>
                     </div>
                 `;
             }).join('')}
         </div>
     `;
+
+    // Automatically refresh list when the soonest scheduled mock test goes live (no admin or manual refresh required)
+    if (Number.isFinite(soonestReleaseMs) && soonestReleaseMs > 0 && soonestReleaseMs < 24 * 60 * 60 * 1000) {
+        mockScheduleRefreshTimer = setTimeout(() => {
+            loadAndRenderStudentMockTests(classKey);
+        }, Math.min(soonestReleaseMs + 1200, 60 * 60 * 1000));
+    }
 }
 
 async function startOrResumeStudentMockTest(classKey, subjectId, testId, isRetake = false) {
@@ -192,19 +228,32 @@ async function startOrResumeStudentMockTest(classKey, subjectId, testId, isRetak
         return;
     }
 
+    if (typeof ensureProtectedContentNoticeAccepted === 'function' && typeof hasAcceptedProtectedContentRule === 'function' && !hasAcceptedProtectedContentRule()) {
+        ensureProtectedContentNoticeAccepted(() => startOrResumeStudentMockTest(classKey, subjectId, testId, isRetake));
+        return;
+    }
+
     container.innerHTML = `<div class="mock-empty-card"><p>${isRetake ? 'Starting new attempt...' : 'Opening mock test...'}</p></div>`;
 
     try {
+        const clientRequestId = `req_${testId}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
         const res = await fetch('/api/mock-tests', {
             method: 'POST',
             headers: getMockAuthHeaders(),
             body: JSON.stringify({
                 action: 'START_ATTEMPT',
                 testId,
-                retake: Boolean(isRetake)
+                retake: Boolean(isRetake),
+                clientRequestId
             })
         });
         const payload = await res.json();
+
+        if (res.status === 403 && payload.code === 'TEST_NOT_YET_LIVE') {
+            showToast(payload.error || 'This mock test is not live yet.');
+            loadAndRenderStudentMockTests(classKey);
+            return;
+        }
 
         if (res.status === 403 && payload.code === 'SECTION_LOCKED') {
             if (typeof showSectionLockedModal === 'function') showSectionLockedModal(classKey);
@@ -578,8 +627,15 @@ function renderActiveMockTestRunner(container) {
     const answeredCount = Object.keys(answers).length;
     const remainingMs = Number(attempt.finishAt || 0) - (Date.now() + (activeMockSession.serverOffsetMs || 0));
 
+    const maskedWm = typeof getMaskedStudentWatermarkId === 'function' ? escapeHtml(getMaskedStudentWatermarkId()) : '';
+
     container.innerHTML = `
-        <div class="mock-runner-shell">
+        <div class="mock-runner-shell bpg-protected-content">
+            <div class="bpg-protected-rule-bar" role="note" style="margin-bottom:12px;">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                <span>Screenshots and screen recordings are prohibited.</span>
+                ${maskedWm ? `<span class="bpg-watermark-chip" aria-hidden="true">${maskedWm}</span>` : ''}
+            </div>
             <div class="mock-runner-header">
                 <div class="mock-runner-title-wrap">
                     <span class="mock-runner-kicker">Question ${idx + 1} of ${total} &middot; ${answeredCount} answered</span>

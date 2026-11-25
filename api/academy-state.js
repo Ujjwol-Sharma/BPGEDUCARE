@@ -331,6 +331,10 @@ async function academyStateHandler(req, res) {
 
             const rawData = readAcademyState();
             delete rawData.adminPasskey;
+            const { reconcileScheduledMockTests, gradeToClassKey } = require('./_access-control');
+            if (reconcileScheduledMockTests(rawData)) {
+                writeStateToDisk(rawData);
+            }
             let roster = readRoster();
             let user = null;
             let sessionRevoked = false;
@@ -405,6 +409,11 @@ async function academyStateHandler(req, res) {
                     )
                     : [];
 
+                const userClassKey = user ? gradeToClassKey(user.classKey || user.grade) : '';
+                const visibleNotifications = (Array.isArray(rawData.notifications) ? rawData.notifications : [])
+                    .filter(n => n && n.published !== false && (!n.scope || n.scope === 'sitewide' || (userClassKey && n.scope === userClassKey)))
+                    .slice(0, 30);
+
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
@@ -417,6 +426,7 @@ async function academyStateHandler(req, res) {
                     sessionRevoked,
                     myPayments,
                     mySwitchRequests,
+                    notifications: visibleNotifications,
                     sectionLocks: rawData.sectionLocks || {},
                     plansConfig: rawData.plansConfig || {},
                     maintenanceMode: rawData.maintenanceMode || { enabled: false }

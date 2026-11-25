@@ -103,7 +103,16 @@ module.exports = async function handler(req, res) {
         const grade = normalizeGradeName(body.grade || 'Class 12');
         const rawMode = String(body.mode || 'signup').toLowerCase();
         const mode = rawMode === 'reset' ? 'reset' : (rawMode === 'gmail_otp' ? 'gmail_otp' : 'signup');
-        const newPassword = String(body.newPassword || body.password || '').trim();
+        const newPassword = String(body.newPassword || body.password || '');
+        const keepSignedIn = body.keepSignedIn !== false;
+
+        if ((mode === 'signup' || mode === 'reset') && newPassword.length < 6) {
+            return res.status(400).json({
+                ok: false,
+                code: 'WEAK_PASSWORD',
+                error: 'Password must be at least 6 characters long.'
+            });
+        }
 
         if (!email || !/^\d{6}$/.test(otp)) {
             return res.status(400).json({
@@ -275,14 +284,20 @@ module.exports = async function handler(req, res) {
             }
             if (newPassword) {
                 roster.accounts[existingIdx].passkey = hashPassword(newPassword);
+                roster.accounts[existingIdx].hasPassword = true;
             }
             roster.accounts[existingIdx].emailVerified = true;
             if (!roster.accounts[existingIdx].verifiedAt) {
                 roster.accounts[existingIdx].verifiedAt = new Date().toISOString();
             }
+            appendAccountAuditEntry(roster.accounts[existingIdx], {
+                actor: `${roster.accounts[existingIdx].name} (Password Reset)`,
+                action: 'PASSWORD_RESET',
+                details: 'Reset password via verified 6-digit email code'
+            });
             writeRoster(roster);
             const acc = roster.accounts[existingIdx];
-            const sessionToken = issueStudentSessionToken(acc);
+            const sessionToken = issueStudentSessionToken(acc, { keepSignedIn });
             const { passkey, ...safeUser } = acc;
             return res.status(200).json({
                 ok: true,
@@ -300,7 +315,7 @@ module.exports = async function handler(req, res) {
             acc.emailVerified = true;
             if (!acc.verifiedAt) acc.verifiedAt = new Date().toISOString();
             writeRoster(roster);
-            const sessionToken = issueStudentSessionToken(acc);
+            const sessionToken = issueStudentSessionToken(acc, { keepSignedIn });
             const { passkey, ...safeUser } = acc;
             return res.status(200).json({
                 ok: true,
@@ -341,7 +356,9 @@ module.exports = async function handler(req, res) {
             emailVerified: true,
             verifiedAt: nowIso,
             verificationMethod: 'email_otp',
+            hasPassword: true,
             passkey: hashPassword(newPassword || crypto.randomBytes(16).toString('hex')),
+            readNotificationIds: [],
             joinedAt: nowIso.split('T')[0],
             updatedAt: nowIso,
             lastModifiedBy: `${name} (Email OTP Sign-Up)`,
@@ -363,7 +380,7 @@ module.exports = async function handler(req, res) {
         const savedRoster = writeRoster(roster);
         const savedAccount = savedRoster.accounts.find(a => a.userId === stableUserId || a.canonicalEmail === canonical) || newAccount;
 
-        const sessionToken = issueStudentSessionToken(savedAccount);
+        const sessionToken = issueStudentSessionToken(savedAccount, { keepSignedIn });
         const { passkey, ...safeUser } = savedAccount;
 
         return res.status(200).json({

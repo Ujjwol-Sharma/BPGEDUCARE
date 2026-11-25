@@ -279,10 +279,12 @@ module.exports = async function studentRosterHandler(req, res) {
                         emailVerified: true,
                         verifiedAt: nowIso,
                         verificationMethod: 'google_oauth',
+                        hasPassword: false,
                         googleLinked: true,
                         googleSub: googleProfile.googleSub || ('gsub_' + crypto.createHash('sha256').update(canonical).digest('hex').slice(0, 16)),
                         avatarUrl: googleProfile.avatarUrl || '',
                         passkey: hashPassword('google-oauth-' + Date.now() + '-' + Math.random()),
+                        readNotificationIds: [],
                         joinedAt: nowIso.split('T')[0],
                         updatedAt: nowIso,
                         lastModifiedBy: `${googleProfile.name || 'Student'} (Google Sign-Up)`,
@@ -305,7 +307,8 @@ module.exports = async function studentRosterHandler(req, res) {
                     account = updated.accounts.find(a => a.userId === stableUserId || a.canonicalEmail === canonical) || created;
                 }
 
-                const sessionToken = issueStudentSessionToken(account);
+                const keepSignedIn = payload.keepSignedIn !== false;
+                const sessionToken = issueStudentSessionToken(account, { keepSignedIn });
                 const mySwitchRequests = (roster.classSwitchRequests || []).filter(
                     r => (r.userId && r.userId === account.userId) || canonicalizeEmail(r.email) === canonical
                 );
@@ -503,28 +506,69 @@ module.exports = async function studentRosterHandler(req, res) {
                 return;
             }
 
-            // 1. SIGN IN (matches canonical verified email, never creates duplicate accounts)
+            // 0c. MARK NOTIFICATIONS READ (Persists per-account read status across devices and sessions)
+            if (payload.action === 'MARK_NOTIFICATIONS_READ') {
+                const user = resolveRequestUser(req);
+                if (!user || !user.email) {
+                    res.statusCode = 401;
+                    res.end(JSON.stringify({ success: false, error: 'Please sign in to save notification status.' }));
+                    return;
+                }
+                const canonical = canonicalizeEmail(user.email);
+                const account = roster.accounts.find(a => a.userId === user.userId || a.canonicalEmail === canonical);
+                if (!account) {
+                    res.statusCode = 404;
+                    res.end(JSON.stringify({ success: false, error: 'Student account not found.' }));
+                    return;
+                }
+                const incomingIds = Array.isArray(payload.notificationIds)
+                    ? payload.notificationIds.map(x => String(x || '').trim()).filter(Boolean)
+                    : [];
+                const existingSet = new Set(Array.isArray(account.readNotificationIds) ? account.readNotificationIds : []);
+                incomingIds.forEach(id => existingSet.add(id));
+                if (payload.markAll) {
+                    const userClass = gradeToClassKey(account.classKey || account.grade);
+                    (Array.isArray(state.notifications) ? state.notifications : []).forEach(n => {
+                        if (n && n.id && n.published !== false && (!n.scope || n.scope === 'sitewide' || n.scope === userClass)) {
+                            existingSet.add(String(n.id));
+                        }
+                    });
+                }
+                account.readNotificationIds = Array.from(existingSet).slice(-250);
+                writeRoster(roster);
+                res.statusCode = 200;
+                res.end(JSON.stringify({
+                    success: true,
+                    readNotificationIds: account.readNotificationIds
+                }));
+                return;
+            }
+
+            // 1. SIGN IN (matches canonical verified email, protects email registration privacy, never creates duplicates)
             if (payload.action === 'SIGN_IN') {
                 const rawEmail = String(payload.email || '').trim().toLowerCase();
                 const enteredPass = String(payload.password || payload.passkey || '');
+                const keepSignedIn = payload.keepSignedIn !== false;
                 if (!rawEmail || !isValidEmailFormat(rawEmail)) {
                     res.statusCode = 400;
-                    res.end(JSON.stringify({ success: false, error: 'Please enter a valid email address.' }));
+                    res.end(JSON.stringify({ success: false, code: 'INVALID_EMAIL', error: 'Please enter a valid email address.' }));
                     return;
                 }
                 if (!enteredPass) {
                     res.statusCode = 400;
-                    res.end(JSON.stringify({ success: false, error: 'Please enter your password.' }));
+                    res.end(JSON.stringify({ success: false, code: 'MISSING_PASSWORD', error: 'Please enter your password.' }));
                     return;
                 }
                 const canonical = canonicalizeEmail(rawEmail);
                 const account = roster.accounts.find(a => a.canonicalEmail === canonical);
+                const genericCredError = "We couldn't sign you in with that email and password. Double-check your password, try Continue with Google, sign in with a 6-digit email code, or click Forgot password?.";
+
                 if (!account) {
-                    res.statusCode = 404;
+                    res.statusCode = 401;
                     res.end(JSON.stringify({
                         success: false,
-                        code: 'ACCOUNT_NOT_FOUND',
-                        error: 'No account found for this email. Please create an account.'
+                        code: 'INVALID_CREDENTIALS',
+                        error: genericCredError
                     }));
                     return;
                 }
@@ -533,7 +577,7 @@ module.exports = async function studentRosterHandler(req, res) {
                     res.end(JSON.stringify({
                         success: false,
                         code: 'EMAIL_NOT_VERIFIED',
-                        error: 'Your email address is not verified yet. Please complete email verification first.'
+                        error: 'Your email address is not verified yet. Please complete email verification or request a new code.'
                     }));
                     return;
                 }
@@ -551,12 +595,12 @@ module.exports = async function studentRosterHandler(req, res) {
                     res.statusCode = 401;
                     res.end(JSON.stringify({
                         success: false,
-                        code: 'INVALID_PASSWORD',
-                        error: 'Incorrect password. Please try again or reset your password.'
+                        code: 'INVALID_CREDENTIALS',
+                        error: genericCredError
                     }));
                     return;
                 }
-                const sessionToken = issueStudentSessionToken(account);
+                const sessionToken = issueStudentSessionToken(account, { keepSignedIn });
                 const mySwitchRequests = (roster.classSwitchRequests || []).filter(
                     r => (r.userId && r.userId === account.userId) || canonicalizeEmail(r.email) === canonical
                 );
@@ -567,6 +611,7 @@ module.exports = async function studentRosterHandler(req, res) {
                 res.end(JSON.stringify({
                     success: true,
                     sessionToken,
+                    keepSignedIn,
                     user: stripSensitiveAccountFields(account),
                     mySwitchRequests,
                     myPayments

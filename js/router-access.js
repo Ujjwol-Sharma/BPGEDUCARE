@@ -180,11 +180,34 @@ function closeCalendarSessionModal() {
    -------------------------------------------------------------------------- */
 function getStoredStudentSession() {
     try {
+        const sRaw = sessionStorage.getItem(BPG_STUDENT_SESSION_KEY);
+        if (sRaw) return JSON.parse(sRaw);
         const raw = localStorage.getItem(BPG_STUDENT_SESSION_KEY) || localStorage.getItem('bpg_maths_academy_session_v1') || localStorage.getItem('bpg_student_session_v2') || localStorage.getItem('bpg_student_session');
         return raw ? JSON.parse(raw) : null;
     } catch (e) {
         return null;
     }
+}
+
+function saveStoredStudentSession(record, keepSignedIn = true) {
+    if (!record || typeof record !== 'object') return;
+    record.keepSignedIn = Boolean(keepSignedIn);
+    const serialized = JSON.stringify(record);
+    try {
+        if (keepSignedIn) {
+            sessionStorage.removeItem(BPG_STUDENT_SESSION_KEY);
+            localStorage.setItem(BPG_STUDENT_SESSION_KEY, serialized);
+            localStorage.setItem('bpg_student_session', serialized);
+            if (record.classKey) localStorage.setItem('bpg_student_class', record.classKey);
+        } else {
+            localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
+            localStorage.removeItem('bpg_maths_academy_session_v1');
+            localStorage.removeItem('bpg_student_session_v2');
+            localStorage.removeItem('bpg_student_session');
+            localStorage.removeItem('bpg_student_class');
+            sessionStorage.setItem(BPG_STUDENT_SESSION_KEY, serialized);
+        }
+    } catch (e) {}
 }
 
 function isUserAuthenticated() {
@@ -1183,6 +1206,7 @@ function handleSwitchAccountRegister() {
 function handleSignOutSilent() {
     if (typeof isAuthenticated !== 'undefined') isAuthenticated = false;
     try {
+        sessionStorage.removeItem(BPG_STUDENT_SESSION_KEY);
         localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
         localStorage.removeItem('bpg_maths_academy_session_v1');
         localStorage.removeItem('bpg_student_session_v2');
@@ -1199,6 +1223,7 @@ function handleSignOutSilent() {
     }
     closeUserDropdown();
     updateAuthUserPill();
+    if (typeof renderHeaderNotificationsBell === 'function') renderHeaderNotificationsBell();
     switchPortal('view-home');
     try { history.replaceState(null, '', '#home'); } catch (e) {}
 }
@@ -1541,10 +1566,270 @@ function downloadSampleIcs(sessionTitle, timeSummary) {
     showToast(`Calendar Event (.ics) downloaded for "${sessionTitle}"!`);
 }
 
+/* --------------------------------------------------------------------------
+   6. COMPACT HEADER NOTIFICATIONS BELL (PER-ACCOUNT PERSISTENT READ STATUS)
+   -------------------------------------------------------------------------- */
+const GUEST_READ_NOTIFS_KEY = 'bpg_guest_read_notifs_v1';
+
+function getVisibleNotificationsForCurrentUser() {
+    const raw = (typeof ACADEMY_STATE !== 'undefined' && Array.isArray(ACADEMY_STATE.notifications))
+        ? ACADEMY_STATE.notifications
+        : [];
+    const userClassPortal = isUserAuthenticated() ? shortKeyToPortalKey(getStudentRegisteredClass()) : '';
+    const seen = new Set();
+    return raw
+        .filter(n => {
+            if (!n || !n.id || n.published === false) return false;
+            const dedupe = n.dedupeKey || n.id;
+            if (seen.has(dedupe)) return false;
+            seen.add(dedupe);
+            const scope = String(n.scope || 'sitewide');
+            if (scope === 'sitewide') return true;
+            return Boolean(userClassPortal && scope === userClassPortal);
+        })
+        .sort((a, b) => Date.parse(b.createdAt || b.updatedAt || 0) - Date.parse(a.createdAt || a.updatedAt || 0));
+}
+
+function getReadNotificationIdSet() {
+    const session = getStoredStudentSession();
+    if (session && Array.isArray(session.readNotificationIds)) {
+        return new Set(session.readNotificationIds.map(String));
+    }
+    try {
+        const guest = JSON.parse(localStorage.getItem(GUEST_READ_NOTIFS_KEY) || '[]');
+        return new Set(Array.isArray(guest) ? guest.map(String) : []);
+    } catch (e) {
+        return new Set();
+    }
+}
+
+function formatNotifTimestamp(iso) {
+    const ms = Date.parse(String(iso || ''));
+    if (!Number.isFinite(ms)) return '';
+    const diffSec = Math.max(0, Math.floor((Date.now() - ms) / 1000));
+    if (diffSec < 60) return 'Just now';
+    if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
+    if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
+    try {
+        return new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Kathmandu',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        }).format(new Date(ms));
+    } catch (e) {
+        return new Date(ms).toLocaleDateString();
+    }
+}
+
+function renderHeaderNotificationsBell() {
+    const badge = document.getElementById('headerNotifBadge');
+    const listEl = document.getElementById('headerNotifList');
+    const markAllBtn = document.getElementById('btnMarkAllNotifsRead');
+    if (!badge || !listEl) return;
+
+    const items = getVisibleNotificationsForCurrentUser();
+    const readSet = getReadNotificationIdSet();
+    const unreadCount = items.filter(n => !readSet.has(String(n.id))).length;
+
+    if (unreadCount > 0) {
+        badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+    if (markAllBtn) {
+        markAllBtn.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+    }
+
+    if (items.length === 0) {
+        listEl.innerHTML = `<div class="notif-empty-state">You're all caught up. No announcements yet.</div>`;
+        return;
+    }
+
+    const esc = typeof escapeHtml === 'function' ? escapeHtml : (s => String(s || ''));
+    listEl.innerHTML = items.slice(0, 20).map(n => {
+        const isUnread = !readSet.has(String(n.id));
+        const safeId = esc(String(n.id)).replace(/'/g, "\\'");
+        const safeLink = esc(String(n.linkTarget || '')).replace(/'/g, "\\'");
+        const cat = esc(n.category || 'Update');
+        const ts = formatNotifTimestamp(n.createdAt || n.updatedAt);
+        const hasLink = Boolean(n.linkTarget && n.linkTarget !== 'none');
+        return `
+            <button type="button" class="notif-drawer-item ${isUnread ? 'is-unread' : ''}" onclick="handleHeaderNotificationClick('${safeId}', '${safeLink}')">
+                <div class="notif-item-top">
+                    <span class="notif-item-cat">${cat}</span>
+                    <span class="notif-item-time">${esc(ts)}</span>
+                </div>
+                <div class="notif-item-title">
+                    ${isUnread ? '<span class="notif-unread-dot" aria-label="Unread"></span>' : ''}
+                    <strong>${esc(n.title || 'Announcement')}</strong>
+                </div>
+                <p class="notif-item-body">${esc(n.body || '')}</p>
+                ${hasLink ? `<span class="notif-item-cta">Open &rarr;</span>` : ''}
+            </button>
+        `;
+    }).join('');
+}
+
+function toggleHeaderNotifications(e) {
+    if (e) e.stopPropagation();
+    const drawer = document.getElementById('notifDrawer');
+    const btn = document.getElementById('headerNotifBtn');
+    if (!drawer) return;
+    const willOpen = !drawer.classList.contains('open');
+    closeUserDropdown();
+    closeClassesDropdown();
+    drawer.classList.toggle('open', willOpen);
+    if (btn) btn.setAttribute('aria-expanded', String(willOpen));
+    if (willOpen) renderHeaderNotificationsBell();
+}
+
+async function persistReadNotificationIds(idsToMark, markAll = false) {
+    const readSet = getReadNotificationIdSet();
+    (idsToMark || []).forEach(id => readSet.add(String(id)));
+    if (markAll) {
+        getVisibleNotificationsForCurrentUser().forEach(n => readSet.add(String(n.id)));
+    }
+    const nextList = Array.from(readSet).slice(-250);
+
+    const session = getStoredStudentSession();
+    if (session && session.sessionToken) {
+        session.readNotificationIds = nextList;
+        saveStoredStudentSession(session, session.keepSignedIn !== false);
+        renderHeaderNotificationsBell();
+        try {
+            const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+            const res = await fetch('/api/student-roster', {
+                method: 'POST',
+                headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+                body: JSON.stringify({
+                    action: 'MARK_NOTIFICATIONS_READ',
+                    notificationIds: idsToMark || [],
+                    markAll: Boolean(markAll)
+                })
+            });
+            if (res.ok) {
+                const json = await res.json();
+                if (Array.isArray(json.readNotificationIds)) {
+                    session.readNotificationIds = json.readNotificationIds;
+                    saveStoredStudentSession(session, session.keepSignedIn !== false);
+                    renderHeaderNotificationsBell();
+                }
+            }
+        } catch (e) {}
+    } else {
+        try { localStorage.setItem(GUEST_READ_NOTIFS_KEY, JSON.stringify(nextList)); } catch (e) {}
+        renderHeaderNotificationsBell();
+    }
+}
+
+function markAllNotificationsRead() {
+    persistReadNotificationIds([], true);
+}
+
+function handleHeaderNotificationClick(notifId, linkTarget) {
+    persistReadNotificationIds([notifId], false);
+    document.getElementById('notifDrawer')?.classList.remove('open');
+    document.getElementById('headerNotifBtn')?.setAttribute('aria-expanded', 'false');
+
+    if (!linkTarget || linkTarget === 'none') return;
+    if (linkTarget === 'mocktests') {
+        openMyMockTestsView();
+    } else if (linkTarget === 'notes' || linkTarget === 'lessons') {
+        openMyLessonsView();
+    } else if (linkTarget === 'live' || linkTarget === 'calendar') {
+        openLiveClassCalendarEntry();
+    } else if (linkTarget === 'syllabus') {
+        openMySyllabusView();
+    } else if (linkTarget === 'plans') {
+        openPlanComparisonModal('', '');
+    } else if (linkTarget.startsWith('http://') || linkTarget.startsWith('https://')) {
+        window.open(linkTarget, '_blank', 'noopener');
+    } else if (linkTarget.startsWith('#')) {
+        const target = linkTarget.slice(1);
+        if (['c10', 'c11', 'c12', 'entrance'].includes(target)) handleClassNavClick(target);
+        else scrollToSection(target);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. PROTECTED CONTENT RULE NOTICE & MASKED STUDENT ID WATERMARK
+   -------------------------------------------------------------------------- */
+const PROTECTED_RULE_ACK_KEY = 'bpg_protected_rule_ack_v1';
+let pendingProtectedContentCallback = null;
+
+function getMaskedStudentWatermarkId() {
+    try {
+        const s = getStoredStudentSession();
+        if (s) {
+            const rawId = String(s.userId || '').trim();
+            if (rawId && rawId.length >= 6) {
+                return `ID: ${rawId.slice(0, 6)}••${rawId.slice(-3)}`;
+            }
+            const email = String(s.email || '').trim().toLowerCase();
+            if (email.includes('@')) {
+                const [local, domain] = email.split('@');
+                const maskedLocal = local.length <= 2 ? `${local[0] || '*'}•` : `${local.slice(0, 2)}••${local.slice(-1)}`;
+                const domParts = domain.split('.');
+                const maskedDom = `${domParts[0].slice(0, 1)}••.${domParts.slice(1).join('.') || 'com'}`;
+                return `ID: ${maskedLocal}@${maskedDom}`;
+            }
+        }
+    } catch (e) {}
+    return 'BPG EDUCARE · Protected';
+}
+
+function hasAcceptedProtectedContentRule() {
+    try {
+        const s = getStoredStudentSession();
+        const key = s && (s.userId || s.email) ? `${PROTECTED_RULE_ACK_KEY}:${s.userId || s.email}` : PROTECTED_RULE_ACK_KEY;
+        return localStorage.getItem(key) === '1';
+    } catch (e) {
+        return false;
+    }
+}
+
+function ensureProtectedContentNoticeAccepted(onAccepted) {
+    if (hasAcceptedProtectedContentRule()) {
+        if (typeof onAccepted === 'function') onAccepted();
+        return;
+    }
+    pendingProtectedContentCallback = onAccepted;
+    const modal = document.getElementById('protectedContentRuleModal');
+    if (modal) {
+        modal.classList.add('open');
+    } else if (typeof onAccepted === 'function') {
+        onAccepted();
+    }
+}
+
+function acceptProtectedContentRuleModal() {
+    try {
+        const s = getStoredStudentSession();
+        const key = s && (s.userId || s.email) ? `${PROTECTED_RULE_ACK_KEY}:${s.userId || s.email}` : PROTECTED_RULE_ACK_KEY;
+        localStorage.setItem(key, '1');
+    } catch (e) {}
+    document.getElementById('protectedContentRuleModal')?.classList.remove('open');
+    const cb = pendingProtectedContentCallback;
+    pendingProtectedContentCallback = null;
+    if (typeof cb === 'function') cb();
+}
+
+function cancelProtectedContentRuleModal() {
+    pendingProtectedContentCallback = null;
+    document.getElementById('protectedContentRuleModal')?.classList.remove('open');
+}
+
 document.addEventListener('click', e => {
     if (!e.target.closest('#primaryNav') && !e.target.closest('#mobileMenuToggle')) closeMobileNav();
     if (!e.target.closest('#userDropdownWrap')) closeUserDropdown();
     if (!e.target.closest('#navClassesWrap')) closeClassesDropdown();
+    if (!e.target.closest('#notifWrapper')) {
+        document.getElementById('notifDrawer')?.classList.remove('open');
+        document.getElementById('headerNotifBtn')?.setAttribute('aria-expanded', 'false');
+    }
 });
 
 document.addEventListener('keydown', e => {

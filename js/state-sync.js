@@ -597,6 +597,15 @@ function reconcileStudentLiveSessionPayload(payload) {
         }
     }
 
+    if (Array.isArray(payload.notifications)) {
+        const prevNotifStr = JSON.stringify(ACADEMY_STATE.notifications || []);
+        const nextNotifStr = JSON.stringify(payload.notifications);
+        if (prevNotifStr !== nextNotifStr) {
+            ACADEMY_STATE.notifications = payload.notifications;
+            uiNeedsRefresh = true;
+        }
+    }
+
     const session = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
     if (session && session.sessionToken) {
         if (payload.sessionRevoked === true) {
@@ -604,6 +613,7 @@ function reconcileStudentLiveSessionPayload(payload) {
             if (typeof handleSignOutSilent === 'function') {
                 handleSignOutSilent();
             } else {
+                sessionStorage.removeItem(BPG_STUDENT_SESSION_KEY);
                 localStorage.removeItem(BPG_STUDENT_SESSION_KEY);
                 localStorage.removeItem('bpg_student_session');
                 if (typeof updateAuthUserPill === 'function') updateAuthUserPill();
@@ -624,8 +634,9 @@ function reconcileStudentLiveSessionPayload(payload) {
             const gradeChanged = nextGrade !== prevGrade || nextNormClass !== session.classKey;
             const statusChanged = u.accountStatus !== session.accountStatus || u.paymentStatus !== session.paymentStatus;
             const idChanged = u.userId && u.userId !== session.userId;
+            const readNotifsChanged = Array.isArray(u.readNotificationIds) && JSON.stringify(u.readNotificationIds) !== JSON.stringify(session.readNotificationIds || []);
 
-            if (nameChanged || usernameChanged || planChanged || gradeChanged || statusChanged || idChanged || u.updatedAt !== session.updatedAt) {
+            if (nameChanged || usernameChanged || planChanged || gradeChanged || statusChanged || idChanged || readNotifsChanged || u.updatedAt !== session.updatedAt) {
                 session.userId = u.userId || session.userId || '';
                 session.name = u.name || session.name;
                 session.username = u.username || session.username;
@@ -636,12 +647,17 @@ function reconcileStudentLiveSessionPayload(payload) {
                 session.paymentStatus = u.paymentStatus || (nextPlan !== 'free' ? 'paid' : 'none');
                 session.legacyAccess = Boolean(u.legacyAccess);
                 session.planExplicitlySet = Boolean(u.planExplicitlySet);
+                session.readNotificationIds = Array.isArray(u.readNotificationIds) ? u.readNotificationIds : (session.readNotificationIds || []);
                 session.updatedAt = u.updatedAt || new Date().toISOString();
                 session.lastModifiedBy = u.lastModifiedBy || session.lastModifiedBy || '';
 
-                localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
-                localStorage.setItem('bpg_student_session', JSON.stringify(session));
-                localStorage.setItem('bpg_student_class', nextNormClass);
+                if (typeof saveStoredStudentSession === 'function') {
+                    saveStoredStudentSession(session, session.keepSignedIn !== false);
+                } else {
+                    localStorage.setItem(BPG_STUDENT_SESSION_KEY, JSON.stringify(session));
+                    localStorage.setItem('bpg_student_session', JSON.stringify(session));
+                    localStorage.setItem('bpg_student_class', nextNormClass);
+                }
                 uiNeedsRefresh = true;
 
                 if (planChanged && typeof showToast === 'function') {
@@ -666,6 +682,7 @@ function reconcileStudentLiveSessionPayload(payload) {
 
     if (uiNeedsRefresh) {
         if (typeof updateAuthUserPill === 'function') updateAuthUserPill();
+        if (typeof renderHeaderNotificationsBell === 'function') renderHeaderNotificationsBell();
         if (typeof renderStudentDashboardPaymentBanner === 'function') renderStudentDashboardPaymentBanner();
         if (typeof refreshOpenCheckoutStatusLive === 'function') refreshOpenCheckoutStatusLive();
         if (typeof renderStudentProfileModalContent === 'function' && document.getElementById('studentProfileModal')?.classList.contains('open')) {

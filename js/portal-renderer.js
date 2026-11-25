@@ -535,13 +535,10 @@ function findLocalLessonPdf(classKey, subjectId, lessonId, pdfId) {
 }
 
 function getPdfWatermarkText() {
-    try {
-        const s = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
-        if (s && s.email) {
-            return `BPG EDUCARE · ${s.name || 'Student'} (${s.email}) · DO NOT COPY`;
-        }
-    } catch (e) {}
-    return 'BPG EDUCARE · PROTECTED STUDY MATERIAL · DO NOT COPY';
+    if (typeof getMaskedStudentWatermarkId === 'function') {
+        return `BPG EDUCARE · ${getMaskedStudentWatermarkId()}`;
+    }
+    return 'BPG EDUCARE · Protected';
 }
 
 function paintCanvasWatermark(canvas) {
@@ -549,19 +546,16 @@ function paintCanvasWatermark(canvas) {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
         const wmText = getPdfWatermarkText();
-        ctx.save();
-        ctx.font = '600 16px Inter, sans-serif';
-        ctx.fillStyle = 'rgba(17, 17, 20, 0.085)';
-        ctx.textAlign = 'center';
         const w = canvas.width;
         const h = canvas.height;
-        ctx.translate(w / 2, h / 2);
-        ctx.rotate(-Math.PI / 6);
-        for (let y = -h; y <= h; y += 190) {
-            for (let x = -w; x <= w; x += 520) {
-                ctx.fillText(wmText, x, y);
-            }
-        }
+        ctx.save();
+        // Subtle margin-only watermark kept clear of central lesson text, equations, and answers
+        ctx.font = '500 12px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(17, 17, 20, 0.22)';
+        ctx.textAlign = 'right';
+        ctx.fillText(wmText, w - 18, 20);
+        ctx.textAlign = 'left';
+        ctx.fillText(wmText, 18, h - 12);
         ctx.restore();
     } catch (e) {}
 }
@@ -644,10 +638,12 @@ function displayPdfInViewerModal(pdf, fileUrl) {
     const badgeEl = document.getElementById('pdfModalBadge');
     const titleEl = document.getElementById('pdfModalTitle');
     const bodyEl = document.getElementById('pdfModalBody');
+    const wmChipEl = document.getElementById('pdfModalWatermarkId');
 
     dismissScreenshotBlurShield();
     if (badgeEl) badgeEl.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Read-Only PDF';
     if (titleEl) titleEl.textContent = pdf.title || pdf.fileName || 'Lesson PDF';
+    if (wmChipEl) wmChipEl.textContent = typeof getMaskedStudentWatermarkId === 'function' ? getMaskedStudentWatermarkId() : '';
 
     if (bodyEl) {
         bodyEl.innerHTML = `<div id="pdfJsPagesMount" style="padding:4px; text-align:center; color:var(--text-secondary);">Loading protected PDF pages...</div>`;
@@ -663,6 +659,10 @@ function displayPdfInViewerModal(pdf, fileUrl) {
 }
 
 async function openLessonPdf(classKey, lessonId, pdfId, pdfTitle, subjectId = 'mathematics') {
+    if (typeof ensureProtectedContentNoticeAccepted === 'function' && typeof hasAcceptedProtectedContentRule === 'function' && !hasAcceptedProtectedContentRule()) {
+        ensureProtectedContentNoticeAccepted(() => openLessonPdf(classKey, lessonId, pdfId, pdfTitle, subjectId));
+        return;
+    }
     // 1. Check if authorized PDF fileUrl is already available in local state
     const localPdf = findLocalLessonPdf(classKey, subjectId, lessonId, pdfId);
     if (localPdf && !localPdf.restricted && localPdf.fileUrl) {

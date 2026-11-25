@@ -382,26 +382,34 @@ function hashPassword(password) {
     return `scrypt$${salt}$${derived}`;
 }
 
-function verifyPassword(password, storedPasskey) {
-    const raw = String(password || '');
-    const stored = String(storedPasskey || '');
-    if (!raw || !stored) return false;
+function verifySinglePasswordCandidate(candidate, stored) {
+    if (!candidate || !stored) return false;
     if (stored.startsWith('scrypt$')) {
         const parts = stored.split('$');
         if (parts.length !== 3) return false;
         const [, salt, expectedHex] = parts;
         try {
-            const derived = crypto.scryptSync(raw, salt, 64);
+            const derived = crypto.scryptSync(candidate, salt, 64);
             const expected = Buffer.from(expectedHex, 'hex');
             return derived.length === expected.length && crypto.timingSafeEqual(derived, expected);
         } catch (e) {
             return false;
         }
     }
-    // Legacy plaintext passkey compatibility for existing accounts
-    const a = Buffer.from(raw, 'utf8');
+    const a = Buffer.from(candidate, 'utf8');
     const b = Buffer.from(stored, 'utf8');
     return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+function verifyPassword(password, storedPasskey) {
+    const raw = String(password || '');
+    const stored = String(storedPasskey || '');
+    if (!raw || !stored) return false;
+    if (verifySinglePasswordCandidate(raw, stored)) return true;
+    // Backward compatibility for returning accounts whose passwords were saved trimmed or entered with autofill spaces
+    const trimmed = raw.trim();
+    if (trimmed && trimmed !== raw && verifySinglePasswordCandidate(trimmed, stored)) return true;
+    return false;
 }
 
 const OTP_STORE_FILE = path.join(os.tmpdir(), 'bpg-otp-store-v2.json');
@@ -511,9 +519,11 @@ function isAdminPasskeyValid(passkey) {
 /* --------------------------------------------------------------------------
    2. SESSION TOKEN SIGNING & VERIFICATION
    -------------------------------------------------------------------------- */
-function issueStudentSessionToken(user) {
+function issueStudentSessionToken(user, options = {}) {
     const issuedAt = Date.now();
-    const expiresAt = issuedAt + 30 * 24 * 60 * 60 * 1000;
+    const keepSignedIn = options.keepSignedIn !== false;
+    const ttlMs = keepSignedIn ? (30 * 24 * 60 * 60 * 1000) : (12 * 60 * 60 * 1000);
+    const expiresAt = issuedAt + ttlMs;
     const email = String(user.email || '').trim().toLowerCase();
     const canonicalEmail = canonicalizeEmail(email);
     const payload = {
@@ -523,6 +533,7 @@ function issueStudentSessionToken(user) {
         name: user.name || 'Student',
         grade: normalizeGradeName(user.grade || user.classKey),
         plan: normalizePlan(user.plan),
+        keepSignedIn,
         verified: true,
         issuedAt,
         expiresAt
@@ -691,7 +702,9 @@ function readRoster() {
             googleLinked: Boolean(rawAcc.googleLinked),
             googleSub: String(rawAcc.googleSub || ''),
             avatarUrl: String(rawAcc.avatarUrl || ''),
+            hasPassword: rawAcc.hasPassword !== undefined ? Boolean(rawAcc.hasPassword) : (rawAcc.verificationMethod !== 'google_oauth'),
             passkey: rawAcc.passkey || 'bpgstudent',
+            readNotificationIds: Array.isArray(rawAcc.readNotificationIds) ? rawAcc.readNotificationIds.map(String) : [],
             joinedAt: rawAcc.joinedAt || new Date().toISOString().split('T')[0],
             updatedAt: rawAcc.updatedAt || rawAcc.verifiedAt || (rawAcc.joinedAt ? `${rawAcc.joinedAt}T00:00:00.000Z` : new Date().toISOString()),
             lastModifiedBy: rawAcc.lastModifiedBy || (rawAcc.googleLinked ? 'Google Sign-In' : 'System'),
@@ -764,7 +777,9 @@ function writeRoster(roster) {
             googleLinked: Boolean(acc.googleLinked),
             googleSub: String(acc.googleSub || ''),
             avatarUrl: String(acc.avatarUrl || ''),
+            hasPassword: acc.hasPassword !== undefined ? Boolean(acc.hasPassword) : (acc.verificationMethod !== 'google_oauth'),
             passkey: acc.passkey || 'bpgstudent',
+            readNotificationIds: Array.isArray(acc.readNotificationIds) ? Array.from(new Set(acc.readNotificationIds.map(String))).slice(-250) : [],
             joinedAt: acc.joinedAt || nowIso.split('T')[0],
             updatedAt: acc.updatedAt || nowIso,
             lastModifiedBy: acc.lastModifiedBy || 'System',
@@ -1500,6 +1515,86 @@ function sanitizeStateForStudent(rawState, user) {
     return clone;
 }
 
+/* --------------------------------------------------------------------------
+   4B. NEPAL TIME (Asia/Kathmandu, UTC+05:45) MOCK TEST SCHEDULING & AUTO-RELEASE
+   -------------------------------------------------------------------------- */
+const NEPAL_OFFSET_MS = (5 * 60 + 45) * 60 * 1000;
+
+function formatNepalTime(isoOrMs) {
+    const ms = typeof isoOrMs === 'number' ? isoOrMs : Date.parse(String(isoOrMs || ''));
+    if (!Number.isFinite(ms)) return '';
+    try {
+        return new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Kathmandu',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        }).format(new Date(ms)) + ' NPT';
+    } catch (e) {
+        const d = new Date(ms + NEPAL_OFFSET_MS);
+        return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')} ${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')} NPT`;
+    }
+}
+
+function getEffectiveMockTestStatus(test, nowMs = Date.now()) {
+    if (!test || typeof test !== 'object') return 'draft';
+    const raw = String(test.status || 'draft').toLowerCase();
+    if (raw === 'published' || raw === 'live') return 'live';
+    if (raw === 'scheduled') {
+        const releaseMs = Date.parse(String(test.scheduledReleaseAt || ''));
+        if (!Number.isFinite(releaseMs)) return 'draft';
+        return nowMs >= releaseMs ? 'live' : 'scheduled';
+    }
+    return 'draft';
+}
+
+/**
+ * Checks scheduled mock tests that have reached their Nepal Time release and automatically
+ * generates a single idempotent notification per test for eligible students (even with no admin online).
+ */
+function reconcileScheduledMockTests(state, nowMs = Date.now()) {
+    if (!state || typeof state !== 'object') return false;
+    if (!Array.isArray(state.mockTests)) return false;
+    if (!Array.isArray(state.notifications)) state.notifications = [];
+
+    let mutated = false;
+    for (const test of state.mockTests) {
+        if (!test || test.status !== 'scheduled') continue;
+        const releaseMs = Date.parse(String(test.scheduledReleaseAt || ''));
+        if (!Number.isFinite(releaseMs) || nowMs < releaseMs) continue;
+
+        // Automatically promote scheduled test to published/live once release time passes
+        test.status = 'published';
+        test.releasedAt = test.releasedAt || new Date(releaseMs).toISOString();
+        mutated = true;
+
+        // Deduplicated notification ID so retries or concurrent requests never create duplicate alerts
+        const notifId = `notif_mock_live_${test.id}`;
+        const alreadyExists = state.notifications.some(n => n && (n.id === notifId || n.dedupeKey === notifId));
+        if (!alreadyExists) {
+            const gradeLabel = normalizeGradeName(test.classKey || 'class-12');
+            state.notifications.unshift({
+                id: notifId,
+                dedupeKey: notifId,
+                title: `Mock Test Now Live: ${test.title || 'New Mock Test'}`,
+                body: `Your scheduled ${gradeLabel} mock test (${Number(test.durationMinutes || 30)} min, ${(test.questions || []).length} questions) is now open.`,
+                category: 'Exam Update',
+                scope: gradeToClassKey(test.classKey || 'class-12'),
+                linkTarget: 'mocktests',
+                testId: test.id,
+                published: true,
+                createdAt: new Date(releaseMs).toISOString(),
+                updatedAt: new Date(nowMs).toISOString()
+            });
+            test.releaseNotifiedAt = new Date(nowMs).toISOString();
+        }
+    }
+    return mutated;
+}
+
 module.exports = {
     ROOT_DIR,
     DATA_DIR,
@@ -1548,5 +1643,8 @@ module.exports = {
     resolveRequestUserStatus,
     resolveRequestUser,
     evaluateItemAccess,
-    sanitizeStateForStudent
+    sanitizeStateForStudent,
+    getEffectiveMockTestStatus,
+    formatNepalTime,
+    reconcileScheduledMockTests
 };

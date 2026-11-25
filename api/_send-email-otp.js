@@ -229,12 +229,33 @@ module.exports = async function handler(req, res) {
             });
         }
 
-        // For password reset or passwordless email-code login, ensure an account exists for that inbox
-        if ((mode === 'reset' || mode === 'gmail_otp') && !existingAccount) {
-            return res.status(404).json({
-                ok: false,
-                code: 'ACCOUNT_NOT_FOUND',
-                error: 'No account found for this email address. Please create a new account first.'
+        // For password reset, protect email registration privacy (never leak whether an email is registered)
+        if (mode === 'reset' && !existingAccount) {
+            return res.status(200).json({
+                ok: true,
+                mode: 'reset',
+                neutralNotice: true,
+                email,
+                expiresAt: Date.now() + OTP_TTL_MS,
+                ttlSeconds: Math.floor(OTP_TTL_MS / 1000),
+                cooldownSeconds: Math.floor(RESEND_COOLDOWN_MS / 1000),
+                otpToken: '',
+                message: "If an account exists for this email, we've sent a 6-digit reset code. Check your inbox and spam folder."
+            });
+        }
+
+        // For passwordless email-code login, ensure an account exists for that inbox
+        if (mode === 'gmail_otp' && !existingAccount) {
+            return res.status(200).json({
+                ok: true,
+                mode: 'gmail_otp',
+                neutralNotice: true,
+                email,
+                expiresAt: Date.now() + OTP_TTL_MS,
+                ttlSeconds: Math.floor(OTP_TTL_MS / 1000),
+                cooldownSeconds: Math.floor(RESEND_COOLDOWN_MS / 1000),
+                otpToken: '',
+                message: "If an account exists for this email, we've sent a 6-digit login code. Check your inbox and spam folder."
             });
         }
 
