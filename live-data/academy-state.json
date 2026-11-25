@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T17:46:11.626Z",
+  "lastUpdated": "2026-11-25T17:46:15.196Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3098,15 +3098,6 @@
       "role": "Founder",
       "photoUrl": "./images/bpg_sir.jpg",
       "bio": ""
-    },
-    {
-      "id": "team-cto",
-      "slot": "cto",
-      "initial": "U",
-      "name": "Utsav Sharma",
-      "role": "",
-      "photoUrl": "",
-      "bio": ""
     }
   ],
   "homepageContent": {
@@ -3847,6 +3838,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 132,
+  "revision": 133,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
