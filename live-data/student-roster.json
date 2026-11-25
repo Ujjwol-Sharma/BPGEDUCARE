@@ -1,6 +1,6 @@
 {
-  "revision": 92,
-  "lastUpdated": "2026-11-25T13:38:23.119Z",
+  "revision": 93,
+  "lastUpdated": "2026-11-25T13:42:08.881Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795614128881_bmlv",
+      "timestamp": "2026-11-25T13:42:08.881Z",
+      "userId": "usr_102017d9b135",
+      "email": "shirishtripathi49@gmail.com",
+      "actor": "Shirish Tripathi (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795613659454_mt8w",
       "timestamp": "2026-11-25T13:34:19.454Z",
@@ -525,6 +534,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_102017d9b135",
+      "name": "Shirish Tripathi",
+      "username": "shirishtripathi49",
+      "email": "shirishtripathi49@gmail.com",
+      "canonicalEmail": "shirishtripathi49@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T13:42:08.828Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_102017d9b135e030",
+      "avatarUrl": "",
+      "passkey": "scrypt$a7f86031ef810770aef0f04f3117d56f$dd58e390db4d952f40137be62366262d596892acab248acafa80e35976ebfecb297d7b64275ead4e20571e17919b7cc1c5ba22865814eaaf0fd2f7eeaea55eda",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T13:42:08.881Z",
+      "lastModifiedBy": "Shirish Tripathi (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795614128881_6o0a",
+          "timestamp": "2026-11-25T13:42:08.881Z",
+          "actor": "Shirish Tripathi (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_86f4da6c35bb",
       "name": "Nistha thakuri",
