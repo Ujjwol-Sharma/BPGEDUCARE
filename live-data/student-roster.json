@@ -1,6 +1,6 @@
 {
-  "revision": 99,
-  "lastUpdated": "2026-11-25T14:45:31.268Z",
+  "revision": 100,
+  "lastUpdated": "2026-11-25T14:50:08.422Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795618208422_7jhk",
+      "timestamp": "2026-11-25T14:50:08.422Z",
+      "userId": "usr_03f7b735f6ec",
+      "email": "aadityakhatri234@gmail.com",
+      "actor": "Aaditya Khatri (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795617931268_4rmn",
       "timestamp": "2026-11-25T14:45:31.268Z",
@@ -1191,9 +1200,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$41f1287a5025f52638caf88c42e90647$3c7cb4ee8878ae283c68b3dcc784db0a6d195d3237bbaa18eda7793d651ccb65f08ce97e9fd4163b40c37c7ad9c7f70b3ebed85e2bd6036165ffcecdf2c8c74b",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:01:45.503Z",
+      "updatedAt": "2026-11-25T14:50:08.421Z",
       "lastModifiedBy": "Aaditya Khatri (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795618208421_t916",
+          "timestamp": "2026-11-25T14:50:08.421Z",
+          "actor": "Aaditya Khatri (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795608105503_9myj",
           "timestamp": "2026-11-25T12:01:45.503Z",
