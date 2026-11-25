@@ -1,8 +1,17 @@
 {
-  "revision": 39,
-  "lastUpdated": "2026-11-25T16:15:26.530Z",
+  "revision": 40,
+  "lastUpdated": "2026-11-25T16:17:22.700Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795623442700_jvrp",
+      "timestamp": "2026-11-25T16:17:22.700Z",
+      "userId": "usr_d57448dcc3ec",
+      "email": "bisheshpahari@gmail.com",
+      "actor": "bishesh pahari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795623326530_korz",
       "timestamp": "2026-11-25T16:15:26.530Z",
@@ -77,6 +86,41 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_d57448dcc3ec",
+      "name": "bishesh pahari",
+      "username": "bisheshpahari",
+      "email": "bisheshpahari@gmail.com",
+      "canonicalEmail": "bisheshpahari@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T16:17:22.640Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_d57448dcc3ecb003",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$15a628832b0a8705945cd08e5999d8fc$59d06a4ad48ad0f80cd570e5b3fd59a2359b9bfb84c19c77657833f9754c20985e19c0fe3126f721d6ea5d5563770c856137accc3fae07639a2ee5cb13124acf",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T16:17:22.700Z",
+      "lastModifiedBy": "bishesh pahari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795623442700_b5uc",
+          "timestamp": "2026-11-25T16:17:22.700Z",
+          "actor": "bishesh pahari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_8e8ce14819bd",
       "name": "Mijal Parajuli",
