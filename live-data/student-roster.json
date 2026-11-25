@@ -1,6 +1,6 @@
 {
-  "revision": 107,
-  "lastUpdated": "2026-11-25T15:37:38.014Z",
+  "revision": 108,
+  "lastUpdated": "2026-11-25T15:41:23.403Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795621283403_hupb",
+      "timestamp": "2026-11-25T15:41:23.403Z",
+      "userId": "usr_102017d9b135",
+      "email": "shirishtripathi49@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
+    },
     {
       "id": "raud_1795621058014_awn2",
       "timestamp": "2026-11-25T15:37:38.014Z",
@@ -1000,7 +1009,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T13:42:08.828Z",
       "verificationMethod": "google_oauth",
@@ -1009,9 +1018,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$a7f86031ef810770aef0f04f3117d56f$dd58e390db4d952f40137be62366262d596892acab248acafa80e35976ebfecb297d7b64275ead4e20571e17919b7cc1c5ba22865814eaaf0fd2f7eeaea55eda",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:44:27.813Z",
-      "lastModifiedBy": "Shirish Tripathi (Student)",
+      "updatedAt": "2026-11-25T15:41:23.403Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795621283403_war5",
+          "timestamp": "2026-11-25T15:41:23.403Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795614267812-FE5B4D marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795614267813_fdhj",
           "timestamp": "2026-11-25T13:44:27.813Z",
