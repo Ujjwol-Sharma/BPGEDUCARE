@@ -1,6 +1,6 @@
 {
-  "revision": 77,
-  "lastUpdated": "2026-11-25T12:27:08.987Z",
+  "revision": 78,
+  "lastUpdated": "2026-11-25T12:35:36.601Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795610136601_0mtb",
+      "timestamp": "2026-11-25T12:35:36.601Z",
+      "userId": "usr_35b207967208",
+      "email": "poudlearadhya@gmail.com",
+      "actor": "Aradhya Paudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795609628987_cbpo",
       "timestamp": "2026-11-25T12:27:08.987Z",
@@ -426,6 +435,39 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_35b207967208",
+      "name": "Aradhya Paudel",
+      "username": "poudlearadhya",
+      "email": "poudlearadhya@gmail.com",
+      "canonicalEmail": "poudlearadhya@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-25T12:35:36.543Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_35b2079672087220",
+      "avatarUrl": "",
+      "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
+      "joinedAt": "2026-11-25",
+      "updatedAt": "2026-11-25T12:35:36.601Z",
+      "lastModifiedBy": "Aradhya Paudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795610136601_dhup",
+          "timestamp": "2026-11-25T12:35:36.601Z",
+          "actor": "Aradhya Paudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_5bf8c263fc69",
       "name": "Saurav Kunwar",
