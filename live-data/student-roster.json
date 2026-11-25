@@ -1,8 +1,17 @@
 {
-  "revision": 32,
-  "lastUpdated": "2026-11-25T16:03:31.983Z",
+  "revision": 33,
+  "lastUpdated": "2026-11-25T16:04:17.769Z",
   "classSwitchRequests": [],
   "auditLog": [
+    {
+      "id": "raud_1795622657769_bnv9",
+      "timestamp": "2026-11-25T16:04:17.769Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Ujjwol Sharma: payment ORD-1795613177801-485BF2 marked FAILED"
+    },
     {
       "id": "raud_1795622576964_1d4m",
       "timestamp": "2026-11-25T16:02:56.964Z",
@@ -139,7 +148,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-24T08:21:17.668Z",
       "verificationMethod": "google_oauth",
@@ -150,9 +159,16 @@
       "passkey": "scrypt$19f3775001ef024187700bc00c0a4f88$377c0010e0200ab4baf458bfb2c37dcb72a1747041b0d7f5de03919c84dfad42ae02cc7a9df2963d9c73c822e3bc04ae67fed62eec8290941b1bd54f9c03195a",
       "readNotificationIds": [],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T16:03:31.983Z",
-      "lastModifiedBy": "Ujjwol Sharma (Password Reset)",
+      "updatedAt": "2026-11-25T16:04:17.769Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795622657769_j2qd",
+          "timestamp": "2026-11-25T16:04:17.769Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795613177801-485BF2 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795622611983_wlhi",
           "timestamp": "2026-11-25T16:03:31.983Z",
