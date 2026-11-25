@@ -1,6 +1,6 @@
 {
-  "revision": 91,
-  "lastUpdated": "2026-11-25T13:34:19.454Z",
+  "revision": 92,
+  "lastUpdated": "2026-11-25T13:38:23.119Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -669,7 +669,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "awaiting_confirmation",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T12:45:19.877Z",
       "verificationMethod": "email_otp",
@@ -678,9 +678,16 @@
       "avatarUrl": "",
       "passkey": "scrypt$732606f01916b3e2230f4bc9e33f6714$f051b2551784fd90b13a316289fdd6393bcbb4615a2014494c79523c3da2f2d9002cd9f090c714496891c3a2c5934da5787f3ff6accbfba435e8c990cf33bb88",
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:47:09.917Z",
-      "lastModifiedBy": "Manjul Subedi (Student)",
+      "updatedAt": "2026-11-25T13:38:23.119Z",
+      "lastModifiedBy": "Admin Console (Provider Status Check)",
       "auditLog": [
+        {
+          "id": "aud_1795613903119_ns9u",
+          "timestamp": "2026-11-25T13:38:23.119Z",
+          "actor": "Admin Console (Provider Status Check)",
+          "action": "PAYMENT_AWAITING_CONFIRMATION",
+          "details": "Order ORD-1795610829916-3D9F45 (Topper, NPR 2999) is awaiting confirmation"
+        },
         {
           "id": "aud_1795610829917_lqh4",
           "timestamp": "2026-11-25T12:47:09.917Z",
