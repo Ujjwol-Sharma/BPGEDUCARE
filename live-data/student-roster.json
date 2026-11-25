@@ -1,6 +1,6 @@
 {
-  "revision": 124,
-  "lastUpdated": "2026-11-25T16:59:01.008Z",
+  "revision": 125,
+  "lastUpdated": "2026-11-25T16:59:18.293Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -1186,7 +1186,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "bpgstudent",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795622839468"
+      ],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-25T16:04:17.769Z",
       "lastModifiedBy": "Ujjwol Sharma (Google Sign-In)",
