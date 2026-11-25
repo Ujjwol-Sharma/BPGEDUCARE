@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T18:16:25.279Z",
+  "lastUpdated": "2026-11-25T18:17:37.377Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3204,18 +3204,7 @@
     "esewaMerchantName": "BPG EDUCARE",
     "googleClientId": ""
   },
-  "notifications": [
-    {
-      "id": "notif_1795622839468",
-      "title": "Tomorrow",
-      "body": "Opening Ceremony",
-      "category": "Announcement",
-      "scope": "sitewide",
-      "published": true,
-      "createdAt": "2026-11-25T16:07:19.468Z",
-      "updatedAt": "2026-11-25T16:07:19.468Z"
-    }
-  ],
+  "notifications": [],
   "chatbotFaqs": [
     {
       "id": "faq_1795618720244",
@@ -3980,6 +3969,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 151,
+  "revision": 152,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
