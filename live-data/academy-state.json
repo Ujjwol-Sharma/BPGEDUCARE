@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-25T15:13:19.546Z",
+  "lastUpdated": "2026-11-25T15:13:27.862Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -1515,7 +1515,7 @@
                   "title": "1.3 Ellipse"
                 },
                 {
-                  "id": "sub_1795619565939_4",
+                  "id": "sub_1795619568147_4",
                   "title": "1.4 Hyperbola"
                 }
               ],
@@ -3459,6 +3459,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 87,
+  "revision": 88,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
