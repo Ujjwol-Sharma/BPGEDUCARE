@@ -1,6 +1,6 @@
 {
-  "revision": 228,
-  "lastUpdated": "2026-11-26T12:41:51.684Z",
+  "revision": 229,
+  "lastUpdated": "2026-11-26T13:11:05.244Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795698665244_4j8c",
+      "timestamp": "2026-11-26T13:11:05.244Z",
+      "userId": "usr_562af9e6cdb1",
+      "email": "manojthapaa076@gmail.com",
+      "actor": "Manoj Thapa (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795696911684_r9i9",
       "timestamp": "2026-11-26T12:41:51.684Z",
@@ -959,18 +968,45 @@
       "actor": "utsav sharma (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795617197721_9ytr",
-      "timestamp": "2026-11-25T14:33:17.721Z",
-      "userId": "usr_312a69d2027b",
-      "email": "sakshyambk0@gmail.com",
-      "actor": "Sakshyam B.K. (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_562af9e6cdb1",
+      "name": "Manoj Thapa",
+      "username": "manojthapaa076",
+      "email": "manojthapaa076@gmail.com",
+      "canonicalEmail": "manojthapaa076@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:11:05.180Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_562af9e6cdb10e21",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$bbe75c2f5eb6c22883a749112622e8e3$ca86c309ad0c869babf0d2fe1ba65045ffaeece86b84ea134464d6e0f6052c6846fa3298fea36943230d7b9c34fab8fcfeace4d8694bde25262eae9b34772c87",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:11:05.244Z",
+      "lastModifiedBy": "Manoj Thapa (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795698665244_ji1j",
+          "timestamp": "2026-11-26T13:11:05.244Z",
+          "actor": "Manoj Thapa (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_8848460eb814",
       "name": "Aadarsha Adhikari",
