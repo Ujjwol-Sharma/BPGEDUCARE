@@ -1,6 +1,6 @@
 {
-  "revision": 285,
-  "lastUpdated": "2026-11-26T16:52:09.318Z",
+  "revision": 286,
+  "lastUpdated": "2026-11-26T17:09:45.394Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795712985394_tc01",
+      "timestamp": "2026-11-26T17:09:45.394Z",
+      "userId": "usr_61483efe2565",
+      "email": "ashbin998@gmail.com",
+      "actor": "Ashbin Adhikari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795711929318_4zxu",
       "timestamp": "2026-11-26T16:52:09.318Z",
@@ -962,18 +971,45 @@
       "actor": "Believe Gahatraj (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795625904026_0cvr",
-      "timestamp": "2026-11-25T16:58:24.026Z",
-      "userId": "usr_687a66b28e6b",
-      "email": "dahalpurnima00@gmail.com",
-      "actor": "Shrawana Dahal (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_61483efe2565",
+      "name": "Ashbin Adhikari",
+      "username": "ashbin998",
+      "email": "ashbin998@gmail.com",
+      "canonicalEmail": "ashbin998@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T17:09:45.328Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_61483efe25653750",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$b640e02c03b10b09dd97c528c11310c9$834e6edc5d07317ebeb2fbbea247290cc334c3c4d09c2a3f2797e9acee21ac3d4c46357c4d5de13f022ea8324bc714b56a663c77db341fd027dbb3ca487b95ae",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T17:09:45.394Z",
+      "lastModifiedBy": "Ashbin Adhikari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795712985394_kl0j",
+          "timestamp": "2026-11-26T17:09:45.394Z",
+          "actor": "Ashbin Adhikari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_0cd6895cf040",
       "name": "Roji Poudel",
