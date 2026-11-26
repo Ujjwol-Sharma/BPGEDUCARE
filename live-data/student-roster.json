@@ -1,6 +1,6 @@
 {
-  "revision": 269,
-  "lastUpdated": "2026-11-26T14:55:15.870Z",
+  "revision": 270,
+  "lastUpdated": "2026-11-26T15:12:13.061Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795705933061_3bn8",
+      "timestamp": "2026-11-26T15:12:13.061Z",
+      "userId": "usr_1fa9eebb3e9b",
+      "email": "nikitapdl66@gmail.com",
+      "actor": "Nikita Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795704915870_gaup",
       "timestamp": "2026-11-26T14:55:15.870Z",
@@ -959,18 +968,45 @@
       "actor": "Mijal Parajuli (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795623010336_2l5l",
-      "timestamp": "2026-11-25T16:10:10.336Z",
-      "userId": "usr_81477cddc864",
-      "email": "binilc09@gmail.com",
-      "actor": "Binita Lamichhane (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1fa9eebb3e9b",
+      "name": "Nikita Poudel",
+      "username": "nikitapdl66",
+      "email": "nikitapdl66@gmail.com",
+      "canonicalEmail": "nikitapdl66@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T15:12:12.999Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_1fa9eebb3e9b9bde",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$ecf4ba9f0d2d256146cd49e56143ea04$3afa022e1896ab817ce41a3ad66ffa64148781e5530c1f1beda6ccea1cf6c6d868590073a331f925879cf322ef327d9b840388b81ba7e549e11392f225abd5fa",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T15:12:13.061Z",
+      "lastModifiedBy": "Nikita Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795705933061_0f8i",
+          "timestamp": "2026-11-26T15:12:13.061Z",
+          "actor": "Nikita Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_501e3f720bc7",
       "name": "Roshani Aryal",
