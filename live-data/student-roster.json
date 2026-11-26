@@ -1,6 +1,6 @@
 {
-  "revision": 271,
-  "lastUpdated": "2026-11-26T15:17:44.165Z",
+  "revision": 272,
+  "lastUpdated": "2026-11-26T15:18:37.149Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795706317149_61ej",
+      "timestamp": "2026-11-26T15:18:37.149Z",
+      "userId": "usr_0eaf0c6aaff2",
+      "email": "swonupa.gc25@gmail.com",
+      "actor": "Swonupa Gc (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795706264165_hjoq",
       "timestamp": "2026-11-26T15:17:44.165Z",
@@ -959,18 +968,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_CLASS_CHANGE",
       "details": "Aayush KC: class changed from Class 10 to Class 11"
-    },
-    {
-      "id": "raud_1795623442700_jvrp",
-      "timestamp": "2026-11-25T16:17:22.700Z",
-      "userId": "usr_d57448dcc3ec",
-      "email": "bisheshpahari@gmail.com",
-      "actor": "bishesh pahari (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_0eaf0c6aaff2",
+      "name": "Swonupa Gc",
+      "username": "swonupa",
+      "email": "swonupa.gc25@gmail.com",
+      "canonicalEmail": "swonupagc25@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T15:18:37.089Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$be631a35449d8ee734281d7d375f3cf6$f386f5c7c14be3ec3c0b0eae27f1f25aeba62896dcb217412aabaced0237e28c476379b9a92b7b601e1a57674d0191935d963404684930c44345aa4a27940c87",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T15:18:37.149Z",
+      "lastModifiedBy": "Swonupa Gc (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795706317149_9kyb",
+          "timestamp": "2026-11-26T15:18:37.149Z",
+          "actor": "Swonupa Gc (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_7541b6e8e674",
       "name": "prayash kafle",
