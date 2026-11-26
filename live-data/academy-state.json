@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T16:15:40.644Z",
+  "lastUpdated": "2026-11-26T16:16:07.028Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -964,6 +964,10 @@
                 {
                   "id": "sub_1795709741342_1",
                   "title": "Derivatives"
+                },
+                {
+                  "id": "sub_1795709767716_2",
+                  "title": "Application of Derivatives"
                 }
               ],
               "pdfs": [],
@@ -4409,6 +4413,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 204,
+  "revision": 205,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
