@@ -1,6 +1,6 @@
 {
-  "revision": 261,
-  "lastUpdated": "2026-11-26T14:14:14.441Z",
+  "revision": 262,
+  "lastUpdated": "2026-11-26T14:27:39.903Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -2077,7 +2077,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "awaiting_confirmation",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T11:32:08.369Z",
       "verificationMethod": "google_oauth",
@@ -2088,9 +2088,16 @@
       "passkey": "scrypt$c99bcff13c16df50d4ba0ac38a032cae$49b43b9035dcc1dc5a92fbe42a8c8699d5916d822c31128809ff2840b9b63fa8635772eda1c23759fb50e4f8c16d8730099fa87e5a0f106d4bd79362bdb6f2e5",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T14:09:14.040Z",
+      "updatedAt": "2026-11-26T14:27:39.903Z",
       "lastModifiedBy": "Rupesh Bhandari (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795703259903_z5bb",
+          "timestamp": "2026-11-26T14:27:39.903Z",
+          "actor": "Rupesh Bhandari (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795703259902-597F85 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795702154040_6t9w",
           "timestamp": "2026-11-26T14:09:14.040Z",
