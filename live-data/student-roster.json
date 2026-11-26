@@ -1,6 +1,6 @@
 {
-  "revision": 163,
-  "lastUpdated": "2026-11-26T02:35:50.144Z",
+  "revision": 164,
+  "lastUpdated": "2026-11-26T02:36:24.733Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660584733_9zt9",
+      "timestamp": "2026-11-26T02:36:24.733Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "UJJWOL SHARMA (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · DIAMOND)"
+    },
     {
       "id": "raud_1795660550144_v615",
       "timestamp": "2026-11-26T02:35:50.144Z",
@@ -942,15 +951,6 @@
       "actor": "Dipson Poudel (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795513650895_v6to",
-      "timestamp": "2026-11-24T09:47:30.895Z",
-      "userId": "usr_1b558269b9fa",
-      "email": "thapaparibesh01@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Paribesh Thapa (thapaparibesh01@gmail.com)"
     }
   ],
   "accounts": [
@@ -1309,9 +1309,16 @@
       "passkey": "scrypt$54bb8072aeacf704ad56477e247a111e$b72b3103c2e301ff693ab2b32f9fc6da988880bf9d2982ee3642ca51d73b90ec0932a305dfed21cf6bea05ebf135082f1bd221b12d0c80739f4311dd67634b62",
       "readNotificationIds": [],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-26T02:26:02.871Z",
+      "updatedAt": "2026-11-26T02:36:24.733Z",
       "lastModifiedBy": "UJJWOL SHARMA (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795660584733_3c7e",
+          "timestamp": "2026-11-26T02:36:24.733Z",
+          "actor": "UJJWOL SHARMA (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795659962871_05qj",
           "timestamp": "2026-11-26T02:26:02.871Z",
