@@ -1,6 +1,6 @@
 {
-  "revision": 253,
-  "lastUpdated": "2026-11-26T13:53:30.969Z",
+  "revision": 254,
+  "lastUpdated": "2026-11-26T13:54:09.137Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -994,7 +994,8 @@
       "hasPassword": false,
       "passkey": "scrypt$51d2bca3d1468f2954911e4c8223c238$b1dc5092e2d6a4bcf45085ac6b7db77cb9e83965dd65f01467956db382a6ca08ab2ca8915fd28107d033468b097eda92b91dd24bd2be38c0f2c5fdda0645b186",
       "readNotificationIds": [
-        "notif_mock_live_mt_1795626947423"
+        "notif_mock_live_mt_1795626947423",
+        "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T13:52:41.539Z",
