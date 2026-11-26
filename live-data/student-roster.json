@@ -1,6 +1,6 @@
 {
-  "revision": 289,
-  "lastUpdated": "2026-11-26T23:47:47.635Z",
+  "revision": 290,
+  "lastUpdated": "2026-11-26T23:48:08.566Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -987,7 +987,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T23:47:47.575Z",
       "verificationMethod": "email_otp",
@@ -998,9 +998,16 @@
       "passkey": "scrypt$d804509e6e6d6edc973898863f2b622d$95e4bfab2ad40149539c34749225205eef6f4c3f6abbe52180bc44dc4c154901ed0400c63556c13b5e5c1ee4f4e4eb9800f1bf8857302ffe04c7f8fab301ff88",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T23:47:47.635Z",
-      "lastModifiedBy": "Sahara Chhetri (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-26T23:48:08.566Z",
+      "lastModifiedBy": "Sahara Chhetri (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795736888566_vlg0",
+          "timestamp": "2026-11-26T23:48:08.566Z",
+          "actor": "Sahara Chhetri (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795736888565-EDFB9A (Padandas, NPR 1999) is pending"
+        },
         {
           "id": "aud_1795736867635_8lvq",
           "timestamp": "2026-11-26T23:47:47.635Z",
