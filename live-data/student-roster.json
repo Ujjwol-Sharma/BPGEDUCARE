@@ -1,6 +1,6 @@
 {
-  "revision": 222,
-  "lastUpdated": "2026-11-26T12:24:15.351Z",
+  "revision": 223,
+  "lastUpdated": "2026-11-26T12:26:13.060Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695973060_4dwo",
+      "timestamp": "2026-11-26T12:26:13.060Z",
+      "userId": "usr_6b739595b4d1",
+      "email": "gautamashim123410@gmail.com",
+      "actor": "Ashim Gautam (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795695855351_n1hc",
       "timestamp": "2026-11-26T12:24:15.351Z",
@@ -959,18 +968,45 @@
       "actor": "Shirish Tripathi (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795613659454_mt8w",
-      "timestamp": "2026-11-25T13:34:19.454Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_6b739595b4d1",
+      "name": "Ashim Gautam",
+      "username": "gautamashim123410",
+      "email": "gautamashim123410@gmail.com",
+      "canonicalEmail": "gautamashim123410@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:26:12.997Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_6b739595b4d19944",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$bf04e377be31353faf4a9a54725e7c43$8841a0a4fa81c7f28cc1aad20590c90df1ae5fad2fa9ea52c039078e9075e6c981829fe5301e9c6f42706185eceb2cab90d47dfa6a881496ade7d9833e4f99bb",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:26:13.060Z",
+      "lastModifiedBy": "Ashim Gautam (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695973060_58fg",
+          "timestamp": "2026-11-26T12:26:13.060Z",
+          "actor": "Ashim Gautam (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_1e8bfafb5695",
       "name": "Bishal Karki",
