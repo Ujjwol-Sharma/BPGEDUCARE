@@ -1,6 +1,6 @@
 {
-  "revision": 147,
-  "lastUpdated": "2026-11-26T01:42:16.087Z",
+  "revision": 148,
+  "lastUpdated": "2026-11-26T01:44:20.295Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795657460295_9llp",
+      "timestamp": "2026-11-26T01:44:20.295Z",
+      "userId": "usr_d032e2a0558a",
+      "email": "ultraclips4561@gmail.com",
+      "actor": "UJJWOL SHARMA (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795657336087_6vf2",
       "timestamp": "2026-11-26T01:42:16.087Z",
@@ -945,6 +954,42 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_d032e2a0558a",
+      "name": "UJJWOL SHARMA",
+      "username": "ujjwolsharma",
+      "email": "ultraclips4561@gmail.com",
+      "canonicalEmail": "ultraclips4561@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T01:44:20.231Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$48497075781c141389e7900778b08703$26eae55cbd4933aa6ffb283c2bb4984c0fa1caafa189b9bdb92ff74277ff6c68e159e8f97c17586b08964e2a76e798bdc62badbdef305f9207db64f67be05e99",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T01:44:20.295Z",
+      "lastModifiedBy": "UJJWOL SHARMA (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795657460295_qnks",
+          "timestamp": "2026-11-26T01:44:20.295Z",
+          "actor": "UJJWOL SHARMA (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_974c713f29dd",
       "name": "UJJWOL SHARMA",
