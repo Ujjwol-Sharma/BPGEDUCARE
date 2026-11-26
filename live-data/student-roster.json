@@ -1,6 +1,6 @@
 {
-  "revision": 180,
-  "lastUpdated": "2026-11-26T03:47:47.105Z",
+  "revision": 181,
+  "lastUpdated": "2026-11-26T03:57:31.674Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795665451674_owiu",
+      "timestamp": "2026-11-26T03:57:31.674Z",
+      "userId": "usr_35b207967208",
+      "email": "poudlearadhya@gmail.com",
+      "actor": "Aradhya Paudel (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795664867105_030j",
       "timestamp": "2026-11-26T03:47:47.105Z",
@@ -957,15 +966,6 @@
       "userId": "usr_358b294bfb3b",
       "email": "bishnupdgautam2@gmail.com",
       "actor": "Binisa Gautam (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795573513893_h7et",
-      "timestamp": "2026-11-25T02:25:13.893Z",
-      "userId": "usr_b2f5d1fbcf97",
-      "email": "binodtimilsina06@gmail.com",
-      "actor": "Binod Timilsina (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
     }
@@ -2722,9 +2722,16 @@
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T03:47:47.105Z",
+      "updatedAt": "2026-11-26T03:57:31.674Z",
       "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795665451674_998i",
+          "timestamp": "2026-11-26T03:57:31.674Z",
+          "actor": "Aradhya Paudel (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795664867105_mogj",
           "timestamp": "2026-11-26T03:47:47.105Z",
