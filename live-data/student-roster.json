@@ -1,6 +1,6 @@
 {
-  "revision": 192,
-  "lastUpdated": "2026-11-26T04:09:30.293Z",
+  "revision": 193,
+  "lastUpdated": "2026-11-26T04:11:44.247Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795666304247_w6ks",
+      "timestamp": "2026-11-26T04:11:44.247Z",
+      "userId": "usr_5c5a56496063",
+      "email": "rampdojha@gmail.com",
+      "actor": "Ram Prasad Ojha (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795665954448_6he6",
       "timestamp": "2026-11-26T04:05:54.448Z",
@@ -959,18 +968,45 @@
       "actor": "Live Verify Student (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 11 · FREE)"
-    },
-    {
-      "id": "raud_1795603387684_xhy3",
-      "timestamp": "2026-11-25T10:43:07.684Z",
-      "userId": "usr_5d0c6b99f8a6",
-      "email": "verify.session.live@gmail.com",
-      "actor": "Live Verify Student (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 11)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_5c5a56496063",
+      "name": "Ram Prasad Ojha",
+      "username": "rampdojha",
+      "email": "rampdojha@gmail.com",
+      "canonicalEmail": "rampdojha@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T04:11:44.194Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_5c5a56496063acf4",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$0903a362b075e209a6233a286d21c157$56c4bd56aa4932d60fbe2ef0119ab6083b79a61486130d5a4ef1134d75ad739891226dedbb6fa0bc0f3debe3b22b1b1f7b64cccf004fd7216d8336cef20507dd",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T04:11:44.246Z",
+      "lastModifiedBy": "Ram Prasad Ojha (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795666304246_hg1m",
+          "timestamp": "2026-11-26T04:11:44.246Z",
+          "actor": "Ram Prasad Ojha (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_10d588688c4c",
       "name": "safdfafadwd",
