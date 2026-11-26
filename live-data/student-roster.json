@@ -1,6 +1,6 @@
 {
-  "revision": 176,
-  "lastUpdated": "2026-11-26T02:50:14.535Z",
+  "revision": 177,
+  "lastUpdated": "2026-11-26T03:10:52.326Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795662652326_hf5o",
+      "timestamp": "2026-11-26T03:10:52.326Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Creative Chess Club (creativechessclub01@gmail.com)"
+    },
     {
       "id": "raud_1795661414535_7baf",
       "timestamp": "2026-11-26T02:50:14.535Z",
@@ -959,15 +968,6 @@
       "actor": "Admin Console",
       "action": "CLASS_SWITCH_REJECTED",
       "details": "Chess Club: switch to Class 11 rejected"
-    },
-    {
-      "id": "raud_1795532266169_fc7e",
-      "timestamp": "2026-11-24T14:57:46.169Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Student)",
-      "action": "CLASS_SWITCH_REQUESTED",
-      "details": "Requested switch from Class 12 to Class 11"
     }
   ],
   "accounts": [
@@ -1972,212 +1972,6 @@
           "id": "aud_1795623010336_9nw8",
           "timestamp": "2026-11-25T16:10:10.336Z",
           "actor": "Binita Lamichhane (Email OTP Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_25e888886ae4",
-      "name": "Creative Chess Club",
-      "username": "creativechessclub01",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "diamond",
-      "planExpiresAt": "2027-11-25T18:03:05.601Z",
-      "planExplicitlySet": true,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "paid",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-24T09:46:13.317Z",
-      "verificationMethod": "email_otp",
-      "googleLinked": true,
-      "googleSub": "gsub_25e888886ae4fdd5",
-      "avatarUrl": "",
-      "hasPassword": true,
-      "passkey": "scrypt$d62ea66d128ced19e9b6d01e6dda8a72$bcb847252b12b91243706b1f41533bdc7f4ea0b5622db3d9a2f520e753167ca73b4accf0719bd8dc32be1dc38ce4fa20c2d618e0da9a2bf8e8c9226159cf3bdb",
-      "readNotificationIds": [
-        "notif_1795622839468"
-      ],
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T18:12:44.724Z",
-      "lastModifiedBy": "Creative Chess Club (Student)",
-      "auditLog": [
-        {
-          "id": "aud_1795630364724_zjgo",
-          "timestamp": "2026-11-25T18:12:44.724Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795630364724-B4C5CB (Padandas, NPR 1999) is pending"
-        },
-        {
-          "id": "aud_1795630362639_l9gb",
-          "timestamp": "2026-11-25T18:12:42.639Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795630362639-1BE1A1 (Padandas, NPR 1999) is pending"
-        },
-        {
-          "id": "aud_1795630343428_3m1q",
-          "timestamp": "2026-11-25T18:12:23.428Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795630343427-C72FC8 (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795630237338_dlzp",
-          "timestamp": "2026-11-25T18:10:37.338Z",
-          "actor": "Admin Console",
-          "action": "ENTITLEMENT_RECONCILED",
-          "details": "Reconciled DIAMOND access from verified payment ORD-1795629710591-0A1AE1"
-        },
-        {
-          "id": "aud_1795629785601_mckd",
-          "timestamp": "2026-11-25T18:03:05.601Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-          "details": "Order ORD-1795625777877-D76F26 (Txn N/A, NPR 1499) confirmed PAID. Plan DIAMOND -> GOLD (expires 2027-11-25)"
-        },
-        {
-          "id": "aud_1795629722449_9wzl",
-          "timestamp": "2026-11-25T18:02:02.449Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-          "details": "Order ORD-1795629710591-0A1AE1 (Txn N/A, NPR 2999) confirmed PAID. Plan DIAMOND -> DIAMOND (expires 2027-11-25)"
-        },
-        {
-          "id": "aud_1795629710592_n2aw",
-          "timestamp": "2026-11-25T18:01:50.592Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795629710591-0A1AE1 (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795625777878_enmv",
-          "timestamp": "2026-11-25T16:56:17.878Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795625777877-D76F26 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795622054358_6qve",
-          "timestamp": "2026-11-25T15:54:14.358Z",
-          "actor": "Creative Chess Club (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        },
-        {
-          "id": "aud_1795622576964_a35f",
-          "timestamp": "2026-11-25T16:02:56.964Z",
-          "actor": "Admin Console",
-          "action": "ADMIN_PLAN_CHANGE",
-          "details": "Changed plan from FREE to DIAMOND"
-        },
-        {
-          "id": "aud_1795622054358_6qve",
-          "timestamp": "2026-11-25T15:54:14.358Z",
-          "actor": "Creative Chess Club (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        },
-        {
-          "id": "aud_1795538322387_mp0k",
-          "timestamp": "2026-11-24T16:38:42.387Z",
-          "actor": "Admin Console (Provider Status Check)",
-          "action": "PAYMENT_AWAITING_CONFIRMATION",
-          "details": "Order ORD-1795531613133-AD4BC7 (Padandas, NPR 1499) is awaiting confirmation"
-        },
-        {
-          "id": "aud_1795532308589_ownu",
-          "timestamp": "2026-11-24T14:58:28.589Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_REJECTED",
-          "details": "Rejected class switch to Class 11"
-        },
-        {
-          "id": "aud_1795532266169_ypnk",
-          "timestamp": "2026-11-24T14:57:46.169Z",
-          "actor": "Chess Club (Student)",
-          "action": "CLASS_SWITCH_REQUESTED",
-          "details": "Requested switch from Class 12 to Class 11"
-        },
-        {
-          "id": "aud_1795531613133_7gao",
-          "timestamp": "2026-11-24T14:46:53.133Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795531613133-AD4BC7 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795531610244_h10t",
-          "timestamp": "2026-11-24T14:46:50.244Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795531610243-091C49 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795519735342_a5tf",
-          "timestamp": "2026-11-24T11:28:55.342Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_APPROVED",
-          "details": "Approved class switch from Class 11 to Class 12"
-        },
-        {
-          "id": "aud_1795519732507_ztos",
-          "timestamp": "2026-11-24T11:28:52.507Z",
-          "actor": "Chess Club (Student)",
-          "action": "CLASS_SWITCH_REQUESTED",
-          "details": "Requested switch from Class 11 to Class 12"
-        },
-        {
-          "id": "aud_1795519713189_7kpp",
-          "timestamp": "2026-11-24T11:28:33.189Z",
-          "actor": "Admin Console",
-          "action": "CLASS_SWITCH_APPROVED",
-          "details": "Approved class switch from Class 12 to Class 11 (Ok man)"
-        },
-        {
-          "id": "aud_1795519694219_r1k0",
-          "timestamp": "2026-11-24T11:28:14.219Z",
-          "actor": "Chess Club (Student)",
-          "action": "CLASS_SWITCH_REQUESTED",
-          "details": "Requested switch from Class 12 to Class 11"
-        },
-        {
-          "id": "aud_1795518620384_mv9n",
-          "timestamp": "2026-11-24T11:10:20.384Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795518544717-1E3DF3 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795518618910_4wq0",
-          "timestamp": "2026-11-24T11:10:18.910Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795518561321-571F30 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795518561322_k1g9",
-          "timestamp": "2026-11-24T11:09:21.322Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795518561321-571F30 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795518544717_elt0",
-          "timestamp": "2026-11-24T11:09:04.717Z",
-          "actor": "Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795518544717-1E3DF3 (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795513573381_p1t6",
-          "timestamp": "2026-11-24T09:46:13.381Z",
-          "actor": "Chess Club (Email OTP Sign-Up)",
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
         }
