@@ -1,6 +1,6 @@
 {
-  "revision": 264,
-  "lastUpdated": "2026-11-26T14:32:47.349Z",
+  "revision": 265,
+  "lastUpdated": "2026-11-26T14:33:31.635Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795703611635_vu8b",
+      "timestamp": "2026-11-26T14:33:31.635Z",
+      "userId": "usr_131d502f669b",
+      "email": "shubhampoudel2010@gmail.com",
+      "actor": "Shubham (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795703567349_r8m6",
       "timestamp": "2026-11-26T14:32:47.349Z",
@@ -959,18 +968,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_PLAN_CHANGE",
       "details": "Creative Chess Club: plan changed from FREE to DIAMOND"
-    },
-    {
-      "id": "raud_1795622545159_dp19",
-      "timestamp": "2026-11-25T16:02:25.159Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "Ujjwol Sharma (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_131d502f669b",
+      "name": "Shubham",
+      "username": "shubhampoudel2010",
+      "email": "shubhampoudel2010@gmail.com",
+      "canonicalEmail": "shubhampoudel2010@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:33:31.571Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_131d502f669bf388",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$7ae0f5f4c6733acb912100c249ced08d$06b6d9d2389a39a5a3e604bd3acfcb956a07be369ca36f131600a9369a81df9622c8b8b6147bbdcaa81d80698915b479f05015103c71c8e6f86645fd122c6fdf",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:33:31.635Z",
+      "lastModifiedBy": "Shubham (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795703611635_5yjv",
+          "timestamp": "2026-11-26T14:33:31.635Z",
+          "actor": "Shubham (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_5a4912d722d0",
       "name": "Sambeg Sapakota",
