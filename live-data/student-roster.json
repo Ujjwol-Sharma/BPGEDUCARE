@@ -1,6 +1,6 @@
 {
-  "revision": 143,
-  "lastUpdated": "2026-11-25T18:12:44.724Z",
+  "revision": 144,
+  "lastUpdated": "2026-11-26T01:34:17.475Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795656857475_329p",
+      "timestamp": "2026-11-26T01:34:17.475Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Ujjwol Sharma (intumintuchintu76@gmail.com)"
+    },
     {
       "id": "raud_1795630169552_vdzs",
       "timestamp": "2026-11-25T18:09:29.552Z",
@@ -1306,135 +1315,6 @@
           "actor": "Binita Lamichhane (Email OTP Sign-Up)",
           "action": "ACCOUNT_CREATED",
           "details": "Verified email via 6-digit OTP and enrolled in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_974c713f29dd",
-      "name": "Ujjwol Sharma",
-      "username": "intumintuchintu76",
-      "email": "intumintuchintu76@gmail.com",
-      "canonicalEmail": "intumintuchintu76@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "diamond",
-      "planExpiresAt": "",
-      "planExplicitlySet": true,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "paid",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-24T08:21:17.668Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_974c713f29dd430d",
-      "avatarUrl": "",
-      "hasPassword": true,
-      "passkey": "scrypt$54bb8072aeacf704ad56477e247a111e$b72b3103c2e301ff693ab2b32f9fc6da988880bf9d2982ee3642ca51d73b90ec0932a305dfed21cf6bea05ebf135082f1bd221b12d0c80739f4311dd67634b62",
-      "readNotificationIds": [
-        "notif_1795622839468"
-      ],
-      "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-25T17:55:58.869Z",
-      "lastModifiedBy": "Ujjwol Sharma (Password Reset)",
-      "auditLog": [
-        {
-          "id": "aud_1795629358869_y3en",
-          "timestamp": "2026-11-25T17:55:58.869Z",
-          "actor": "Ujjwol Sharma (Password Reset)",
-          "action": "PASSWORD_RESET",
-          "details": "Reset password via verified 6-digit email code"
-        },
-        {
-          "id": "aud_1795622046931_4ruw",
-          "timestamp": "2026-11-25T15:54:06.931Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795622657769_j2qd",
-          "timestamp": "2026-11-25T16:04:17.769Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795613177801-485BF2 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795622611983_wlhi",
-          "timestamp": "2026-11-25T16:03:31.983Z",
-          "actor": "Ujjwol Sharma (Password Reset)",
-          "action": "PASSWORD_RESET",
-          "details": "Reset password via verified 6-digit email code"
-        },
-        {
-          "id": "aud_1795622545159_ch1p",
-          "timestamp": "2026-11-25T16:02:25.159Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795622046931_4ruw",
-          "timestamp": "2026-11-25T15:54:06.931Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795619869242_l1cg",
-          "timestamp": "2026-11-25T15:17:49.242Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795613177802_xf0u",
-          "timestamp": "2026-11-25T13:26:17.802Z",
-          "actor": "Ujjwol Sharma (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795613177801-485BF2 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795543508465_4tus",
-          "timestamp": "2026-11-24T18:05:08.465Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795513648289_9kwv",
-          "timestamp": "2026-11-24T09:47:28.289Z",
-          "actor": "Admin Console",
-          "action": "ADMIN_PLAN_CHANGE",
-          "details": "Changed plan from FREE to DIAMOND"
-        },
-        {
-          "id": "aud_1795619869242_l1cg",
-          "timestamp": "2026-11-25T15:17:49.242Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795613177802_xf0u",
-          "timestamp": "2026-11-25T13:26:17.802Z",
-          "actor": "Ujjwol Sharma (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795613177801-485BF2 (Padandas, NPR 1499) is pending"
-        },
-        {
-          "id": "aud_1795543508465_4tus",
-          "timestamp": "2026-11-24T18:05:08.465Z",
-          "actor": "Ujjwol Sharma (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795513648289_9kwv",
-          "timestamp": "2026-11-24T09:47:28.289Z",
-          "actor": "Admin Console",
-          "action": "ADMIN_PLAN_CHANGE",
-          "details": "Changed plan from FREE to DIAMOND"
         }
       ]
     },
