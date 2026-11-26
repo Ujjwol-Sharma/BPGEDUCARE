@@ -1,6 +1,6 @@
 {
-  "revision": 226,
-  "lastUpdated": "2026-11-26T12:29:16.214Z",
+  "revision": 227,
+  "lastUpdated": "2026-11-26T12:35:31.613Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795696531613_pmlx",
+      "timestamp": "2026-11-26T12:35:31.613Z",
+      "userId": "usr_264e52740ee1",
+      "email": "karnathapa517@gmail.com",
+      "actor": "Ishan Thapa (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795695973060_4dwo",
       "timestamp": "2026-11-26T12:26:13.060Z",
@@ -959,18 +968,45 @@
       "actor": "Soniya Dhungana (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795614128881_bmlv",
-      "timestamp": "2026-11-25T13:42:08.881Z",
-      "userId": "usr_102017d9b135",
-      "email": "shirishtripathi49@gmail.com",
-      "actor": "Shirish Tripathi (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_264e52740ee1",
+      "name": "Ishan Thapa",
+      "username": "thapaishan",
+      "email": "karnathapa517@gmail.com",
+      "canonicalEmail": "karnathapa517@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:35:31.557Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$fe981762559b22a479d0a219dc0f9fa3$e043535d87cd522de3e7d95fb6a1ce81aedae56eb0d5c105b2b2b7322c877743c9375288e3e089febcd4dd49936b5475c8c3518462a67e15047e8c3da3ba6d48",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:35:31.613Z",
+      "lastModifiedBy": "Ishan Thapa (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795696531613_4rsq",
+          "timestamp": "2026-11-26T12:35:31.613Z",
+          "actor": "Ishan Thapa (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_6b739595b4d1",
       "name": "Ashim Gautam",
