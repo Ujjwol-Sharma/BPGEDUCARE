@@ -1,6 +1,6 @@
 {
-  "revision": 159,
-  "lastUpdated": "2026-11-26T02:31:09.245Z",
+  "revision": 160,
+  "lastUpdated": "2026-11-26T02:31:27.068Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660287068_o2jh",
+      "timestamp": "2026-11-26T02:31:27.068Z",
+      "userId": "usr_c0891c66477b",
+      "email": "koiralasudarshan3@gmail.com",
+      "actor": "Sudarshan Koirala (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795660207299_1v57",
       "timestamp": "2026-11-26T02:30:07.299Z",
@@ -942,18 +951,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account Rohan Sharma (rohan.sharma@gmail.com)"
-    },
-    {
-      "id": "raud_1795513538402_9j4n",
-      "timestamp": "2026-11-24T09:45:38.402Z",
-      "userId": "usr_57ca72c99775",
-      "email": "suman@bpgacademy.edu.np",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Suman Sharma (suman@bpgacademy.edu.np)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_c0891c66477b",
+      "name": "Sudarshan Koirala",
+      "username": "sudarshan",
+      "email": "koiralasudarshan3@gmail.com",
+      "canonicalEmail": "koiralasudarshan3@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:31:26.979Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$a9d0699a55b0198572e4502f1ec06cf5$d294b497f151c44e2a72470d972a8d3963dae09fc5a2a940da931059a6532d114fe961994d677534a95470a0aae562b4093cc22676d5ea7de483380ffd302c54",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:31:27.067Z",
+      "lastModifiedBy": "Sudarshan Koirala (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795660287067_m1ao",
+          "timestamp": "2026-11-26T02:31:27.067Z",
+          "actor": "Sudarshan Koirala (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_f644dfd69005",
       "name": "Safal Thapa",
