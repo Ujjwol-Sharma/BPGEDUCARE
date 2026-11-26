@@ -1,6 +1,6 @@
 {
-  "revision": 276,
-  "lastUpdated": "2026-11-26T15:53:48.636Z",
+  "revision": 277,
+  "lastUpdated": "2026-11-26T15:56:01.238Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795708561238_uzkb",
+      "timestamp": "2026-11-26T15:56:01.238Z",
+      "userId": "usr_a786d18f0f8c",
+      "email": "smithkandel593@gmail.com",
+      "actor": "Smith Kandel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795708428636_ifdc",
       "timestamp": "2026-11-26T15:53:48.636Z",
@@ -962,18 +971,45 @@
       "actor": "Mridul Jung Pande (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (After 12 Entrance)"
-    },
-    {
-      "id": "raud_1795624559101_exzo",
-      "timestamp": "2026-11-25T16:35:59.101Z",
-      "userId": "usr_03f7b735f6ec",
-      "email": "aadityakhatri234@gmail.com",
-      "actor": "Aaditya Khatri (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_a786d18f0f8c",
+      "name": "Smith Kandel",
+      "username": "smithkandel593",
+      "email": "smithkandel593@gmail.com",
+      "canonicalEmail": "smithkandel593@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T15:56:01.183Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_a786d18f0f8ce5e9",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$4040cb5cb524ff8d3ff6493841ada865$118bc9ab79812fd7cb9037a2a5dff2617264421df96b986b3fc0b8fae92e3c1794515813b61caca7ee822f9e600cfe18b1ae3ea30a20d74322f4fdd7a4815868",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T15:56:01.238Z",
+      "lastModifiedBy": "Smith Kandel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795708561238_ek5c",
+          "timestamp": "2026-11-26T15:56:01.238Z",
+          "actor": "Smith Kandel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_46742bb1e818",
       "name": "Sumit Poudel",
