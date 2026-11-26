@@ -1,6 +1,6 @@
 {
-  "revision": 233,
-  "lastUpdated": "2026-11-26T13:30:30.158Z",
+  "revision": 234,
+  "lastUpdated": "2026-11-26T13:30:59.066Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795699859066_131d",
+      "timestamp": "2026-11-26T13:30:59.066Z",
+      "userId": "usr_a5ea3abd9ac1",
+      "email": "agrimpahari36@gmail.com",
+      "actor": "Agrim Pahari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795698665244_4j8c",
       "timestamp": "2026-11-26T13:11:05.244Z",
@@ -959,18 +968,45 @@
       "actor": "RatBnl (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795617313987_3fi8",
-      "timestamp": "2026-11-25T14:35:13.987Z",
-      "userId": "usr_6cb3f51630c9",
-      "email": "utsavsharma647@gmail.com",
-      "actor": "utsav sharma (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_a5ea3abd9ac1",
+      "name": "Agrim Pahari",
+      "username": "agrimpahari36",
+      "email": "agrimpahari36@gmail.com",
+      "canonicalEmail": "agrimpahari36@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:30:59.012Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_a5ea3abd9ac1b4e5",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$6b9d5660bca9a0e93ee5e76cb35221c2$db54e8abff0f2c1598ff7814d6d9be1e0bff7aeef992a4bafca57ba844618894305f51ee44556e6b5ac781a52f02052c6fa268c4c535bafd507e081ec8643c31",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:30:59.066Z",
+      "lastModifiedBy": "Agrim Pahari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795699859066_65fb",
+          "timestamp": "2026-11-26T13:30:59.066Z",
+          "actor": "Agrim Pahari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_562af9e6cdb1",
       "name": "Manoj Thapa",
