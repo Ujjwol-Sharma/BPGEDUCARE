@@ -1,6 +1,6 @@
 {
-  "revision": 161,
-  "lastUpdated": "2026-11-26T02:34:57.195Z",
+  "revision": 162,
+  "lastUpdated": "2026-11-26T02:35:23.198Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660523198_r80d",
+      "timestamp": "2026-11-26T02:35:23.198Z",
+      "userId": "usr_fcfe40b5444e",
+      "email": "muktirampoudel123@gmail.com",
+      "actor": "Muktiram Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795660497195_fe3l",
       "timestamp": "2026-11-26T02:34:57.195Z",
@@ -942,18 +951,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_PLAN_CHANGE",
       "details": "Ujjwol Sharma: plan changed from FREE to DIAMOND"
-    },
-    {
-      "id": "raud_1795513573381_8a0p",
-      "timestamp": "2026-11-24T09:46:13.381Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_fcfe40b5444e",
+      "name": "Muktiram Poudel",
+      "username": "muktirampoudel123",
+      "email": "muktirampoudel123@gmail.com",
+      "canonicalEmail": "muktirampoudel123@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:35:23.144Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_fcfe40b5444ecc4a",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$94686ed73415030e16622ea52a41d4f7$ad0f54b7c79a272ef8551f7aaac0afd076bfd845cf20c616b9539f80a77bf16f55aa40a2e02da9ae17723cc891afa5930625b722748381adebd1d38e37e543d2",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:35:23.198Z",
+      "lastModifiedBy": "Muktiram Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795660523198_hroo",
+          "timestamp": "2026-11-26T02:35:23.198Z",
+          "actor": "Muktiram Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_1034c714c4cd",
       "name": "Biswash sharma",
