@@ -1,6 +1,6 @@
 {
-  "revision": 152,
-  "lastUpdated": "2026-11-26T02:22:01.292Z",
+  "revision": 153,
+  "lastUpdated": "2026-11-26T02:26:02.871Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795659962871_3xox",
+      "timestamp": "2026-11-26T02:26:02.871Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "UJJWOL SHARMA (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · DIAMOND)"
+    },
     {
       "id": "raud_1795659465622_5dar",
       "timestamp": "2026-11-26T02:17:45.622Z",
@@ -942,15 +951,6 @@
       "actor": "Redeploy Test Scholar (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 11 · GOLD)"
-    },
-    {
-      "id": "raud_1795512560471_2vr0",
-      "timestamp": "2026-11-24T09:29:20.471Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "Redeploy Test Scholar (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 11 · GOLD)"
     }
   ],
   "accounts": [
@@ -1014,9 +1014,16 @@
       "passkey": "scrypt$54bb8072aeacf704ad56477e247a111e$b72b3103c2e301ff693ab2b32f9fc6da988880bf9d2982ee3642ca51d73b90ec0932a305dfed21cf6bea05ebf135082f1bd221b12d0c80739f4311dd67634b62",
       "readNotificationIds": [],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-26T01:42:16.086Z",
+      "updatedAt": "2026-11-26T02:26:02.871Z",
       "lastModifiedBy": "UJJWOL SHARMA (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795659962871_05qj",
+          "timestamp": "2026-11-26T02:26:02.871Z",
+          "actor": "UJJWOL SHARMA (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795657336086_egfi",
           "timestamp": "2026-11-26T01:42:16.086Z",
