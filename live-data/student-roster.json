@@ -1,6 +1,6 @@
 {
-  "revision": 173,
-  "lastUpdated": "2026-11-26T02:42:52.683Z",
+  "revision": 174,
+  "lastUpdated": "2026-11-26T02:46:05.553Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795661165553_zgwq",
+      "timestamp": "2026-11-26T02:46:05.553Z",
+      "userId": "usr_b2d7c9b1c76d",
+      "email": "prashillamichhane@gmail.com",
+      "actor": "Prashil Lamichhane (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795660972683_u8kf",
       "timestamp": "2026-11-26T02:42:52.683Z",
@@ -959,18 +968,45 @@
       "actor": "Admin Console",
       "action": "CLASS_SWITCH_APPROVED",
       "details": "Chess Club: switch approved Class 11 -> Class 12"
-    },
-    {
-      "id": "raud_1795519732507_o5hw",
-      "timestamp": "2026-11-24T11:28:52.507Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Student)",
-      "action": "CLASS_SWITCH_REQUESTED",
-      "details": "Requested switch from Class 11 to Class 12"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_b2d7c9b1c76d",
+      "name": "Prashil Lamichhane",
+      "username": "prashillamichhane",
+      "email": "prashillamichhane@gmail.com",
+      "canonicalEmail": "prashillamichhane@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:46:05.497Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_b2d7c9b1c76d2797",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$de493bd9715dcabfebf42874d6657748$630e88ef5e7b038fc89f2a9bf7e77efe7f1f37e25ee0e7e1f071258e84df0c037cf35b28c462832f98b0749a380debf8756258a05b3d007b75000fe0231f0625",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:46:05.553Z",
+      "lastModifiedBy": "Prashil Lamichhane (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795661165553_13ce",
+          "timestamp": "2026-11-26T02:46:05.553Z",
+          "actor": "Prashil Lamichhane (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_aba8f2cb0d91",
       "name": "Mridul Jung Pande",
