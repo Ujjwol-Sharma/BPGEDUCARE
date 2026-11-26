@@ -1,6 +1,6 @@
 {
-  "revision": 203,
-  "lastUpdated": "2026-11-26T11:24:33.369Z",
+  "revision": 204,
+  "lastUpdated": "2026-11-26T11:32:08.445Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795692728445_lmts",
+      "timestamp": "2026-11-26T11:32:08.445Z",
+      "userId": "usr_9850039770ec",
+      "email": "rupeshbhandari071@gmail.com",
+      "actor": "Rupesh Bhandari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795667409449_pqro",
       "timestamp": "2026-11-26T04:30:09.449Z",
@@ -959,18 +968,45 @@
       "actor": "Pradip Ranabhat (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795608836672_z1bi",
-      "timestamp": "2026-11-25T12:13:56.672Z",
-      "userId": "usr_0f1bb6e4792c",
-      "email": "sumitach321@gmail.com",
-      "actor": "Sumit Acharya (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_9850039770ec",
+      "name": "Rupesh Bhandari",
+      "username": "rupeshbhandari071",
+      "email": "rupeshbhandari071@gmail.com",
+      "canonicalEmail": "rupeshbhandari071@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T11:32:08.369Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_9850039770ec0382",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$c99bcff13c16df50d4ba0ac38a032cae$49b43b9035dcc1dc5a92fbe42a8c8699d5916d822c31128809ff2840b9b63fa8635772eda1c23759fb50e4f8c16d8730099fa87e5a0f106d4bd79362bdb6f2e5",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T11:32:08.445Z",
+      "lastModifiedBy": "Rupesh Bhandari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795692728445_90pd",
+          "timestamp": "2026-11-26T11:32:08.445Z",
+          "actor": "Rupesh Bhandari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_328a96817608",
       "name": "Deepson Thapa",
