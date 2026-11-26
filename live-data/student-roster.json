@@ -1,6 +1,6 @@
 {
-  "revision": 155,
-  "lastUpdated": "2026-11-26T02:29:12.334Z",
+  "revision": 154,
+  "lastUpdated": "2026-11-26T02:29:12.006Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,15 +55,6 @@
     }
   ],
   "auditLog": [
-    {
-      "id": "raud_1795660152334_2swv",
-      "timestamp": "2026-11-26T02:29:12.334Z",
-      "userId": "usr_11828397bfa7",
-      "email": "paudelruben04@gmail.com",
-      "actor": "Ruben Paudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 11)"
-    },
     {
       "id": "raud_1795660152006_5cas",
       "timestamp": "2026-11-26T02:29:12.006Z",
@@ -951,45 +942,18 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account Creative Scholar (scholar@bpgacademy.edu.np)"
+    },
+    {
+      "id": "raud_1795513047952_tpe5",
+      "timestamp": "2026-11-24T09:37:27.952Z",
+      "userId": "usr_55fa0d17da8e",
+      "email": "redeploy.verify@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Redeploy Test Scholar (redeploy.verify@gmail.com)"
     }
   ],
   "accounts": [
-    {
-      "userId": "usr_11828397bfa7",
-      "name": "Ruben Paudel",
-      "username": "paudelruben04",
-      "email": "paudelruben04@gmail.com",
-      "canonicalEmail": "paudelruben04@gmail.com",
-      "grade": "Class 11",
-      "classKey": "class-11",
-      "plan": "free",
-      "planExpiresAt": "",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-26T02:29:12.279Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_11828397bfa7af84",
-      "avatarUrl": "",
-      "hasPassword": false,
-      "passkey": "scrypt$5424fe0438748ce01ffb8026027a56e4$2038b76d48368c2db34a5406d27838c3954032820368f531777bb607256065a78c9f9cfad0e9abe7665c9572b024221a0fcb1f23f2b2ecc7e58c6a9c307aeb3c",
-      "readNotificationIds": [],
-      "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T02:29:12.334Z",
-      "lastModifiedBy": "Ruben Paudel (Google Sign-Up)",
-      "auditLog": [
-        {
-          "id": "aud_1795660152334_32bx",
-          "timestamp": "2026-11-26T02:29:12.334Z",
-          "actor": "Ruben Paudel (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 11"
-        }
-      ]
-    },
     {
       "userId": "usr_513884c40f22",
       "name": "Shashwot Regmi",
