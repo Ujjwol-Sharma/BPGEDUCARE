@@ -1,6 +1,6 @@
 {
-  "revision": 254,
-  "lastUpdated": "2026-11-26T13:54:09.137Z",
+  "revision": 255,
+  "lastUpdated": "2026-11-26T13:59:40.584Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795701580584_3x3v",
+      "timestamp": "2026-11-26T13:59:40.584Z",
+      "userId": "usr_7bfbdd0aed3c",
+      "email": "ziaparajuli@gmail.com",
+      "actor": "ziaparajuli@gmail.com (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795701161539_ks4f",
       "timestamp": "2026-11-26T13:52:41.539Z",
@@ -959,18 +968,45 @@
       "actor": "Admin Console",
       "action": "PAYMENT_FAILED",
       "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
-    },
-    {
-      "id": "raud_1795621058014_awn2",
-      "timestamp": "2026-11-25T15:37:38.014Z",
-      "userId": "usr_643ae97cc185",
-      "email": "ashish.adhikari.314@gmail.com",
-      "actor": "Ashish Adhikari (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_7bfbdd0aed3c",
+      "name": "ziaparajuli@gmail.com",
+      "username": "ziaparajuli",
+      "email": "ziaparajuli@gmail.com",
+      "canonicalEmail": "ziaparajuli@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:59:40.525Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_7bfbdd0aed3c2e34",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$26201f9a5ebcc2d1c386239ef6ec6128$842f0471c515010d390cb9c8d9532ef6394ee9d7f9dc7c3605a4c7b6c32d4d4fa3c60cd661830a95b20090b1392e2c45438dc2ef145348df95cd624ffcebdcb5",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:59:40.584Z",
+      "lastModifiedBy": "ziaparajuli@gmail.com (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795701580584_qyso",
+          "timestamp": "2026-11-26T13:59:40.584Z",
+          "actor": "ziaparajuli@gmail.com (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_1bbeffd36c10",
       "name": "Sudeep Subedi",
