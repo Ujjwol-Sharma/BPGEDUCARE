@@ -1,6 +1,6 @@
 {
-  "revision": 275,
-  "lastUpdated": "2026-11-26T15:50:19.229Z",
+  "revision": 276,
+  "lastUpdated": "2026-11-26T15:53:48.636Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795708428636_ifdc",
+      "timestamp": "2026-11-26T15:53:48.636Z",
+      "userId": "usr_042985271842",
+      "email": "sampurnashrm@gmail.com",
+      "actor": "Sampurna Sharma (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795708219229_pakc",
       "timestamp": "2026-11-26T15:50:19.229Z",
@@ -962,12 +971,6 @@
       "actor": "Aaditya Khatri (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "timestamp": "2026-11-25T16:31:54.089Z",
-      "actor": "System Recovery",
-      "action": "NON_DESTRUCTIVE_RECOVERY",
-      "details": "Reconciled 40 accounts across pre-overwrite history and newest signups"
     }
   ],
   "accounts": [
@@ -1331,9 +1334,16 @@
       "passkey": "scrypt$6c42d9c46ad39bdb9d68706d40168dd3$4fd3e8d80f5a7255fab1945a47639063881854c3d58b21e8d3896eb1d9d3aa97bc724d1abf63b351045725b67903b2d38254aa83977abad9ca0f48880b610b04",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T14:32:09.558Z",
-      "lastModifiedBy": "Sampurna Sharma (Google Sign-Up)",
+      "updatedAt": "2026-11-26T15:53:48.636Z",
+      "lastModifiedBy": "Sampurna Sharma (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795708428636_cwtr",
+          "timestamp": "2026-11-26T15:53:48.636Z",
+          "actor": "Sampurna Sharma (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795703529558_bw45",
           "timestamp": "2026-11-26T14:32:09.558Z",
