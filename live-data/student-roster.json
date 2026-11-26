@@ -1,6 +1,6 @@
 {
-  "revision": 212,
-  "lastUpdated": "2026-11-26T12:08:46.300Z",
+  "revision": 213,
+  "lastUpdated": "2026-11-26T12:12:17.496Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695137496_6aen",
+      "timestamp": "2026-11-26T12:12:17.496Z",
+      "userId": "usr_3519767fb6a8",
+      "email": "adhmayank3@gmail.com",
+      "actor": "Mayank Adhikari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795694926300_sah3",
       "timestamp": "2026-11-26T12:08:46.300Z",
@@ -959,18 +968,45 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795610414668_w38l",
-      "timestamp": "2026-11-25T12:40:14.668Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_3519767fb6a8",
+      "name": "Mayank Adhikari",
+      "username": "adhmayank3",
+      "email": "adhmayank3@gmail.com",
+      "canonicalEmail": "adhmayank3@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:12:17.433Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_3519767fb6a8ff05",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$2195815defba79701eec7cd444b83203$20fbf2d40fc1db1047964fa5ade8186e7d6c61bb7c23d4f876e2b06f4eb298badee47cc708576071bda418c465041bfd0723ae09425e281f1f20a6060bcd3a15",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:12:17.496Z",
+      "lastModifiedBy": "Mayank Adhikari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695137496_iwaw",
+          "timestamp": "2026-11-26T12:12:17.496Z",
+          "actor": "Mayank Adhikari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_294718ced58a",
       "name": "Ashim Rawal",
