@@ -1,6 +1,6 @@
 {
-  "revision": 247,
-  "lastUpdated": "2026-11-26T13:44:03.070Z",
+  "revision": 248,
+  "lastUpdated": "2026-11-26T13:45:22.168Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795700722168_01m1",
+      "timestamp": "2026-11-26T13:45:22.168Z",
+      "userId": "usr_2266f373ef4f",
+      "email": "marasiniasbin098@gmail.com",
+      "actor": "Asbin Marasini (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795700636395_kf8a",
       "timestamp": "2026-11-26T13:43:56.395Z",
@@ -959,18 +968,45 @@
       "actor": "Dikshya Pokhrel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795620495866_2xp9",
-      "timestamp": "2026-11-25T15:28:15.866Z",
-      "userId": "usr_5264e9c810f7",
-      "email": "pokhreldikshya66@gmail.com",
-      "actor": "Dikshya Pokhrel (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_2266f373ef4f",
+      "name": "Asbin Marasini",
+      "username": "marasiniasbin098",
+      "email": "marasiniasbin098@gmail.com",
+      "canonicalEmail": "marasiniasbin098@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:45:22.107Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_2266f373ef4f68b0",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$e521bb9985122171e0cc5741acda7fbc$8383168c9344ec43743791cd00c0c83aa325810dd75927c3a636b98cb72495c60ba763676d68829bc59977d72e3c53253f22ee412c6c2830156a95e45c16f44e",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:45:22.168Z",
+      "lastModifiedBy": "Asbin Marasini (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795700722168_ugiy",
+          "timestamp": "2026-11-26T13:45:22.168Z",
+          "actor": "Asbin Marasini (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_a3c0711da8c2",
       "name": "Simran",
