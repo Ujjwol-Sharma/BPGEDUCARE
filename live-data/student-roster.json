@@ -1,6 +1,6 @@
 {
-  "revision": 238,
-  "lastUpdated": "2026-11-26T13:34:59.078Z",
+  "revision": 239,
+  "lastUpdated": "2026-11-26T13:35:34.074Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1029,7 +1029,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$5fea6ab3e984fc54b344ef72fe18e5da$d00ca6863ead1eb3bbe5033e85b11ada2f9de75b1aaac8e50267681cab443a99a8521cf38c7ae56256921951d69c76f0ff4e290d53d562c29fc64990f7e85831",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T13:34:11.439Z",
       "lastModifiedBy": "Saksham poudel (Student)",
