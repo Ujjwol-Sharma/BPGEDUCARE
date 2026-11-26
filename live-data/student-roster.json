@@ -1,6 +1,6 @@
 {
-  "revision": 171,
-  "lastUpdated": "2026-11-26T02:39:43.322Z",
+  "revision": 172,
+  "lastUpdated": "2026-11-26T02:42:23.296Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660943296_wz68",
+      "timestamp": "2026-11-26T02:42:23.296Z",
+      "userId": "usr_aba8f2cb0d91",
+      "email": "mriduljungpande0095@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Mridul Jung Pande (mriduljungpande0095@gmail.com)"
+    },
     {
       "id": "raud_1795660697801_rsyl",
       "timestamp": "2026-11-26T02:38:17.801Z",
@@ -959,15 +968,6 @@
       "actor": "Admin Console",
       "action": "CLASS_SWITCH_APPROVED",
       "details": "Chess Club: switch approved Class 12 -> Class 11"
-    },
-    {
-      "id": "raud_1795519694219_xe6t",
-      "timestamp": "2026-11-24T11:28:14.219Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Chess Club (Student)",
-      "action": "CLASS_SWITCH_REQUESTED",
-      "details": "Requested switch from Class 12 to Class 11"
     }
   ],
   "accounts": [
@@ -1675,52 +1675,6 @@
           "actor": "Bishal chhetri (Google Sign-Up)",
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_aba8f2cb0d91",
-      "name": "Mridul Jung Pande",
-      "username": "mriduljungpande0095",
-      "email": "mriduljungpande0095@gmail.com",
-      "canonicalEmail": "mriduljungpande0095@gmail.com",
-      "grade": "After 12 Entrance",
-      "classKey": "after-12",
-      "plan": "free",
-      "planExpiresAt": "",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T16:36:07.615Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_aba8f2cb0d913d5f",
-      "avatarUrl": "",
-      "hasPassword": false,
-      "passkey": "scrypt$44f3d457a9e433632dd2dc308386f891$d03dc683e37c0ad33250b9304ee930d749703e1e3bf5ddaabe109d4ea8a60e8ef7fd8c3df3272a2ed02b97664fccd2a4314da6b7c1c15343c557497f44f69425",
-      "readNotificationIds": [
-        "notif_1795622839468",
-        "notif_1795630727465"
-      ],
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T02:36:57.405Z",
-      "lastModifiedBy": "Mridul Jung Pande (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795660617405_c6sh",
-          "timestamp": "2026-11-26T02:36:57.405Z",
-          "actor": "Mridul Jung Pande (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795624567684_kbgr",
-          "timestamp": "2026-11-25T16:36:07.684Z",
-          "actor": "Mridul Jung Pande (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in After 12 Entrance"
         }
       ]
     },
