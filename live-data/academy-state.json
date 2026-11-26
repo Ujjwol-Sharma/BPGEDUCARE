@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T14:39:23.326Z",
+  "lastUpdated": "2026-11-26T16:09:57.602Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -560,10 +560,12 @@
       "syllabusRows": [
         {
           "code": "Unit 01",
-          "name": "Logic, Set Theory & Real Number System",
-          "hours": "12 hrs",
-          "marks": "6 Marks",
-          "focus": "1 Short (4M) + 2 MCQ (2M)"
+          "name": "Algebra",
+          "hours": "33 hrs",
+          "marks": "20 Marks",
+          "focus": "1 long (8M) +2 Short (10M) + 2 MCQ (2M)",
+          "domain": "Algebra",
+          "weightage": "1 long (8M) +2 Short (10M) + 2 MCQ (2M)"
         },
         {
           "code": "Unit 02",
@@ -901,9 +903,9 @@
             {
               "id": "class-11-math-l1",
               "code": "Unit 01",
-              "title": "Logic, Set Theory & Real Number System",
-              "hours": "12 hrs",
-              "marks": "6 Marks",
+              "title": "Algebra",
+              "hours": "33 hrs",
+              "marks": "20 Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -4398,6 +4400,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 193,
+  "revision": 194,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
