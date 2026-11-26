@@ -1,6 +1,6 @@
 {
-  "revision": 187,
-  "lastUpdated": "2026-11-26T04:04:26.412Z",
+  "revision": 188,
+  "lastUpdated": "2026-11-26T04:05:54.448Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795665954448_6he6",
+      "timestamp": "2026-11-26T04:05:54.448Z",
+      "userId": "usr_10d588688c4c",
+      "email": "poudelaradhya@gmail.com",
+      "actor": "safdfafadwd (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795665782548_czjo",
       "timestamp": "2026-11-26T04:03:02.548Z",
@@ -959,15 +968,6 @@
       "actor": "Live Verify Student (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 11)"
-    },
-    {
-      "id": "raud_1795586647843_f0zw",
-      "timestamp": "2026-11-25T06:04:07.843Z",
-      "userId": "usr_a52d77942f5a",
-      "email": "parajuliabhinav205@gmail.com",
-      "actor": "Abhinav Parajuli (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -998,9 +998,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T04:04:26.412Z",
-      "lastModifiedBy": "safdfafadwd (Student)",
+      "updatedAt": "2026-11-26T04:05:54.448Z",
+      "lastModifiedBy": "safdfafadwd (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795665954448_buew",
+          "timestamp": "2026-11-26T04:05:54.448Z",
+          "actor": "safdfafadwd (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795665866412_ry24",
           "timestamp": "2026-11-26T04:04:26.412Z",
