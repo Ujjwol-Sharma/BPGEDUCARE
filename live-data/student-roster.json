@@ -1,6 +1,6 @@
 {
-  "revision": 150,
-  "lastUpdated": "2026-11-26T02:17:29.811Z",
+  "revision": 151,
+  "lastUpdated": "2026-11-26T02:17:45.622Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795659465622_5dar",
+      "timestamp": "2026-11-26T02:17:45.622Z",
+      "userId": "usr_94997001b0bc",
+      "email": "kritanbastola10@gmail.com",
+      "actor": "Kritan Bastola (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795659449811_lny3",
       "timestamp": "2026-11-26T02:17:29.811Z",
@@ -942,18 +951,45 @@
       "actor": "Redeploy Test Scholar (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 11 · GOLD)"
-    },
-    {
-      "id": "raud_1795512411494_7efc",
-      "timestamp": "2026-11-24T09:26:51.494Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "eSewa Provider Verification",
-      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-      "details": "Redeploy Test Scholar: GOLD activated via verified payment (ESW-REDEPLOY-777)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_94997001b0bc",
+      "name": "Kritan Bastola",
+      "username": "kritanbastola10",
+      "email": "kritanbastola10@gmail.com",
+      "canonicalEmail": "kritanbastola10@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:17:45.552Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_94997001b0bce720",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$ff35fde3db66cc33506cc0dc15948ed7$b27ffcbc28bd686d64e1034fe1c223e6d9d0c5a7903b45cb2e8f45d77afc5075810dde067ede07838274d5ab851abf9e4f3cd009a50e702df7d30a89568dff3d",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:17:45.622Z",
+      "lastModifiedBy": "Kritan Bastola (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795659465622_o0g1",
+          "timestamp": "2026-11-26T02:17:45.622Z",
+          "actor": "Kritan Bastola (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_974c713f29dd",
       "name": "UJJWOL SHARMA",
