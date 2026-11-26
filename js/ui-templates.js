@@ -329,7 +329,8 @@
 
                     <div class="modal-field">
                         <label for="signupUsername">Unique Username</label>
-                        <input type="text" id="signupUsername" name="username" class="modal-input" placeholder="e.g. aarav_12 (letters, numbers, . _ -)" autocomplete="username" minlength="3" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9._-]{2,29}" required>
+                        <input type="text" id="signupUsername" name="bpg_new_handle" class="modal-input" placeholder="e.g. aarav_12 (no spaces)" autocomplete="off" autocapitalize="none" spellcheck="false" minlength="3" maxlength="30" oninput="updateSignupUsernameUI(this)" required>
+                        <div id="signupUsernameHint" style="font-size:0.78rem; margin-top:4px; color:var(--text-secondary);">3–30 characters: letters, numbers, dots (.), hyphens (-), or underscores (_).</div>
                     </div>
 
                     <div class="modal-field">

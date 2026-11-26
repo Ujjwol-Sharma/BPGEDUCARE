@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BPG EDUCARE — Mathematics for Class 10, 11, 12 &amp; Entrance</title>
-    <meta name="description" content="BPG EDUCARE, Pokhara, Nepal. Mathematics for Class 10, Class 11, Class 12 and IOE / CEE / KU entrance by Bishnu Prasad Gautam (BPG Sir).">
+    <meta name="description"
+        content="BPG EDUCARE, Pokhara, Nepal. Mathematics for Class 10, Class 11, Class 12 and IOE / CEE / KU entrance by Bishnu Prasad Gautam (BPG Sir).">
     <meta name="theme-color" content="#ffffff">
     <meta property="og:title" content="BPG EDUCARE — Mathematics Education">
-    <meta property="og:description" content="Concept-first mathematics for Class 10, 11, 12 and IOE / CEE / KU entrance with Bishnu Prasad Gautam (BPG Sir), Pokhara.">
+    <meta property="og:description"
+        content="Concept-first mathematics for Class 10, 11, 12 and IOE / CEE / KU entrance with Bishnu Prasad Gautam (BPG Sir), Pokhara.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bpg_sir.jpg">
     <link rel="icon" href="images/bpg-educare-logo.jpg" type="image/jpeg">
@@ -18,14 +21,16 @@
             try {
                 var t = localStorage.getItem('bpg_theme') || 'light';
                 document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
-            } catch (e) {}
+            } catch (e) { }
         })();
     </script>
 
     <!-- Normal Sans-Serif Font: Inter (+ Fira Code for code/calc) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,6 +46,7 @@
     <link rel="stylesheet" href="./css/05-brand-guide-darkmode.css?v=20261122v6">
     <link rel="stylesheet" href="./css/06-black-minimal.css?v=20261125v2">
 </head>
+
 <body class="bpg-premium">
 
     <a class="bpg-skip-link" href="#view-home">Skip to content</a>
@@ -59,27 +65,40 @@
             </a>
 
             <nav class="bpg-nav" id="primaryNav" aria-label="Primary Navigation">
-                <a href="#home" class="bpg-nav-link is-active" id="navHomeBtn" data-nav="home" onclick="handleHomeClick(); closeMobileNav(); return false;">Home</a>
+                <a href="#home" class="bpg-nav-link is-active" id="navHomeBtn" data-nav="home"
+                    onclick="handleHomeClick(); closeMobileNav(); return false;">Home</a>
 
                 <div class="nav-dropdown-wrap bpg-nav-dropdown" id="navClassesWrap">
-                    <button type="button" class="bpg-nav-link dropdown-trigger" id="navClassesBtn" data-nav="classes" onclick="toggleClassesDropdown(event)" aria-haspopup="true" aria-expanded="false" aria-controls="navClassesMenu">
+                    <button type="button" class="bpg-nav-link dropdown-trigger" id="navClassesBtn" data-nav="classes"
+                        onclick="toggleClassesDropdown(event)" aria-haspopup="true" aria-expanded="false"
+                        aria-controls="navClassesMenu">
                         Classes <i class="fa-solid fa-chevron-down nav-chevron-icon" aria-hidden="true"></i>
                     </button>
                     <div class="classes-dropdown-menu bpg-dropdown" id="navClassesMenu" role="menu">
-                        <button type="button" role="menuitem" class="classes-dropdown-item" data-section-key="class-12" onclick="handleClassNavClick('c12'); closeClassesDropdown(); closeMobileNav();">
-                            <div class="dropdown-item-head"><strong>Class 12</strong><span class="section-status-badge" id="navBadge-class-12"></span></div>
+                        <button type="button" role="menuitem" class="classes-dropdown-item" data-section-key="class-12"
+                            onclick="handleClassNavClick('c12'); closeClassesDropdown(); closeMobileNav();">
+                            <div class="dropdown-item-head"><strong>Class 12</strong><span class="section-status-badge"
+                                    id="navBadge-class-12"></span></div>
                             <small id="navSub-class-12">NEB Mat. 102 &middot; Senior Secondary</small>
                         </button>
-                        <button type="button" role="menuitem" class="classes-dropdown-item" data-section-key="class-11" onclick="handleClassNavClick('c11'); closeClassesDropdown(); closeMobileNav();">
-                            <div class="dropdown-item-head"><strong>Class 11</strong><span class="section-status-badge" id="navBadge-class-11"></span></div>
+                        <button type="button" role="menuitem" class="classes-dropdown-item" data-section-key="class-11"
+                            onclick="handleClassNavClick('c11'); closeClassesDropdown(); closeMobileNav();">
+                            <div class="dropdown-item-head"><strong>Class 11</strong><span class="section-status-badge"
+                                    id="navBadge-class-11"></span></div>
                             <small id="navSub-class-11">NEB Mat. 101 &middot; Foundations</small>
                         </button>
-                        <button type="button" role="menuitem" class="classes-dropdown-item is-locked-section" data-section-key="class-10" onclick="handleClassNavClick('c10'); closeClassesDropdown(); closeMobileNav();">
-                            <div class="dropdown-item-head"><strong>Class 10</strong><span class="section-status-badge locked" id="navBadge-class-10">Locked</span></div>
+                        <button type="button" role="menuitem" class="classes-dropdown-item is-locked-section"
+                            data-section-key="class-10"
+                            onclick="handleClassNavClick('c10'); closeClassesDropdown(); closeMobileNav();">
+                            <div class="dropdown-item-head"><strong>Class 10</strong><span
+                                    class="section-status-badge locked" id="navBadge-class-10">Locked</span></div>
                             <small id="navSub-class-10">Temporarily unavailable</small>
                         </button>
-                        <button type="button" role="menuitem" class="classes-dropdown-item is-locked-section" data-section-key="after-12" onclick="handleClassNavClick('entrance'); closeClassesDropdown(); closeMobileNav();">
-                            <div class="dropdown-item-head"><strong>Entrance Prep</strong><span class="section-status-badge locked" id="navBadge-after-12">Locked</span></div>
+                        <button type="button" role="menuitem" class="classes-dropdown-item is-locked-section"
+                            data-section-key="after-12"
+                            onclick="handleClassNavClick('entrance'); closeClassesDropdown(); closeMobileNav();">
+                            <div class="dropdown-item-head"><strong>Entrance Prep</strong><span
+                                    class="section-status-badge locked" id="navBadge-after-12">Locked</span></div>
                             <small id="navSub-after-12">Temporarily unavailable</small>
                         </button>
                     </div>
@@ -87,27 +106,36 @@
 
                 <!-- Mobile Drawer Quick Links & Auth Actions -->
                 <div class="mobile-nav-extras">
-                    <button type="button" class="bpg-nav-link mobile-extra-link" onclick="openMyLessonsView(); closeMobileNav();">
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="openMyLessonsView(); closeMobileNav();">
                         <span><i class="fa-solid fa-book-open" aria-hidden="true"></i> Lessons</span>
                     </button>
-                    <button type="button" class="bpg-nav-link mobile-extra-link" onclick="openMyMockTestsView(); closeMobileNav();">
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="openMyMockTestsView(); closeMobileNav();">
                         <span><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Mock Tests</span>
                     </button>
-                    <button type="button" class="bpg-nav-link mobile-extra-link" onclick="openMySyllabusView(); closeMobileNav();">
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="openMySyllabusView(); closeMobileNav();">
                         <span><i class="fa-solid fa-table-list" aria-hidden="true"></i> Syllabus Grid</span>
                     </button>
-                    <button type="button" class="bpg-nav-link mobile-extra-link" onclick="openLiveClassCalendarEntry(); closeMobileNav();">
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="openLiveClassCalendarEntry(); closeMobileNav();">
                         <span><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Live Class Calendar</span>
                     </button>
-                    <button type="button" class="bpg-nav-link mobile-extra-link" onclick="openPlanComparisonModal('', ''); closeMobileNav();">
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="openPlanComparisonModal('', ''); closeMobileNav();">
                         <span><i class="fa-solid fa-crown" aria-hidden="true"></i> Membership Plans</span>
                     </button>
-                    <button type="button" class="bpg-nav-link mobile-extra-link" onclick="toggleWebsiteGuide(); closeMobileNav();">
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="toggleWebsiteGuide(); closeMobileNav();">
                         <span><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Ask BPG AI</span>
                     </button>
                     <div class="mobile-nav-auth-btns">
-                        <button type="button" class="btn-primary" onclick="openAuthModal('signup'); closeMobileNav();">Sign Up</button>
-                        <button type="button" class="btn-secondary" onclick="openAuthModal('signin'); closeMobileNav();"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Log In</button>
+                        <button type="button" class="btn-primary"
+                            onclick="openAuthModal('signup'); closeMobileNav();">Sign Up</button>
+                        <button type="button" class="btn-secondary"
+                            onclick="openAuthModal('signin'); closeMobileNav();"><i class="fa-solid fa-right-to-bracket"
+                                aria-hidden="true"></i> Log In</button>
                     </div>
                 </div>
             </nav>
@@ -115,14 +143,18 @@
             <div class="header-auth-slot bpg-header-actions">
                 <!-- Compact Header Notifications Bell -->
                 <div class="header-notif-wrap" id="notifWrapper">
-                    <button type="button" id="headerNotifBtn" class="header-icon-btn header-notif-btn" onclick="toggleHeaderNotifications(event)" title="Notifications" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="notifDrawer">
+                    <button type="button" id="headerNotifBtn" class="header-icon-btn header-notif-btn"
+                        onclick="toggleHeaderNotifications(event)" title="Notifications" aria-label="Notifications"
+                        aria-haspopup="true" aria-expanded="false" aria-controls="notifDrawer">
                         <i class="fa-regular fa-bell" aria-hidden="true"></i>
                         <span class="header-notif-badge" id="headerNotifBadge" style="display:none;">0</span>
                     </button>
                     <div class="header-notif-drawer" id="notifDrawer" role="region" aria-label="Recent notifications">
                         <div class="notif-drawer-head">
                             <strong>Notifications</strong>
-                            <button type="button" class="btn-link-action" id="btnMarkAllNotifsRead" onclick="markAllNotificationsRead()" style="font-size:0.78rem;">Mark all as read</button>
+                            <button type="button" class="btn-link-action" id="btnMarkAllNotifsRead"
+                                onclick="markAllNotificationsRead()" style="font-size:0.78rem;">Mark all as
+                                read</button>
                         </div>
                         <div class="notif-drawer-list" id="headerNotifList">
                             <div class="notif-empty-state">No updates yet.</div>
@@ -131,15 +163,19 @@
                 </div>
 
                 <!-- Membership Icon Button -->
-                <button type="button" id="headerMembershipBtn" class="header-icon-btn membership-icon-btn" onclick="openPlanComparisonModal(getStudentPlan() === 'free' ? 'gold' : 'diamond', '')" title="Membership Plans" aria-label="Membership Plans">
+                <button type="button" id="headerMembershipBtn" class="header-icon-btn membership-icon-btn"
+                    onclick="openPlanComparisonModal(getStudentPlan() === 'free' ? 'gold' : 'diamond', '')"
+                    title="Membership Plans" aria-label="Membership Plans">
                     <i class="fa-solid fa-crown" id="headerMembershipIcon" aria-hidden="true"></i>
                 </button>
 
                 <!-- Guest State -->
-                <button type="button" class="btn-google-sign bpg-signin-btn" id="headerGoogleBtn" onclick="openAuthModal('signup')">
+                <button type="button" class="btn-google-sign bpg-signin-btn" id="headerGoogleBtn"
+                    onclick="openAuthModal('signup')">
                     <span class="btn-label-span">Sign Up</span>
                 </button>
-                <button type="button" class="btn-google-sign bpg-signin-btn" id="headerLoginBtn" onclick="openAuthModal('signin')">
+                <button type="button" class="btn-google-sign bpg-signin-btn" id="headerLoginBtn"
+                    onclick="openAuthModal('signin')">
                     <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
                     <span class="btn-label-span">Log In</span>
                 </button>
@@ -147,14 +183,16 @@
                 <!-- Authenticated State -->
                 <div class="user-profile-dropdown-wrap" id="userDropdownWrap" style="display:none;">
                     <div class="student-pill-group" style="display:inline-flex; align-items:center; gap:8px;">
-                        <button type="button" class="auth-user-pill" id="headerUserPill" onclick="toggleUserDropdown(event)" aria-label="Account menu">
+                        <button type="button" class="auth-user-pill" id="headerUserPill"
+                            onclick="toggleUserDropdown(event)" aria-label="Account menu">
                             <span class="user-avatar" id="headerUserAvatar">S</span>
                             <span class="user-info-text">
                                 <span id="headerUserName">Student</span>
                                 <span class="user-badge-role" id="headerUserRole">Class 12</span>
                             </span>
                         </button>
-                        <button type="button" class="btn-pill-signout" onclick="handleSignOut()" title="Sign Out">Sign Out</button>
+                        <button type="button" class="btn-pill-signout" onclick="handleSignOut()" title="Sign Out">Sign
+                            Out</button>
                     </div>
 
                     <div class="user-dropdown-menu" id="userDropdownMenu">
@@ -162,32 +200,43 @@
                             <strong id="dropdownFullName">Student Name</strong>
                             <small id="dropdownEmail">student@bpgeducare.edu.np</small>
                         </div>
-                        <button type="button" class="user-dropdown-item" onclick="handleHomeClick(); closeUserDropdown();">
+                        <button type="button" class="user-dropdown-item"
+                            onclick="handleHomeClick(); closeUserDropdown();">
                             Home
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="handleContinueToClass(); closeUserDropdown();">
+                        <button type="button" class="user-dropdown-item"
+                            onclick="handleContinueToClass(); closeUserDropdown();">
                             Continue to Class
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="openMyLessonsView(); closeUserDropdown();">
+                        <button type="button" class="user-dropdown-item"
+                            onclick="openMyLessonsView(); closeUserDropdown();">
                             Lessons
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="openMyMockTestsView(); closeUserDropdown();">
+                        <button type="button" class="user-dropdown-item"
+                            onclick="openMyMockTestsView(); closeUserDropdown();">
                             Mock Tests
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="openMySyllabusView(); closeUserDropdown();">
+                        <button type="button" class="user-dropdown-item"
+                            onclick="openMySyllabusView(); closeUserDropdown();">
                             Syllabus Grid
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="openLiveClassCalendarEntry(); closeUserDropdown();">
+                        <button type="button" class="user-dropdown-item"
+                            onclick="openLiveClassCalendarEntry(); closeUserDropdown();">
                             Live Class Calendar
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="openClassSelectionView(); closeUserDropdown();">
+                        <button type="button" class="user-dropdown-item"
+                            onclick="openClassSelectionView(); closeUserDropdown();">
                             Switch Class
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="openStudentProfileModal(); closeUserDropdown();">
-                            <i class="fa-solid fa-crown" aria-hidden="true" style="margin-right:6px;"></i> My Plan &amp; Payments
+                        <button type="button" class="user-dropdown-item"
+                            onclick="openStudentProfileModal(); closeUserDropdown();">
+                            <i class="fa-solid fa-crown" aria-hidden="true" style="margin-right:6px;"></i> My Plan &amp;
+                            Payments
                         </button>
-                        <button type="button" class="user-dropdown-item" onclick="openPlanComparisonModal('', ''); closeUserDropdown();">
-                            <i class="fa-solid fa-bag-shopping" aria-hidden="true" style="margin-right:6px;"></i> Upgrade Plan
+                        <button type="button" class="user-dropdown-item"
+                            onclick="openPlanComparisonModal('', ''); closeUserDropdown();">
+                            <i class="fa-solid fa-bag-shopping" aria-hidden="true" style="margin-right:6px;"></i>
+                            Upgrade Plan
                         </button>
                         <hr style="border:none; border-top:1px solid var(--border-soft); margin:4px 0;">
                         <button type="button" class="user-dropdown-item danger" onclick="handleSignOut()">
@@ -197,12 +246,14 @@
                 </div>
 
                 <!-- Top-Right Light / Dark Mode Sun/Moon Toggle -->
-                <button type="button" id="themeToggleBtn" class="header-icon-btn btn-theme-toggle" onclick="toggleTheme()" aria-label="Toggle Light and Dark Mode" title="Switch to Dark Mode">
+                <button type="button" id="themeToggleBtn" class="header-icon-btn btn-theme-toggle"
+                    onclick="toggleTheme()" aria-label="Toggle Light and Dark Mode" title="Switch to Dark Mode">
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
 
                 <!-- Mobile Menu Toggle -->
-                <button type="button" class="bpg-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileNav(event)" aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav">
+                <button type="button" class="bpg-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileNav(event)"
+                    aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav">
                     <span></span><span></span><span></span>
                 </button>
             </div>
@@ -216,9 +267,11 @@
         <div class="maintenance-notice-banner" id="maintenanceNoticeBanner" role="status" style="display:none;">
             <div class="container maintenance-notice-inner">
                 <div class="maintenance-notice-copy">
-                    <span class="maintenance-pill"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> Maintenance Mode</span>
+                    <span class="maintenance-pill"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                        Maintenance Mode</span>
                     <strong id="maintenanceNoticeTitle">Scheduled Maintenance</strong>
-                    <span id="maintenanceNoticeMessage">Student dashboards, lessons, mock tests, the calculator, and checkout are temporarily locked.</span>
+                    <span id="maintenanceNoticeMessage">Student dashboards, lessons, mock tests, the calculator, and
+                        checkout are temporarily locked.</span>
                 </div>
             </div>
         </div>
@@ -240,14 +293,19 @@
                         <span class="hero-muted" id="heroTitleMuted">Master every concept.</span>
                     </h1>
                     <p class="bpg-hero-lead" id="heroLeadText">
-                        Structured, concept-first mathematics portals for Class 10, Class 11, Class 12, and IOE / CEE / KU entrance — mentored by <strong>Bishnu Prasad Gautam (BPG Sir)</strong>.
+                        Structured, concept-first mathematics portals for Class 10, Class 11, Class 12, and IOE / CEE /
+                        KU entrance — mentored by <strong>Bishnu Prasad Gautam (BPG Sir)</strong>.
                     </p>
                     <div class="bpg-hero-actions">
-                        <button type="button" class="btn-primary btn-lg" id="heroPrimaryCtaBtn" onclick="handleHeroPrimaryCta()">
-                            <span id="heroPrimaryCtaLabel">Get Started</span> <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                        <button type="button" class="btn-primary btn-lg" id="heroPrimaryCtaBtn"
+                            onclick="handleHeroPrimaryCta()">
+                            <span id="heroPrimaryCtaLabel">Get Started</span> <i class="fa-solid fa-arrow-right"
+                                aria-hidden="true"></i>
                         </button>
-                        <button type="button" class="btn-secondary btn-lg" id="heroSecondaryCtaBtn" onclick="handleHeroSecondaryCta()">
-                            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> <span id="heroSecondaryCtaLabel">Ask BPG AI</span>
+                        <button type="button" class="btn-secondary btn-lg" id="heroSecondaryCtaBtn"
+                            onclick="handleHeroSecondaryCta()">
+                            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> <span
+                                id="heroSecondaryCtaLabel">Ask BPG AI</span>
                         </button>
                     </div>
                 </div>
@@ -255,7 +313,8 @@
                 <figure class="bpg-hero-figure">
                     <div class="bpg-portrait-card">
                         <div class="bpg-portrait-frame">
-                            <img src="images/bpg_sir.jpg" alt="Bishnu Prasad Gautam (BPG Sir)" class="bpg-portrait" id="heroPortraitImg" width="460" height="560" fetchpriority="high">
+                            <img src="images/bpg_sir.jpg" alt="Bishnu Prasad Gautam (BPG Sir)" class="bpg-portrait"
+                                id="heroPortraitImg" width="460" height="560" fetchpriority="high">
                         </div>
                         <figcaption class="bpg-portrait-caption-inline">
                             <div>
@@ -278,7 +337,8 @@
                 </div>
 
                 <div class="home-features-grid" id="homeFeaturesGrid">
-                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeLessons" onclick="openMyLessonsView()">
+                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeLessons"
+                        onclick="openMyLessonsView()">
                         <span class="lessons-book-icon" aria-hidden="true">
                             <i class="fa-solid fa-book-open"></i>
                         </span>
@@ -286,7 +346,8 @@
                         <span class="lessons-card-sub">Open subjects, chapters, and lesson PDFs</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeMockTests" onclick="openMyMockTestsView()">
+                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeMockTests"
+                        onclick="openMyMockTestsView()">
                         <span class="lessons-book-icon" aria-hidden="true">
                             <i class="fa-solid fa-clipboard-check"></i>
                         </span>
@@ -294,7 +355,8 @@
                         <span class="lessons-card-sub">Timed MCQ practice tests and instant scoring</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeSyllabusGrid" onclick="openMySyllabusView()">
+                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeSyllabusGrid"
+                        onclick="openMySyllabusView()">
                         <span class="lessons-book-icon" aria-hidden="true">
                             <i class="fa-solid fa-table-list"></i>
                         </span>
@@ -302,7 +364,8 @@
                         <span class="lessons-card-sub">Units, teaching hours, and marks weightage</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeLiveCalendar" onclick="openLiveClassCalendarEntry()">
+                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomeLiveCalendar"
+                        onclick="openLiveClassCalendarEntry()">
                         <span class="lessons-book-icon" aria-hidden="true">
                             <i class="fa-solid fa-calendar-days"></i>
                         </span>
@@ -310,7 +373,8 @@
                         <span class="lessons-card-sub">Scheduled Zoom classes and timings</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomePlans" onclick="openPlanComparisonModal('', '')">
+                    <button type="button" class="lessons-hero-card feature-card-item" id="btnHomePlans"
+                        onclick="openPlanComparisonModal('', '')">
                         <span class="lessons-book-icon" aria-hidden="true">
                             <i class="fa-solid fa-crown"></i>
                         </span>
@@ -322,7 +386,8 @@
         </section>
 
         <!-- Homepage Notifications Section (Newest published updates first; sitewide + active class alerts) -->
-        <section class="home-notifications-section" id="homeNotificationsSection" aria-labelledby="homeNotificationsHeading">
+        <section class="home-notifications-section" id="homeNotificationsSection"
+            aria-labelledby="homeNotificationsHeading">
             <div class="container">
                 <div class="home-section-head">
                     <span class="minimal-section-label" id="homeNotificationsEyebrow">Updates &amp; Alerts</span>
@@ -346,7 +411,8 @@
     </main>
 
     <!-- Class Selection View (for signed-in users clicking "Continue to Class" with no prior activity) -->
-    <main class="view-container portal-view student-clean-home" id="view-class-select" style="display:none;" tabindex="-1">
+    <main class="view-container portal-view student-clean-home" id="view-class-select" style="display:none;"
+        tabindex="-1">
         <div class="container">
             <div class="workspace-top-bar" style="margin-bottom:20px;">
                 <button type="button" class="btn-back" onclick="handleHomeClick()">&larr; Home</button>
@@ -361,17 +427,20 @@
     </main>
 
     <!-- Signed-In Quick Hub (kept in sync with all 5 cards) -->
-    <main class="view-container portal-view student-clean-home" id="view-student-home" style="display:none;" tabindex="-1">
+    <main class="view-container portal-view student-clean-home" id="view-student-home" style="display:none;"
+        tabindex="-1">
         <div class="container">
             <div class="student-home-center student-home-wide">
                 <div class="student-home-meta">
                     <span class="student-home-greeting" id="studentHomeGreeting">Welcome back</span>
                     <div style="display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                        <span class="student-home-plan-badge" id="studentHomePlanBadge" onclick="openPlanComparisonModal('', '')" role="button" tabindex="0">
+                        <span class="student-home-plan-badge" id="studentHomePlanBadge"
+                            onclick="openPlanComparisonModal('', '')" role="button" tabindex="0">
                             <i class="fa-solid fa-crown" id="studentHomePlanIcon" aria-hidden="true"></i>
                             <span id="studentHomePlanText">Free Plan</span>
                         </span>
-                        <button type="button" class="btn btn-secondary" onclick="openStudentProfileModal()" style="padding:5px 12px; font-size:0.78rem; border-radius:999px;">
+                        <button type="button" class="btn btn-secondary" onclick="openStudentProfileModal()"
+                            style="padding:5px 12px; font-size:0.78rem; border-radius:999px;">
                             <i class="fa-regular fa-user" aria-hidden="true"></i> Edit Profile &amp; Payment Status
                         </button>
                     </div>
@@ -380,7 +449,8 @@
                 <h1 class="student-home-title" id="studentHomeClassTitle">Grade XII Mathematics</h1>
 
                 <!-- Live Payment & Subscription Status Banner on Student Dashboard -->
-                <div id="studentDashboardPaymentBanner" style="display:none; margin:0 auto 20px; max-width:760px; text-align:left;"></div>
+                <div id="studentDashboardPaymentBanner"
+                    style="display:none; margin:0 auto 20px; max-width:760px; text-align:left;"></div>
 
                 <div class="home-features-grid">
                     <button type="button" class="lessons-hero-card" id="btnOpenLessons" onclick="openMyLessonsView()">
@@ -389,25 +459,31 @@
                         <span class="lessons-card-sub">Open subjects, chapters, and lesson PDFs</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card" id="btnOpenMockTests" onclick="openMyMockTestsView()">
-                        <span class="lessons-book-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-check"></i></span>
+                    <button type="button" class="lessons-hero-card" id="btnOpenMockTests"
+                        onclick="openMyMockTestsView()">
+                        <span class="lessons-book-icon" aria-hidden="true"><i
+                                class="fa-solid fa-clipboard-check"></i></span>
                         <span class="lessons-card-label">Mock Tests</span>
                         <span class="lessons-card-sub">Timed MCQ practice tests and instant scoring</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card" id="btnOpenSyllabusGrid" onclick="openMySyllabusView()">
+                    <button type="button" class="lessons-hero-card" id="btnOpenSyllabusGrid"
+                        onclick="openMySyllabusView()">
                         <span class="lessons-book-icon" aria-hidden="true"><i class="fa-solid fa-table-list"></i></span>
                         <span class="lessons-card-label">Syllabus Grid</span>
                         <span class="lessons-card-sub">Units, teaching hours, and marks weightage</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card" id="btnOpenLiveCalendar" onclick="openLiveClassCalendarEntry()">
-                        <span class="lessons-book-icon" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></span>
+                    <button type="button" class="lessons-hero-card" id="btnOpenLiveCalendar"
+                        onclick="openLiveClassCalendarEntry()">
+                        <span class="lessons-book-icon" aria-hidden="true"><i
+                                class="fa-solid fa-calendar-days"></i></span>
                         <span class="lessons-card-label">Live Class Calendar</span>
                         <span class="lessons-card-sub">Scheduled Zoom classes and timings</span>
                     </button>
 
-                    <button type="button" class="lessons-hero-card" id="btnOpenPlansCard" onclick="openPlanComparisonModal('', '')">
+                    <button type="button" class="lessons-hero-card" id="btnOpenPlansCard"
+                        onclick="openPlanComparisonModal('', '')">
                         <span class="lessons-book-icon" aria-hidden="true"><i class="fa-solid fa-crown"></i></span>
                         <span class="lessons-card-label">Plans</span>
                         <span class="lessons-card-sub">Compare Gold and Diamond access</span>
@@ -426,7 +502,9 @@
             <div class="minimal-footer-row">
                 <span id="footerCopyrightText">&copy; 2026 BPG EDUCARE &middot; Pokhara, Nepal</span>
                 <div class="minimal-footer-links">
-                    <a id="footerWhatsappLink" href="https://wa.me/9779866064252?text=Namaste%20BPG%20Sir%2C%20I%20have%20an%20academic%20inquiry%20regarding%20BPG%20EDUCARE" target="_blank" rel="noopener">
+                    <a id="footerWhatsappLink"
+                        href="https://wa.me/9779866064252?text=Namaste%20BPG%20Sir%2C%20I%20have%20an%20academic%20inquiry%20regarding%20BPG%20EDUCARE"
+                        target="_blank" rel="noopener">
                         <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp: 9866064252
                     </a>
                     <a href="#ai" onclick="toggleWebsiteGuide(); return false;">Ask BPG AI</a>
@@ -449,13 +527,14 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <!-- Application Scripts (Durable Cloud Storage Active) -->
-    <script src="./js/ui-templates.js?v=20261125v5"></script>
-    <script src="./js/state-sync.js?v=20261125v5"></script>
-    <script src="./js/portal-renderer.js?v=20261125v5"></script>
-    <script src="./js/mock-tests-student.js?v=20261125v5"></script>
-    <script src="./js/router-access.js?v=20261125v5"></script>
-    <script src="./js/widgets-ai.js?v=20261125v5"></script>
-    <script src="./js/auth-otp.js?v=20261125v5"></script>
-    <script src="./js/app-init.js?v=20261125v5"></script>
+    <script src="./js/ui-templates.js?v=20261126v1"></script>
+    <script src="./js/state-sync.js?v=20261126v1"></script>
+    <script src="./js/portal-renderer.js?v=20261126v1"></script>
+    <script src="./js/mock-tests-student.js?v=20261126v1"></script>
+    <script src="./js/router-access.js?v=20261126v1"></script>
+    <script src="./js/widgets-ai.js?v=20261126v1"></script>
+    <script src="./js/auth-otp.js?v=20261126v1"></script>
+    <script src="./js/app-init.js?v=20261126v1"></script>
 </body>
+
 </html>

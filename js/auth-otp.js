@@ -20,6 +20,43 @@ function togglePasswordVisibility(inputId, btnEl) {
     }
 }
 
+function normalizeSignupUsernameValue(raw) {
+    return String(raw || '')
+        .trim()
+        .toLowerCase()
+        .replace(/^@+/, '')
+        .replace(/\s+/g, '_');
+}
+
+function updateSignupUsernameUI(inputEl) {
+    const hint = document.getElementById('signupUsernameHint');
+    if (!inputEl || !hint) return;
+    const raw = String(inputEl.value || '');
+    const cleaned = normalizeSignupUsernameValue(raw);
+    if (!cleaned) {
+        hint.style.color = 'var(--text-secondary)';
+        hint.textContent = '3–30 characters: letters, numbers, dots (.), hyphens (-), or underscores (_).';
+        return;
+    }
+    if (cleaned.includes('@')) {
+        hint.style.color = '#dc2626';
+        hint.textContent = 'Enter a short username (not your full Gmail address), e.g. aarav_12.';
+        return;
+    }
+    if (cleaned.length < 3 || cleaned.length > 30) {
+        hint.style.color = '#dc2626';
+        hint.textContent = 'Username must be between 3 and 30 characters.';
+        return;
+    }
+    if (!/^[a-z0-9_][a-z0-9._-]{2,29}$/.test(cleaned)) {
+        hint.style.color = '#dc2626';
+        hint.textContent = 'Only letters, numbers, dots (.), hyphens (-), and underscores (_) are allowed (no spaces or special symbols).';
+        return;
+    }
+    hint.style.color = '#16a34a';
+    hint.textContent = `✓ Username ready: @${cleaned}`;
+}
+
 function updatePasswordRequirementsUI(val, listId = 'signupPwdReqs') {
     const list = document.getElementById(listId);
     if (!list) return;
@@ -668,16 +705,24 @@ async function handleRequestEmailOtp(e) {
     if (e) e.preventDefault();
     if (authRequestInFlight) return;
     const name = document.getElementById('signupName')?.value.trim() || 'Student';
-    const username = (document.getElementById('signupUsername')?.value || '').trim().toLowerCase().replace(/^@+/, '');
+    const usernameInput = document.getElementById('signupUsername');
+    const username = normalizeSignupUsernameValue(usernameInput?.value || '');
+    if (usernameInput && username && usernameInput.value !== username && !username.includes('@')) {
+        usernameInput.value = username;
+    }
     const email = (document.getElementById('signupEmail')?.value || '').trim().toLowerCase();
     const grade = document.getElementById('signupGrade')?.value || 'Class 12';
     const password = String(document.getElementById('signupPassword')?.value || '');
 
     clearAuthInlineAlerts();
 
-    if (!/^[a-z0-9][a-z0-9._-]{2,29}$/.test(username)) {
-        showToast('Username must be 3–30 characters (letters, numbers, dots, hyphens, underscores).');
-        document.getElementById('signupUsername')?.focus();
+    if (!/^[a-z0-9_][a-z0-9._-]{2,29}$/.test(username)) {
+        if (usernameInput) updateSignupUsernameUI(usernameInput);
+        const msg = username.includes('@')
+            ? 'Please enter a short username (not your full Gmail address), e.g. aarav_12.'
+            : 'Username must be 3–30 characters using letters, numbers, dots, hyphens, or underscores (no spaces).';
+        showToast(msg);
+        usernameInput?.focus();
         return;
     }
     if (!email || !(email.endsWith('@gmail.com') || email.endsWith('@googlemail.com'))) {

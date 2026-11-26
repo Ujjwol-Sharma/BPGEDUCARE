@@ -331,7 +331,7 @@ function normalizeUsername(raw) {
 
 function isValidUsernameFormat(raw) {
     const clean = normalizeUsername(raw);
-    return clean.length >= 3 && clean.length <= 30 && /^[a-z0-9][a-z0-9._-]*$/.test(clean);
+    return clean.length >= 3 && clean.length <= 30 && /^[a-z0-9_][a-z0-9._-]*$/.test(clean);
 }
 
 function isGmailAddress(email) {
