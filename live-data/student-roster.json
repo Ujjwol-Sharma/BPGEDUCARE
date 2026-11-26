@@ -1,6 +1,6 @@
 {
-  "revision": 151,
-  "lastUpdated": "2026-11-26T02:17:45.622Z",
+  "revision": 152,
+  "lastUpdated": "2026-11-26T02:22:01.292Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -3249,7 +3249,10 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$f0157121f8cc1e22ee43f216e4cfe6c9$9ddf53e6252f20956cfafb283010d0d24f30e9f0d187a61228544659a1c9a7515e36224dd8fdcb7d7823f163179bbb8b2ecd14ab33b285488bc8f028d280237b",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423",
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-24T10:06:41.914Z",
       "lastModifiedBy": "Dipson Poudel (Google Sign-In)",
