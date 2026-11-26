@@ -1,6 +1,6 @@
 {
-  "revision": 144,
-  "lastUpdated": "2026-11-26T01:34:17.475Z",
+  "revision": 145,
+  "lastUpdated": "2026-11-26T01:34:51.383Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795656891383_2wuo",
+      "timestamp": "2026-11-26T01:34:51.383Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "UJJWOL SHARMA (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795656857475_329p",
       "timestamp": "2026-11-26T01:34:17.475Z",
@@ -927,6 +936,42 @@
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_974c713f29dd",
+      "name": "UJJWOL SHARMA",
+      "username": "intumintuchintu76",
+      "email": "intumintuchintu76@gmail.com",
+      "canonicalEmail": "intumintuchintu76@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T01:34:51.328Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_974c713f29dd430d",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$492f430b3fa73da965b7222e46b20499$4c5a51788a7c9f32468297cb152fb81c4039129be192147964bc9b55784f9f893328e25fbdf664f70ee10b1bd5956f65d8826d4f3b59c25ac7c880fa260beb1f",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T01:34:51.383Z",
+      "lastModifiedBy": "UJJWOL SHARMA (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795656891383_uhrf",
+          "timestamp": "2026-11-26T01:34:51.383Z",
+          "actor": "UJJWOL SHARMA (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_10456a19783f",
       "name": "Believe Gahatraj",
