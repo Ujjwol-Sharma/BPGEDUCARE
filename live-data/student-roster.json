@@ -1,6 +1,6 @@
 {
-  "revision": 236,
-  "lastUpdated": "2026-11-26T13:33:52.098Z",
+  "revision": 237,
+  "lastUpdated": "2026-11-26T13:34:11.439Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -984,7 +984,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T13:33:52.043Z",
       "verificationMethod": "google_oauth",
@@ -995,9 +995,16 @@
       "passkey": "scrypt$5fea6ab3e984fc54b344ef72fe18e5da$d00ca6863ead1eb3bbe5033e85b11ada2f9de75b1aaac8e50267681cab443a99a8521cf38c7ae56256921951d69c76f0ff4e290d53d562c29fc64990f7e85831",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T13:33:52.098Z",
-      "lastModifiedBy": "Saksham poudel (Google Sign-Up)",
+      "updatedAt": "2026-11-26T13:34:11.439Z",
+      "lastModifiedBy": "Saksham poudel (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795700051439_4f88",
+          "timestamp": "2026-11-26T13:34:11.439Z",
+          "actor": "Saksham poudel (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795700051438-DFCAB5 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795700032098_heka",
           "timestamp": "2026-11-26T13:33:52.098Z",
