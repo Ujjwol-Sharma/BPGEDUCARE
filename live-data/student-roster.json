@@ -1,6 +1,6 @@
 {
-  "revision": 206,
-  "lastUpdated": "2026-11-26T11:38:08.669Z",
+  "revision": 207,
+  "lastUpdated": "2026-11-26T11:49:08.293Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -2740,7 +2740,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$a679789b5db68d27192cda9a8a899fc9$6e2d8ab457e54fa0a18f25f4f8f8b6cf9ec1dae57526afc7c3eaf033fb170f5764ae2dfec2f4775c5eeb1f828db97486ae57850b599d333f72ea5c0caa30c009",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T14:39:41.133Z",
       "lastModifiedBy": "RatBnl (Google Sign-Up)",
