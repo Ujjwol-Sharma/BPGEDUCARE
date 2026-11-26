@@ -1,6 +1,6 @@
 {
-  "revision": 229,
-  "lastUpdated": "2026-11-26T13:11:05.244Z",
+  "revision": 230,
+  "lastUpdated": "2026-11-26T13:15:07.358Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -3894,7 +3894,9 @@
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$eae5e48c4989b95358b89c3207541dc3$e673d64c97aae2d6713d941f9fe8a184d72687438989dca6999fcc9d581077adf82ffaab8cda31c3b258fb365bdb05c98737041b987ccd218b471132fc9d3754",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T12:27:08.987Z",
       "lastModifiedBy": "Saurav Kunwar (Email OTP Sign-Up)",
