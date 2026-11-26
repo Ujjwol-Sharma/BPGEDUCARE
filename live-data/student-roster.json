@@ -1,6 +1,6 @@
 {
-  "revision": 265,
-  "lastUpdated": "2026-11-26T14:33:31.635Z",
+  "revision": 266,
+  "lastUpdated": "2026-11-26T14:38:42.636Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1029,7 +1029,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$538032df9bed36b7b7feffd15905292a$a8eb19afbb2ee43ad0983845942b2c84248ab7e40f72719fdc9f4299dd8ba5a52248197fe58de64ff0da2f1bf6e4946d8ca26529ac01ddcf2b94b7e6922867e5",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T14:32:47.349Z",
       "lastModifiedBy": "Sambeg Sapakota (Google Sign-Up)",
