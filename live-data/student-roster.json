@@ -1,6 +1,6 @@
 {
-  "revision": 211,
-  "lastUpdated": "2026-11-26T12:08:15.076Z",
+  "revision": 212,
+  "lastUpdated": "2026-11-26T12:08:46.300Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795694926300_sah3",
+      "timestamp": "2026-11-26T12:08:46.300Z",
+      "userId": "usr_294718ced58a",
+      "email": "rawalashim2009@gmail.com",
+      "actor": "Ashim Rawal (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795694754667_vio9",
       "timestamp": "2026-11-26T12:05:54.667Z",
@@ -959,18 +968,45 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795610136601_0mtb",
-      "timestamp": "2026-11-25T12:35:36.601Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_294718ced58a",
+      "name": "Ashim Rawal",
+      "username": "rawalashim2009",
+      "email": "rawalashim2009@gmail.com",
+      "canonicalEmail": "rawalashim2009@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:08:46.229Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_294718ced58ad2cc",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$c9e7fe8852c056e064a436699faf9aa4$43ee21108ffc4fd30c35227fdee26a49d66a31c9ea24b58829d073fdb027c64ab1158a0177bb165bde6aba42a809da25a171f516d123a5deb32703a6a6e166c2",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:08:46.300Z",
+      "lastModifiedBy": "Ashim Rawal (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795694926300_81y0",
+          "timestamp": "2026-11-26T12:08:46.300Z",
+          "actor": "Ashim Rawal (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_3dc7e7a9217c",
       "name": "Sudarshan",
