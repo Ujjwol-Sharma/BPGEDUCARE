@@ -1,6 +1,6 @@
 {
-  "revision": 274,
-  "lastUpdated": "2026-11-26T15:33:35.057Z",
+  "revision": 275,
+  "lastUpdated": "2026-11-26T15:50:19.229Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795708219229_pakc",
+      "timestamp": "2026-11-26T15:50:19.229Z",
+      "userId": "usr_46742bb1e818",
+      "email": "sumitpoudel666@gmail.com",
+      "actor": "Sumit Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795706477964_bdgn",
       "timestamp": "2026-11-26T15:21:17.964Z",
@@ -959,18 +968,45 @@
       "actor": "System Recovery",
       "action": "NON_DESTRUCTIVE_RECOVERY",
       "details": "Reconciled 40 accounts across pre-overwrite history and newest signups"
-    },
-    {
-      "id": "raud_1795623783864_vwll",
-      "timestamp": "2026-11-25T16:23:03.864Z",
-      "userId": "usr_ab78663f0a4c",
-      "email": "rohan.sharma@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_PLAN_CHANGE",
-      "details": "Rohan Sharma: plan changed from DIAMOND to FREE"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_46742bb1e818",
+      "name": "Sumit Poudel",
+      "username": "sumitpoudel666",
+      "email": "sumitpoudel666@gmail.com",
+      "canonicalEmail": "sumitpoudel666@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T15:50:19.168Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_46742bb1e8180626",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$58ab88ecb582330c8f0ed89e38998f87$ec27ea632181e3e5c24b60bf809a7963bce964b8ba38a9a425c309350bc05850bafc1215516a6a8d7e8d87c2d5877b610ad6b378fb9abd5492aebf13b327889e",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T15:50:19.229Z",
+      "lastModifiedBy": "Sumit Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795708219229_2ptt",
+          "timestamp": "2026-11-26T15:50:19.229Z",
+          "actor": "Sumit Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_52bb1993566a",
       "name": "Safal Gautam",
