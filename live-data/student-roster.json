@@ -1,6 +1,6 @@
 {
-  "revision": 237,
-  "lastUpdated": "2026-11-26T13:34:11.439Z",
+  "revision": 238,
+  "lastUpdated": "2026-11-26T13:34:59.078Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795700099078_3qjz",
+      "timestamp": "2026-11-26T13:34:59.078Z",
+      "userId": "usr_1c10fbe38b3e",
+      "email": "sambridhipoudel32@gmail.com",
+      "actor": "Sambridhi Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795700032098_24ks",
       "timestamp": "2026-11-26T13:33:52.098Z",
@@ -959,18 +968,45 @@
       "actor": "Unike Tamang (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795618208422_7jhk",
-      "timestamp": "2026-11-25T14:50:08.422Z",
-      "userId": "usr_03f7b735f6ec",
-      "email": "aadityakhatri234@gmail.com",
-      "actor": "Aaditya Khatri (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1c10fbe38b3e",
+      "name": "Sambridhi Poudel",
+      "username": "sambridhipoudel32",
+      "email": "sambridhipoudel32@gmail.com",
+      "canonicalEmail": "sambridhipoudel32@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:34:59.017Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_1c10fbe38b3e2050",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$fee5ad3e5023e8938def3e922fd0f345$fb1f4b65b58c7584a4913f156b6f7e1af18af26874cb36579fd99475fd81072e7c13f4fb6e5c72c54fbd830e2dea7814facbf7c6dbed6a58abfb9ee69dbf8dfd",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:34:59.078Z",
+      "lastModifiedBy": "Sambridhi Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795700099078_s3yz",
+          "timestamp": "2026-11-26T13:34:59.078Z",
+          "actor": "Sambridhi Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_30107fabf8ce",
       "name": "Saksham poudel",
