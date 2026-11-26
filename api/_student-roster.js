@@ -676,15 +676,18 @@ module.exports = async function studentRosterHandler(req, res) {
                 // Verify password first (supports exact + trimmed compatibility, never logs password)
                 const expectedPass = account.passkey || '';
                 if (!verifyPassword(enteredPass, expectedPass)) {
+                    const isGoogleOnly = account.hasPassword === false && Boolean(account.googleLinked);
                     console.info('[BPG Auth SIGN_IN] rejected', {
-                        reason: account.hasPassword === false ? 'google_only_no_password_set' : 'password_mismatch',
+                        reason: isGoogleOnly ? 'google_only_no_password_set' : 'password_mismatch',
                         userId: account.userId
                     });
                     res.statusCode = 401;
                     res.end(JSON.stringify({
                         success: false,
-                        code: 'INVALID_CREDENTIALS',
-                        error: genericCredError
+                        code: isGoogleOnly ? 'GOOGLE_ACCOUNT_NO_PASSWORD' : 'INVALID_CREDENTIALS',
+                        error: isGoogleOnly
+                            ? "This account was created with Google Sign-In and doesn't have a password set yet. Use Continue with Google, or click Forgot password? to create a password."
+                            : genericCredError
                     }));
                     return;
                 }
