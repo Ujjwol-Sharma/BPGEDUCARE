@@ -1,6 +1,6 @@
 {
-  "revision": 174,
-  "lastUpdated": "2026-11-26T02:46:05.553Z",
+  "revision": 175,
+  "lastUpdated": "2026-11-26T02:48:44.896Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795661324896_rdph",
+      "timestamp": "2026-11-26T02:48:44.896Z",
+      "userId": "usr_0f1bb6e4792c",
+      "email": "sumitach321@gmail.com",
+      "actor": "Sumit Acharya (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795661165553_zgwq",
       "timestamp": "2026-11-26T02:46:05.553Z",
@@ -959,15 +968,6 @@
       "actor": "Paribesh Thapa (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795519735342_pj8a",
-      "timestamp": "2026-11-24T11:28:55.342Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "CLASS_SWITCH_APPROVED",
-      "details": "Chess Club: switch approved Class 11 -> Class 12"
     }
   ],
   "accounts": [
@@ -3334,9 +3334,16 @@
       "passkey": "scrypt$6a8087080bbb03c72ff78889937a26f6$acf507d1c5460571cb4731409df2abe63bfa2ed55a3b0694fe26d3c64f6d189aec451bab58d3a7e64c4b603d4f49dc46377df7e77531dfff5632743c2c03a282",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T12:13:56.672Z",
-      "lastModifiedBy": "Sumit Acharya (Google Sign-Up)",
+      "updatedAt": "2026-11-26T02:48:44.896Z",
+      "lastModifiedBy": "Sumit Acharya (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795661324896_k5rt",
+          "timestamp": "2026-11-26T02:48:44.896Z",
+          "actor": "Sumit Acharya (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795608836672_4he0",
           "timestamp": "2026-11-25T12:13:56.672Z",
