@@ -1,6 +1,6 @@
 {
-  "revision": 219,
-  "lastUpdated": "2026-11-26T12:19:50.566Z",
+  "revision": 220,
+  "lastUpdated": "2026-11-26T12:22:46.173Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -993,7 +993,9 @@
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$8e00fdad1f7c73e6964ea073485e94d5$1392885ce182b90400ba3b3d74bd0b549bccda3d4466dd27f18c1bbb460909c0ee2b88fad85fbc024d43e6df32876782f0b91ed9b952a8cf3524a90c09697219",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T12:19:50.566Z",
       "lastModifiedBy": "1 2 3 (Email OTP Sign-Up)",
