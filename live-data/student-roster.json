@@ -1,6 +1,6 @@
 {
-  "revision": 272,
-  "lastUpdated": "2026-11-26T15:18:37.149Z",
+  "revision": 273,
+  "lastUpdated": "2026-11-26T15:21:17.964Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795706477964_bdgn",
+      "timestamp": "2026-11-26T15:21:17.964Z",
+      "userId": "usr_52bb1993566a",
+      "email": "safalgautam2009@gmail.com",
+      "actor": "Safal Gautam (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795706317149_61ej",
       "timestamp": "2026-11-26T15:18:37.149Z",
@@ -959,18 +968,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_PLAN_CHANGE",
       "details": "Rohan Sharma: plan changed from DIAMOND to FREE"
-    },
-    {
-      "id": "raud_1795623750730_7k57",
-      "timestamp": "2026-11-25T16:22:30.730Z",
-      "userId": "usr_cc8442ff9a9c",
-      "email": "aayush.kc@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_CLASS_CHANGE",
-      "details": "Aayush KC: class changed from Class 10 to Class 11"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_52bb1993566a",
+      "name": "Safal Gautam",
+      "username": "3iack",
+      "email": "safalgautam2009@gmail.com",
+      "canonicalEmail": "safalgautam2009@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T15:21:17.911Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$a26918230bb5cf9df4ad02dc63d3ca3b$c09993120b06ec13c42f7392563cc3501d76962c419a7e7c1b87c9cd9dcd642ffc68e4ee162a8f55b5ee7c1b23b591179f51293fc56549873db864a6864e95b1",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T15:21:17.964Z",
+      "lastModifiedBy": "Safal Gautam (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795706477964_rttk",
+          "timestamp": "2026-11-26T15:21:17.964Z",
+          "actor": "Safal Gautam (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_0eaf0c6aaff2",
       "name": "Swonupa Gc",
