@@ -1,6 +1,6 @@
 {
-  "revision": 127,
-  "lastUpdated": "2026-11-26T02:37:32.847Z",
+  "revision": 126,
+  "lastUpdated": "2026-11-26T02:37:35.953Z",
   "attempts": [
     {
       "id": "att_1795660651646_8676",
@@ -39,7 +39,8 @@
       "finishAt": 1795661211925,
       "answers": {
         "q_1795623984764_0": "A",
-        "q_1795624239159_1": "C"
+        "q_1795624239159_1": "C",
+        "q_1795624400461_2": "B"
       },
       "submitted": false,
       "submittedAt": null,
@@ -82,9 +83,7 @@
       "classKey": "class-12",
       "startedAt": 1795660565519,
       "finishAt": 1795661165519,
-      "answers": {
-        "q_1795624239159_1": "A"
-      },
+      "answers": {},
       "submitted": false,
       "submittedAt": null,
       "timeTakenSeconds": 0,
