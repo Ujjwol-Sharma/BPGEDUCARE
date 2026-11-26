@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T02:21:01.849Z",
+  "lastUpdated": "2026-11-26T02:18:39.103Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2957,10 +2957,10 @@
       "durationMinutes": 15,
       "minPlan": "free",
       "adminAssignedPlan": true,
-      "status": "scheduled",
-      "scheduledReleaseAt": "2026-11-26T02:30:00.000Z",
-      "releasedAt": "",
-      "releaseNotifiedAt": "",
+      "status": "published",
+      "scheduledReleaseAt": "2026-11-26T02:20:00.000Z",
+      "releasedAt": "2026-11-26T02:20:00.000Z",
+      "releaseNotifiedAt": "2026-11-26T02:21:05.393Z",
       "questions": [
         {
           "id": "q_1795623984764_0",
@@ -3085,7 +3085,7 @@
         }
       ],
       "createdAt": "2026-11-25T17:15:47.423Z",
-      "updatedAt": "2026-11-26T02:21:01.849Z"
+      "updatedAt": "2026-11-26T02:18:39.103Z"
     }
   ],
   "zoomClasses": [],
@@ -3207,23 +3207,16 @@
   "notifications": [
     {
       "id": "notif_mock_live_mt_1795626947423",
+      "dedupeKey": "notif_mock_live_mt_1795626947423",
       "title": "Mock Test Now Live: Opening Mock Test",
       "body": "Your scheduled Class 12 mock test (15 min, 11 questions) is now open.",
       "category": "Exam Update",
       "scope": "class-12",
+      "linkTarget": "mocktests",
+      "testId": "mt_1795626947423",
       "published": true,
       "createdAt": "2026-11-26T02:20:00.000Z",
-      "updatedAt": "2026-11-26T02:20:00.813Z"
-    },
-    {
-      "id": "notif_1795659581775",
-      "title": "Official Opening",
-      "body": "Finally we are opened officially !",
-      "category": "Announcement",
-      "scope": "sitewide",
-      "published": true,
-      "createdAt": "2026-11-26T02:19:41.775Z",
-      "updatedAt": "2026-11-26T02:19:41.775Z"
+      "updatedAt": "2026-11-26T02:21:05.393Z"
     },
     {
       "id": "notif_1795630727465",
@@ -4000,6 +3993,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 168,
+  "revision": 166,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
