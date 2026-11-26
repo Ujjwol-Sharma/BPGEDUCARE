@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T16:12:27.171Z",
+  "lastUpdated": "2026-11-26T16:13:39.535Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -568,11 +568,13 @@
           "weightage": "1 long (8M) +2 Short (10M) + 2 MCQ (2M)"
         },
         {
-          "code": "Unit 02",
-          "name": "Algebra & Matrices (Quadratics, Complex Numbers, Determinants)",
-          "hours": "32 hrs",
-          "marks": "15 Marks",
-          "focus": "1 Long (5M) + 2 Short (8M) + 2 MCQ (2M)"
+          "code": "Unit 08",
+          "name": "Mechanics",
+          "hours": "9hrs",
+          "marks": "6 Marks",
+          "focus": "1 Short (5M) + 1 MCQ (1M)",
+          "domain": "Mechanics",
+          "weightage": "1 Short (5M) + 1 MCQ (1M)"
         },
         {
           "code": "Unit 03",
@@ -914,10 +916,10 @@
             },
             {
               "id": "class-11-math-l2",
-              "code": "Unit 02",
-              "title": "Algebra & Matrices (Quadratics, Complex Numbers, Determinants)",
-              "hours": "32 hrs",
-              "marks": "15 Marks",
+              "code": "Unit 08",
+              "title": "Mechanics",
+              "hours": "9hrs",
+              "marks": "6 Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -4402,6 +4404,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 196,
+  "revision": 197,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
