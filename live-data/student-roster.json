@@ -1,6 +1,6 @@
 {
-  "revision": 243,
-  "lastUpdated": "2026-11-26T13:40:58.699Z",
+  "revision": 244,
+  "lastUpdated": "2026-11-26T13:41:24.554Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795700484554_kek6",
+      "timestamp": "2026-11-26T13:41:24.554Z",
+      "userId": "usr_53ff89ad5788",
+      "email": "prashantasubedi1721@gmail.com",
+      "actor": "Prashanta Subedi (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795700180927_td3v",
       "timestamp": "2026-11-26T13:36:20.927Z",
@@ -959,18 +968,45 @@
       "actor": "Ujjwol Sharma (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · DIAMOND)"
-    },
-    {
-      "id": "raud_1795619101405_9avb",
-      "timestamp": "2026-11-25T15:05:01.405Z",
-      "userId": "usr_54947c9c748f",
-      "email": "avipsame@gmail.com",
-      "actor": "Avipsa Bhattarai (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_53ff89ad5788",
+      "name": "Prashanta Subedi",
+      "username": "prashantasubedi1721",
+      "email": "prashantasubedi1721@gmail.com",
+      "canonicalEmail": "prashantasubedi1721@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:41:24.500Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_53ff89ad578893f8",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$5eb2f91e86e6abe438b055f20dd4f05a$a4a7e4eead9dfb2d2f6893fd0c8367f9cf646f27d3aa1a890fa87b16da80b36a86fc10c55e7d4e4f2b2e989928ea6a4bc501427dbd0e5c0023d8f09e52357f5e",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:41:24.554Z",
+      "lastModifiedBy": "Prashanta Subedi (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795700484554_v5rz",
+          "timestamp": "2026-11-26T13:41:24.554Z",
+          "actor": "Prashanta Subedi (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_0edbe94bc081",
       "name": "Rebika Thapa",
