@@ -1,6 +1,6 @@
 {
-  "revision": 280,
-  "lastUpdated": "2026-11-26T16:03:37.837Z",
+  "revision": 281,
+  "lastUpdated": "2026-11-26T16:09:44.646Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795709384646_nxsh",
+      "timestamp": "2026-11-26T16:09:44.646Z",
+      "userId": "usr_10821c34fe1c",
+      "email": "brandedexpress777@gmail.com",
+      "actor": "Brandedexpress (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795708915407_38tu",
       "timestamp": "2026-11-26T16:01:55.407Z",
@@ -962,18 +971,45 @@
       "actor": "Binisa Gautam (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795624770043_0jyo",
-      "timestamp": "2026-11-25T16:39:30.043Z",
-      "userId": "usr_d6872f7a8cbc",
-      "email": "bishalchhetri0099@gmail.com",
-      "actor": "Bishal chhetri (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_10821c34fe1c",
+      "name": "Brandedexpress",
+      "username": "brandedexpress777",
+      "email": "brandedexpress777@gmail.com",
+      "canonicalEmail": "brandedexpress777@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T16:09:44.592Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_10821c34fe1ca994",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$07b67a277549ccc5822b65b5f71cd964$a1154a9f91231f8a67c4358134d2dfa6f133874c2fc9a24a3c86af571429185b9573b3cfef97176c52f2d10864cf95510d5ccb10605b2640a9b7e3b7221ea1ab",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T16:09:44.646Z",
+      "lastModifiedBy": "Brandedexpress (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795709384646_sv9q",
+          "timestamp": "2026-11-26T16:09:44.646Z",
+          "actor": "Brandedexpress (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_2de62fbb0993",
       "name": "Luke",
