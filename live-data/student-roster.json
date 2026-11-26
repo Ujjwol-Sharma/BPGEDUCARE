@@ -1,6 +1,6 @@
 {
-  "revision": 267,
-  "lastUpdated": "2026-11-26T14:39:23.326Z",
+  "revision": 268,
+  "lastUpdated": "2026-11-26T14:40:06.804Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795704006804_pk7w",
+      "timestamp": "2026-11-26T14:40:06.804Z",
+      "userId": "usr_c3f7aff20efc",
+      "email": "yashnilkc74@gmail.com",
+      "actor": "Yashnil (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795703611635_vu8b",
       "timestamp": "2026-11-26T14:33:31.635Z",
@@ -959,18 +968,45 @@
       "actor": "Admin Console",
       "action": "PAYMENT_FAILED",
       "details": "Ujjwol Sharma: payment ORD-1795613177801-485BF2 marked FAILED"
-    },
-    {
-      "id": "raud_1795622576964_1d4m",
-      "timestamp": "2026-11-25T16:02:56.964Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_PLAN_CHANGE",
-      "details": "Creative Chess Club: plan changed from FREE to DIAMOND"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_c3f7aff20efc",
+      "name": "Yashnil",
+      "username": "yashnilkc74",
+      "email": "yashnilkc74@gmail.com",
+      "canonicalEmail": "yashnilkc74@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:40:06.737Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_c3f7aff20efca232",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$ea3a8b691f43b5470e6b96fccd64cd0d$c87ecb1da2adfa1668b5b61ea8c6269e70ded680ea1f407380ab37fa80defb7905cff92bd85e40924e91c3f7a57fd86eb110394ac296bb694c4da3b1a74e4332",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:40:06.804Z",
+      "lastModifiedBy": "Yashnil (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795704006804_3ir6",
+          "timestamp": "2026-11-26T14:40:06.804Z",
+          "actor": "Yashnil (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_131d502f669b",
       "name": "Shubham",
