@@ -1,6 +1,6 @@
 {
-  "revision": 166,
-  "lastUpdated": "2026-11-26T02:36:45.788Z",
+  "revision": 167,
+  "lastUpdated": "2026-11-26T02:36:57.405Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660617405_cupb",
+      "timestamp": "2026-11-26T02:36:57.405Z",
+      "userId": "usr_aba8f2cb0d91",
+      "email": "mriduljungpande0095@gmail.com",
+      "actor": "Mridul Jung Pande (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (After 12 Entrance · FREE)"
+    },
     {
       "id": "raud_1795660603501_a1gi",
       "timestamp": "2026-11-26T02:36:43.501Z",
@@ -942,15 +951,6 @@
       "actor": "Dipson Poudel (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795514801914_11q4",
-      "timestamp": "2026-11-24T10:06:41.914Z",
-      "userId": "usr_3fb71be3b31a",
-      "email": "deepsonpaudel9@gmail.com",
-      "actor": "Dipson Poudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
@@ -1673,9 +1673,16 @@
         "notif_1795622839468"
       ],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T16:36:07.684Z",
-      "lastModifiedBy": "Mridul Jung Pande (Google Sign-Up)",
+      "updatedAt": "2026-11-26T02:36:57.405Z",
+      "lastModifiedBy": "Mridul Jung Pande (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795660617405_c6sh",
+          "timestamp": "2026-11-26T02:36:57.405Z",
+          "actor": "Mridul Jung Pande (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795624567684_kbgr",
           "timestamp": "2026-11-25T16:36:07.684Z",
