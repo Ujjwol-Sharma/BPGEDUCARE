@@ -1,6 +1,6 @@
 {
-  "revision": 216,
-  "lastUpdated": "2026-11-26T12:18:40.409Z",
+  "revision": 217,
+  "lastUpdated": "2026-11-26T12:19:30.264Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695570264_uxes",
+      "timestamp": "2026-11-26T12:19:30.264Z",
+      "userId": "usr_7ac3f881b452",
+      "email": "adarshkunwar2009@gmail.com",
+      "actor": "Adarsh Kunwar (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795695520409_on5d",
       "timestamp": "2026-11-26T12:18:40.409Z",
@@ -959,18 +968,45 @@
       "actor": "Aasika Tamang (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795612208493_dpkn",
-      "timestamp": "2026-11-25T13:10:08.493Z",
-      "userId": "usr_6c0fd6ffc46c",
-      "email": "prativapaudel95@gmail.com",
-      "actor": "Prativa Paudel (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_7ac3f881b452",
+      "name": "Adarsh Kunwar",
+      "username": "adarshkunwar2009",
+      "email": "adarshkunwar2009@gmail.com",
+      "canonicalEmail": "adarshkunwar2009@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:19:30.209Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_7ac3f881b4521e19",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$6682061e645616f8685e607002eb0e1d$17ab92e495d18bd29817987c4b60703df4ead7f5886390bca44acae6059c74415e307c156ec6d11448638dc1a440e977bf92b22566a61663ab194490996f8dc3",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:19:30.263Z",
+      "lastModifiedBy": "Adarsh Kunwar (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695570263_ss0c",
+          "timestamp": "2026-11-26T12:19:30.263Z",
+          "actor": "Adarsh Kunwar (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_6b225f8eefb7",
       "name": "Bidhan Parajuli",
