@@ -1,6 +1,6 @@
 {
-  "revision": 205,
-  "lastUpdated": "2026-11-26T11:32:29.915Z",
+  "revision": 206,
+  "lastUpdated": "2026-11-26T11:38:08.669Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795693088669_74hz",
+      "timestamp": "2026-11-26T11:38:08.669Z",
+      "userId": "usr_b96fbb0877b4",
+      "email": "gautamparshav6@gmail.com",
+      "actor": "Sahaj (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795692749915_lznp",
       "timestamp": "2026-11-26T11:32:29.915Z",
@@ -959,18 +968,45 @@
       "actor": "Saurav Kunwar (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795609435407_7ca9",
-      "timestamp": "2026-11-25T12:23:55.407Z",
-      "userId": "usr_219268db8c0d",
-      "email": "spandan.pkr@gmail.com",
-      "actor": "Spandan Gorkhali (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_b96fbb0877b4",
+      "name": "Sahaj",
+      "username": "gautamparshav6",
+      "email": "gautamparshav6@gmail.com",
+      "canonicalEmail": "gautamparshav6@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T11:38:08.614Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_b96fbb0877b4bcd4",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$d3fcf1ed9fb540ba55ef03780a0d8b39$a7b96234e4c25a08ba45dd4f8784a367771a7419d94f0fe33644af6f32dbde818d720231ad5e1b96c757d963f1fe3646e1290cc9cd4b555acf5725ee2757f027",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T11:38:08.669Z",
+      "lastModifiedBy": "Sahaj (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795693088669_e8wp",
+          "timestamp": "2026-11-26T11:38:08.669Z",
+          "actor": "Sahaj (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_9f75addac06c",
       "name": "Ujjwal Pahari",
