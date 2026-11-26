@@ -1,6 +1,6 @@
 {
-  "revision": 175,
-  "lastUpdated": "2026-11-26T02:48:44.896Z",
+  "revision": 176,
+  "lastUpdated": "2026-11-26T02:50:14.535Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795661414535_7baf",
+      "timestamp": "2026-11-26T02:50:14.535Z",
+      "userId": "usr_5fcb93b36525",
+      "email": "divyabhandari202@gmail.com",
+      "actor": "Divya Bhandari (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795661324896_rdph",
       "timestamp": "2026-11-26T02:48:44.896Z",
@@ -959,18 +968,45 @@
       "actor": "Chess Club (Student)",
       "action": "CLASS_SWITCH_REQUESTED",
       "details": "Requested switch from Class 12 to Class 11"
-    },
-    {
-      "id": "raud_1795527351400_dyma",
-      "timestamp": "2026-11-24T13:35:51.400Z",
-      "userId": "usr_1b558269b9fa",
-      "email": "thapaparibesh01@gmail.com",
-      "actor": "Paribesh Thapa (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_5fcb93b36525",
+      "name": "Divya Bhandari",
+      "username": "divya-12",
+      "email": "divyabhandari202@gmail.com",
+      "canonicalEmail": "divyabhandari202@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:50:14.481Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$78de6a39c188b27a8769d9e07404c23b$cc7921b151559a874d5015435dcb01f18345d780d4cd351617c8b601831b1704dcd96a0890b757d6b80f73bf7b7eb039825e5236ae27f2d2518bce0fa94cea5c",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:50:14.535Z",
+      "lastModifiedBy": "Divya Bhandari (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795661414535_a7v5",
+          "timestamp": "2026-11-26T02:50:14.535Z",
+          "actor": "Divya Bhandari (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_b2d7c9b1c76d",
       "name": "Prashil Lamichhane",
