@@ -1,6 +1,6 @@
 {
-  "revision": 213,
-  "lastUpdated": "2026-11-26T12:12:17.496Z",
+  "revision": 214,
+  "lastUpdated": "2026-11-26T12:17:44.856Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695464856_8o8x",
+      "timestamp": "2026-11-26T12:17:44.856Z",
+      "userId": "usr_1912f2ca9bed",
+      "email": "ganeshpoudel573@gmail.com",
+      "actor": "Ganesh Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795695137496_6aen",
       "timestamp": "2026-11-26T12:12:17.496Z",
@@ -959,18 +968,45 @@
       "actor": "Manjul Subedi (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795610431134_7qem",
-      "timestamp": "2026-11-25T12:40:31.134Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1912f2ca9bed",
+      "name": "Ganesh Poudel",
+      "username": "ganeshpoudel573",
+      "email": "ganeshpoudel573@gmail.com",
+      "canonicalEmail": "ganeshpoudel573@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:17:44.802Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_1912f2ca9bed838a",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$8abb5c0f7bd8e4f171065b6d96aa70c8$859e1c1eddb1e5e8c60d0d996d42a1747bbf42948dca7a1a20b0e7324aca06c7d0e1f9fd2e4d493e026b4ea0c173c706cae8b58f63b93dba92310e880622cd2c",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:17:44.855Z",
+      "lastModifiedBy": "Ganesh Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695464855_ehfy",
+          "timestamp": "2026-11-26T12:17:44.855Z",
+          "actor": "Ganesh Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_3519767fb6a8",
       "name": "Mayank Adhikari",
