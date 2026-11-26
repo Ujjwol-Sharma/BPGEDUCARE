@@ -1,6 +1,6 @@
 {
-  "revision": 167,
-  "lastUpdated": "2026-11-26T02:36:57.405Z",
+  "revision": 168,
+  "lastUpdated": "2026-11-26T02:37:10.670Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660630670_kwma",
+      "timestamp": "2026-11-26T02:37:10.670Z",
+      "userId": "usr_35b207967208",
+      "email": "poudlearadhya@gmail.com",
+      "actor": "Aradhya Paudel (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795660617405_cupb",
       "timestamp": "2026-11-26T02:36:57.405Z",
@@ -942,15 +951,6 @@
       "actor": "Admin Console",
       "action": "PAYMENT_FAILED",
       "details": "Chess Club: payment ORD-1795518561321-571F30 marked FAILED"
-    },
-    {
-      "id": "raud_1795514902554_gu2g",
-      "timestamp": "2026-11-24T10:08:22.554Z",
-      "userId": "usr_8e81abd1d7f6",
-      "email": "deepsonking444@gmail.com",
-      "actor": "Dipson Poudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -2827,9 +2827,16 @@
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T17:19:13.200Z",
-      "lastModifiedBy": "Aradhya Paudel (Student)",
+      "updatedAt": "2026-11-26T02:37:10.670Z",
+      "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795660630670_ddz2",
+          "timestamp": "2026-11-26T02:37:10.670Z",
+          "actor": "Aradhya Paudel (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795627153200_1hf1",
           "timestamp": "2026-11-25T17:19:13.200Z",
