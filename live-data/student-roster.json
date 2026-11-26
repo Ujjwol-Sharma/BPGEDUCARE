@@ -1,6 +1,6 @@
 {
-  "revision": 287,
-  "lastUpdated": "2026-11-26T17:13:53.084Z",
+  "revision": 288,
+  "lastUpdated": "2026-11-26T22:02:35.564Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795730555564_jyiu",
+      "timestamp": "2026-11-26T22:02:35.564Z",
+      "userId": "usr_89791ac8e21b",
+      "email": "pratisthaa16@gmail.com",
+      "actor": "Pratisthaa (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (After 12 Entrance)"
+    },
     {
       "id": "raud_1795713233084_nqvp",
       "timestamp": "2026-11-26T17:13:53.084Z",
@@ -962,18 +971,45 @@
       "actor": "Binisa Gautam (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795627087017_994q",
-      "timestamp": "2026-11-25T17:18:07.017Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_89791ac8e21b",
+      "name": "Pratisthaa",
+      "username": "pratisthaa16",
+      "email": "pratisthaa16@gmail.com",
+      "canonicalEmail": "pratisthaa16@gmail.com",
+      "grade": "After 12 Entrance",
+      "classKey": "after-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T22:02:35.494Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_89791ac8e21b8f09",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$e9bf862cc535cfd301da5cabe59ce6f0$f08e104bac5ce16b562d198d2be127144ebc5bed018de90e76e6710d49fb0f7aa8599994022b9ca5bc873b45bb6f61f9b4a03f7fd58666520993cb10d7285c23",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T22:02:35.564Z",
+      "lastModifiedBy": "Pratisthaa (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795730555564_gom7",
+          "timestamp": "2026-11-26T22:02:35.564Z",
+          "actor": "Pratisthaa (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in After 12 Entrance"
+        }
+      ]
+    },
     {
       "userId": "usr_88cfec2ed344",
       "name": "Api Thapa",
