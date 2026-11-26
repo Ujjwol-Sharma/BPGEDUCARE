@@ -1,6 +1,6 @@
 {
-  "revision": 270,
-  "lastUpdated": "2026-11-26T15:12:13.061Z",
+  "revision": 271,
+  "lastUpdated": "2026-11-26T15:17:44.165Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795706264165_hjoq",
+      "timestamp": "2026-11-26T15:17:44.165Z",
+      "userId": "usr_7541b6e8e674",
+      "email": "kafleprayash0@gmail.com",
+      "actor": "prayash kafle (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795705933061_3bn8",
       "timestamp": "2026-11-26T15:12:13.061Z",
@@ -959,18 +968,45 @@
       "actor": "bishesh pahari (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795623326530_korz",
-      "timestamp": "2026-11-25T16:15:26.530Z",
-      "userId": "usr_8e8ce14819bd",
-      "email": "parajulemijal23@gmail.com",
-      "actor": "Mijal Parajuli (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_7541b6e8e674",
+      "name": "prayash kafle",
+      "username": "kafleprayash0",
+      "email": "kafleprayash0@gmail.com",
+      "canonicalEmail": "kafleprayash0@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T15:17:44.102Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_7541b6e8e674e208",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$15f797c93070092598142a68012bb279$42c7b80989c54a234ab0a6683c7a5b2ba70919ff307c68a4249a9689fc4dec46a85d89707e5886455bfcc44d83565f03a1637f3aa44a4864a6a2374d678574f5",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T15:17:44.165Z",
+      "lastModifiedBy": "prayash kafle (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795706264165_2y1t",
+          "timestamp": "2026-11-26T15:17:44.165Z",
+          "actor": "prayash kafle (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_1fa9eebb3e9b",
       "name": "Nikita Poudel",
