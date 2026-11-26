@@ -1,6 +1,6 @@
 {
-  "revision": 224,
-  "lastUpdated": "2026-11-26T12:26:22.169Z",
+  "revision": 225,
+  "lastUpdated": "2026-11-26T12:29:03.950Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -984,7 +984,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T12:26:12.997Z",
       "verificationMethod": "google_oauth",
@@ -995,9 +995,16 @@
       "passkey": "scrypt$bf04e377be31353faf4a9a54725e7c43$8841a0a4fa81c7f28cc1aad20590c90df1ae5fad2fa9ea52c039078e9075e6c981829fe5301e9c6f42706185eceb2cab90d47dfa6a881496ade7d9833e4f99bb",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T12:26:13.060Z",
-      "lastModifiedBy": "Ashim Gautam (Google Sign-Up)",
+      "updatedAt": "2026-11-26T12:29:03.950Z",
+      "lastModifiedBy": "Ashim Gautam (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795696143950_z5fj",
+          "timestamp": "2026-11-26T12:29:03.950Z",
+          "actor": "Ashim Gautam (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795696143949-68829E (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795695973060_58fg",
           "timestamp": "2026-11-26T12:26:13.060Z",
