@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T16:13:51.248Z",
+  "lastUpdated": "2026-11-26T16:13:54.535Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -568,21 +568,21 @@
           "weightage": "1 long (8M) +2 Short (10M) + 2 MCQ (2M)"
         },
         {
-          "code": "Unit 03",
-          "name": "Trigonometry (General Solutions & Inverse Functions)",
-          "hours": "9 hrs",
-          "marks": "6 Marks",
-          "focus": "1 Short (5M) + 1 MCQ (1M)",
-          "domain": "Trigonometry (General Solutions & Inverse Functions)",
-          "weightage": "1 Short (5M) + 1 MCQ (1M)"
-        },
-        {
           "code": "Unit 08",
           "name": "Mechanics",
           "hours": "9hrs",
           "marks": "6 Marks",
           "focus": "1 Short (5M) + 1 MCQ (1M)",
           "domain": "Mechanics",
+          "weightage": "1 Short (5M) + 1 MCQ (1M)"
+        },
+        {
+          "code": "Unit 03",
+          "name": "Trigonometry (General Solutions & Inverse Functions)",
+          "hours": "9 hrs",
+          "marks": "6 Marks",
+          "focus": "1 Short (5M) + 1 MCQ (1M)",
+          "domain": "Trigonometry (General Solutions & Inverse Functions)",
           "weightage": "1 Short (5M) + 1 MCQ (1M)"
         },
         {
@@ -4404,6 +4404,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 198,
+  "revision": 199,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
