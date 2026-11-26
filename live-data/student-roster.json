@@ -1,6 +1,6 @@
 {
-  "revision": 266,
-  "lastUpdated": "2026-11-26T14:38:42.636Z",
+  "revision": 267,
+  "lastUpdated": "2026-11-26T14:39:23.326Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1020,7 +1020,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T14:32:47.287Z",
       "verificationMethod": "google_oauth",
@@ -1033,9 +1033,16 @@
         "notif_mock_live_mt_1795626947423"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T14:32:47.349Z",
-      "lastModifiedBy": "Sambeg Sapakota (Google Sign-Up)",
+      "updatedAt": "2026-11-26T14:39:23.326Z",
+      "lastModifiedBy": "Sambeg Sapakota (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795703963326_yqch",
+          "timestamp": "2026-11-26T14:39:23.326Z",
+          "actor": "Sambeg Sapakota (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795703963326-E48D20 (Padandas, NPR 1999) is pending"
+        },
         {
           "id": "aud_1795703567349_27ju",
           "timestamp": "2026-11-26T14:32:47.349Z",
