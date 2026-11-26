@@ -1,6 +1,6 @@
 {
-  "revision": 262,
-  "lastUpdated": "2026-11-26T14:27:39.903Z",
+  "revision": 263,
+  "lastUpdated": "2026-11-26T14:32:09.558Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795703529558_3jyg",
+      "timestamp": "2026-11-26T14:32:09.558Z",
+      "userId": "usr_042985271842",
+      "email": "sampurnashrm@gmail.com",
+      "actor": "Sampurna Sharma (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795702454441_360r",
       "timestamp": "2026-11-26T14:14:14.441Z",
@@ -959,18 +968,45 @@
       "actor": "Chiran Gyawali (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795622054358_0fa2",
-      "timestamp": "2026-11-25T15:54:14.358Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Creative Chess Club (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_042985271842",
+      "name": "Sampurna Sharma",
+      "username": "sampurnashrm",
+      "email": "sampurnashrm@gmail.com",
+      "canonicalEmail": "sampurnashrm@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:32:09.488Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_042985271842040d",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$6c42d9c46ad39bdb9d68706d40168dd3$4fd3e8d80f5a7255fab1945a47639063881854c3d58b21e8d3896eb1d9d3aa97bc724d1abf63b351045725b67903b2d38254aa83977abad9ca0f48880b610b04",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:32:09.558Z",
+      "lastModifiedBy": "Sampurna Sharma (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795703529558_bw45",
+          "timestamp": "2026-11-26T14:32:09.558Z",
+          "actor": "Sampurna Sharma (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_9d8cd15a8dc7",
       "name": "Janus gurung",
