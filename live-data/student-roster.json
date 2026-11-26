@@ -1,6 +1,6 @@
 {
-  "revision": 196,
-  "lastUpdated": "2026-11-26T04:17:16.816Z",
+  "revision": 197,
+  "lastUpdated": "2026-11-26T04:21:26.154Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795666886154_red3",
+      "timestamp": "2026-11-26T04:21:26.154Z",
+      "userId": "usr_35b207967208",
+      "email": "poudlearadhya@gmail.com",
+      "actor": "Aradhya Paudel (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795666636816_3xa2",
       "timestamp": "2026-11-26T04:17:16.816Z",
@@ -959,15 +968,6 @@
       "actor": "Aaditya Khatri (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795603395217_sx8n",
-      "timestamp": "2026-11-25T10:43:15.217Z",
-      "userId": "usr_5d0c6b99f8a6",
-      "email": "verify.session.live@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Live Verify Student (verify.session.live@gmail.com)"
     }
   ],
   "accounts": [
@@ -2839,9 +2839,16 @@
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T04:03:02.548Z",
+      "updatedAt": "2026-11-26T04:21:26.154Z",
       "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795666886154_keye",
+          "timestamp": "2026-11-26T04:21:26.154Z",
+          "actor": "Aradhya Paudel (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795665782548_1c79",
           "timestamp": "2026-11-26T04:03:02.548Z",
