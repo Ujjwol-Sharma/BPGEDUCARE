@@ -1,6 +1,6 @@
 {
-  "revision": 160,
-  "lastUpdated": "2026-11-26T02:31:27.068Z",
+  "revision": 161,
+  "lastUpdated": "2026-11-26T02:34:57.195Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660497195_fe3l",
+      "timestamp": "2026-11-26T02:34:57.195Z",
+      "userId": "usr_1034c714c4cd",
+      "email": "sharmabiswash84@gmail.com",
+      "actor": "Biswash sharma (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795660287068_o2jh",
       "timestamp": "2026-11-26T02:31:27.068Z",
@@ -942,18 +951,45 @@
       "actor": "Chess Club (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795513540405_x815",
-      "timestamp": "2026-11-24T09:45:40.405Z",
-      "userId": "usr_ab78663f0a4c",
-      "email": "rohan.sharma@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Rohan Sharma (rohan.sharma@gmail.com)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1034c714c4cd",
+      "name": "Biswash sharma",
+      "username": "biswash",
+      "email": "sharmabiswash84@gmail.com",
+      "canonicalEmail": "sharmabiswash84@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:34:57.140Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$5840f16801ca4dd121d9dcb203b2ebe7$8acec8d28a8beac13588f8ee1173c655c5f1aec6cf0fe29208411fcc970e3047b2da2e53b6ed04b2a996f965f1c3a072dfddbb22f569212b32491a0c18770464",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:34:57.195Z",
+      "lastModifiedBy": "Biswash sharma (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795660497195_k4qf",
+          "timestamp": "2026-11-26T02:34:57.195Z",
+          "actor": "Biswash sharma (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_c0891c66477b",
       "name": "Sudarshan Koirala",
