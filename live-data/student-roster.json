@@ -1,6 +1,6 @@
 {
-  "revision": 225,
-  "lastUpdated": "2026-11-26T12:29:03.950Z",
+  "revision": 226,
+  "lastUpdated": "2026-11-26T12:29:16.214Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1110,7 +1110,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$e315af52bab1604961c80f500c86336a$ea3ea0814e9e3e7c87eba3700e7a49d6c70d6e3fea61fae82310c2498132f725d60c9f9af58dcb5160a498ef2ea82af8c8e193a247ab25b23ea41b772800a8d8",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T12:19:31.453Z",
       "lastModifiedBy": "Milan Adhikari (Google Sign-Up)",
