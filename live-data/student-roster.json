@@ -1,6 +1,6 @@
 {
-  "revision": 182,
-  "lastUpdated": "2026-11-26T03:59:17.372Z",
+  "revision": 183,
+  "lastUpdated": "2026-11-26T04:00:45.495Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795665645495_dp9g",
+      "timestamp": "2026-11-26T04:00:45.495Z",
+      "userId": "usr_10d588688c4c",
+      "email": "poudelaradhya@gmail.com",
+      "actor": "safdfafadwd (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795665557372_nqww",
       "timestamp": "2026-11-26T03:59:17.372Z",
@@ -959,18 +968,45 @@
       "actor": "Prashil Lamichhane (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795574626563_fise",
-      "timestamp": "2026-11-25T02:43:46.563Z",
-      "userId": "usr_358b294bfb3b",
-      "email": "bishnupdgautam2@gmail.com",
-      "actor": "Binisa Gautam (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_10d588688c4c",
+      "name": "safdfafadwd",
+      "username": "poudelaradhya",
+      "email": "poudelaradhya@gmail.com",
+      "canonicalEmail": "poudelaradhya@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T04:00:45.434Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_10d588688c4c3bfb",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$27c175857ee42151488d983f7c638025$8be155b5509d3d6754dad617d76c8549afc117aaa33fc337830d31aa6d0935603e055ffb221f748272aeebd90e13d3b54dfc2fa829699cbe3befd8f52136a6f1",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T04:00:45.494Z",
+      "lastModifiedBy": "safdfafadwd (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795665645494_ja4a",
+          "timestamp": "2026-11-26T04:00:45.494Z",
+          "actor": "safdfafadwd (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_5fcb93b36525",
       "name": "Divya Bhandari",
