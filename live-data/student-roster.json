@@ -1,6 +1,6 @@
 {
-  "revision": 273,
-  "lastUpdated": "2026-11-26T15:21:17.964Z",
+  "revision": 274,
+  "lastUpdated": "2026-11-26T15:33:35.057Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -993,7 +993,10 @@
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$a26918230bb5cf9df4ad02dc63d3ca3b$c09993120b06ec13c42f7392563cc3501d76962c419a7e7c1b87c9cd9dcd642ffc68e4ee162a8f55b5ee7c1b23b591179f51293fc56549873db864a6864e95b1",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423",
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T15:21:17.964Z",
       "lastModifiedBy": "Safal Gautam (Email OTP Sign-Up)",
