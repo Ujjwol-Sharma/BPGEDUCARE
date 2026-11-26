@@ -1,6 +1,6 @@
 {
-  "revision": 240,
-  "lastUpdated": "2026-11-26T13:36:10.999Z",
+  "revision": 241,
+  "lastUpdated": "2026-11-26T13:36:20.927Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795700180927_td3v",
+      "timestamp": "2026-11-26T13:36:20.927Z",
+      "userId": "usr_0edbe94bc081",
+      "email": "rebikathapa2009@gmail.com",
+      "actor": "Rebika Thapa (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795700170999_zslh",
       "timestamp": "2026-11-26T13:36:10.999Z",
@@ -959,18 +968,45 @@
       "actor": "Avipsa Bhattarai (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795618730652_vx37",
-      "timestamp": "2026-11-25T14:58:50.652Z",
-      "userId": "usr_dd6b92875358",
-      "email": "subashpoudel925@gmail.com",
-      "actor": "subashpoudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_0edbe94bc081",
+      "name": "Rebika Thapa",
+      "username": "rebikathapa2009",
+      "email": "rebikathapa2009@gmail.com",
+      "canonicalEmail": "rebikathapa2009@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:36:20.861Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_0edbe94bc0810f12",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$6476e2fcf72d2099bbb46e2130d29556$a44d1fda43aab30ef3c54bfc0a0868f6e9506cd3d0c391668304d1a630572f2bb123d231b9e82b9bb5c33d305fac50656185b93c7f94edfc98cd698feae19b10",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:36:20.926Z",
+      "lastModifiedBy": "Rebika Thapa (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795700180926_wpxz",
+          "timestamp": "2026-11-26T13:36:20.926Z",
+          "actor": "Rebika Thapa (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_b2fb0af9ffea",
       "name": "Sahara Chhetri",
