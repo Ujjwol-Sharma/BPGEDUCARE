@@ -1,6 +1,6 @@
 {
-  "revision": 210,
-  "lastUpdated": "2026-11-26T12:05:54.667Z",
+  "revision": 211,
+  "lastUpdated": "2026-11-26T12:08:15.076Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -3791,7 +3791,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "bpgstudent",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423"
+      ],
       "joinedAt": "2026-11-24",
       "updatedAt": "2026-11-24T13:35:51.400Z",
       "lastModifiedBy": "Paribesh Thapa (Google Sign-Up)",
