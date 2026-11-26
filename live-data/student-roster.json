@@ -1,6 +1,6 @@
 {
-  "revision": 255,
-  "lastUpdated": "2026-11-26T13:59:40.584Z",
+  "revision": 256,
+  "lastUpdated": "2026-11-26T14:02:40.318Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795701760318_xswr",
+      "timestamp": "2026-11-26T14:02:40.318Z",
+      "userId": "usr_cc8662c3221b",
+      "email": "addinbrl1946@gmail.com",
+      "actor": "Addin Baral (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (After 12 Entrance)"
+    },
     {
       "id": "raud_1795701580584_3x3v",
       "timestamp": "2026-11-26T13:59:40.584Z",
@@ -959,18 +968,45 @@
       "actor": "Admin Console",
       "action": "PAYMENT_FAILED",
       "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
-    },
-    {
-      "id": "raud_1795621283403_hupb",
-      "timestamp": "2026-11-25T15:41:23.403Z",
-      "userId": "usr_102017d9b135",
-      "email": "shirishtripathi49@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_cc8662c3221b",
+      "name": "Addin Baral",
+      "username": "addinbrl1946",
+      "email": "addinbrl1946@gmail.com",
+      "canonicalEmail": "addinbrl1946@gmail.com",
+      "grade": "After 12 Entrance",
+      "classKey": "after-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:02:40.264Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_cc8662c3221b0a8d",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$ee292679da26ab8b4efffe35a5df3330$287b1e428bef20d44e401fbb82c13b23e4d5c3786de92e92a8191b991b9384406175d5723f5d11eb93769da926f960334de37949109c17790846a4b8b0d54c1e",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:02:40.318Z",
+      "lastModifiedBy": "Addin Baral (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795701760318_ry6w",
+          "timestamp": "2026-11-26T14:02:40.318Z",
+          "actor": "Addin Baral (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in After 12 Entrance"
+        }
+      ]
+    },
     {
       "userId": "usr_7bfbdd0aed3c",
       "name": "ziaparajuli@gmail.com",
