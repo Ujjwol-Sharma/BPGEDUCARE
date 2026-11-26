@@ -1,6 +1,6 @@
 {
-  "revision": 245,
-  "lastUpdated": "2026-11-26T13:43:33.470Z",
+  "revision": 246,
+  "lastUpdated": "2026-11-26T13:43:56.395Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795700636395_kf8a",
+      "timestamp": "2026-11-26T13:43:56.395Z",
+      "userId": "usr_a3c0711da8c2",
+      "email": "simrandhunganaa@gmail.com",
+      "actor": "Simran (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795700484554_kek6",
       "timestamp": "2026-11-26T13:41:24.554Z",
@@ -959,18 +968,45 @@
       "actor": "Dikshya Pokhrel (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795619869242_wa0e",
-      "timestamp": "2026-11-25T15:17:49.242Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "Ujjwol Sharma (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · DIAMOND)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_a3c0711da8c2",
+      "name": "Simran",
+      "username": "simrandhunganaa",
+      "email": "simrandhunganaa@gmail.com",
+      "canonicalEmail": "simrandhunganaa@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:43:56.322Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_a3c0711da8c2be67",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$b2aa36cafd53692f47ab51728ae82cd5$bf5f30e1d5e5109bc3df8cc9cebb4a9644025621cf8fb8059070da25897cef2fcf19ee32515377d5c2d56ee8a19c9a604b20240a93ad77608c82d3e6aa16d308",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:43:56.395Z",
+      "lastModifiedBy": "Simran (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795700636395_gvi1",
+          "timestamp": "2026-11-26T13:43:56.395Z",
+          "actor": "Simran (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_53ff89ad5788",
       "name": "Prashanta Subedi",
