@@ -1,6 +1,6 @@
 {
-  "revision": 247,
-  "lastUpdated": "2026-11-26T02:46:30.629Z",
+  "revision": 249,
+  "lastUpdated": "2026-11-26T02:46:34.804Z",
   "attempts": [
     {
       "id": "att_1795661182801_8474",
@@ -17,7 +17,9 @@
       "startedAt": 1795661182801,
       "finishAt": 1795661782801,
       "answers": {
-        "q_1795623984764_0": "A"
+        "q_1795623984764_0": "A",
+        "q_1795624239159_1": "C",
+        "q_1795624400461_2": "B"
       },
       "submitted": false,
       "submittedAt": null,
