@@ -1,6 +1,6 @@
 {
-  "revision": 215,
-  "lastUpdated": "2026-11-26T12:17:53.393Z",
+  "revision": 216,
+  "lastUpdated": "2026-11-26T12:18:40.409Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695520409_on5d",
+      "timestamp": "2026-11-26T12:18:40.409Z",
+      "userId": "usr_6b225f8eefb7",
+      "email": "pbidhan158@gmail.com",
+      "actor": "Bidhan Parajuli (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795695473393_00e6",
       "timestamp": "2026-11-26T12:17:53.393Z",
@@ -959,18 +968,45 @@
       "actor": "Prativa Paudel (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795610756257_nzej",
-      "timestamp": "2026-11-25T12:45:56.257Z",
-      "userId": "usr_82b1ff28ecc3",
-      "email": "safalpaudel0600@gmail.com",
-      "actor": "Safal (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_6b225f8eefb7",
+      "name": "Bidhan Parajuli",
+      "username": "pbidhan158",
+      "email": "pbidhan158@gmail.com",
+      "canonicalEmail": "pbidhan158@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:18:40.348Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_6b225f8eefb73699",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$5885d2666aa20daf12aae4ea809f442e$725bb317f80be9ebb2af1680fd81b61a3d51f4ee7e217e1105a9146aac3f505c6a381e48f4d46ce9903970ee7faf466ad774ae15a56ff092a0f832d839311477",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:18:40.409Z",
+      "lastModifiedBy": "Bidhan Parajuli (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695520409_4nbj",
+          "timestamp": "2026-11-26T12:18:40.409Z",
+          "actor": "Bidhan Parajuli (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_c8cdbe5a4b5a",
       "name": "Sonish Diyali",
