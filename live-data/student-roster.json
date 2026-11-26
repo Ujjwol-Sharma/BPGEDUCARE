@@ -1,6 +1,6 @@
 {
-  "revision": 286,
-  "lastUpdated": "2026-11-26T17:09:45.394Z",
+  "revision": 287,
+  "lastUpdated": "2026-11-26T17:13:53.084Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795713233084_nqvp",
+      "timestamp": "2026-11-26T17:13:53.084Z",
+      "userId": "usr_88cfec2ed344",
+      "email": "thapaapi621@gmail.com",
+      "actor": "Api Thapa (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795712985394_tc01",
       "timestamp": "2026-11-26T17:09:45.394Z",
@@ -962,18 +971,45 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795626555027_5szk",
-      "timestamp": "2026-11-25T17:09:15.027Z",
-      "userId": "usr_10456a19783f",
-      "email": "gahatrajbelieve@gmail.com",
-      "actor": "Believe Gahatraj (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_88cfec2ed344",
+      "name": "Api Thapa",
+      "username": "thapaapi621",
+      "email": "thapaapi621@gmail.com",
+      "canonicalEmail": "thapaapi621@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T17:13:53.030Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_88cfec2ed344c7a2",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$0a4588d1cd06a2e29efcf7c981ec30dc$8b188af3c7ee632e36564eb4608f0d98dab2ddd31682842a5582d31dbdf4a81583ff71c33d73a2f32015923936c82c0c42e64085dceeabcbea5f3ace040c74d7",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T17:13:53.084Z",
+      "lastModifiedBy": "Api Thapa (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795713233084_kkjs",
+          "timestamp": "2026-11-26T17:13:53.084Z",
+          "actor": "Api Thapa (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_61483efe2565",
       "name": "Ashbin Adhikari",
