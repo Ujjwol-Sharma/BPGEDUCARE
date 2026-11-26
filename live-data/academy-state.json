@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T16:11:59.055Z",
+  "lastUpdated": "2026-11-26T16:12:27.171Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -586,11 +586,11 @@
         {
           "code": "Unit 04",
           "name": "Analytic Geometry",
-          "hours": "9 hrs",
-          "marks": "Marks",
-          "focus": "1 Long (5M) + 1 Short (4M) + 1 MCQ (1M)",
+          "hours": "15 hrs",
+          "marks": "9Marks",
+          "focus": "1 Long (8M) +  1 MCQ (1M)",
           "domain": "Analytic Geometry",
-          "weightage": "1 Long (5M) + 1 Short (4M) + 1 MCQ (1M)"
+          "weightage": "1 Long (8M) +  1 MCQ (1M)"
         },
         {
           "code": "Unit 05",
@@ -936,8 +936,8 @@
               "id": "class-11-math-l4",
               "code": "Unit 04",
               "title": "Analytic Geometry",
-              "hours": "9 hrs",
-              "marks": "Marks",
+              "hours": "15 hrs",
+              "marks": "9Marks",
               "subTopics": [],
               "pdfs": [],
               "videos": []
@@ -4402,6 +4402,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 195,
+  "revision": 196,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
