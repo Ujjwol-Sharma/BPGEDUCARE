@@ -1,6 +1,6 @@
 {
-  "revision": 220,
-  "lastUpdated": "2026-11-26T12:22:46.173Z",
+  "revision": 221,
+  "lastUpdated": "2026-11-26T12:23:50.366Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695830366_olom",
+      "timestamp": "2026-11-26T12:23:50.366Z",
+      "userId": "usr_1e8bfafb5695",
+      "email": "bishalkarkiii19@gmail.com",
+      "actor": "Bishal Karki (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795695590566_479p",
       "timestamp": "2026-11-26T12:19:50.566Z",
@@ -959,18 +968,45 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795613575247_qfau",
-      "timestamp": "2026-11-25T13:32:55.247Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1e8bfafb5695",
+      "name": "Bishal Karki",
+      "username": "bishalkarkiii19",
+      "email": "bishalkarkiii19@gmail.com",
+      "canonicalEmail": "bishalkarkiii19@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:23:50.312Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_1e8bfafb5695fa2f",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$0c275ef70be7ed450fc007d908b29965$c842ed796b799bf7f7e2fcbc3c5b591e52efb344adaf44a06591abde21a1cafaee9f7fe9854a6fcbdf569128297c90e5bc2debaa79724b8a27dcc60c54f7e4f0",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:23:50.365Z",
+      "lastModifiedBy": "Bishal Karki (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695830365_8cct",
+          "timestamp": "2026-11-26T12:23:50.365Z",
+          "actor": "Bishal Karki (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_e73d14f7d391",
       "name": "1 2 3",
