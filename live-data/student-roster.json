@@ -1,6 +1,6 @@
 {
-  "revision": 284,
-  "lastUpdated": "2026-11-26T16:16:51.795Z",
+  "revision": 285,
+  "lastUpdated": "2026-11-26T16:52:09.318Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795711929318_4zxu",
+      "timestamp": "2026-11-26T16:52:09.318Z",
+      "userId": "usr_0cd6895cf040",
+      "email": "poudelroji120@gmail.com",
+      "actor": "Roji Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795709750584_4lwg",
       "timestamp": "2026-11-26T16:15:50.584Z",
@@ -962,18 +971,45 @@
       "actor": "Shrawana Dahal (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795625807808_1rdp",
-      "timestamp": "2026-11-25T16:56:47.808Z",
-      "userId": "usr_0cae2b14a0d9",
-      "email": "sulabk89@gmail.com",
-      "actor": "Sulab Kc (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_0cd6895cf040",
+      "name": "Roji Poudel",
+      "username": "poudelroji120",
+      "email": "poudelroji120@gmail.com",
+      "canonicalEmail": "poudelroji120@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T16:52:09.258Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_0cd6895cf040c77a",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$355597b165d8fdbf10bc909164101ef4$2fea5e51e2192742b739a2210754dabeea3b0c8011f9b422701d5219ffd59867b1f348b0e69e9bf84417800e812788cb3b36ac70812579cfb1e8f0aced44dce3",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T16:52:09.317Z",
+      "lastModifiedBy": "Roji Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795711929317_tr59",
+          "timestamp": "2026-11-26T16:52:09.317Z",
+          "actor": "Roji Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_2e57cd27d3d8",
       "name": "Ganesh Sharma",
