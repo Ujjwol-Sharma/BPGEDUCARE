@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T16:15:02.465Z",
+  "lastUpdated": "2026-11-26T16:15:40.644Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -960,7 +960,12 @@
               "title": "Calculus",
               "hours": "36 hrs",
               "marks": "22 Marks",
-              "subTopics": [],
+              "subTopics": [
+                {
+                  "id": "sub_1795709741342_1",
+                  "title": "Derivatives"
+                }
+              ],
               "pdfs": [],
               "videos": []
             },
@@ -4404,6 +4409,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 203,
+  "revision": 204,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
