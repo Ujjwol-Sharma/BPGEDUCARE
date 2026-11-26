@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T16:14:39.925Z",
+  "lastUpdated": "2026-11-26T16:15:02.465Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -568,7 +568,7 @@
           "weightage": "1 long (8M) +2 Short (10M) + 2 MCQ (2M)"
         },
         {
-          "code": "Unit 08",
+          "code": "Unit 02",
           "name": "Mechanics",
           "hours": "9hrs",
           "marks": "6 Marks",
@@ -916,7 +916,7 @@
             },
             {
               "id": "class-11-math-l2",
-              "code": "Unit 08",
+              "code": "Unit 02",
               "title": "Mechanics",
               "hours": "9hrs",
               "marks": "6 Marks",
@@ -4404,6 +4404,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 202,
+  "revision": 203,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
