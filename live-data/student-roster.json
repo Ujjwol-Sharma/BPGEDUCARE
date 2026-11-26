@@ -1,6 +1,6 @@
 {
-  "revision": 283,
-  "lastUpdated": "2026-11-26T16:15:50.584Z",
+  "revision": 284,
+  "lastUpdated": "2026-11-26T16:16:51.795Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -996,7 +996,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$881fed229d7e8b50c9744056037e0753$6cd385bbc791af6d892ded6cd939d803447cc29809a4efb740c542286a0f2ba9083fc89bb24a43a748ada61af7398060e4f72e65daf37ecabeeb3a12ea85209b",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T16:15:50.584Z",
       "lastModifiedBy": "Ganesh Sharma (Google Sign-Up)",
