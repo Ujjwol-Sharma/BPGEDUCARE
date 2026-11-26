@@ -1,6 +1,6 @@
 {
-  "revision": 278,
-  "lastUpdated": "2026-11-26T16:01:55.407Z",
+  "revision": 279,
+  "lastUpdated": "2026-11-26T16:03:29.605Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -5027,7 +5027,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$6a8087080bbb03c72ff78889937a26f6$acf507d1c5460571cb4731409df2abe63bfa2ed55a3b0694fe26d3c64f6d189aec451bab58d3a7e64c4b603d4f49dc46377df7e77531dfff5632743c2c03a282",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-26T02:48:44.896Z",
       "lastModifiedBy": "Sumit Acharya (Google Sign-In)",
