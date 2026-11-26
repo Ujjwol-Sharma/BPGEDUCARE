@@ -1,6 +1,6 @@
 {
-  "revision": 209,
-  "lastUpdated": "2026-11-26T11:50:16.379Z",
+  "revision": 210,
+  "lastUpdated": "2026-11-26T12:05:54.667Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795694754667_vio9",
+      "timestamp": "2026-11-26T12:05:54.667Z",
+      "userId": "usr_3dc7e7a9217c",
+      "email": "info.sudarshan915@gmail.com",
+      "actor": "Sudarshan (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795693088669_74hz",
       "timestamp": "2026-11-26T11:38:08.669Z",
@@ -959,18 +968,45 @@
       "actor": "Aradhya Paudel (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795609628987_cbpo",
-      "timestamp": "2026-11-25T12:27:08.987Z",
-      "userId": "usr_5bf8c263fc69",
-      "email": "sauravkunwar231@gmail.com",
-      "actor": "Saurav Kunwar (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_3dc7e7a9217c",
+      "name": "Sudarshan",
+      "username": "info.sudarshan915",
+      "email": "info.sudarshan915@gmail.com",
+      "canonicalEmail": "infosudarshan915@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:05:54.602Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_3dc7e7a9217cb3d2",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$9d7aeecc7a21a135eeecee9275ba6269$d3ca4767aedce71f7247c262493e4e104cf0554bcd4dd76122eb30cc6b6c95724ee788fd7441c632ce8f2ad6c75f1216b502fe8a040379b25439579b81aa844e",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:05:54.667Z",
+      "lastModifiedBy": "Sudarshan (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795694754667_wv22",
+          "timestamp": "2026-11-26T12:05:54.667Z",
+          "actor": "Sudarshan (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_b96fbb0877b4",
       "name": "Sahaj",
