@@ -1,6 +1,6 @@
 {
-  "revision": 268,
-  "lastUpdated": "2026-11-26T14:40:06.804Z",
+  "revision": 269,
+  "lastUpdated": "2026-11-26T14:55:15.870Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795704915870_gaup",
+      "timestamp": "2026-11-26T14:55:15.870Z",
+      "userId": "usr_501e3f720bc7",
+      "email": "roshaniaryal66@gmail.com",
+      "actor": "Roshani Aryal (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795704006804_pk7w",
       "timestamp": "2026-11-26T14:40:06.804Z",
@@ -959,18 +968,45 @@
       "actor": "Binita Lamichhane (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795622657769_bnv9",
-      "timestamp": "2026-11-25T16:04:17.769Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Ujjwol Sharma: payment ORD-1795613177801-485BF2 marked FAILED"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_501e3f720bc7",
+      "name": "Roshani Aryal",
+      "username": "roshaniaryal66",
+      "email": "roshaniaryal66@gmail.com",
+      "canonicalEmail": "roshaniaryal66@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:55:15.806Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_501e3f720bc736a5",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$cebcafc23e4d36304f30480793ac131b$769449f1c740daa9152013f5e8ea51f62a365798a609250c6b10abd7ce61ee46175741283a44706709b9934ab992af6454feed347dc86283ef5e07dd50802ea1",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:55:15.870Z",
+      "lastModifiedBy": "Roshani Aryal (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795704915870_ezup",
+          "timestamp": "2026-11-26T14:55:15.870Z",
+          "actor": "Roshani Aryal (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_c3f7aff20efc",
       "name": "Yashnil",
