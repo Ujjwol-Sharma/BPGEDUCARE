@@ -1,6 +1,6 @@
 {
-  "revision": 227,
-  "lastUpdated": "2026-11-26T12:35:31.613Z",
+  "revision": 228,
+  "lastUpdated": "2026-11-26T12:41:51.684Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795696911684_r9i9",
+      "timestamp": "2026-11-26T12:41:51.684Z",
+      "userId": "usr_8848460eb814",
+      "email": "aadarshaa92@gmail.com",
+      "actor": "Aadarsha Adhikari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795696531613_pmlx",
       "timestamp": "2026-11-26T12:35:31.613Z",
@@ -959,18 +968,45 @@
       "actor": "Sakshyam B.K. (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795614198401_cklv",
-      "timestamp": "2026-11-25T13:43:18.401Z",
-      "userId": "usr_b91fd463da75",
-      "email": "dhunganasoniya43@gmail.com",
-      "actor": "Soniya Dhungana (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_8848460eb814",
+      "name": "Aadarsha Adhikari",
+      "username": "aadarshaa92",
+      "email": "aadarshaa92@gmail.com",
+      "canonicalEmail": "aadarshaa92@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:41:51.625Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_8848460eb81422cb",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$129a88ee73c8db693477b7a8f0bc8493$dbd4110263c676fe74d167e0edca986cb8b906ddc18ab8bb0b967584afa122ff95ef146d8dfab3854ee5ee0586ce86ab38a45313cdf1d86577e9c9b3233f6974",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:41:51.684Z",
+      "lastModifiedBy": "Aadarsha Adhikari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795696911684_buj7",
+          "timestamp": "2026-11-26T12:41:51.684Z",
+          "actor": "Aadarsha Adhikari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_264e52740ee1",
       "name": "Ishan Thapa",
