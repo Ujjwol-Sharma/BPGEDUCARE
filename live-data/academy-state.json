@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T01:52:43.307Z",
+  "lastUpdated": "2026-11-26T02:06:51.835Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3193,10 +3193,10 @@
     "footerText": "© 2026 BPG EDUCARE · Pokhara, Nepal"
   },
   "maintenanceMode": {
-    "enabled": true,
+    "enabled": false,
     "title": "Official Launch Coming Up 🚀",
     "message": "Student portals are temporarily locked as we prepare for the BPG EDUCARE Official Opening Ceremony (Nov 26, 2026). All open features will go live right after the official release!",
-    "updatedAt": "2026-11-26T01:48:25.415Z"
+    "updatedAt": "2026-11-26T02:06:51.426Z"
   },
   "siteSettings": {
     "whatsappNumber": "9779866064252",
@@ -3980,6 +3980,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 163,
+  "revision": 164,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
