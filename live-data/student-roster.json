@@ -1,6 +1,6 @@
 {
-  "revision": 263,
-  "lastUpdated": "2026-11-26T14:32:09.558Z",
+  "revision": 264,
+  "lastUpdated": "2026-11-26T14:32:47.349Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795703567349_r8m6",
+      "timestamp": "2026-11-26T14:32:47.349Z",
+      "userId": "usr_5a4912d722d0",
+      "email": "sambegsapakota11@gmail.com",
+      "actor": "Sambeg Sapakota (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795703529558_3jyg",
       "timestamp": "2026-11-26T14:32:09.558Z",
@@ -959,18 +968,45 @@
       "actor": "Ujjwol Sharma (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795622085907_5o2a",
-      "timestamp": "2026-11-25T15:54:45.907Z",
-      "userId": "usr_0b94641ca0cc",
-      "email": "chirangbgyawali@gmail.com",
-      "actor": "Chiran Gyawali (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_5a4912d722d0",
+      "name": "Sambeg Sapakota",
+      "username": "sambegsapakota11",
+      "email": "sambegsapakota11@gmail.com",
+      "canonicalEmail": "sambegsapakota11@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:32:47.287Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_5a4912d722d04b0b",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$538032df9bed36b7b7feffd15905292a$a8eb19afbb2ee43ad0983845942b2c84248ab7e40f72719fdc9f4299dd8ba5a52248197fe58de64ff0da2f1bf6e4946d8ca26529ac01ddcf2b94b7e6922867e5",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:32:47.349Z",
+      "lastModifiedBy": "Sambeg Sapakota (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795703567349_27ju",
+          "timestamp": "2026-11-26T14:32:47.349Z",
+          "actor": "Sambeg Sapakota (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_042985271842",
       "name": "Sampurna Sharma",
