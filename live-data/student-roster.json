@@ -1,6 +1,6 @@
 {
-  "revision": 195,
-  "lastUpdated": "2026-11-26T04:15:02.647Z",
+  "revision": 196,
+  "lastUpdated": "2026-11-26T04:17:16.816Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795666636816_3xa2",
+      "timestamp": "2026-11-26T04:17:16.816Z",
+      "userId": "usr_10d588688c4c",
+      "email": "poudelaradhya@gmail.com",
+      "actor": "safdfafadwd (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795666304247_w6ks",
       "timestamp": "2026-11-26T04:11:44.247Z",
@@ -959,15 +968,6 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account Live Verify Student (verify.session.live@gmail.com)"
-    },
-    {
-      "id": "raud_1795603392358_oa51",
-      "timestamp": "2026-11-25T10:43:12.358Z",
-      "userId": "usr_5d0c6b99f8a6",
-      "email": "verify.session.live@gmail.com",
-      "actor": "Live Verify Student (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 11 · FREE)"
     }
   ],
   "accounts": [
@@ -1034,9 +1034,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T04:15:02.647Z",
-      "lastModifiedBy": "safdfafadwd (Student)",
+      "updatedAt": "2026-11-26T04:17:16.816Z",
+      "lastModifiedBy": "safdfafadwd (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795666636816_tmbv",
+          "timestamp": "2026-11-26T04:17:16.816Z",
+          "actor": "safdfafadwd (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795666502647_iicp",
           "timestamp": "2026-11-26T04:15:02.647Z",
