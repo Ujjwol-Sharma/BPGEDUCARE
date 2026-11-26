@@ -1,6 +1,6 @@
 {
-  "revision": 198,
-  "lastUpdated": "2026-11-26T04:22:27.304Z",
+  "revision": 199,
+  "lastUpdated": "2026-11-26T04:22:31.487Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -2839,9 +2839,16 @@
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T04:22:27.304Z",
-      "lastModifiedBy": "Aradhya Paudel (Google Sign-In)",
+      "updatedAt": "2026-11-26T04:22:31.487Z",
+      "lastModifiedBy": "Aradhya Paudel (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795666951487_7ytv",
+          "timestamp": "2026-11-26T04:22:31.487Z",
+          "actor": "Aradhya Paudel (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795666951486-FC0F91 (Padandas, NPR 1999) is pending"
+        },
         {
           "id": "aud_1795666947304_2w81",
           "timestamp": "2026-11-26T04:22:27.304Z",
