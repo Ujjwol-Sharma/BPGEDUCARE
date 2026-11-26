@@ -1,6 +1,6 @@
 {
-  "revision": 288,
-  "lastUpdated": "2026-11-26T22:02:35.564Z",
+  "revision": 289,
+  "lastUpdated": "2026-11-26T23:47:47.635Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795736867635_0bki",
+      "timestamp": "2026-11-26T23:47:47.635Z",
+      "userId": "usr_8560191f6da3",
+      "email": "saharachhetri70@gmail.com",
+      "actor": "Sahara Chhetri (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795730555564_jyiu",
       "timestamp": "2026-11-26T22:02:35.564Z",
@@ -962,18 +971,45 @@
       "actor": "utsav sharma (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795627168650_suix",
-      "timestamp": "2026-11-25T17:19:28.650Z",
-      "userId": "usr_358b294bfb3b",
-      "email": "bishnupdgautam2@gmail.com",
-      "actor": "Binisa Gautam (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_8560191f6da3",
+      "name": "Sahara Chhetri",
+      "username": "sara",
+      "email": "saharachhetri70@gmail.com",
+      "canonicalEmail": "saharachhetri70@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T23:47:47.575Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$d804509e6e6d6edc973898863f2b622d$95e4bfab2ad40149539c34749225205eef6f4c3f6abbe52180bc44dc4c154901ed0400c63556c13b5e5c1ee4f4e4eb9800f1bf8857302ffe04c7f8fab301ff88",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T23:47:47.635Z",
+      "lastModifiedBy": "Sahara Chhetri (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795736867635_8lvq",
+          "timestamp": "2026-11-26T23:47:47.635Z",
+          "actor": "Sahara Chhetri (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_89791ac8e21b",
       "name": "Pratisthaa",
