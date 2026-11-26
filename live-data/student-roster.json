@@ -1,6 +1,6 @@
 {
-  "revision": 260,
-  "lastUpdated": "2026-11-26T14:09:36.101Z",
+  "revision": 261,
+  "lastUpdated": "2026-11-26T14:14:14.441Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795702454441_360r",
+      "timestamp": "2026-11-26T14:14:14.441Z",
+      "userId": "usr_9d8cd15a8dc7",
+      "email": "janusgurung@gmail.com",
+      "actor": "Janus gurung (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795702176101_3zsf",
       "timestamp": "2026-11-26T14:09:36.101Z",
@@ -959,18 +968,45 @@
       "actor": "Creative Chess Club (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795622046931_3o5j",
-      "timestamp": "2026-11-25T15:54:06.931Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "Ujjwol Sharma (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_9d8cd15a8dc7",
+      "name": "Janus gurung",
+      "username": "janusgurung",
+      "email": "janusgurung@gmail.com",
+      "canonicalEmail": "janusgurung@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:14:14.365Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_9d8cd15a8dc75d28",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$6c91d8e1772fd129c1b16a054d96c4a2$0c9a6c16d4ef0655ff19c453d595ab1d4fdb8e8030543a89e59425aa07faecb5ecb6ca17b46dbd786cddd5f9dad5d819b4da06d4a0d5f89913083a668e6533f6",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:14:14.441Z",
+      "lastModifiedBy": "Janus gurung (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795702454441_qzlg",
+          "timestamp": "2026-11-26T14:14:14.441Z",
+          "actor": "Janus gurung (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_377c5d16701c",
       "name": "Jeffrey Epstein",
