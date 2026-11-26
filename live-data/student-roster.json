@@ -1,6 +1,6 @@
 {
-  "revision": 149,
-  "lastUpdated": "2026-11-26T01:46:11.263Z",
+  "revision": 150,
+  "lastUpdated": "2026-11-26T02:17:29.811Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795659449811_lny3",
+      "timestamp": "2026-11-26T02:17:29.811Z",
+      "userId": "usr_4eb8560d0956",
+      "email": "prashillamichhane123@gmail.com",
+      "actor": "Prashil Lamichhane (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795657571263_6ugj",
       "timestamp": "2026-11-26T01:46:11.263Z",
@@ -942,15 +951,6 @@
       "actor": "eSewa Provider Verification",
       "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
       "details": "Redeploy Test Scholar: GOLD activated via verified payment (ESW-REDEPLOY-777)"
-    },
-    {
-      "id": "raud_1795512405470_yzzn",
-      "timestamp": "2026-11-24T09:26:45.470Z",
-      "userId": "usr_55fa0d17da8e",
-      "email": "redeploy.verify@gmail.com",
-      "actor": "Redeploy Verifier",
-      "action": "ADMIN_CLASS_CHANGE",
-      "details": "Redeploy Test Scholar: class changed from Class 12 to Class 11"
     }
   ],
   "accounts": [
@@ -2965,9 +2965,16 @@
       "passkey": "scrypt$7f1aa4a36df409cbe9cd9b225a20bddc$1924222851221530929980d5399ac1859ec5774c0633596df106e10245e49210bce87ac35b0f7996ee685f44953c2d8a94d256d9c55a6c1cac774bf5e5d19c4f",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T03:04:11.507Z",
-      "lastModifiedBy": "Prashil Lamichhane (Google Sign-Up)",
+      "updatedAt": "2026-11-26T02:17:29.810Z",
+      "lastModifiedBy": "Prashil Lamichhane (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795659449810_lank",
+          "timestamp": "2026-11-26T02:17:29.810Z",
+          "actor": "Prashil Lamichhane (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795575851507_fdfn",
           "timestamp": "2026-11-25T03:04:11.507Z",
