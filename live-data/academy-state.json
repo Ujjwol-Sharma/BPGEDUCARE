@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T02:32:14.456Z",
+  "lastUpdated": "2026-11-26T02:33:16.306Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2954,12 +2954,12 @@
       "classKey": "class-12",
       "subjectId": "mathematics",
       "title": "Opening Mock Test",
-      "durationMinutes": 15,
+      "durationMinutes": 10,
       "minPlan": "free",
       "adminAssignedPlan": true,
-      "status": "scheduled",
-      "scheduledReleaseAt": "2026-11-26T02:35:00.000Z",
-      "releasedAt": "",
+      "status": "published",
+      "scheduledReleaseAt": "",
+      "releasedAt": "2026-11-26T02:33:16.306Z",
       "releaseNotifiedAt": "",
       "questions": [
         {
@@ -3085,7 +3085,7 @@
         }
       ],
       "createdAt": "2026-11-25T17:15:47.423Z",
-      "updatedAt": "2026-11-26T02:27:52.457Z"
+      "updatedAt": "2026-11-26T02:33:16.306Z"
     }
   ],
   "zoomClasses": [],
@@ -4014,6 +4014,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 169,
+  "revision": 170,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
