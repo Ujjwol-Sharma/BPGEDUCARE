@@ -1,6 +1,6 @@
 {
-  "revision": 217,
-  "lastUpdated": "2026-11-26T12:19:30.264Z",
+  "revision": 218,
+  "lastUpdated": "2026-11-26T12:19:31.453Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695571453_bp84",
+      "timestamp": "2026-11-26T12:19:31.453Z",
+      "userId": "usr_6bc9380a4bae",
+      "email": "milanofnp@gmail.com",
+      "actor": "Milan Adhikari (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795695570264_uxes",
       "timestamp": "2026-11-26T12:19:30.264Z",
@@ -959,18 +968,45 @@
       "actor": "Nistha thakuri (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795613008021_w5r2",
-      "timestamp": "2026-11-25T13:23:28.021Z",
-      "userId": "usr_1128fb26d860",
-      "email": "aashikat2009@gmail.com",
-      "actor": "Aasika Tamang (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_6bc9380a4bae",
+      "name": "Milan Adhikari",
+      "username": "milanofnp",
+      "email": "milanofnp@gmail.com",
+      "canonicalEmail": "milanofnp@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:19:31.399Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_6bc9380a4baebdbe",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$e315af52bab1604961c80f500c86336a$ea3ea0814e9e3e7c87eba3700e7a49d6c70d6e3fea61fae82310c2498132f725d60c9f9af58dcb5160a498ef2ea82af8c8e193a247ab25b23ea41b772800a8d8",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:19:31.453Z",
+      "lastModifiedBy": "Milan Adhikari (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695571453_4s6e",
+          "timestamp": "2026-11-26T12:19:31.453Z",
+          "actor": "Milan Adhikari (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_7ac3f881b452",
       "name": "Adarsh Kunwar",
