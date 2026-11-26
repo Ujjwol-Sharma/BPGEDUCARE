@@ -1,6 +1,6 @@
 {
-  "revision": 251,
-  "lastUpdated": "2026-11-26T13:51:58.074Z",
+  "revision": 252,
+  "lastUpdated": "2026-11-26T13:52:41.539Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795701161539_ks4f",
+      "timestamp": "2026-11-26T13:52:41.539Z",
+      "userId": "usr_1bbeffd36c10",
+      "email": "sudeepsubedi3456@gmail.com",
+      "actor": "Sudeep Subedi (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795700722168_01m1",
       "timestamp": "2026-11-26T13:45:22.168Z",
@@ -959,18 +968,45 @@
       "actor": "Ashish Adhikari (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795620857770_prsp",
-      "timestamp": "2026-11-25T15:34:17.770Z",
-      "userId": "usr_5264e9c810f7",
-      "email": "pokhreldikshya66@gmail.com",
-      "actor": "Dikshya Pokhrel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_1bbeffd36c10",
+      "name": "Sudeep Subedi",
+      "username": "sudeepsubedi3456",
+      "email": "sudeepsubedi3456@gmail.com",
+      "canonicalEmail": "sudeepsubedi3456@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:52:41.479Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_1bbeffd36c101113",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$51d2bca3d1468f2954911e4c8223c238$b1dc5092e2d6a4bcf45085ac6b7db77cb9e83965dd65f01467956db382a6ca08ab2ca8915fd28107d033468b097eda92b91dd24bd2be38c0f2c5fdda0645b186",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:52:41.539Z",
+      "lastModifiedBy": "Sudeep Subedi (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795701161539_9anx",
+          "timestamp": "2026-11-26T13:52:41.539Z",
+          "actor": "Sudeep Subedi (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_2266f373ef4f",
       "name": "Asbin Marasini",
