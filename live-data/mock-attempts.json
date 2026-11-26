@@ -1,6 +1,6 @@
 {
-  "revision": 498,
-  "lastUpdated": "2026-11-26T15:29:18.191Z",
+  "revision": 499,
+  "lastUpdated": "2026-11-26T15:29:25.152Z",
   "attempts": [
     {
       "id": "att_1795706958191_7589",
@@ -16,7 +16,9 @@
       "classKey": "class-12",
       "startedAt": 1795706958191,
       "finishAt": 1795707558191,
-      "answers": {},
+      "answers": {
+        "q_1795623984764_0": "A"
+      },
       "submitted": false,
       "submittedAt": null,
       "timeTakenSeconds": 0,
