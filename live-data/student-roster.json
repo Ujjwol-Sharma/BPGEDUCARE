@@ -1,6 +1,6 @@
 {
-  "revision": 250,
-  "lastUpdated": "2026-11-26T13:48:01.848Z",
+  "revision": 251,
+  "lastUpdated": "2026-11-26T13:51:58.074Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -2875,9 +2875,16 @@
       "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T11:24:33.369Z",
+      "updatedAt": "2026-11-26T13:51:58.074Z",
       "lastModifiedBy": "Bishal chhetri (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795701118074_guyd",
+          "timestamp": "2026-11-26T13:51:58.074Z",
+          "actor": "Bishal chhetri (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795701118073-A996D7 (Padandas, NPR 1999) is pending"
+        },
         {
           "id": "aud_1795692273369_f3jq",
           "timestamp": "2026-11-26T11:24:33.369Z",

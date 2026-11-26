@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T13:46:12.679Z",
+  "lastUpdated": "2026-11-26T13:51:58.073Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3614,6 +3614,30 @@
   ],
   "payments": [
     {
+      "id": "pay_1795701118073_6md2",
+      "orderId": "ORD-1795701118073-A996D7",
+      "userId": "usr_d6872f7a8cbc",
+      "fullName": "Bishal chhetri",
+      "username": "bishalchhetri0099",
+      "email": "bishalchhetri0099@gmail.com",
+      "canonicalEmail": "bishalchhetri0099@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planId": "gold",
+      "planName": "Padandas",
+      "amount": "Rs. 1,999",
+      "expectedAmount": 1999,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "ab8c94c404ee2827b3c067a2c59ce656b1d2d2c94759c203deddb1d3767e8a3a",
+      "method": "esewa_qr",
+      "status": "pending",
+      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "createdAt": "2026-11-26T13:51:58.073Z",
+      "updatedAt": "2026-11-26T13:51:58.073Z",
+      "reviewedAt": ""
+    },
+    {
       "id": "pay_1795700772678_dbjk",
       "orderId": "ORD-1795700772678-DE8FBB",
       "userId": "usr_0edbe94bc081",
@@ -4278,6 +4302,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 186,
+  "revision": 187,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
