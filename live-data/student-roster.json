@@ -1,6 +1,6 @@
 {
-  "revision": 223,
-  "lastUpdated": "2026-11-26T12:26:13.060Z",
+  "revision": 224,
+  "lastUpdated": "2026-11-26T12:26:22.169Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1211,7 +1211,10 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$b8ca3cc18b7cac0c8b21e4a02d77dce0$74066bfedfdf10e5868e7c0badb7ad51675cfe71e2febf68a079b7f603c441009a6512692021ae7c83e6a510247369434d9eed50e6a94e54f38d6cdf926b4589",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423",
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T12:24:15.351Z",
       "lastModifiedBy": "Sonish Diyali (Google Sign-In)",
