@@ -1,6 +1,6 @@
 {
-  "revision": 157,
-  "lastUpdated": "2026-11-26T02:29:35.635Z",
+  "revision": 158,
+  "lastUpdated": "2026-11-26T02:30:07.299Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660207299_1v57",
+      "timestamp": "2026-11-26T02:30:07.299Z",
+      "userId": "usr_f644dfd69005",
+      "email": "sadisht412@gmail.com",
+      "actor": "Safal Thapa (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795660175635_nnqv",
       "timestamp": "2026-11-26T02:29:35.635Z",
@@ -942,18 +951,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account Suman Sharma (suman@bpgacademy.edu.np)"
-    },
-    {
-      "id": "raud_1795513532481_yk0r",
-      "timestamp": "2026-11-24T09:45:32.481Z",
-      "userId": "usr_cc8442ff9a9c",
-      "email": "aayush.kc@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Aayush KC (aayush.kc@gmail.com)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_f644dfd69005",
+      "name": "Safal Thapa",
+      "username": "sadisht412",
+      "email": "sadisht412@gmail.com",
+      "canonicalEmail": "sadisht412@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:30:07.229Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_f644dfd690054fc0",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$24cf6700257dc9d28119abffd69f4b74$a9afbf728f685f8197348e38fb8b208da29b936c7e611db13366595824b8986f285e00138a3bb7fee576f734f4e0f8754d3a149bb045f66d5f9cbe8b9bfcf338",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:30:07.299Z",
+      "lastModifiedBy": "Safal Thapa (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795660207299_71dw",
+          "timestamp": "2026-11-26T02:30:07.299Z",
+          "actor": "Safal Thapa (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_913ce4fde8d3",
       "name": "Swarnim Ranabhat",
