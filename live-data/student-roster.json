@@ -1,6 +1,6 @@
 {
-  "revision": 235,
-  "lastUpdated": "2026-11-26T13:31:13.981Z",
+  "revision": 236,
+  "lastUpdated": "2026-11-26T13:33:52.098Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795700032098_24ks",
+      "timestamp": "2026-11-26T13:33:52.098Z",
+      "userId": "usr_30107fabf8ce",
+      "email": "saksham.co.pou@gmail.com",
+      "actor": "Saksham poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795699873981_zrub",
       "timestamp": "2026-11-26T13:31:13.981Z",
@@ -959,18 +968,45 @@
       "actor": "Aaditya Khatri (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795617931268_4rmn",
-      "timestamp": "2026-11-25T14:45:31.268Z",
-      "userId": "usr_253246e8adf9",
-      "email": "nabinkc1031@gmail.com",
-      "actor": "Nabin (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_30107fabf8ce",
+      "name": "Saksham poudel",
+      "username": "saksham.co.pou",
+      "email": "saksham.co.pou@gmail.com",
+      "canonicalEmail": "sakshamcopou@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T13:33:52.043Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_30107fabf8ce0ad7",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$5fea6ab3e984fc54b344ef72fe18e5da$d00ca6863ead1eb3bbe5033e85b11ada2f9de75b1aaac8e50267681cab443a99a8521cf38c7ae56256921951d69c76f0ff4e290d53d562c29fc64990f7e85831",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T13:33:52.098Z",
+      "lastModifiedBy": "Saksham poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795700032098_heka",
+          "timestamp": "2026-11-26T13:33:52.098Z",
+          "actor": "Saksham poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_a5ea3abd9ac1",
       "name": "Agrim Pahari",
