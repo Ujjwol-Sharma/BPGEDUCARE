@@ -1,6 +1,6 @@
 {
-  "revision": 256,
-  "lastUpdated": "2026-11-26T14:02:40.318Z",
+  "revision": 257,
+  "lastUpdated": "2026-11-26T14:04:54.582Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -4371,7 +4371,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T12:23:55.353Z",
       "verificationMethod": "google_oauth",
@@ -4382,9 +4382,16 @@
       "passkey": "scrypt$3712dcc866d423c4f91dd98536fad283$c1ff33719f3cff2b934260cca9a45f4b5b31c6b09f2630e8b70296d49b67964be91299ac1f261b0666c3ebd97d715e34b8790761fbb0ab77157737bb718d1ff2",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T13:31:13.981Z",
-      "lastModifiedBy": "Spandan Gorkhali (Google Sign-In)",
+      "updatedAt": "2026-11-26T14:04:54.582Z",
+      "lastModifiedBy": "Spandan Gorkhali (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795701894582_f6ny",
+          "timestamp": "2026-11-26T14:04:54.582Z",
+          "actor": "Spandan Gorkhali (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795701894581-E03223 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795699873981_358f",
           "timestamp": "2026-11-26T13:31:13.981Z",

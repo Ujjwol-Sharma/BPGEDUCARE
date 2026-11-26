@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T13:51:58.073Z",
+  "lastUpdated": "2026-11-26T14:04:54.582Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3614,6 +3614,30 @@
   ],
   "payments": [
     {
+      "id": "pay_1795701894582_stac",
+      "orderId": "ORD-1795701894581-E03223",
+      "userId": "usr_219268db8c0d",
+      "fullName": "Spandan Gorkhali",
+      "username": "spandan.pkr",
+      "email": "spandan.pkr@gmail.com",
+      "canonicalEmail": "spandanpkr@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planId": "diamond",
+      "planName": "Topper",
+      "amount": "Rs. 2,999",
+      "expectedAmount": 2999,
+      "currency": "NPR",
+      "transactionId": "",
+      "orderSignature": "95475bd3f294faf3f6886e90f9453dc4b23725533e59c0d369875a053438728e",
+      "method": "esewa_qr",
+      "status": "pending",
+      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "createdAt": "2026-11-26T14:04:54.582Z",
+      "updatedAt": "2026-11-26T14:04:54.582Z",
+      "reviewedAt": ""
+    },
+    {
       "id": "pay_1795701118073_6md2",
       "orderId": "ORD-1795701118073-A996D7",
       "userId": "usr_d6872f7a8cbc",
@@ -4302,6 +4326,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 187,
+  "revision": 188,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
