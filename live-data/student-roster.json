@@ -1,6 +1,6 @@
 {
-  "revision": 164,
-  "lastUpdated": "2026-11-26T02:36:24.733Z",
+  "revision": 166,
+  "lastUpdated": "2026-11-26T02:36:45.788Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795532266168_ch1h",
@@ -55,6 +55,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660603501_a1gi",
+      "timestamp": "2026-11-26T02:36:43.501Z",
+      "userId": "usr_5d7f21afd1ca",
+      "email": "poudlearadhaya@gmail.com",
+      "actor": "Amrit (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795660584733_9zt9",
       "timestamp": "2026-11-26T02:36:24.733Z",
@@ -942,18 +951,45 @@
       "actor": "Dipson Poudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795514697750_m5hx",
-      "timestamp": "2026-11-24T10:04:57.750Z",
-      "userId": "usr_3fb71be3b31a",
-      "email": "deepsonpaudel9@gmail.com",
-      "actor": "Dipson Poudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_5d7f21afd1ca",
+      "name": "Amrit",
+      "username": "poudlearadhaya",
+      "email": "poudlearadhaya@gmail.com",
+      "canonicalEmail": "poudlearadhaya@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T02:36:43.441Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_5d7f21afd1ca8dd3",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$7cd3f8418fb1b0bf405b8e792cdf0262$525a3cfb085c7a2c868e3ef3d4d0d3b7fc80c2cf9689831fecdf9bb80a14899144530dd6ad20717e6fc5ed1360607522bc68ca900da3a4768b39ec63e27898cd",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T02:36:43.501Z",
+      "lastModifiedBy": "Amrit (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795660603501_noh2",
+          "timestamp": "2026-11-26T02:36:43.501Z",
+          "actor": "Amrit (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_a2139cc0df00",
       "name": "Sanket Baral",
@@ -976,7 +1012,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$ac854c00b48a1b8c6b47b586be134764$e25077857d8098b008529f93268b092c2abcfa4e268cd8a065af782c59f4e3ded34768ef09d1f4f03e324542bf8309cbb6404ba248fee1807ccbc854fc0fa93a",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T02:35:50.144Z",
       "lastModifiedBy": "Sanket Baral (Google Sign-Up)",
