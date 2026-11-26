@@ -1,6 +1,6 @@
 {
-  "revision": 282,
-  "lastUpdated": "2026-11-26T16:11:31.046Z",
+  "revision": 283,
+  "lastUpdated": "2026-11-26T16:15:50.584Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795709750584_4lwg",
+      "timestamp": "2026-11-26T16:15:50.584Z",
+      "userId": "usr_2e57cd27d3d8",
+      "email": "ganeshsharma0224@gmail.com",
+      "actor": "Ganesh Sharma (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795709384646_nxsh",
       "timestamp": "2026-11-26T16:09:44.646Z",
@@ -962,18 +971,45 @@
       "actor": "Sulab Kc (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795624892733_ywet",
-      "timestamp": "2026-11-25T16:41:32.733Z",
-      "userId": "usr_358b294bfb3b",
-      "email": "bishnupdgautam2@gmail.com",
-      "actor": "Binisa Gautam (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_2e57cd27d3d8",
+      "name": "Ganesh Sharma",
+      "username": "ganeshsharma0224",
+      "email": "ganeshsharma0224@gmail.com",
+      "canonicalEmail": "ganeshsharma0224@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T16:15:50.522Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_2e57cd27d3d8df5c",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$881fed229d7e8b50c9744056037e0753$6cd385bbc791af6d892ded6cd939d803447cc29809a4efb740c542286a0f2ba9083fc89bb24a43a748ada61af7398060e4f72e65daf37ecabeeb3a12ea85209b",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T16:15:50.584Z",
+      "lastModifiedBy": "Ganesh Sharma (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795709750584_zgp9",
+          "timestamp": "2026-11-26T16:15:50.584Z",
+          "actor": "Ganesh Sharma (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_10821c34fe1c",
       "name": "Brandedexpress",
