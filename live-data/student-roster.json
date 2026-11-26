@@ -1,6 +1,6 @@
 {
-  "revision": 185,
-  "lastUpdated": "2026-11-26T04:03:20.113Z",
+  "revision": 186,
+  "lastUpdated": "2026-11-26T04:03:47.537Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -984,7 +984,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T04:00:45.434Z",
       "verificationMethod": "google_oauth",
@@ -998,9 +998,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T04:00:45.494Z",
-      "lastModifiedBy": "safdfafadwd (Google Sign-Up)",
+      "updatedAt": "2026-11-26T04:03:47.537Z",
+      "lastModifiedBy": "safdfafadwd (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795665827537_csno",
+          "timestamp": "2026-11-26T04:03:47.537Z",
+          "actor": "safdfafadwd (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795665827536-9AE5E4 (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795665645494_ja4a",
           "timestamp": "2026-11-26T04:00:45.494Z",
