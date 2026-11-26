@@ -1,6 +1,6 @@
 {
-  "revision": 214,
-  "lastUpdated": "2026-11-26T12:17:44.856Z",
+  "revision": 215,
+  "lastUpdated": "2026-11-26T12:17:53.393Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795695473393_00e6",
+      "timestamp": "2026-11-26T12:17:53.393Z",
+      "userId": "usr_c8cdbe5a4b5a",
+      "email": "sonish.diyali.cs@gmail.com",
+      "actor": "Sonish Diyali (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795695464856_8o8x",
       "timestamp": "2026-11-26T12:17:44.856Z",
@@ -959,18 +968,45 @@
       "actor": "Safal (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795610719930_or54",
-      "timestamp": "2026-11-25T12:45:19.930Z",
-      "userId": "usr_32c1a5fb30c2",
-      "email": "subedimanjul25@gmail.com",
-      "actor": "Manjul Subedi (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_c8cdbe5a4b5a",
+      "name": "Sonish Diyali",
+      "username": "sonish.diyali.cs",
+      "email": "sonish.diyali.cs@gmail.com",
+      "canonicalEmail": "sonishdiyalics@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T12:17:53.333Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_c8cdbe5a4b5ae614",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$b8ca3cc18b7cac0c8b21e4a02d77dce0$74066bfedfdf10e5868e7c0badb7ad51675cfe71e2febf68a079b7f603c441009a6512692021ae7c83e6a510247369434d9eed50e6a94e54f38d6cdf926b4589",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T12:17:53.393Z",
+      "lastModifiedBy": "Sonish Diyali (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795695473393_cn9z",
+          "timestamp": "2026-11-26T12:17:53.393Z",
+          "actor": "Sonish Diyali (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_1912f2ca9bed",
       "name": "Ganesh Poudel",
