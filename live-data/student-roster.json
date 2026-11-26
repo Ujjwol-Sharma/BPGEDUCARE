@@ -1,6 +1,6 @@
 {
-  "revision": 204,
-  "lastUpdated": "2026-11-26T11:32:08.445Z",
+  "revision": 205,
+  "lastUpdated": "2026-11-26T11:32:29.915Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795692749915_lznp",
+      "timestamp": "2026-11-26T11:32:29.915Z",
+      "userId": "usr_9f75addac06c",
+      "email": "pahariujjwal2564@gmail.com",
+      "actor": "Ujjwal Pahari (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795692728445_lmts",
       "timestamp": "2026-11-26T11:32:08.445Z",
@@ -959,18 +968,45 @@
       "actor": "Spandan Gorkhali (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795609175280_9c8e",
-      "timestamp": "2026-11-25T12:19:35.280Z",
-      "userId": "usr_b779167fbeb3",
-      "email": "pradipranabhat19@gmail.com",
-      "actor": "Pradip Ranabhat (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_9f75addac06c",
+      "name": "Ujjwal Pahari",
+      "username": "ujjwal_7",
+      "email": "pahariujjwal2564@gmail.com",
+      "canonicalEmail": "pahariujjwal2564@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T11:32:29.845Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$06fee78dc33809d02d279842c2b2dd45$222cf9a181fc6232621e3d8897f85d77e26f19c80a5b21f3e49a2182397917a802e88f7be79976c03998a9d8a9513c52201179f9384810575ce7f6f2690c57c5",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T11:32:29.915Z",
+      "lastModifiedBy": "Ujjwal Pahari (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795692749915_ksmj",
+          "timestamp": "2026-11-26T11:32:29.915Z",
+          "actor": "Ujjwal Pahari (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_9850039770ec",
       "name": "Rupesh Bhandari",
