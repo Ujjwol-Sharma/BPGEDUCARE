@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-26T01:48:07.833Z",
+  "lastUpdated": "2026-11-26T01:48:08.829Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3196,7 +3196,7 @@
     "enabled": false,
     "title": "Official Launch Coming Up 🚀",
     "message": "Student portals are temporarily locked as we prepare for the BPG EDUCARE Official Opening Ceremony (Nov 26, 2026). All open features will go live right after the official release!",
-    "updatedAt": "2026-11-26T01:48:07.465Z"
+    "updatedAt": "2026-11-26T01:48:08.433Z"
   },
   "siteSettings": {
     "whatsappNumber": "9779866064252",
@@ -3980,6 +3980,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 157,
+  "revision": 159,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
