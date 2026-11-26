@@ -1,6 +1,6 @@
 {
-  "revision": 259,
-  "lastUpdated": "2026-11-26T14:09:14.040Z",
+  "revision": 260,
+  "lastUpdated": "2026-11-26T14:09:36.101Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795702176101_3zsf",
+      "timestamp": "2026-11-26T14:09:36.101Z",
+      "userId": "usr_377c5d16701c",
+      "email": "jeffreyepstein100000@gmail.com",
+      "actor": "Jeffrey Epstein (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795701760318_xswr",
       "timestamp": "2026-11-26T14:02:40.318Z",
@@ -959,18 +968,45 @@
       "actor": "Ujjwol Sharma (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795621286047_j7wn",
-      "timestamp": "2026-11-25T15:41:26.047Z",
-      "userId": "usr_102017d9b135",
-      "email": "shirishtripathi49@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_377c5d16701c",
+      "name": "Jeffrey Epstein",
+      "username": "jeffreyepstein100000",
+      "email": "jeffreyepstein100000@gmail.com",
+      "canonicalEmail": "jeffreyepstein100000@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T14:09:36.030Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_377c5d16701cfe2b",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$9446c0fda4ea883bb8eb18359da2905b$78ea87180abd594c4405ba5595590a93735d06a881d71fc8ac6044afc291670b8366f765bc638976d5f8c4abbad5dba9e0c37c442f9300a54d252ef912e95648",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T14:09:36.101Z",
+      "lastModifiedBy": "Jeffrey Epstein (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795702176101_7syb",
+          "timestamp": "2026-11-26T14:09:36.101Z",
+          "actor": "Jeffrey Epstein (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_cc8662c3221b",
       "name": "Addin Baral",
