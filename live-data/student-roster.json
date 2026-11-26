@@ -1,6 +1,6 @@
 {
-  "revision": 169,
-  "lastUpdated": "2026-11-26T02:37:59.383Z",
+  "revision": 170,
+  "lastUpdated": "2026-11-26T02:38:17.801Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -13,10 +13,11 @@
       "requestedClassKey": "class-12",
       "requestedGrade": "Class 12",
       "reason": "",
-      "status": "pending",
+      "status": "approved",
       "adminNote": "",
       "submittedAt": "2026-11-26T02:37:59.383Z",
-      "reviewedAt": ""
+      "reviewedAt": "2026-11-26T02:38:17.800Z",
+      "reviewedBy": "Admin Console"
     },
     {
       "id": "csr_1795532266168_ch1h",
@@ -71,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795660697801_rsyl",
+      "timestamp": "2026-11-26T02:38:17.801Z",
+      "userId": "usr_11828397bfa7",
+      "email": "paudelruben04@gmail.com",
+      "actor": "Admin Console",
+      "action": "CLASS_SWITCH_APPROVED",
+      "details": "Ruben Paudel: switch approved Class 11 -> Class 12"
+    },
     {
       "id": "raud_1795660679383_1119",
       "timestamp": "2026-11-26T02:37:59.383Z",
@@ -958,15 +968,6 @@
       "actor": "Chess Club (Student)",
       "action": "CLASS_SWITCH_REQUESTED",
       "details": "Requested switch from Class 12 to Class 11"
-    },
-    {
-      "id": "raud_1795518620384_ok6o",
-      "timestamp": "2026-11-24T11:10:20.384Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_FAILED",
-      "details": "Chess Club: payment ORD-1795518544717-1E3DF3 marked FAILED"
     }
   ],
   "accounts": [
@@ -1230,8 +1231,8 @@
       "username": "paudelruben04",
       "email": "paudelruben04@gmail.com",
       "canonicalEmail": "paudelruben04@gmail.com",
-      "grade": "Class 11",
-      "classKey": "class-11",
+      "grade": "Class 12",
+      "classKey": "class-12",
       "plan": "free",
       "planExpiresAt": "",
       "planExplicitlySet": false,
@@ -1248,9 +1249,16 @@
       "passkey": "scrypt$5424fe0438748ce01ffb8026027a56e4$2038b76d48368c2db34a5406d27838c3954032820368f531777bb607256065a78c9f9cfad0e9abe7665c9572b024221a0fcb1f23f2b2ecc7e58c6a9c307aeb3c",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T02:37:59.383Z",
-      "lastModifiedBy": "Ruben Paudel (Student)",
+      "updatedAt": "2026-11-26T02:38:17.800Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795660697801_xl2k",
+          "timestamp": "2026-11-26T02:38:17.800Z",
+          "actor": "Admin Console",
+          "action": "CLASS_SWITCH_APPROVED",
+          "details": "Approved class switch from Class 11 to Class 12"
+        },
         {
           "id": "aud_1795660679383_z1ku",
           "timestamp": "2026-11-26T02:37:59.383Z",
