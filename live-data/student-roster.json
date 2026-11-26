@@ -1,6 +1,6 @@
 {
-  "revision": 193,
-  "lastUpdated": "2026-11-26T04:11:44.247Z",
+  "revision": 194,
+  "lastUpdated": "2026-11-26T04:12:48.387Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1020,7 +1020,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "awaiting_confirmation",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T04:00:45.434Z",
       "verificationMethod": "google_oauth",
@@ -1034,9 +1034,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T04:05:54.448Z",
-      "lastModifiedBy": "safdfafadwd (Google Sign-In)",
+      "updatedAt": "2026-11-26T04:12:48.387Z",
+      "lastModifiedBy": "safdfafadwd (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795666368387_ropn",
+          "timestamp": "2026-11-26T04:12:48.387Z",
+          "actor": "safdfafadwd (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795666368386-B21480 (Padandas, NPR 1999) is pending"
+        },
         {
           "id": "aud_1795665954448_buew",
           "timestamp": "2026-11-26T04:05:54.448Z",
