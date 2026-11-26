@@ -1,6 +1,6 @@
 {
-  "revision": 199,
-  "lastUpdated": "2026-11-26T04:22:31.487Z",
+  "revision": 200,
+  "lastUpdated": "2026-11-26T04:30:09.449Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795667409449_pqro",
+      "timestamp": "2026-11-26T04:30:09.449Z",
+      "userId": "usr_328a96817608",
+      "email": "deepsonsee@gmail.com",
+      "actor": "Deepson Thapa (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795666947304_2p5k",
       "timestamp": "2026-11-26T04:22:27.304Z",
@@ -959,18 +968,45 @@
       "actor": "Sumit Acharya (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795608105503_itxq",
-      "timestamp": "2026-11-25T12:01:45.503Z",
-      "userId": "usr_03f7b735f6ec",
-      "email": "aadityakhatri234@gmail.com",
-      "actor": "Aaditya Khatri (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_328a96817608",
+      "name": "Deepson Thapa",
+      "username": "deepsonsee",
+      "email": "deepsonsee@gmail.com",
+      "canonicalEmail": "deepsonsee@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T04:30:09.396Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_328a968176089af5",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$d46c64157eeff58551c285cc361fdee7$c07fdcffd418b5ec4306710e543eb7b733437c78753cb20b72aa7935f2968afea292fed8ec87138612e357b781d4b8a92a0c456dae6fec964898e3fae7ea1394",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T04:30:09.449Z",
+      "lastModifiedBy": "Deepson Thapa (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795667409449_vkir",
+          "timestamp": "2026-11-26T04:30:09.449Z",
+          "actor": "Deepson Thapa (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_5c5a56496063",
       "name": "Ram Prasad Ojha",
