@@ -1,6 +1,6 @@
 {
-  "revision": 400,
-  "lastUpdated": "2026-11-26T13:04:07.433Z",
+  "revision": 401,
+  "lastUpdated": "2026-11-26T13:24:30.972Z",
   "attempts": [
     {
       "id": "att_1795698066212_4557",
@@ -838,11 +838,186 @@
       "startedAt": 1795692900284,
       "finishAt": 1795693500284,
       "answers": {},
-      "submitted": false,
-      "submittedAt": null,
+      "submitted": true,
+      "submittedAt": "2026-11-26T13:24:30.972Z",
       "timeTakenSeconds": 0,
-      "autoSubmitted": false,
-      "result": null
+      "autoSubmitted": true,
+      "result": {
+        "score": 0,
+        "total": 11,
+        "percentage": 0,
+        "correctCount": 0,
+        "wrongCount": 0,
+        "skippedCount": 11,
+        "autoSubmitted": true,
+        "review": [
+          {
+            "id": "q_1795623984764_0",
+            "text": "If $A=[(x,y):x^2+y^2=25] and B=[(x,y):x^2+y^2=144] then A \\cap B contains :$",
+            "options": {
+              "A": "0",
+              "B": "1",
+              "C": "2",
+              "D": "4"
+            },
+            "selectedOption": null,
+            "correctOption": "A",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795624239159_1",
+            "text": "If $ \\alpha ,\\beta  be  the  roots of x^2+x-1=0 then \\alpha ^2+\\beta ^2= $",
+            "options": {
+              "A": "-1",
+              "B": "2",
+              "C": "3",
+              "D": "-2"
+            },
+            "selectedOption": null,
+            "correctOption": "C",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795624400461_2",
+            "text": "The possible number of different squares in a\nchess board is :",
+            "options": {
+              "A": "64",
+              "B": "204",
+              "C": "512",
+              "D": "1296"
+            },
+            "selectedOption": null,
+            "correctOption": "B",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795624971478_3",
+            "text": "$\\lim(x \\to 1)⁡(\\frac{\\tan⁡(x^2-1)}{x-1})  is  equal to :$",
+            "options": {
+              "A": "1/2",
+              "B": "2",
+              "C": "-2",
+              "D": "-1/2"
+            },
+            "selectedOption": null,
+            "correctOption": "A",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795625164090_4",
+            "text": "If $y=1-x+\\frac{x^2}{2!}-\\frac{x^3}{3!}+\\frac{x^4}{4!}-… then \\frac{d^2 y}{dx^2} =$",
+            "options": {
+              "A": "x",
+              "B": "-x",
+              "C": "y",
+              "D": "-y"
+            },
+            "selectedOption": null,
+            "correctOption": "C",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795625305053_5",
+            "text": "If $\\cos^{-1} x+\\cos^{-1} y+\\cos^{-1} z=3\\pi  then  xy+yz+zx=$",
+            "options": {
+              "A": "0",
+              "B": "1",
+              "C": "2",
+              "D": "3"
+            },
+            "selectedOption": null,
+            "correctOption": "D",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795625495622_6",
+            "text": "$\\int [\\sin^{-1} (\\cos⁡\\sin^{-1}  x)+\\cos^{-1} (\\sin⁡\\cos^{-1}  x)] dx=$",
+            "options": {
+              "A": "$\\pi\\frac{x} {2}+c$",
+              "B": "$\\frac {\\pi} {2} +c$",
+              "C": "x+c",
+              "D": "non2"
+            },
+            "selectedOption": null,
+            "correctOption": "A",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795626218988_7",
+            "text": "The range of the function   f(x)=1-|x-7|  is:",
+            "options": {
+              "A": "R",
+              "B": "R-{0}",
+              "C": "$[0,\\infty )$",
+              "D": "$(-\\infty ,1]$"
+            },
+            "selectedOption": null,
+            "correctOption": "D",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795626369908_8",
+            "text": "The area of the triangle whose sides are along the\nlines x=0 , y=0 and 4x+5y=20   is:",
+            "options": {
+              "A": "20",
+              "B": "10",
+              "C": "5",
+              "D": "15/2"
+            },
+            "selectedOption": null,
+            "correctOption": "B",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795626501016_9",
+            "text": "The projection of a line on the co-ordinate\naxes are 6,2,3. The d.c's of the line are :",
+            "options": {
+              "A": "1/7,2/7,3/7",
+              "B": "6/7,2/7,3/7",
+              "C": "6/49,2/49,3/49",
+              "D": "$\\frac{1}{\\sqrt{3}},\\frac{1}{\\sqrt{3}},\\frac{1}{\\sqrt{3}}$"
+            },
+            "selectedOption": null,
+            "correctOption": "B",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          },
+          {
+            "id": "q_1795626631539_10",
+            "text": "Area bounded by the\ncurve $y=x^2$ and $y=2-x^2$ is",
+            "options": {
+              "A": "8/3",
+              "B": "3/8",
+              "C": "3/2",
+              "D": "3/4"
+            },
+            "selectedOption": null,
+            "correctOption": "A",
+            "marksAwarded": 0,
+            "maxMarks": 1,
+            "status": "skipped"
+          }
+        ]
+      }
     },
     {
       "id": "att_1795666917518_8424",
