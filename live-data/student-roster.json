@@ -1,6 +1,6 @@
 {
-  "revision": 277,
-  "lastUpdated": "2026-11-26T15:56:01.238Z",
+  "revision": 278,
+  "lastUpdated": "2026-11-26T16:01:55.407Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795708915407_38tu",
+      "timestamp": "2026-11-26T16:01:55.407Z",
+      "userId": "usr_2de62fbb0993",
+      "email": "lukemat716@gmail.com",
+      "actor": "Luke (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795708561238_uzkb",
       "timestamp": "2026-11-26T15:56:01.238Z",
@@ -962,18 +971,45 @@
       "actor": "Bishal chhetri (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795624567684_5x7y",
-      "timestamp": "2026-11-25T16:36:07.684Z",
-      "userId": "usr_aba8f2cb0d91",
-      "email": "mriduljungpande0095@gmail.com",
-      "actor": "Mridul Jung Pande (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (After 12 Entrance)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_2de62fbb0993",
+      "name": "Luke",
+      "username": "lukemat716",
+      "email": "lukemat716@gmail.com",
+      "canonicalEmail": "lukemat716@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-26T16:01:55.339Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_2de62fbb0993215c",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$9158dcf88c70c42887bd122ff10cac3a$941ae1a0572dffffdbf9dc5dbcf93978257a6b5aaf69687365b4926659e8013fdebe5fc0153698b0424df9699e6d32dc5e1df9b25aa7377228708ffc694a6c95",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-26",
+      "updatedAt": "2026-11-26T16:01:55.407Z",
+      "lastModifiedBy": "Luke (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795708915407_d7l9",
+          "timestamp": "2026-11-26T16:01:55.407Z",
+          "actor": "Luke (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_a786d18f0f8c",
       "name": "Smith Kandel",
