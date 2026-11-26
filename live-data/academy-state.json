@@ -2957,10 +2957,10 @@
       "durationMinutes": 15,
       "minPlan": "free",
       "adminAssignedPlan": true,
-      "status": "scheduled",
+      "status": "published",
       "scheduledReleaseAt": "2026-11-26T02:20:00.000Z",
-      "releasedAt": "",
-      "releaseNotifiedAt": "",
+      "releasedAt": "2026-11-26T02:20:00.000Z",
+      "releaseNotifiedAt": "2026-11-26T02:20:00.813Z",
       "questions": [
         {
           "id": "q_1795623984764_0",
@@ -3205,6 +3205,19 @@
     "googleClientId": ""
   },
   "notifications": [
+    {
+      "id": "notif_mock_live_mt_1795626947423",
+      "dedupeKey": "notif_mock_live_mt_1795626947423",
+      "title": "Mock Test Now Live: Opening Mock Test",
+      "body": "Your scheduled Class 12 mock test (15 min, 11 questions) is now open.",
+      "category": "Exam Update",
+      "scope": "class-12",
+      "linkTarget": "mocktests",
+      "testId": "mt_1795626947423",
+      "published": true,
+      "createdAt": "2026-11-26T02:20:00.000Z",
+      "updatedAt": "2026-11-26T02:20:00.813Z"
+    },
     {
       "id": "notif_1795659581775",
       "title": "Official Opening",
@@ -3990,6 +4003,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 166,
+  "revision": 167,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
