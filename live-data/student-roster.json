@@ -1,6 +1,6 @@
 {
-  "revision": 244,
-  "lastUpdated": "2026-11-26T13:41:24.554Z",
+  "revision": 245,
+  "lastUpdated": "2026-11-26T13:43:33.470Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1029,7 +1029,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$6476e2fcf72d2099bbb46e2130d29556$a44d1fda43aab30ef3c54bfc0a0868f6e9506cd3d0c391668304d1a630572f2bb123d231b9e82b9bb5c33d305fac50656185b93c7f94edfc98cd698feae19b10",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_mock_live_mt_1795626947423"
+      ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T13:36:20.926Z",
       "lastModifiedBy": "Rebika Thapa (Google Sign-Up)",
