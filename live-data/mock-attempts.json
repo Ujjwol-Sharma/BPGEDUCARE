@@ -1,28 +1,7 @@
 {
-  "revision": 258,
-  "lastUpdated": "2026-11-26T02:46:51.251Z",
+  "revision": 257,
+  "lastUpdated": "2026-11-26T02:46:50.831Z",
   "attempts": [
-    {
-      "id": "att_1795661211251_5434",
-      "clientRequestId": "req_mt_1795626947423_1795661210629_j3pik",
-      "attemptNumber": 2,
-      "testId": "mt_1795626947423",
-      "userId": "usr_11828397bfa7",
-      "userName": "Ruben Paudel",
-      "username": "paudelruben04",
-      "grade": "Class 12",
-      "canonicalEmail": "paudelruben04@gmail.com",
-      "email": "paudelruben04@gmail.com",
-      "classKey": "class-12",
-      "startedAt": 1795661211251,
-      "finishAt": 1795661811251,
-      "answers": {},
-      "submitted": false,
-      "submittedAt": null,
-      "timeTakenSeconds": 0,
-      "autoSubmitted": false,
-      "result": null
-    },
     {
       "id": "att_1795661182801_8474",
       "clientRequestId": "req_mt_1795626947423_1795661181541_au402",
