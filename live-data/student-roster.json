@@ -1,6 +1,6 @@
 {
-  "revision": 496,
-  "lastUpdated": "2026-11-27T17:38:00.183Z",
+  "revision": 497,
+  "lastUpdated": "2026-11-27T17:38:11.510Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1018,7 +1018,7 @@
       "termsAcceptedAt": "2026-11-27T17:29:46.750Z",
       "ioeAccess": false,
       "mustChangePassword": false,
-      "activeSessionId": "sid_b70f2d2953d3621e8c5dd610",
+      "activeSessionId": "revoked_sid_a1e0071ea2d69ff9c393fcba",
       "lastLoginAt": "2026-11-27T17:29:46.750Z",
       "lastActiveAt": "2026-11-27T17:30:47.078Z",
       "currentSection": "IOE (Entrance Prep) Mathematics · notes",
