@@ -1,6 +1,6 @@
 {
-  "revision": 304,
-  "lastUpdated": "2026-11-27T03:12:01.132Z",
+  "revision": 305,
+  "lastUpdated": "2026-11-27T10:23:23.657Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795775003657_duce",
+      "timestamp": "2026-11-27T10:23:23.657Z",
+      "userId": "usr_cfe03652d5e2",
+      "email": "neerjbhattarai625@gmail.com",
+      "actor": "NIraj Bhattarai (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795749121132_w325",
       "timestamp": "2026-11-27T03:12:01.132Z",
@@ -962,18 +971,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account UJJWOL SHARMA (ultraclips4561@gmail.com)"
-    },
-    {
-      "id": "raud_1795657460295_9llp",
-      "timestamp": "2026-11-26T01:44:20.295Z",
-      "userId": "usr_d032e2a0558a",
-      "email": "ultraclips4561@gmail.com",
-      "actor": "UJJWOL SHARMA (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_cfe03652d5e2",
+      "name": "NIraj Bhattarai",
+      "username": "neerjbhattarai625",
+      "email": "neerjbhattarai625@gmail.com",
+      "canonicalEmail": "neerjbhattarai625@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T10:23:23.597Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_cfe03652d5e2f3ac",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$005b70a6722f3051388f2f5112ece6d8$c3706bd03309e0e89bf910a65a6c7076678f9f43dac14ec77c76d061c1f59f3b0e09376979cfcfe3bf03437f647f3a89476283fc33da991257a5e21aa5626306",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T10:23:23.657Z",
+      "lastModifiedBy": "NIraj Bhattarai (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795775003657_9tbm",
+          "timestamp": "2026-11-27T10:23:23.657Z",
+          "actor": "NIraj Bhattarai (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_437be9c554cc",
       "name": "Abhimanyu Poudel",
