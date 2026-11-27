@@ -1,6 +1,6 @@
 {
-  "revision": 294,
-  "lastUpdated": "2026-11-27T01:41:21.387Z",
+  "revision": 295,
+  "lastUpdated": "2026-11-27T02:01:56.878Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1039,7 +1039,9 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$bfd71b61486a038347caa1e4c489c8dd$75f1bced649ff99b97f8e22bc7f407d26214befd531a2ccabd562795de13a1b78ad5c0cd4cc0575a39a41b5ffc0508ecac0bc8ecd60207ed787e4cb7ec1c09e4",
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795630727465"
+      ],
       "joinedAt": "2026-11-27",
       "updatedAt": "2026-11-27T01:22:51.566Z",
       "lastModifiedBy": "Suraj Paudel (Google Sign-Up)",
