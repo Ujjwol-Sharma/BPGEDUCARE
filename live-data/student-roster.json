@@ -1,6 +1,6 @@
 {
-  "revision": 328,
-  "lastUpdated": "2026-11-27T11:11:40.659Z",
+  "revision": 330,
+  "lastUpdated": "2026-11-27T11:11:44.563Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,24 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777904563_wgpn",
+      "timestamp": "2026-11-27T11:11:44.563Z",
+      "userId": "usr_102017d9b135",
+      "email": "shirishtripathi49@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Shirish Tripathi: payment ORD-1795614267812-FE5B4D marked FAILED"
+    },
+    {
+      "id": "raud_1795777902749_x2ha",
+      "timestamp": "2026-11-27T11:11:42.749Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "UJJWOL SHARMA: payment ORD-1795662726202-80D6E0 marked FAILED"
+    },
     {
       "id": "raud_1795777900659_5vqi",
       "timestamp": "2026-11-27T11:11:40.659Z",
@@ -953,24 +971,6 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account Creative Chess Club (creativechessclub01@gmail.com)"
-    },
-    {
-      "id": "raud_1795661414535_7baf",
-      "timestamp": "2026-11-26T02:50:14.535Z",
-      "userId": "usr_5fcb93b36525",
-      "email": "divyabhandari202@gmail.com",
-      "actor": "Divya Bhandari (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795661324896_rdph",
-      "timestamp": "2026-11-26T02:48:44.896Z",
-      "userId": "usr_0f1bb6e4792c",
-      "email": "sumitach321@gmail.com",
-      "actor": "Sumit Acharya (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
@@ -3940,9 +3940,16 @@
       "passkey": "scrypt$54bb8072aeacf704ad56477e247a111e$b72b3103c2e301ff693ab2b32f9fc6da988880bf9d2982ee3642ca51d73b90ec0932a305dfed21cf6bea05ebf135082f1bd221b12d0c80739f4311dd67634b62",
       "readNotificationIds": [],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-26T03:12:06.203Z",
-      "lastModifiedBy": "UJJWOL SHARMA (Student)",
+      "updatedAt": "2026-11-27T11:11:42.749Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777902749_iur4",
+          "timestamp": "2026-11-27T11:11:42.749Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795662726202-80D6E0 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795662726203_gte6",
           "timestamp": "2026-11-26T03:12:06.203Z",
@@ -4574,7 +4581,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T13:42:08.828Z",
       "verificationMethod": "google_oauth",
@@ -4585,9 +4592,16 @@
       "passkey": "scrypt$a7f86031ef810770aef0f04f3117d56f$dd58e390db4d952f40137be62366262d596892acab248acafa80e35976ebfecb297d7b64275ead4e20571e17919b7cc1c5ba22865814eaaf0fd2f7eeaea55eda",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T15:41:26.047Z",
+      "updatedAt": "2026-11-27T11:11:44.563Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777904563_f2r3",
+          "timestamp": "2026-11-27T11:11:44.563Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795614267812-FE5B4D marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795614267813_fdhj",
           "timestamp": "2026-11-25T13:44:27.813Z",
