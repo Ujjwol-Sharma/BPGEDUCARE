@@ -1,6 +1,6 @@
 {
-  "revision": 364,
-  "lastUpdated": "2026-11-27T15:33:41.987Z",
+  "revision": 365,
+  "lastUpdated": "2026-11-27T15:33:57.594Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1165,9 +1165,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:29:15.984Z",
+      "updatedAt": "2026-11-27T15:33:57.594Z",
       "lastModifiedBy": "Creative Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795793637594_d5o0",
+          "timestamp": "2026-11-27T15:33:57.594Z",
+          "actor": "Creative Chess Club (Student)",
+          "action": "PAYMENT_PROOF_SUBMITTED",
+          "details": "Order BPG-2026-00101 (Padandas, Rs. 1,999, eSewa, TxCode FDSFDSFDSF) submitted for verification"
+        },
         {
           "id": "aud_1795793355984_woxn",
           "timestamp": "2026-11-27T15:29:15.984Z",
