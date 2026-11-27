@@ -10,7 +10,7 @@ const GUIDE_KNOWLEDGE_BASE = {
             <p>Registering on <strong>BPG Academy</strong> takes less than 30 seconds:</p>
             <ul>
                 <li>Click <strong>Sign In / Register</strong> at the top-right navigation bar and choose <strong>Create Account</strong>.</li>
-                <li>Enter your Full Name, select your primary class (e.g. Class 10, Class 11, Class 12, or After 12), and enter your email.</li>
+                <li>Enter your Full Name, select your primary class (Class 11, Class 12, or IOE), accept the Terms &amp; Conditions, and enter your Gmail address.</li>
                 <li>Enter the <strong>6-digit OTP verification code</strong> sent to your email (or displayed in the instant local preview box) to unlock your primary class workspace free forever!</li>
             </ul>
         `
@@ -29,12 +29,12 @@ const GUIDE_KNOWLEDGE_BASE = {
     single_class_rule: {
         question: "How does single-class registration work?",
         reply: `
-            <p><strong>BPG Academy</strong> operates on a <strong>Strict Single-Class Registration Model</strong>:</p>
+            <p><strong>BPG EDUCARE</strong> offers Class 11, Class 12, and side-by-side IOE (Entrance Prep):</p>
             <ul>
-                <li>When you create an account, you select exactly ONE class (Class 10, Class 11, Class 12, or Entrance).</li>
-                <li>Your student ID is permanently dedicated to this program.</li>
-                <li><strong>All features are fully unlocked:</strong> You get complete, unrestricted access to the Syllabus Blueprint, Units &amp; Theory KaTeX reader, Live Zoom Calendar, and Notes &amp; PDFs.</li>
-                <li>To enroll in a different academic program, simply register a separate student account.</li>
+                <li>When you create an account, you select your primary class (Class 11, Class 12, or IOE).</li>
+                <li>Class 11 &amp; Class 12 students can also explore <strong>IOE</strong> side-by-side without losing their primary class!</li>
+                <li><strong>Padandas (Rs. 1,999/yr):</strong> Full Class 11 or Class 12 access (IOE not included).</li>
+                <li><strong>Topper (Rs. 2,999/yr):</strong> Full Class 11/12 access <strong>PLUS full IOE included</strong>.</li>
             </ul>
         `
     },
@@ -52,12 +52,11 @@ const GUIDE_KNOWLEDGE_BASE = {
     classes_offered: {
         question: "What classes are offered?",
         reply: `
-            <p>BPG Academy offers four focused, structured mathematics programs:</p>
+            <p>BPG EDUCARE offers three focused, structured mathematics programs:</p>
             <ul>
-                <li><strong>01 — Grade XII Mathematics:</strong> Complete board preparation, integration techniques, 3D vectors & skew lines, differential equations.</li>
-                <li><strong>02 — Grade XI Mathematics:</strong> Algebraic foundations, complex numbers, coordinate conics, first-principle calculus.</li>
-                <li><strong>03 — SEE Mathematics Foundation:</strong> Class 10 CDC Compulsory & Optional Math, geometric circle theorems, unseen riders, trigonometry.</li>
-                <li><strong>04 — Engineering & Medical Entrance:</strong> IOE Pulchowk, CEE & KU speed hacks, 15-year past papers, and FX-991 calculator shortcuts.</li>
+                <li><strong>01 — Grade XII Mathematics (NEB Mat. 102):</strong> Complete board preparation, integration techniques, 3D vectors &amp; skew lines, differential equations.</li>
+                <li><strong>02 — Grade XI Mathematics (NEB Mat. 101):</strong> Algebraic foundations, complex numbers, coordinate conics, first-principle calculus.</li>
+                <li><strong>03 — IOE (Entrance Prep):</strong> IOE Pulchowk speed hacks, 15-year past papers, and scientific shortcuts — accessible side-by-side and included in the Topper plan.</li>
             </ul>
         `
     },
@@ -214,14 +213,14 @@ function renderMathInGuide() {
 function toggleKaTexGuideModal() { toggleWebsiteGuide(); }
 function handleKaTexGuideChip(chipKey) { askGuideQuestion(chipKey); }
 
-// Redesigned Basic + Scientific Calculator (Recursive-Descent Parser, DEG/RAD persisted per user, History, Helpful Errors, Keyboard Input)
+// Windows 11-Style Standard & Scientific Calculator (PEMDAS/BODMAS, DEG/RAD/GRAD, 2nd, Memory MC/MR/M+/M-/MS, History, Keyboard Input)
 const BPG_CALC_ANGLE_STORAGE_KEY = 'bpg_calc_angle_mode_v1';
 const BPG_CALC_MODE_STORAGE_KEY = 'bpg_calc_mode_v1';
 let miniCalcExpr = '';
 let miniCalcAngleMode = (() => {
     try {
         const saved = localStorage.getItem(BPG_CALC_ANGLE_STORAGE_KEY);
-        return saved === 'RAD' ? 'RAD' : 'DEG';
+        return ['DEG', 'RAD', 'GRAD'].includes(saved) ? saved : 'DEG';
     } catch (e) {
         return 'DEG';
     }
@@ -235,6 +234,9 @@ let miniCalcMode = (() => {
     }
 })();
 let miniCalcLastAns = 0;
+let miniCalcMemory = 0;
+let miniCalcHasMemory = false;
+let miniCalcSecondFn = false;
 let miniCalcHistory = [];
 let miniCalcJustEvaluated = false;
 let miniCalcHasError = false;
@@ -242,8 +244,8 @@ let miniCalcHasError = false;
 const CALC_MULTI_CHAR_TOKENS = [
     'sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(',
     'asin(', 'acos(', 'atan(',
-    'log₁₀(', 'log10(', 'sqrt(',
-    'sin(', 'cos(', 'tan(', 'log(', 'ln(', 'abs(', '√('
+    'log₁₀(', 'log10(', 'log2(', 'log₂(', 'cbrt(', '³√(', 'sqrt(',
+    'sin(', 'cos(', 'tan(', 'log(', 'ln(', 'abs(', '√(', ' mod '
 ];
 
 function formatBpgCalcNumber(val) {
@@ -265,7 +267,8 @@ function formatBpgCalcNumber(val) {
  * √81 and √(81), 2³ and 2^3, log₁₀(100), ln(e), trig & inverse trig in DEG/RAD, and explicit °.
  */
 function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
-    const mode = String(angleMode || 'DEG').toUpperCase() === 'RAD' ? 'RAD' : 'DEG';
+    const up = String(angleMode || 'DEG').toUpperCase();
+    const mode = up === 'RAD' ? 'RAD' : (up === 'GRAD' ? 'GRAD' : 'DEG');
     const src = String(rawInput || '').trim();
     if (!src) {
         const err = new Error('Enter an expression to calculate.');
@@ -278,7 +281,9 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
         .replace(/\u2212|\u2013|\u2014/g, '-')
         .replace(/[×·✕]/g, '*')
         .replace(/÷/g, '/')
+        .replace(/³√/g, 'cbrt')
         .replace(/log₁₀/gi, 'log10')
+        .replace(/log₂/gi, 'log2')
         .replace(/sin⁻¹/gi, 'asin')
         .replace(/cos⁻¹/gi, 'acos')
         .replace(/tan⁻¹/gi, 'atan')
@@ -371,10 +376,12 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
                 rawTokens.push({ type: 'CONST', name: 'pi', value: Math.PI });
             } else if (ident === 'e') {
                 rawTokens.push({ type: 'CONST', name: 'e', value: Math.E });
-            } else if (['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10', 'ln', 'sqrt', 'abs'].includes(ident)) {
+            } else if (ident === 'mod') {
+                rawTokens.push({ type: 'OP', value: 'mod' });
+            } else if (['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10', 'log2', 'ln', 'sqrt', 'cbrt', 'abs'].includes(ident)) {
                 rawTokens.push({ type: 'FUNC', name: ident === 'log10' ? 'log' : ident });
             } else {
-                const err = new Error(`Unknown function or symbol "${ident}".`);
+                const err = new Error('Invalid input');
                 err.code = 'SYNTAX';
                 throw err;
             }
@@ -418,16 +425,16 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
 
     function parseMulDiv() {
         let left = parseUnary();
-        while (peek() && peek().type === 'OP' && (peek().value === '*' || peek().value === '/')) {
+        while (peek() && peek().type === 'OP' && (peek().value === '*' || peek().value === '/' || peek().value === 'mod')) {
             const op = consume().value;
             const right = parseUnary();
-            if (op === '/') {
+            if (op === '/' || op === 'mod') {
                 if (right === 0) {
-                    const err = new Error('Cannot divide by zero.');
+                    const err = new Error('Cannot divide by zero');
                     err.code = 'DIV_ZERO';
                     throw err;
                 }
-                left = left / right;
+                left = op === 'mod' ? (left % right) : (left / right);
             } else {
                 left = left * right;
             }
@@ -492,8 +499,8 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
     }
 
     function applyFunction(name, arg) {
-        const toRad = (v) => mode === 'DEG' ? (v * Math.PI / 180) : v;
-        const fromRad = (v) => mode === 'DEG' ? (v * 180 / Math.PI) : v;
+        const toRad = (v) => mode === 'DEG' ? (v * Math.PI / 180) : (mode === 'GRAD' ? (v * Math.PI / 200) : v);
+        const fromRad = (v) => mode === 'DEG' ? (v * 180 / Math.PI) : (mode === 'GRAD' ? (v * 200 / Math.PI) : v);
 
         switch (name) {
             case 'sin':
@@ -503,7 +510,7 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
             case 'tan': {
                 const rad = toRad(arg);
                 if (Math.abs(Math.cos(rad)) < 1e-12) {
-                    const err = new Error('Undefined — tan(90° + 180°k) is undefined.');
+                    const err = new Error('Invalid input');
                     err.code = 'ASYMPTOTE';
                     throw err;
                 }
@@ -511,7 +518,7 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
             }
             case 'asin': {
                 if (arg < -1 || arg > 1) {
-                    const err = new Error('Domain error — sin⁻¹ input must be between -1 and 1.');
+                    const err = new Error('Invalid input');
                     err.code = 'DOMAIN';
                     throw err;
                 }
@@ -519,7 +526,7 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
             }
             case 'acos': {
                 if (arg < -1 || arg > 1) {
-                    const err = new Error('Domain error — cos⁻¹ input must be between -1 and 1.');
+                    const err = new Error('Invalid input');
                     err.code = 'DOMAIN';
                     throw err;
                 }
@@ -529,15 +536,23 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
                 return fromRad(Math.atan(arg));
             case 'log': {
                 if (arg <= 0) {
-                    const err = new Error('Domain error — log₁₀ requires a positive number.');
+                    const err = new Error('Invalid input');
                     err.code = 'DOMAIN';
                     throw err;
                 }
                 return Math.log10(arg);
             }
+            case 'log2': {
+                if (arg <= 0) {
+                    const err = new Error('Invalid input');
+                    err.code = 'DOMAIN';
+                    throw err;
+                }
+                return Math.log2(arg);
+            }
             case 'ln': {
                 if (arg <= 0) {
-                    const err = new Error('Domain error — ln requires a positive number.');
+                    const err = new Error('Invalid input');
                     err.code = 'DOMAIN';
                     throw err;
                 }
@@ -545,16 +560,18 @@ function evaluateBpgMathExpression(rawInput, angleMode = 'DEG') {
             }
             case 'sqrt': {
                 if (arg < 0) {
-                    const err = new Error('Domain error — square root of a negative number.');
+                    const err = new Error('Invalid input');
                     err.code = 'DOMAIN';
                     throw err;
                 }
                 return Math.sqrt(arg);
             }
+            case 'cbrt':
+                return Math.cbrt(arg);
             case 'abs':
                 return Math.abs(arg);
             default: {
-                const err = new Error(`Unsupported function "${name}".`);
+                const err = new Error('Invalid input');
                 err.code = 'SYNTAX';
                 throw err;
             }
@@ -679,39 +696,38 @@ function setCalculatorMode(mode) {
     const sciRow = document.getElementById('calcSciKeypad');
     const basicBtn = document.getElementById('calcModeBasicBtn');
     const sciBtn = document.getElementById('calcModeSciBtn');
+    const titleEl = document.getElementById('calcModeTitleLabel');
     const flyout = document.getElementById('calcFlyoutWindow');
     if (sciRow) sciRow.style.display = miniCalcMode === 'scientific' ? 'grid' : 'none';
     if (basicBtn) basicBtn.classList.toggle('active', miniCalcMode === 'basic');
     if (sciBtn) sciBtn.classList.toggle('active', miniCalcMode === 'scientific');
+    if (titleEl) titleEl.textContent = miniCalcMode === 'scientific' ? 'Scientific' : 'Standard';
     if (flyout) flyout.classList.toggle('is-scientific', miniCalcMode === 'scientific');
     syncMiniCalcAngleUI();
+    syncCalcMemoryUI();
     if (!miniCalcJustEvaluated && !miniCalcHasError) {
         updateMiniCalcStatusLine();
     }
 }
 
 function syncMiniCalcAngleUI() {
-    const isRad = miniCalcAngleMode === 'RAD';
     const btn = document.getElementById('calcAngleToggleBtn');
-    if (btn) {
-        btn.textContent = miniCalcAngleMode;
-        btn.classList.toggle('mode-deg', !isRad);
-        btn.classList.toggle('mode-rad', isRad);
-        btn.setAttribute('aria-label', `Angle mode ${miniCalcAngleMode}`);
-        btn.setAttribute('title', isRad
-            ? 'Angle mode: Radians (click to switch to Degrees)'
-            : 'Angle mode: Degrees (click to switch to Radians)');
-    }
     const badge = document.getElementById('calcActiveAngleBadge');
-    if (badge) {
-        badge.textContent = miniCalcAngleMode;
-        badge.classList.toggle('mode-deg', !isRad);
-        badge.classList.toggle('mode-rad', isRad);
-    }
+    const titles = { DEG: 'Degrees (click for RAD)', RAD: 'Radians (click for GRAD)', GRAD: 'Gradians (click for DEG)' };
+    [btn, badge].forEach(el => {
+        if (!el) return;
+        el.textContent = miniCalcAngleMode;
+        el.classList.toggle('mode-deg', miniCalcAngleMode === 'DEG');
+        el.classList.toggle('mode-rad', miniCalcAngleMode === 'RAD');
+        el.classList.toggle('mode-grad', miniCalcAngleMode === 'GRAD');
+        el.setAttribute('title', titles[miniCalcAngleMode] || 'Angle mode');
+    });
 }
 
 function toggleMiniCalcAngle() {
-    miniCalcAngleMode = miniCalcAngleMode === 'DEG' ? 'RAD' : 'DEG';
+    const order = ['DEG', 'RAD', 'GRAD'];
+    const idx = order.indexOf(miniCalcAngleMode);
+    miniCalcAngleMode = order[(idx + 1) % order.length];
     try { localStorage.setItem(BPG_CALC_ANGLE_STORAGE_KEY, miniCalcAngleMode); } catch (e) {}
     syncMiniCalcAngleUI();
     if (!miniCalcJustEvaluated && !miniCalcHasError) {
@@ -720,11 +736,130 @@ function toggleMiniCalcAngle() {
 }
 
 function setMiniCalcAngleMode(mode) {
-    miniCalcAngleMode = String(mode || 'DEG').toUpperCase() === 'RAD' ? 'RAD' : 'DEG';
+    const up = String(mode || 'DEG').toUpperCase();
+    miniCalcAngleMode = ['DEG', 'RAD', 'GRAD'].includes(up) ? up : 'DEG';
     try { localStorage.setItem(BPG_CALC_ANGLE_STORAGE_KEY, miniCalcAngleMode); } catch (e) {}
     syncMiniCalcAngleUI();
     if (!miniCalcJustEvaluated && !miniCalcHasError) {
         updateMiniCalcStatusLine();
+    }
+}
+
+function syncCalcMemoryUI() {
+    const mc = document.getElementById('calcBtnMC');
+    const mr = document.getElementById('calcBtnMR');
+    const ind = document.getElementById('calcMemoryIndicator');
+    if (mc) mc.disabled = !miniCalcHasMemory;
+    if (mr) mr.disabled = !miniCalcHasMemory;
+    if (ind) {
+        ind.style.display = miniCalcHasMemory ? 'inline-flex' : 'none';
+        ind.title = `Memory: ${formatBpgCalcNumber(miniCalcMemory)}`;
+    }
+}
+
+function getCalcCurrentNumericValue() {
+    if (!miniCalcExpr || !miniCalcExpr.trim()) return 0;
+    try {
+        return evaluateBpgMathExpression(miniCalcExpr, miniCalcAngleMode).value;
+    } catch (e) {
+        return miniCalcLastAns || 0;
+    }
+}
+
+function calcMemoryClear() {
+    miniCalcMemory = 0;
+    miniCalcHasMemory = false;
+    syncCalcMemoryUI();
+}
+function calcMemoryRecall() {
+    if (!miniCalcHasMemory) return;
+    showMiniCalcError('');
+    miniCalcHasError = false;
+    const valStr = formatBpgCalcNumber(miniCalcMemory);
+    if (miniCalcJustEvaluated || !miniCalcExpr) {
+        miniCalcExpr = valStr;
+        miniCalcJustEvaluated = false;
+    } else {
+        miniCalcExpr += valStr;
+    }
+    updateMiniCalcDisplay();
+}
+function calcMemoryStore() {
+    miniCalcMemory = getCalcCurrentNumericValue();
+    miniCalcHasMemory = true;
+    miniCalcJustEvaluated = true;
+    syncCalcMemoryUI();
+}
+function calcMemoryAdd() {
+    miniCalcMemory += getCalcCurrentNumericValue();
+    miniCalcHasMemory = true;
+    miniCalcJustEvaluated = true;
+    syncCalcMemoryUI();
+}
+function calcMemorySub() {
+    miniCalcMemory -= getCalcCurrentNumericValue();
+    miniCalcHasMemory = true;
+    miniCalcJustEvaluated = true;
+    syncCalcMemoryUI();
+}
+
+function toggleCalcSecondFn() {
+    miniCalcSecondFn = !miniCalcSecondFn;
+    const btn = document.getElementById('calcBtn2nd');
+    if (btn) btn.classList.toggle('is-active-2nd', miniCalcSecondFn);
+    const setLbl = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+    setLbl('calcSciSin', miniCalcSecondFn ? 'sin<sup>&minus;1</sup>' : 'sin');
+    setLbl('calcSciCos', miniCalcSecondFn ? 'cos<sup>&minus;1</sup>' : 'cos');
+    setLbl('calcSciTan', miniCalcSecondFn ? 'tan<sup>&minus;1</sup>' : 'tan');
+    setLbl('calcSciLog', miniCalcSecondFn ? 'log<sub>2</sub>' : 'log');
+    setLbl('calcSci10x', miniCalcSecondFn ? '2<sup>x</sup>' : '10<sup>x</sup>');
+}
+
+function calcTriggerSci(kind) {
+    if (kind === 'sin') calcAppend(miniCalcSecondFn ? 'sin⁻¹(' : 'sin(');
+    else if (kind === 'cos') calcAppend(miniCalcSecondFn ? 'cos⁻¹(' : 'cos(');
+    else if (kind === 'tan') calcAppend(miniCalcSecondFn ? 'tan⁻¹(' : 'tan(');
+    else if (kind === 'log') calcAppend(miniCalcSecondFn ? 'log₂(' : 'log₁₀(');
+    else if (kind === 'ln') calcAppend('ln(');
+    else if (kind === 'pow') calcAppend('^');
+    else if (kind === 'tenx') calcAppend(miniCalcSecondFn ? '2^(' : '10^(');
+    else if (kind === 'ex') calcAppend('e^(');
+    else if (kind === 'cube') calcAppend('³');
+    else if (kind === 'cbrt') calcAppend('³√(');
+}
+
+function calcClearEntry() {
+    showMiniCalcError('');
+    miniCalcHasError = false;
+    if (miniCalcJustEvaluated || !miniCalcExpr) {
+        calcClear();
+        return;
+    }
+    // Remove only the last number/token segment
+    const stripped = miniCalcExpr.replace(/([0-9.]+|[a-zA-Zπ√³¹⁰⁻]+\(?|\s+mod\s+)$/, '');
+    miniCalcExpr = stripped;
+    updateMiniCalcDisplay(miniCalcExpr || '0');
+}
+
+function calcReciprocal() {
+    if (!miniCalcExpr) {
+        calcAppend('1÷(');
+        return;
+    }
+    if (miniCalcJustEvaluated || /^[−-]?\d+(\.\d+)?$/.test(miniCalcExpr.trim())) {
+        miniCalcExpr = `1÷(${miniCalcExpr})`;
+        calcEvaluate();
+    } else {
+        calcAppend('1÷(');
+    }
+}
+
+function calcSquareRoot() {
+    if (miniCalcJustEvaluated && miniCalcExpr) {
+        miniCalcExpr = `√(${miniCalcExpr})`;
+        calcEvaluate();
+    } else {
+        calcAppend('√(');
     }
 }
 
@@ -735,8 +870,7 @@ function updateMiniCalcStatusLine(overrideExpr) {
         hist.textContent = overrideExpr;
         return;
     }
-    const modeLabel = miniCalcMode === 'scientific' ? 'Scientific Mode' : 'Basic Mode';
-    hist.textContent = modeLabel;
+    hist.textContent = '';
 }
 
 function showMiniCalcError(msg) {
@@ -935,7 +1069,11 @@ function calcBackspace() {
 function updateMiniCalcDisplay(override) {
     const scr = document.getElementById('calcScreen');
     if (scr) {
-        scr.textContent = override !== undefined ? override : (miniCalcExpr || '0');
+        const text = String(override !== undefined ? override : (miniCalcExpr || '0'));
+        scr.textContent = text;
+        // Windows 11 auto-scaling display font size for long expressions/results
+        const len = text.length;
+        scr.style.fontSize = len > 18 ? '1.15rem' : (len > 13 ? '1.45rem' : (len > 9 ? '1.78rem' : '2.1rem'));
         scr.scrollLeft = scr.scrollWidth;
     }
 }

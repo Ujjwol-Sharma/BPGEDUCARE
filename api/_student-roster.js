@@ -29,7 +29,9 @@ const {
     normalizeAccountStatus,
     normalizePaymentStatusValue,
     readAcademyState,
-    resolveRequestUser
+    resolveRequestUser,
+    TERMS_CURRENT_VERSION,
+    recordStudentActivity
 } = require('./_access-control');
 
 async function verifyGoogleIdToken(idToken, expectedClientId) {
@@ -205,6 +207,7 @@ module.exports = async function studentRosterHandler(req, res) {
                 }
                 me = status.user;
                 sessionReplaced = status.reason === 'session_replaced';
+                const reloginRequired = status.reason === 'relogin_required';
                 sessionRevokedError = status.error || '';
                 sessionRevoked = Boolean(status.revoked || (status.needsFreshCheck && isDurableHydrationAuthoritative()));
 
@@ -222,34 +225,35 @@ module.exports = async function studentRosterHandler(req, res) {
                 if (sessionRevoked) {
                     res.setHeader('Set-Cookie', buildClearSessionCookieHeader(req));
                 }
-            }
 
-            if (checkMe && !isAdmin) {
-                const mySwitchRequests = me
-                    ? (liveRoster.classSwitchRequests || []).filter(
-                        r => (r.userId && r.userId === me.userId) || canonicalizeEmail(r.email) === canonicalizeEmail(me.email)
-                    )
-                    : [];
-                const myPayments = me
-                    ? (Array.isArray(readAcademyState().payments) ? readAcademyState().payments : []).filter(
-                        p => (p.userId && p.userId === me.userId) || canonicalizeEmail(p.email) === canonicalizeEmail(me.email)
-                    )
-                    : [];
-                res.statusCode = 200;
-                res.end(JSON.stringify({
-                    success: true,
-                    authenticated: Boolean(me),
-                    rosterRevision: Number(liveRoster.revision) || 0,
-                    account: me ? stripSensitiveAccountFields(me) : null,
-                    sessionToken: slidingSessionToken || undefined,
-                    sessionRevoked,
-                    sessionReplaced,
-                    code: sessionReplaced ? 'SESSION_REPLACED' : undefined,
-                    error: sessionReplaced ? (sessionRevokedError || 'You were signed out because your account logged in on another device.') : undefined,
-                    mySwitchRequests,
-                    myPayments
-                }));
-                return;
+                if (checkMe && !isAdmin) {
+                    const mySwitchRequests = me
+                        ? (liveRoster.classSwitchRequests || []).filter(
+                            r => (r.userId && r.userId === me.userId) || canonicalizeEmail(r.email) === canonicalizeEmail(me.email)
+                        )
+                        : [];
+                    const myPayments = me
+                        ? (Array.isArray(readAcademyState().payments) ? readAcademyState().payments : []).filter(
+                            p => (p.userId && p.userId === me.userId) || canonicalizeEmail(p.email) === canonicalizeEmail(me.email)
+                        )
+                        : [];
+                    res.statusCode = 200;
+                    res.end(JSON.stringify({
+                        success: true,
+                        authenticated: Boolean(me),
+                        rosterRevision: Number(liveRoster.revision) || 0,
+                        account: me ? stripSensitiveAccountFields(me) : null,
+                        sessionToken: slidingSessionToken || undefined,
+                        sessionRevoked,
+                        sessionReplaced,
+                        reloginRequired,
+                        code: reloginRequired ? 'RELOGIN_REQUIRED' : (sessionReplaced ? 'SESSION_REPLACED' : undefined),
+                        error: (reloginRequired || sessionReplaced) ? sessionRevokedError : undefined,
+                        mySwitchRequests,
+                        myPayments
+                    }));
+                    return;
+                }
             }
 
             res.statusCode = 200;
@@ -293,6 +297,54 @@ module.exports = async function studentRosterHandler(req, res) {
 
         try {
             const roster = readRoster();
+
+            // 0-HEARTBEAT. LIVE STUDENT ACTIVITY TRACKING (for Super Admin Live Activity Monitor)
+            if (payload.action === 'HEARTBEAT') {
+                const user = resolveRequestUser(req);
+                if (user && user.email) {
+                    recordStudentActivity(user, req, String(payload.currentSection || '').trim());
+                }
+                res.statusCode = 200;
+                res.end(JSON.stringify({ success: true }));
+                return;
+            }
+
+            // 0-TEMP-PWD. COMPLETE FORCED TEMPORARY PASSWORD CHANGE (after Super Admin temp password)
+            if (payload.action === 'COMPLETE_TEMP_PASSWORD') {
+                const rawIdentifier = String(payload.identifier || payload.email || payload.username || '').trim();
+                const currentTemp = String(payload.currentPassword || '').trim();
+                const nextPwd = String(payload.newPassword || '').trim();
+                const termsAccepted = payload.termsAccepted === true;
+                if (!rawIdentifier || !currentTemp || nextPwd.length < 6) {
+                    res.statusCode = 400;
+                    res.end(JSON.stringify({ success: false, error: 'Enter your temporary password and a new password (at least 6 characters).' }));
+                    return;
+                }
+                const canonical = rawIdentifier.includes('@') ? canonicalizeEmail(rawIdentifier) : '';
+                const normU = !rawIdentifier.includes('@') ? normalizeUsername(rawIdentifier) : '';
+                const acc = roster.accounts.find(a =>
+                    (canonical && a.canonicalEmail === canonical) ||
+                    (normU && normalizeUsername(a.username) === normU)
+                );
+                if (!acc || !verifyPassword(currentTemp, acc.passkey || '')) {
+                    res.statusCode = 401;
+                    res.end(JSON.stringify({ success: false, error: 'Temporary password is incorrect.' }));
+                    return;
+                }
+                acc.passkey = hashPassword(nextPwd);
+                acc.hasPassword = true;
+                acc.mustChangePassword = false;
+                if (termsAccepted) {
+                    acc.termsAccepted = true;
+                    acc.termsVersion = TERMS_CURRENT_VERSION;
+                    acc.termsAcceptedAt = acc.termsAcceptedAt || new Date().toISOString();
+                }
+                appendAccountAuditEntry(acc, { actor: `${acc.name} (Student)`, action: 'TEMP_PASSWORD_CHANGED', details: 'Replaced temporary one-time password' });
+                writeRoster(roster);
+                res.statusCode = 200;
+                res.end(JSON.stringify({ success: true, message: 'New password saved! Please sign in with your new password.' }));
+                return;
+            }
 
             // 0-OUT. SIGN OUT (revokes server activeSessionId & clears HttpOnly session cookie)
             if (payload.action === 'SIGN_OUT') {
@@ -430,6 +482,34 @@ module.exports = async function studentRosterHandler(req, res) {
                     roster.accounts.unshift(created);
                     const updated = writeRoster(roster);
                     account = updated.accounts.find(a => a.userId === stableUserId || a.canonicalEmail === canonical) || created;
+                }
+
+                // Strict OTP & Terms enforcement for BOTH Gmail & Google Sign-In
+                const termsAcceptedFlag = payload.termsAccepted === true;
+                if (termsAcceptedFlag && !account.termsAccepted) {
+                    const tIdx = roster.accounts.findIndex(a => a.userId === account.userId || a.canonicalEmail === canonical);
+                    if (tIdx >= 0) {
+                        roster.accounts[tIdx].termsAccepted = true;
+                        roster.accounts[tIdx].termsVersion = TERMS_CURRENT_VERSION;
+                        roster.accounts[tIdx].termsAcceptedAt = new Date().toISOString();
+                        writeRoster(roster);
+                        account = roster.accounts[tIdx];
+                    }
+                }
+                if (account.otpVerified !== true || account.termsAccepted !== true) {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify({
+                        success: true,
+                        requiresOtp: account.otpVerified !== true,
+                        requiresTerms: account.termsAccepted !== true,
+                        email: account.email,
+                        username: account.username,
+                        name: account.name,
+                        grade: account.grade,
+                        code: account.otpVerified !== true ? 'OTP_VERIFICATION_REQUIRED' : 'TERMS_REQUIRED',
+                        message: 'Please complete 6-digit Email OTP verification and accept the Terms & Conditions to continue.'
+                    }));
+                    return;
                 }
 
                 const keepSignedIn = payload.keepSignedIn !== false;
@@ -831,6 +911,57 @@ module.exports = async function studentRosterHandler(req, res) {
                 // Clear failed login counter on success
                 require('./_access-control').deleteOtpStoreEntry(`rl:${failBucketKey}`);
 
+                // Enforce Super Admin Temporary Password Reset on next login
+                if (account.mustChangePassword === true) {
+                    res.statusCode = 403;
+                    res.end(JSON.stringify({
+                        success: false,
+                        code: 'MUST_CHANGE_PASSWORD',
+                        requiresPasswordChange: true,
+                        email: account.email,
+                        username: account.username,
+                        error: 'A temporary password was set for your account. Please set a new permanent password now.'
+                    }));
+                    return;
+                }
+
+                // Enforce mandatory Terms & Conditions checkbox on first login after update
+                const termsAcceptedPayload = payload.termsAccepted === true;
+                if (!account.termsAccepted && !termsAcceptedPayload) {
+                    res.statusCode = 403;
+                    res.end(JSON.stringify({
+                        success: false,
+                        code: 'TERMS_REQUIRED',
+                        requiresTerms: true,
+                        email: account.email,
+                        username: account.username,
+                        error: 'Please tick "I agree to the Terms & Conditions and Privacy Policy" to continue.'
+                    }));
+                    return;
+                }
+                if (termsAcceptedPayload && !account.termsAccepted) {
+                    account.termsAccepted = true;
+                    account.termsVersion = TERMS_CURRENT_VERSION;
+                    account.termsAcceptedAt = new Date().toISOString();
+                    writeRoster(roster);
+                }
+
+                // Enforce strict 6-digit Email OTP verification before granting dashboard access
+                if (account.otpVerified !== true) {
+                    res.statusCode = 403;
+                    res.end(JSON.stringify({
+                        success: false,
+                        code: 'OTP_VERIFICATION_REQUIRED',
+                        requiresOtp: true,
+                        email: account.email,
+                        username: account.username,
+                        name: account.name,
+                        grade: account.grade,
+                        error: 'Security verification required: please verify the 6-digit Email OTP sent to your Gmail to continue with your saved username.'
+                    }));
+                    return;
+                }
+
                 // Transparently upgrade any legacy plaintext password to scrypt$ + update device/session tracking
                 const newSessionId = generateSessionId();
                 const nowLoginIso = new Date().toISOString();
@@ -842,6 +973,8 @@ module.exports = async function studentRosterHandler(req, res) {
                 account.lastLoginAt = nowLoginIso;
                 account.lastActiveAt = nowLoginIso;
                 account.deviceInfo = parseUserAgentDeviceInfo(req);
+                account.ipAddress = clientIp;
+                account.currentSection = `Signed in (${account.grade})`;
                 const savedRoster = writeRoster(roster);
                 const freshAccount = savedRoster.accounts.find(a => a.userId === account.userId || a.canonicalEmail === accountCanon) || account;
 

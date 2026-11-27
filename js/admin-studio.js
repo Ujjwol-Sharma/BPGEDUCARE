@@ -15,8 +15,7 @@ try {
 const SECTION_META = [
     { key: 'class-12', label: 'Class 12', sub: 'Grade XII' },
     { key: 'class-11', label: 'Class 11', sub: 'Grade XI' },
-    { key: 'class-10', label: 'Class 10', sub: 'SEE Foundation' },
-    { key: 'after-12', label: 'Entrance Prep', sub: 'IOE / CEE / KU' }
+    { key: 'after-12', label: 'IOE', sub: 'Entrance Prep · Topper' }
 ];
 
 let ADMIN_STATE = null;
@@ -420,7 +419,7 @@ async function persistAcademyState(partialPayload, successMsg = 'Saved') {
 }
 
 function switchAdminTab(tabName) {
-    ['users', 'switches', 'payments', 'content', 'mocktests', 'zoom', 'notifications', 'homepage', 'team', 'faqs', 'sections', 'plans'].forEach(t => {
+    ['users', 'switches', 'payments', 'content', 'mocktests', 'zoom', 'notifications', 'posts', 'scheduled', 'homepage', 'team', 'faqs', 'sections', 'plans'].forEach(t => {
         document.getElementById(`tabBtn-${t}`)?.classList.toggle('active', t === tabName);
         document.getElementById(`pane-${t}`)?.classList.toggle('active', t === tabName);
     });
@@ -431,6 +430,8 @@ function switchAdminTab(tabName) {
     if (tabName === 'mocktests') renderMockTestsTab();
     if (tabName === 'zoom') renderZoomClassesTab();
     if (tabName === 'notifications') renderNotificationsTab();
+    if (tabName === 'posts') renderPostsAdminTab();
+    if (tabName === 'scheduled') renderScheduledQueueTab();
     if (tabName === 'homepage') renderHomepageEditorTab();
     if (tabName === 'team') renderTeamTab();
     if (tabName === 'faqs') renderFaqsTab();
@@ -446,6 +447,8 @@ function renderAllAdminTabs() {
     renderMockTestsTab();
     renderZoomClassesTab();
     renderNotificationsTab();
+    renderPostsAdminTab();
+    renderScheduledQueueTab();
     renderHomepageEditorTab();
     renderTeamTab();
     renderFaqsTab();
@@ -5385,8 +5388,7 @@ function renderNotificationsTab() {
                         <option value="sitewide" ${editingNotification.scope === 'sitewide' ? 'selected' : ''}>Sitewide (All Students)</option>
                         <option value="class-12" ${editingNotification.scope === 'class-12' ? 'selected' : ''}>Class 12 Only</option>
                         <option value="class-11" ${editingNotification.scope === 'class-11' ? 'selected' : ''}>Class 11 Only</option>
-                        <option value="class-10" ${editingNotification.scope === 'class-10' ? 'selected' : ''}>Class 10 Only</option>
-                        <option value="after-12" ${editingNotification.scope === 'after-12' ? 'selected' : ''}>Entrance Prep Only</option>
+                        <option value="after-12" ${editingNotification.scope === 'after-12' ? 'selected' : ''}>IOE Only</option>
                     </select>
                 </div>
                 <div>
@@ -5405,10 +5407,21 @@ function renderNotificationsTab() {
                 <label class="adm-label">Message</label>
                 <textarea id="notifFormBody" class="adm-input" rows="3" placeholder="Notification details...">${escapeHtml(editingNotification.body || '')}</textarea>
             </div>
+            <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; margin-bottom:10px;">
+                <div>
+                    <label class="adm-label">Publish Mode</label>
+                    <select id="notifFormPublishMode" class="adm-select" onchange="document.getElementById('notifScheduleWrap').style.display=this.value==='scheduled'?'block':'none';">
+                        <option value="published" ${(editingNotification.publishStatus || (editingNotification.published === false ? 'draft' : 'published')) === 'published' ? 'selected' : ''}>Publish Now</option>
+                        <option value="scheduled" ${editingNotification.publishStatus === 'scheduled' ? 'selected' : ''}>Schedule for Later (Nepal Time)</option>
+                        <option value="draft" ${(editingNotification.publishStatus === 'draft' || editingNotification.published === false) && editingNotification.publishStatus !== 'scheduled' ? 'selected' : ''}>Save as Draft</option>
+                    </select>
+                </div>
+                <div id="notifScheduleWrap" style="display:${editingNotification.publishStatus === 'scheduled' ? 'block' : 'none'};">
+                    <label class="adm-label">Publish Date &amp; Time (NPT · +05:45)</label>
+                    <input type="datetime-local" id="notifFormPublishAt" class="adm-input" value="${isoToNptDatetimeLocal(editingNotification.publishAt || '')}">
+                </div>
+            </div>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.86rem; cursor:pointer;">
-                    <input type="checkbox" id="notifFormPublished" ${editingNotification.published !== false ? 'checked' : ''}> Publish immediately
-                </label>
                 <button type="button" class="btn-topbar" onclick="previewNotificationDraft()">Preview</button>
                 <button type="button" class="btn-adm-dark" onclick="saveNotificationForm()">Save Notification</button>
                 <button type="button" class="btn-topbar" onclick="editingNotification=null; renderNotificationsTab();">Cancel</button>
@@ -5486,9 +5499,16 @@ async function saveNotificationForm() {
     const category = document.getElementById('notifFormCategory')?.value || 'Announcement';
     const scope = document.getElementById('notifFormScope')?.value || 'sitewide';
     const linkTarget = document.getElementById('notifFormLinkTarget')?.value || 'none';
-    const published = Boolean(document.getElementById('notifFormPublished')?.checked);
+    const publishStatus = document.getElementById('notifFormPublishMode')?.value || 'published';
+    const publishAtLocal = document.getElementById('notifFormPublishAt')?.value || '';
+    const publishAt = publishStatus === 'scheduled' ? nptDatetimeLocalToIso(publishAtLocal) : '';
+    const published = publishStatus === 'published';
     if (!title || !body) {
         showAdminToast('Title and message are required.', 'error');
+        return;
+    }
+    if (publishStatus === 'scheduled' && !publishAt) {
+        showAdminToast('Please choose a valid Nepal Time date & time to schedule.', 'error');
         return;
     }
     const list = JSON.parse(JSON.stringify(ADMIN_STATE?.notifications || []));
@@ -5497,19 +5517,412 @@ async function saveNotificationForm() {
     if (editingNotification && editingNotification.id) {
         const idx = list.findIndex(n => n.id === editingNotification.id);
         if (idx >= 0) {
-            list[idx] = { ...list[idx], title, body, category, scope, linkTarget, published, updatedAt: now };
+            list[idx] = { ...list[idx], title, body, category, scope, linkTarget, published, publishStatus, publishAt, updatedAt: now };
         }
     } else {
-        // Prevent duplicate notification if admin double-clicks or retries the exact same announcement
         const existingDup = list.find(n => n && n.dedupeKey === dedupeKey);
         if (existingDup) {
-            Object.assign(existingDup, { title, body, category, scope, linkTarget, published, updatedAt: now });
+            Object.assign(existingDup, { title, body, category, scope, linkTarget, published, publishStatus, publishAt, updatedAt: now });
         } else {
-            list.unshift({ id: 'notif_' + Date.now(), dedupeKey, title, body, category, scope, linkTarget, published, createdAt: now, updatedAt: now });
+            list.unshift({ id: 'notif_' + Date.now(), dedupeKey, title, body, category, scope, linkTarget, published, publishStatus, publishAt, createdAt: now, updatedAt: now });
         }
     }
     editingNotification = null;
-    await persistAcademyState({ notifications: list }, 'Notification saved.');
+    await persistAcademyState({ notifications: list }, publishStatus === 'scheduled' ? 'Notification scheduled (NPT).' : 'Notification saved.');
+}
+
+/* --------------------------------------------------------------------------
+   6D-2. NEPAL TIME HELPERS, POSTS MANAGER (NEWS & ACHIEVEMENTS) & SCHEDULED QUEUE
+   -------------------------------------------------------------------------- */
+function nptDatetimeLocalToIso(localStr) {
+    const s = String(localStr || '').trim();
+    if (!s) return '';
+    // Input is YYYY-MM-DDTHH:mm in Asia/Kathmandu (+05:45)
+    const withSec = s.length === 16 ? `${s}:00+05:45` : `${s}+05:45`;
+    const d = new Date(withSec);
+    return Number.isNaN(d.getTime()) ? '' : d.toISOString();
+}
+
+function isoToNptDatetimeLocal(iso) {
+    const ms = Date.parse(String(iso || ''));
+    if (!Number.isFinite(ms)) return '';
+    const npt = new Date(ms + (5 * 60 + 45) * 60 * 1000);
+    const pad = n => String(n).padStart(2, '0');
+    return `${npt.getUTCFullYear()}-${pad(npt.getUTCMonth() + 1)}-${pad(npt.getUTCDate())}T${pad(npt.getUTCHours())}:${pad(npt.getUTCMinutes())}`;
+}
+
+function formatNptReadableAdmin(iso) {
+    const ms = Date.parse(String(iso || ''));
+    if (!Number.isFinite(ms)) return '—';
+    try {
+        return new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Kathmandu', year: 'numeric', month: 'short', day: 'numeric',
+            hour: 'numeric', minute: '2-digit', hour12: true
+        }).format(new Date(ms)) + ' NPT';
+    } catch (e) {
+        return iso;
+    }
+}
+
+let editingAdminPost = null;
+let pendingPostUploadedPhotos = [];
+let pendingPostUploadedVideo = '';
+
+function startCreateAdminPost() {
+    editingAdminPost = { id: '', category: 'news', title: '', body: '', photos: [], videoUrl: '', publishStatus: 'published', publishAt: '' };
+    pendingPostUploadedPhotos = [];
+    pendingPostUploadedVideo = '';
+    renderPostsAdminTab();
+}
+
+function editAdminPost(postId) {
+    const found = (ADMIN_STATE?.posts || []).find(p => p && p.id === postId);
+    if (!found) return;
+    editingAdminPost = JSON.parse(JSON.stringify(found));
+    pendingPostUploadedPhotos = Array.isArray(found.photos) ? [...found.photos] : [];
+    pendingPostUploadedVideo = found.videoUrl || '';
+    renderPostsAdminTab();
+}
+
+function handlePostPhotosFileChange(inputEl) {
+    const files = Array.from(inputEl?.files || []);
+    if (!files.length) return;
+    files.forEach(file => {
+        if (file.size > 4 * 1024 * 1024) {
+            showAdminToast(`${file.name} exceeds 4 MB — please resize or use an image URL.`, 'error');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (typeof reader.result === 'string') {
+                pendingPostUploadedPhotos.push(reader.result);
+                renderPostPhotoPreviewStrip();
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function removePendingPostPhoto(idx) {
+    pendingPostUploadedPhotos.splice(idx, 1);
+    renderPostPhotoPreviewStrip();
+}
+
+function renderPostPhotoPreviewStrip() {
+    const box = document.getElementById('postPhotosPreviewStrip');
+    if (!box) return;
+    if (!pendingPostUploadedPhotos.length) {
+        box.innerHTML = '<small style="color:var(--adm-text-muted);">No photos attached yet.</small>';
+        return;
+    }
+    box.innerHTML = pendingPostUploadedPhotos.map((src, i) => `
+        <div style="position:relative; width:74px; height:54px; border-radius:6px; overflow:hidden; border:1px solid var(--adm-border);">
+            <img src="${escapeHtml(src)}" alt="" style="width:100%; height:100%; object-fit:cover;">
+            <button type="button" onclick="removePendingPostPhoto(${i})" style="position:absolute; top:2px; right:2px; width:18px; height:18px; border-radius:50%; border:none; background:#dc2626; color:#fff; font-size:11px; cursor:pointer; line-height:1;">&times;</button>
+        </div>
+    `).join('');
+}
+
+function handlePostVideoFileChange(inputEl) {
+    const file = inputEl?.files?.[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+        showAdminToast('Uploaded MP4 exceeds 8 MB. For larger videos, paste a YouTube URL instead.', 'error');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+        if (typeof reader.result === 'string') {
+            pendingPostUploadedVideo = reader.result;
+            const inp = document.getElementById('postFormVideoUrl');
+            if (inp) inp.value = '(Uploaded MP4 attached)';
+            showAdminToast(`Video "${file.name}" attached.`);
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+async function saveAdminPostForm() {
+    const category = document.getElementById('postFormCategory')?.value === 'achievements' ? 'achievements' : 'news';
+    const title = (document.getElementById('postFormTitle')?.value || '').trim();
+    const body = (document.getElementById('postFormBody')?.value || '').trim();
+    const extraPhotoUrls = (document.getElementById('postFormPhotoUrls')?.value || '')
+        .split(/\n|,/)
+        .map(s => s.trim())
+        .filter(Boolean);
+    const rawVideoInput = (document.getElementById('postFormVideoUrl')?.value || '').trim();
+    const videoUrl = rawVideoInput === '(Uploaded MP4 attached)' ? pendingPostUploadedVideo : (rawVideoInput || pendingPostUploadedVideo || '');
+    const publishStatus = document.getElementById('postFormPublishMode')?.value || 'published';
+    const publishAtLocal = document.getElementById('postFormPublishAt')?.value || '';
+    const publishAt = publishStatus === 'scheduled' ? nptDatetimeLocalToIso(publishAtLocal) : '';
+
+    if (!title || !body) {
+        showAdminToast('Post title and body text are required.', 'error');
+        return;
+    }
+    if (publishStatus === 'scheduled' && !publishAt) {
+        showAdminToast('Choose a Nepal Time date & time to schedule this post.', 'error');
+        return;
+    }
+
+    const photos = Array.from(new Set([...pendingPostUploadedPhotos, ...extraPhotoUrls]));
+    const list = JSON.parse(JSON.stringify(ADMIN_STATE?.posts || []));
+    const now = new Date().toISOString();
+
+    if (editingAdminPost && editingAdminPost.id) {
+        const idx = list.findIndex(p => p && p.id === editingAdminPost.id);
+        if (idx >= 0) {
+            list[idx] = { ...list[idx], category, title, body, photos, videoUrl, publishStatus, publishAt, updatedAt: now };
+        }
+    } else {
+        list.unshift({
+            id: 'post_' + Date.now(),
+            category, title, body, photos, videoUrl, publishStatus, publishAt,
+            createdAt: now, updatedAt: now, author: 'BPG EDUCARE'
+        });
+    }
+
+    editingAdminPost = null;
+    pendingPostUploadedPhotos = [];
+    pendingPostUploadedVideo = '';
+    await persistAcademyState({ posts: list }, publishStatus === 'scheduled' ? 'Post scheduled (NPT).' : 'Post published.');
+    renderPostsAdminTab();
+    renderScheduledQueueTab();
+}
+
+async function deleteAdminPost(postId) {
+    if (!confirm('Delete this post permanently?')) return;
+    const list = (ADMIN_STATE?.posts || []).filter(p => p && p.id !== postId);
+    await persistAcademyState({ posts: list }, 'Post deleted.');
+    renderPostsAdminTab();
+    renderScheduledQueueTab();
+}
+
+function renderPostsAdminTab() {
+    const mount = document.getElementById('postsAdminMount');
+    if (!mount || !ADMIN_STATE) return;
+    const list = Array.isArray(ADMIN_STATE.posts) ? ADMIN_STATE.posts : [];
+
+    const editorHtml = editingAdminPost ? `
+        <div class="adm-card" style="background:var(--adm-bg-subtle); margin-bottom:18px; padding:16px;">
+            <h3 style="margin:0 0 12px 0; font-size:1rem;">${editingAdminPost.id ? 'Edit Post' : 'Create New Post'}</h3>
+            <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px;">
+                <div>
+                    <label class="adm-label">Category</label>
+                    <select id="postFormCategory" class="adm-select">
+                        <option value="news" ${editingAdminPost.category !== 'achievements' ? 'selected' : ''}>1. News</option>
+                        <option value="achievements" ${editingAdminPost.category === 'achievements' ? 'selected' : ''}>2. Achievements</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="adm-label">Title</label>
+                    <input type="text" id="postFormTitle" class="adm-input" value="${escapeHtml(editingAdminPost.title || '')}" placeholder="e.g. IOE Pulchowk Toppers 2026">
+                </div>
+            </div>
+            <div style="margin-bottom:10px;">
+                <label class="adm-label">Body Text / Description</label>
+                <textarea id="postFormBody" class="adm-input" rows="4" placeholder="Write the full announcement or achievement story...">${escapeHtml(editingAdminPost.body || '')}</textarea>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                <div>
+                    <label class="adm-label">Upload Photos (JPG/PNG, multiple)</label>
+                    <input type="file" accept="image/*" multiple class="adm-input" onchange="handlePostPhotosFileChange(this)">
+                    <div id="postPhotosPreviewStrip" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;"></div>
+                </div>
+                <div>
+                    <label class="adm-label">Or Paste Photo URLs (one per line)</label>
+                    <textarea id="postFormPhotoUrls" class="adm-input" rows="3" placeholder="https://... or images/..."></textarea>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                <div>
+                    <label class="adm-label">Video URL (YouTube link or MP4 URL)</label>
+                    <input type="text" id="postFormVideoUrl" class="adm-input" value="${escapeHtml(editingAdminPost.videoUrl && !editingAdminPost.videoUrl.startsWith('data:') ? editingAdminPost.videoUrl : (editingAdminPost.videoUrl ? '(Uploaded MP4 attached)' : ''))}" placeholder="https://youtube.com/watch?v=... or .mp4 URL">
+                </div>
+                <div>
+                    <label class="adm-label">Or Upload MP4 Video (up to 8 MB)</label>
+                    <input type="file" accept="video/mp4,video/webm" class="adm-input" onchange="handlePostVideoFileChange(this)">
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; margin-bottom:12px;">
+                <div>
+                    <label class="adm-label">Publish Mode</label>
+                    <select id="postFormPublishMode" class="adm-select" onchange="document.getElementById('postScheduleWrap').style.display=this.value==='scheduled'?'block':'none';">
+                        <option value="published" ${editingAdminPost.publishStatus === 'published' ? 'selected' : ''}>Publish Now</option>
+                        <option value="scheduled" ${editingAdminPost.publishStatus === 'scheduled' ? 'selected' : ''}>Schedule for Later (Nepal Time)</option>
+                        <option value="draft" ${editingAdminPost.publishStatus === 'draft' ? 'selected' : ''}>Draft</option>
+                    </select>
+                </div>
+                <div id="postScheduleWrap" style="display:${editingAdminPost.publishStatus === 'scheduled' ? 'block' : 'none'};">
+                    <label class="adm-label">Schedule Date &amp; Time (NPT · +05:45)</label>
+                    <input type="datetime-local" id="postFormPublishAt" class="adm-input" value="${isoToNptDatetimeLocal(editingAdminPost.publishAt || '')}">
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button type="button" class="btn-adm-dark" onclick="saveAdminPostForm()">Save Post</button>
+                <button type="button" class="btn-topbar" onclick="editingAdminPost=null; renderPostsAdminTab();">Cancel</button>
+            </div>
+        </div>
+    ` : '';
+
+    mount.innerHTML = editorHtml + (list.length === 0
+        ? '<div style="padding:20px; text-align:center; color:var(--adm-text-muted);">No posts created yet. Click "+ New Post" to publish News or Achievements.</div>'
+        : `<div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>Post</th><th>Category</th><th>Media</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+            ${list.map(p => {
+                const isSched = p.publishStatus === 'scheduled';
+                const statusTxt = isSched ? `Scheduled (${formatNptReadableAdmin(p.publishAt)})` : (p.publishStatus === 'draft' ? 'Draft' : 'Published');
+                return `<tr>
+                    <td><strong>${escapeHtml(p.title)}</strong><br><small style="color:var(--adm-text-muted);">${escapeHtml((p.body || '').slice(0, 110))}</small></td>
+                    <td>${p.category === 'achievements' ? 'Achievements' : 'News'}</td>
+                    <td>${(p.photos || []).length} photo(s)${p.videoUrl ? ' · Video' : ''}</td>
+                    <td><span class="adm-status-pill ${p.publishStatus === 'published' ? 'open' : 'locked'}">${escapeHtml(statusTxt)}</span></td>
+                    <td>
+                        <div style="display:flex; gap:6px;">
+                            <button type="button" class="btn-topbar" style="padding:4px 9px; font-size:0.78rem;" onclick="editAdminPost('${escapeHtml(p.id)}')">Edit</button>
+                            <button type="button" class="btn-topbar" style="padding:4px 9px; font-size:0.78rem; color:#dc2626;" onclick="deleteAdminPost('${escapeHtml(p.id)}')">Delete</button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('')}
+        </tbody></table></div>`);
+    if (editingAdminPost) renderPostPhotoPreviewStrip();
+}
+
+function collectAdminScheduledItems() {
+    if (!ADMIN_STATE) return [];
+    const items = [];
+    (ADMIN_STATE.posts || []).forEach(p => {
+        if (p && p.publishStatus === 'scheduled') {
+            items.push({ kind: 'post', id: p.id, title: p.title, category: p.category === 'achievements' ? 'Post · Achievements' : 'Post · News', publishAt: p.publishAt });
+        }
+    });
+    (ADMIN_STATE.notifications || []).forEach(n => {
+        if (n && n.publishStatus === 'scheduled') {
+            items.push({ kind: 'notification', id: n.id, title: n.title, category: `Notification · ${n.scope || 'sitewide'}`, publishAt: n.publishAt });
+        }
+    });
+    (ADMIN_MOCK_TESTS || []).forEach(t => {
+        if (t && t.status === 'scheduled') {
+            items.push({ kind: 'mocktest', id: t.id, title: t.title, category: `Mock Test · ${t.classKey}`, publishAt: t.scheduledReleaseAt || t.publishAt });
+        }
+    });
+    (ADMIN_STATE.zoomClasses || []).forEach(z => {
+        if (z && z.publishStatus === 'scheduled') {
+            items.push({ kind: 'zoom', id: z.id, title: z.title, category: `Zoom · ${z.classKey}`, publishAt: z.publishAt });
+        }
+    });
+    Object.entries(ADMIN_STATE.portals || {}).forEach(([ck, portal]) => {
+        if (ck === 'class-10' || !portal) return;
+        (portal.subjects || []).forEach(s => {
+            (s.lessons || []).forEach(l => {
+                (l.pdfs || []).forEach(pdf => {
+                    if (pdf && pdf.publishStatus === 'scheduled') {
+                        items.push({ kind: 'pdf', id: pdf.id, classKey: ck, subjectId: s.id, lessonId: l.id, title: pdf.title || pdf.fileName, category: `PDF · ${ck}`, publishAt: pdf.publishAt });
+                    }
+                });
+                (l.videos || []).forEach(v => {
+                    if (v && v.publishStatus === 'scheduled') {
+                        items.push({ kind: 'video', id: v.id, classKey: ck, subjectId: s.id, lessonId: l.id, title: v.title, category: `Video · ${ck}`, publishAt: v.publishAt });
+                    }
+                });
+            });
+        });
+    });
+    items.sort((a, b) => (Date.parse(a.publishAt || '') || 0) - (Date.parse(b.publishAt || '') || 0));
+    return items;
+}
+
+function renderScheduledQueueTab() {
+    const mount = document.getElementById('scheduledQueueAdminMount');
+    const badge = document.getElementById('scheduledQueueBadge');
+    const items = collectAdminScheduledItems();
+    if (badge) {
+        badge.textContent = String(items.length);
+        badge.style.display = items.length > 0 ? 'inline-flex' : 'none';
+    }
+    if (!mount) return;
+    if (items.length === 0) {
+        mount.innerHTML = '<div style="padding:20px; text-align:center; color:var(--adm-text-muted);">No items currently scheduled for future publishing. Schedule Posts, Notifications, PDFs, or Mock Tests to see them here.</div>';
+        return;
+    }
+    mount.innerHTML = `<div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>Item</th><th>Type</th><th>Scheduled Time (NPT)</th><th>Actions</th></tr></thead><tbody>
+        ${items.map((it, idx) => `
+            <tr>
+                <td><strong>${escapeHtml(it.title || 'Untitled')}</strong></td>
+                <td>${escapeHtml(it.category)}</td>
+                <td><code>${escapeHtml(formatNptReadableAdmin(it.publishAt))}</code></td>
+                <td>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button type="button" class="btn-adm-dark" style="padding:4px 10px; font-size:0.76rem;" onclick="mutateAdminScheduledQueue(${idx}, 'publish_now')">Publish Now</button>
+                        <button type="button" class="btn-topbar" style="padding:4px 9px; font-size:0.76rem;" onclick="mutateAdminScheduledQueue(${idx}, 'reschedule')">Edit Schedule</button>
+                        <button type="button" class="btn-topbar" style="padding:4px 9px; font-size:0.76rem; color:#dc2626;" onclick="mutateAdminScheduledQueue(${idx}, 'cancel')">Cancel</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('')}
+    </tbody></table></div>`;
+}
+
+async function mutateAdminScheduledQueue(idx, mode) {
+    const items = collectAdminScheduledItems();
+    const it = items[idx];
+    if (!it || !ADMIN_STATE) return;
+    let nextIso = '';
+    if (mode === 'reschedule') {
+        const currentLocal = isoToNptDatetimeLocal(it.publishAt);
+        const entered = prompt('Enter new Nepal Time (YYYY-MM-DDTHH:mm):', currentLocal || '');
+        if (!entered) return;
+        nextIso = nptDatetimeLocalToIso(entered);
+        if (!nextIso) {
+            showAdminToast('Invalid date/time format. Use YYYY-MM-DDTHH:mm', 'error');
+            return;
+        }
+    }
+    const nowIso = new Date().toISOString();
+    const apply = (obj) => {
+        if (!obj) return;
+        if (mode === 'publish_now') { obj.publishStatus = 'published'; obj.published = true; obj.publishAt = ''; obj.updatedAt = nowIso; }
+        else if (mode === 'cancel') { obj.publishStatus = 'draft'; obj.published = false; obj.publishAt = ''; obj.updatedAt = nowIso; }
+        else if (mode === 'reschedule') { obj.publishStatus = 'scheduled'; obj.publishAt = nextIso; obj.updatedAt = nowIso; }
+    };
+
+    if (it.kind === 'post') {
+        const posts = JSON.parse(JSON.stringify(ADMIN_STATE.posts || []));
+        apply(posts.find(p => p && p.id === it.id));
+        await persistAcademyState({ posts }, mode === 'publish_now' ? 'Post published now!' : 'Post schedule updated.');
+    } else if (it.kind === 'notification') {
+        const notifications = JSON.parse(JSON.stringify(ADMIN_STATE.notifications || []));
+        apply(notifications.find(n => n && n.id === it.id));
+        await persistAcademyState({ notifications }, mode === 'publish_now' ? 'Notification published now!' : 'Notification schedule updated.');
+    } else if (it.kind === 'zoom') {
+        const zoomClasses = JSON.parse(JSON.stringify(ADMIN_STATE.zoomClasses || []));
+        apply(zoomClasses.find(z => z && z.id === it.id));
+        await persistAcademyState({ zoomClasses }, 'Zoom schedule updated.');
+    } else if (it.kind === 'pdf' || it.kind === 'video') {
+        const portals = JSON.parse(JSON.stringify(ADMIN_STATE.portals || {}));
+        const subj = (portals[it.classKey]?.subjects || []).find(s => s.id === it.subjectId);
+        const lesson = (subj?.lessons || []).find(l => l.id === it.lessonId);
+        const arr = it.kind === 'pdf' ? (lesson?.pdfs || []) : (lesson?.videos || []);
+        apply(arr.find(x => x && x.id === it.id));
+        await persistAcademyState({ portals }, 'Content schedule updated.');
+    } else if (it.kind === 'mocktest') {
+        const test = (ADMIN_MOCK_TESTS || []).find(t => t && t.id === it.id);
+        if (test) {
+            const payload = {
+                ...test,
+                status: mode === 'publish_now' ? 'published' : (mode === 'cancel' ? 'draft' : 'scheduled'),
+                scheduledReleaseAt: mode === 'reschedule' ? nextIso : ''
+            };
+            await fetch('/api/mock-tests', {
+                method: 'POST',
+                headers: getAdminHeaders(),
+                body: JSON.stringify({ action: 'SAVE_MOCK_TEST', test: payload })
+            });
+            await loadAdminData();
+            showAdminToast('Mock test schedule updated.');
+        }
+    }
+    renderScheduledQueueTab();
 }
 
 async function toggleNotificationPublish(id) {

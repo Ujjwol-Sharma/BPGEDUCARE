@@ -169,9 +169,8 @@ function openAuthModal(initialTab = 'signin', targetClass = null) {
         pendingTargetClass = normalizeClassKey(targetClass);
         const gradeSelect = document.getElementById('signupGrade');
         if (gradeSelect) {
-            if (pendingTargetClass === 'c10' && !isSectionLocked('class-10')) gradeSelect.value = 'Class 10';
-            else if (pendingTargetClass === 'c11' && !isSectionLocked('class-11')) gradeSelect.value = 'Class 11';
-            else if (pendingTargetClass === 'entrance' && !isSectionLocked('after-12')) gradeSelect.value = 'After 12';
+            if (pendingTargetClass === 'c11' && !isSectionLocked('class-11')) gradeSelect.value = 'Class 11';
+            else if (pendingTargetClass === 'entrance' && !isSectionLocked('after-12')) gradeSelect.value = 'IOE';
             else if (!isSectionLocked('class-12')) gradeSelect.value = 'Class 12';
             else gradeSelect.value = 'Class 11';
         }
@@ -278,10 +277,16 @@ function switchAuthTab(tab) {
     const googlePane = document.getElementById('googleLocalChooserContainer');
     const resetPane = document.getElementById('authResetContainer');
     const step2Pane = document.getElementById('otpStep2Container');
+    const tempPwdPane = document.getElementById('authTempPwdContainer');
     const tabSignIn = document.getElementById('authTabSignIn');
     const tabSignUp = document.getElementById('authTabSignUp');
 
     clearAuthInlineAlerts();
+
+    if (tempPwdPane) {
+        tempPwdPane.style.display = tab === 'temp_pwd' ? 'block' : 'none';
+        tempPwdPane.classList.toggle('active', tab === 'temp_pwd');
+    }
 
     if (signInPane) {
         signInPane.style.display = tab === 'signin' ? 'block' : 'none';
@@ -591,24 +596,145 @@ async function handleGmailOtpSubmit(e) {
     }
 }
 
+let pendingTempPasswordCtx = { identifier: '', currentPassword: '' };
+
+async function triggerStrictOtpVerificationForExistingAccount({ email, username = '', name = 'Student', grade = 'Class 12', keepSignedIn = true, termsAccepted = false }) {
+    try {
+        const res = await fetch('/api/send-email-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, grade, mode: 'gmail_otp' })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+            showToast(data.error || 'Could not send 6-digit verification code.');
+            return;
+        }
+        pendingOtpSession = {
+            name,
+            username,
+            email,
+            grade,
+            password: '',
+            mode: 'gmail_otp',
+            keepSignedIn,
+            termsAccepted,
+            otpToken: data.otpToken || '',
+            expiresAt: data.expiresAt || (Date.now() + 10 * 60 * 1000)
+        };
+        ['authSignInContainer', 'otpStep1Container', 'googleLocalChooserContainer', 'authResetContainer', 'authTempPwdContainer'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        const step2 = document.getElementById('otpStep2Container');
+        if (step2) step2.style.display = 'block';
+        const head = document.getElementById('otpStep2Heading');
+        if (head) head.textContent = 'Verify 6-Digit Email OTP';
+        const sub = document.getElementById('otpStep2Subtitle');
+        if (sub) sub.textContent = username
+            ? `Your username (@${username}) and account progress are preserved. Enter the 6-digit code sent to your Gmail to unlock your dashboard.`
+            : 'Enter the 6-digit verification code sent to your Gmail to unlock your dashboard.';
+        const badge = document.getElementById('otpTargetEmailBadge');
+        if (badge) badge.textContent = email;
+        const otpTermsBox = document.getElementById('otpTermsAgree');
+        if (otpTermsBox) otpTermsBox.checked = Boolean(termsAccepted);
+        startOtpExpiryTimer(pendingOtpSession.expiresAt);
+        startResendCooldown(data.cooldownSeconds || 60);
+        clearOtpDigitBoxes();
+        setTimeout(() => document.getElementById('otpDigit0')?.focus(), 80);
+        showToast(data.message || `6-digit verification code sent to ${email}`);
+    } catch (e) {
+        showToast('Unable to send verification code. Please try again.');
+    }
+}
+
+async function handleCompleteTempPassword(e) {
+    if (e) e.preventDefault();
+    const newPwd = String(document.getElementById('tempPwdNewInput')?.value || '');
+    const confPwd = String(document.getElementById('tempPwdConfirmInput')?.value || '');
+    const termsOk = Boolean(document.getElementById('tempPwdTermsAgree')?.checked);
+    const errEl = document.getElementById('tempPwdErrorBanner');
+    if (errEl) errEl.style.display = 'none';
+    if (newPwd.length < 6) {
+        if (errEl) { errEl.textContent = 'New password must be at least 6 characters.'; errEl.style.display = 'block'; }
+        return;
+    }
+    if (newPwd !== confPwd) {
+        if (errEl) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; }
+        return;
+    }
+    if (!termsOk) {
+        if (errEl) { errEl.textContent = 'You must agree to the Terms & Conditions and Privacy Policy.'; errEl.style.display = 'block'; }
+        return;
+    }
+    const btn = document.getElementById('btnCompleteTempPwd');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+    try {
+        const res = await fetch('/api/student-roster', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'COMPLETE_TEMP_PASSWORD',
+                identifier: pendingTempPasswordCtx.identifier,
+                currentPassword: pendingTempPasswordCtx.currentPassword,
+                newPassword: newPwd,
+                termsAccepted: true
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            throw new Error(data.error || 'Could not update password.');
+        }
+        showToast('New password saved! Sign in now with your new password.');
+        const pwdField = document.getElementById('signinPassword');
+        if (pwdField) pwdField.value = newPwd;
+        const siTerms = document.getElementById('signinTermsAgree');
+        if (siTerms) siTerms.checked = true;
+        switchAuthTab('signin');
+    } catch (err) {
+        if (errEl) { errEl.textContent = err.message; errEl.style.display = 'block'; }
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Save New Password'; }
+    }
+}
+
 async function completeGoogleTokenSignIn(tokenPayload) {
     try {
         const payload = typeof tokenPayload === 'string'
             ? { idToken: tokenPayload }
             : (tokenPayload || {});
+        const termsChecked = Boolean(
+            document.getElementById('signinTermsAgree')?.checked ||
+            document.getElementById('signupTermsAgree')?.checked
+        );
         const res = await fetch('/api/student-roster', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'GOOGLE_SIGN_IN',
                 idToken: payload.idToken || '',
                 accessToken: payload.accessToken || '',
-                grade: getSelectedSignupGradeForGoogle()
+                grade: getSelectedSignupGradeForGoogle(),
+                termsAccepted: termsChecked
             })
         });
         const data = await res.json();
         if (!res.ok || !data.success) {
             showToast(data.error || 'Google Sign-In failed.');
+            return;
+        }
+        // Strict 6-digit Email OTP + Terms enforcement for Google Sign-In
+        if (data.requiresOtp || data.requiresTerms) {
+            await triggerStrictOtpVerificationForExistingAccount({
+                email: data.email,
+                username: data.username || '',
+                name: data.name || 'Student',
+                grade: data.grade || 'Class 12',
+                keepSignedIn: true,
+                termsAccepted: termsChecked
+            });
             return;
         }
         const user = Object.assign({}, data.user, {
@@ -698,7 +824,8 @@ async function handleSignInSubmit(e) {
                 email: identifier.includes('@') ? identifier.toLowerCase() : undefined,
                 username: !identifier.includes('@') ? identifier.replace(/^@+/, '') : undefined,
                 password,
-                keepSignedIn
+                keepSignedIn,
+                termsAccepted: Boolean(document.getElementById('signinTermsAgree')?.checked)
             })
         });
 
@@ -716,10 +843,29 @@ async function handleSignInSubmit(e) {
         }
 
         if (!res.ok || !data.success) {
+            if (data.code === 'MUST_CHANGE_PASSWORD') {
+                pendingTempPasswordCtx = { identifier, currentPassword: password };
+                switchAuthTab('temp_pwd');
+                showToast('Please set a new permanent password for your account.');
+                return;
+            }
+            if (data.code === 'OTP_VERIFICATION_REQUIRED' && data.email) {
+                await triggerStrictOtpVerificationForExistingAccount({
+                    email: data.email,
+                    username: data.username || '',
+                    name: data.name || 'Student',
+                    grade: data.grade || 'Class 12',
+                    keepSignedIn,
+                    termsAccepted: Boolean(document.getElementById('signinTermsAgree')?.checked)
+                });
+                return;
+            }
             const msg = data.error || 'Incorrect credentials. Please check your email/username and password.';
             if (errBanner) {
                 let extraAction = '';
-                if (data.code === 'EMAIL_NOT_VERIFIED') {
+                if (data.code === 'TERMS_REQUIRED') {
+                    document.getElementById('signinTermsAgree')?.focus();
+                } else if (data.code === 'EMAIL_NOT_VERIFIED') {
                     extraAction = `<button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem; margin-top:8px;" onclick="openGmailOtpPane()">Verify with Gmail code</button>`;
                 } else if (data.code === 'ACCOUNT_NOT_FOUND') {
                     extraAction = `<button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem; margin-top:8px;" onclick="switchAuthTab('signup')">Create Account &rarr;</button>`;
@@ -842,9 +988,15 @@ async function handleRequestEmailOtp(e) {
         document.getElementById('signupPassword')?.focus();
         return;
     }
+    const signupTermsAgreed = Boolean(document.getElementById('signupTermsAgree')?.checked);
+    if (!signupTermsAgreed) {
+        showToast('Please agree to the Terms & Conditions and Privacy Policy to continue.');
+        document.getElementById('signupTermsAgree')?.focus();
+        return;
+    }
 
     // Block registering directly into a locked section
-    const classKeyMap = { 'Class 10': 'class-10', 'Class 11': 'class-11', 'Class 12': 'class-12', 'After 12': 'after-12' };
+    const classKeyMap = { 'Class 11': 'class-11', 'Class 12': 'class-12', 'IOE': 'after-12', 'After 12': 'after-12' };
     const mappedClass = classKeyMap[grade] || 'class-12';
     if (typeof isSectionLocked === 'function' && isSectionLocked(mappedClass)) {
         showSectionLockedModal(mappedClass);
@@ -905,9 +1057,12 @@ async function handleRequestEmailOtp(e) {
             password,
             mode: 'signup',
             keepSignedIn: document.getElementById('signupKeepSignedIn')?.checked !== false,
+            termsAccepted: true,
             otpToken: data.otpToken || '',
             expiresAt: data.expiresAt || (Date.now() + 10 * 60 * 1000)
         };
+        const otpTermsBox = document.getElementById('otpTermsAgree');
+        if (otpTermsBox) otpTermsBox.checked = true;
 
         document.getElementById('otpStep1Container').style.display = 'none';
         document.getElementById('otpStep2Container').style.display = 'block';
@@ -1060,6 +1215,20 @@ async function handleVerifyEmailOtp(e) {
     }
 
     try {
+        const otpTermsChecked = Boolean(
+            pendingOtpSession.termsAccepted ||
+            document.getElementById('otpTermsAgree')?.checked ||
+            document.getElementById('signupTermsAgree')?.checked
+        );
+        if ((pendingOtpSession.mode === 'signup' || pendingOtpSession.mode === 'gmail_otp') && !otpTermsChecked) {
+            const msg = 'Please tick "I agree to the Terms & Conditions and Privacy Policy" before verifying.';
+            if (errBanner) {
+                errBanner.innerHTML = `<p style="margin:0;">${msg}</p>`;
+                errBanner.style.display = 'block';
+            }
+            showToast(msg);
+            return;
+        }
         const res = await fetch('/api/verify-otp', {
             method: 'POST',
             credentials: 'same-origin',
@@ -1072,6 +1241,7 @@ async function handleVerifyEmailOtp(e) {
                 newPassword: pendingOtpSession.password,
                 mode: pendingOtpSession.mode || 'signup',
                 keepSignedIn: pendingOtpSession.keepSignedIn !== false,
+                termsAccepted: otpTermsChecked,
                 otp: enteredOtp,
                 otpToken: pendingOtpSession.otpToken
             })
@@ -1147,6 +1317,9 @@ async function finalizeVerifiedStudentAccount(userObj, shouldPostToRoster = fals
         paymentStatus: userObj.paymentStatus || (plan !== 'free' ? 'paid' : 'none'),
         legacyAccess: Boolean(userObj.legacyAccess),
         planExplicitlySet: Boolean(userObj.planExplicitlySet),
+        ioeAccess: Boolean(userObj.ioeAccess),
+        otpVerified: userObj.otpVerified !== false,
+        termsAccepted: userObj.termsAccepted !== false,
         googleLinked: Boolean(userObj.googleLinked),
         avatarUrl: userObj.avatarUrl || '',
         readNotificationIds: Array.isArray(userObj.readNotificationIds) ? userObj.readNotificationIds : [],

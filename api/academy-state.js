@@ -77,6 +77,10 @@ function deepMergeState(currentData, payload) {
         updated.notifications = payload.notifications;
     }
 
+    if (Array.isArray(payload.posts)) {
+        updated.posts = payload.posts;
+    }
+
     if (Array.isArray(payload.chatbotFaqs)) {
         updated.chatbotFaqs = payload.chatbotFaqs;
     }
@@ -206,6 +210,7 @@ const verifyOtpHandler = require('./_verify-otp');
 const contentAccessHandler = require('./_content-access');
 const mockTestsHandler = require('./_mock-tests');
 const paymentsHandler = require('./_payments');
+const superAdminHandler = require('./_super-admin');
 const aiTutorHandler = require('./_ai-tutor');
 
 const SUB_ROUTE_HANDLERS = {
@@ -215,6 +220,7 @@ const SUB_ROUTE_HANDLERS = {
     'content-access': contentAccessHandler,
     'mock-tests': mockTestsHandler,
     'payments': paymentsHandler,
+    'super-admin': superAdminHandler,
     'ai-tutor': aiTutorHandler
 };
 
@@ -305,7 +311,7 @@ async function academyStateHandler(req, res) {
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-passkey, x-session-token, x-student-email, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-passkey, x-super-admin-key, x-session-token, x-student-email, Authorization');
 
     if (req.method === 'OPTIONS') {
         res.statusCode = 204;

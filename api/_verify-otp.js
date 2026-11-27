@@ -7,6 +7,7 @@
 const crypto = require('crypto');
 const {
     OTP_SECRET,
+    TERMS_CURRENT_VERSION,
     canonicalizeEmail,
     normalizeUsername,
     isValidUsernameFormat,
@@ -112,6 +113,15 @@ module.exports = async function handler(req, res) {
         const mode = rawMode === 'reset' ? 'reset' : (rawMode === 'gmail_otp' ? 'gmail_otp' : 'signup');
         const newPassword = String(body.newPassword || body.password || '');
         const keepSignedIn = body.keepSignedIn !== false;
+        const termsAccepted = body.termsAccepted === true;
+
+        if (mode === 'signup' && !termsAccepted) {
+            return res.status(400).json({
+                ok: false,
+                code: 'TERMS_REQUIRED',
+                error: 'You must agree to the Terms & Conditions and Privacy Policy to create an account.'
+            });
+        }
 
         if ((mode === 'signup' || mode === 'reset') && newPassword.length < 6) {
             return res.status(400).json({
@@ -301,6 +311,13 @@ module.exports = async function handler(req, res) {
                 }
             }
             roster.accounts[existingIdx].emailVerified = true;
+            roster.accounts[existingIdx].otpVerified = true;
+            roster.accounts[existingIdx].mustChangePassword = false;
+            if (termsAccepted || roster.accounts[existingIdx].termsAccepted) {
+                roster.accounts[existingIdx].termsAccepted = true;
+                roster.accounts[existingIdx].termsVersion = TERMS_CURRENT_VERSION;
+                roster.accounts[existingIdx].termsAcceptedAt = roster.accounts[existingIdx].termsAcceptedAt || new Date().toISOString();
+            }
             if (!roster.accounts[existingIdx].verifiedAt) {
                 roster.accounts[existingIdx].verifiedAt = new Date().toISOString();
             }
@@ -315,6 +332,7 @@ module.exports = async function handler(req, res) {
             roster.accounts[existingIdx].lastLoginAt = nowResetIso;
             roster.accounts[existingIdx].lastActiveAt = nowResetIso;
             roster.accounts[existingIdx].deviceInfo = parseUserAgentDeviceInfo(req);
+            roster.accounts[existingIdx].ipAddress = getClientIp(req);
             writeRoster(roster);
             const acc = roster.accounts[existingIdx];
             const state = readAcademyState();
@@ -357,15 +375,29 @@ module.exports = async function handler(req, res) {
                     error: 'Your account has been suspended by an administrator. Please contact BPG EDUCARE support.'
                 });
             }
+            if (!acc.termsAccepted && !termsAccepted) {
+                return res.status(400).json({
+                    ok: false,
+                    code: 'TERMS_REQUIRED',
+                    error: 'Please tick the Terms & Conditions and Privacy Policy checkbox to finish signing in.'
+                });
+            }
             const newSessionId = generateSessionId();
             const nowOtpIso = new Date().toISOString();
             acc.emailVerified = true;
+            acc.otpVerified = true;
+            if (termsAccepted) {
+                acc.termsAccepted = true;
+                acc.termsVersion = TERMS_CURRENT_VERSION;
+                acc.termsAcceptedAt = acc.termsAcceptedAt || nowOtpIso;
+            }
             if (acc.accountStatus === 'pending_verification') acc.accountStatus = 'active';
             if (!acc.verifiedAt) acc.verifiedAt = nowOtpIso;
             acc.activeSessionId = newSessionId;
             acc.lastLoginAt = nowOtpIso;
             acc.lastActiveAt = nowOtpIso;
             acc.deviceInfo = parseUserAgentDeviceInfo(req);
+            acc.ipAddress = getClientIp(req);
             writeRoster(roster);
             const state = readAcademyState();
             const mySwitchRequests = (roster.classSwitchRequests || []).filter(
@@ -428,6 +460,10 @@ module.exports = async function handler(req, res) {
             accountStatus: 'active',
             paymentStatus: 'none',
             emailVerified: true,
+            otpVerified: true,
+            termsAccepted: true,
+            termsVersion: TERMS_CURRENT_VERSION,
+            termsAcceptedAt: nowIso,
             verifiedAt: nowIso,
             verificationMethod: 'email_otp',
             hasPassword: true,
@@ -436,6 +472,7 @@ module.exports = async function handler(req, res) {
             lastLoginAt: nowIso,
             lastActiveAt: nowIso,
             deviceInfo: parseUserAgentDeviceInfo(req),
+            ipAddress: getClientIp(req),
             readNotificationIds: [],
             joinedAt: nowIso.split('T')[0],
             updatedAt: nowIso,

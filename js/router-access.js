@@ -8,7 +8,7 @@ function recordLastClassActivity(classShortKey, tabKey = 'notes') {
     const session = getStoredStudentSession();
     if (!session || !session.email) return;
     const norm = normalizeClassKey(classShortKey);
-    if (!['c10', 'c11', 'c12', 'entrance'].includes(norm)) return;
+    if (!['c11', 'c12', 'entrance'].includes(norm)) return;
     try {
         const all = JSON.parse(localStorage.getItem(BPG_LAST_CLASS_ACTIVITY_KEY) || '{}');
         all[String(session.email).toLowerCase()] = {
@@ -18,6 +18,78 @@ function recordLastClassActivity(classShortKey, tabKey = 'notes') {
         };
         localStorage.setItem(BPG_LAST_CLASS_ACTIVITY_KEY, JSON.stringify(all));
     } catch (e) {}
+    sendStudentActivityHeartbeat(`${getClassDisplayTitle(norm)} · ${tabKey || 'notes'}`);
+}
+
+let lastHeartbeatSentAt = 0;
+let lastHeartbeatSection = '';
+function sendStudentActivityHeartbeat(sectionLabel = '') {
+    if (!isUserAuthenticated()) return;
+    const now = Date.now();
+    if (sectionLabel === lastHeartbeatSection && (now - lastHeartbeatSentAt) < 40000) return;
+    lastHeartbeatSentAt = now;
+    lastHeartbeatSection = sectionLabel;
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        fetch('/api/student-roster', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({ action: 'HEARTBEAT', currentSection: sectionLabel })
+        }).catch(() => {});
+    } catch (e) {}
+}
+
+function togglePostsDropdown(e) {
+    if (e) e.stopPropagation();
+    closeClassesDropdown();
+    closeUserDropdown();
+    const wrap = document.getElementById('navPostsWrap');
+    const menu = document.getElementById('navPostsMenu');
+    const btn = document.getElementById('navPostsBtn');
+    if (!menu) return;
+    const isOpen = menu.classList.toggle('open');
+    if (wrap) wrap.classList.toggle('open', isOpen);
+    if (btn) btn.setAttribute('aria-expanded', String(isOpen));
+}
+
+function closePostsDropdown() {
+    const wrap = document.getElementById('navPostsWrap');
+    const menu = document.getElementById('navPostsMenu');
+    const btn = document.getElementById('navPostsBtn');
+    if (menu) menu.classList.remove('open');
+    if (wrap) wrap.classList.remove('open');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+function openPostsView(category = 'all') {
+    document.querySelectorAll('.portal-view, .view-container').forEach(v => {
+        v.style.display = 'none';
+        v.classList.remove('active');
+    });
+    const view = document.getElementById('view-posts');
+    if (view) {
+        view.style.display = 'block';
+        view.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.body.classList.remove('in-notes-tab');
+    setActiveNavLink('posts');
+    closePostsDropdown();
+    closeClassesDropdown();
+    closeMobileNav();
+    closeUserDropdown();
+    if (typeof setPostsFilter === 'function') setPostsFilter(category);
+    try { history.replaceState(null, '', category === 'all' ? '#posts' : `#${category}`); } catch (e) {}
+    sendStudentActivityHeartbeat(`Viewing Posts (${category})`);
+}
+
+function openTermsPrivacyModal() {
+    document.getElementById('termsPrivacyModal')?.classList.add('open');
+}
+
+function closeTermsPrivacyModal() {
+    document.getElementById('termsPrivacyModal')?.classList.remove('open');
 }
 
 function getLastClassActivity() {
@@ -218,7 +290,6 @@ function isUserAuthenticated() {
 function normalizeClassKey(key) {
     if (!key) return 'c12';
     const k = String(key).toLowerCase().trim().replace('view-', '').replace(/\s+/g, '-');
-    if (k === 'c10' || k === 'class-10' || k === 'class10' || k === '10' || k.includes('10')) return 'c10';
     if (k === 'c11' || k === 'class-11' || k === 'class11' || k === '11' || k.includes('11')) return 'c11';
     if (k === 'c12' || k === 'class-12' || k === 'class12' || k === '12') return 'c12';
     if (k === 'entrance' || k === 'after-12' || k === 'after12' || k.includes('after-12') || k.includes('entrance') || k === 'ioe' || k === 'cee' || k === 'ku') return 'entrance';
@@ -231,28 +302,25 @@ function getStudentRegisteredClass() {
     const session = getStoredStudentSession();
     if (session && session.grade) {
         const g = String(session.grade).toLowerCase();
-        if (g.includes('10')) return 'c10';
         if (g.includes('11')) return 'c11';
-        if (g.includes('12')) return 'c12';
         if (g.includes('after') || g.includes('entrance') || g.includes('ioe') || g.includes('cee')) return 'entrance';
+        if (g.includes('12')) return 'c12';
     }
     const directClass = localStorage.getItem('bpg_student_class');
-    if (directClass) return normalizeClassKey(directClass);
-    return 'c12'; // default fallback
+    if (directClass && directClass !== 'c10' && directClass !== 'class-10') return normalizeClassKey(directClass);
+    return 'c12';
 }
 
 function getClassDisplayTitle(classKey) {
     const norm = normalizeClassKey(classKey);
-    if (norm === 'c10') return 'Class 10 Mathematics';
     if (norm === 'c11') return 'Grade XI Mathematics';
     if (norm === 'c12') return 'Grade XII Mathematics';
-    if (norm === 'entrance') return 'Entrance Prep Mathematics';
+    if (norm === 'entrance') return 'IOE (Entrance Prep) Mathematics';
     return 'Mathematics';
 }
 
 function shortKeyToPortalKey(key) {
     const norm = normalizeClassKey(key);
-    if (norm === 'c10') return 'class-10';
     if (norm === 'c11') return 'class-11';
     if (norm === 'c12') return 'class-12';
     if (norm === 'entrance') return 'after-12';
@@ -275,14 +343,13 @@ function syncSectionLockBadges() {
     const sections = [
         { key: 'class-12', defaultSub: 'NEB Mat. 102 · Senior Secondary', optId: null, optLabel: 'Class 12 (NEB Mat. 102)' },
         { key: 'class-11', defaultSub: 'NEB Mat. 101 · Foundations', optId: null, optLabel: 'Class 11 (NEB Mat. 101)' },
-        { key: 'class-10', defaultSub: 'SEE Compulsory & Optional Math', optId: 'signupOpt-class-10', optLabel: 'Class 10 (SEE Foundation)' },
-        { key: 'after-12', defaultSub: 'IOE Pulchowk / CEE / KU', optId: 'signupOpt-after-12', optLabel: 'Entrance Prep (IOE / CEE / KU)' }
+        { key: 'after-12', defaultSub: 'Entrance Prep · Included in Topper', optId: 'signupOpt-after-12', optLabel: 'IOE (Entrance Prep)' }
     ];
 
     sections.forEach(s => {
         const info = typeof getSectionLockInfo === 'function'
             ? getSectionLockInfo(s.key)
-            : { locked: s.key === 'class-10' || s.key === 'after-12', reason: 'Temporarily unavailable' };
+            : { locked: false, reason: '' };
 
         const badge = document.getElementById(`navBadge-${s.key}`);
         const sub = document.getElementById(`navSub-${s.key}`);
@@ -455,10 +522,15 @@ function openPlanComparisonModal(requiredPlan = 'gold', itemTitle = '') {
                 <ul class="plan-counts-list">
                     <li>${c.p} Lesson PDFs &amp; ${c.v} Videos (open sections)</li>
                     <li>${c.z} Live Zoom Classes (open sections)</li>
-                    <li>${pid === 'diamond' ? 'Full access to all open section lessons, mock tests &amp; live classes' : 'Gold lessons, mock tests, study PDFs &amp; live classes'}</li>
+                    <li>${pid === 'diamond'
+                        ? '<strong>Full Class 11 / 12 + Full IOE (Entrance Prep) included</strong>'
+                        : 'Full Class 11 or Class 12 access (IOE Entrance Prep not included)'}</li>
+                    ${pid === 'diamond' && currentPlan === 'gold'
+                        ? '<li style="color:#16a34a; font-weight:600;">Padandas Upgrade: Pay only Rs. 1,000 difference!</li>'
+                        : ''}
                 </ul>
                 <button type="button" class="plan-select-btn ${isSelected ? 'is-selected' : ''}" onclick="event.stopPropagation(); openCheckoutModal('${pid}')">
-                    <i class="fa-solid fa-bag-shopping"></i> Buy ${safeName}
+                    <i class="fa-solid fa-bag-shopping"></i> ${pid === 'diamond' && currentPlan === 'gold' ? 'Upgrade to Topper (Rs. 1,000)' : `Buy ${safeName}`}
                 </button>
             </div>
         `;
@@ -1330,6 +1402,8 @@ function hasAccessToClass(classKey) {
     const norm = normalizeClassKey(classKey);
     if (typeof isSectionLocked === 'function' && isSectionLocked(shortKeyToPortalKey(norm))) return false;
     const myClass = getStudentRegisteredClass();
+    // Both Class 11 & Class 12 students can access IOE ('entrance') side-by-side!
+    if (norm === 'entrance' && (myClass === 'c11' || myClass === 'c12' || myClass === 'entrance')) return true;
     return norm === myClass;
 }
 
@@ -1451,8 +1525,8 @@ function handleClassNavClick(targetClassKey) {
     }
 
     const myClass = getStudentRegisteredClass();
-    if (targetNorm === myClass) {
-        switchPortal(`view-${myClass}`);
+    if (targetNorm === myClass || (targetNorm === 'entrance' && (myClass === 'c11' || myClass === 'c12'))) {
+        switchPortal(`view-${targetNorm}`);
     } else {
         showRestrictedAccessModal(targetNorm);
     }
@@ -1620,7 +1694,7 @@ function switchPortal(portalId) {
     const norm = normalizeClassKey(targetId.replace('view-', ''));
 
     // SECTION LOCK GUARD: Applies to every plan (including Diamond) and direct links!
-    if (['c10', 'c11', 'c12', 'entrance'].includes(norm)) {
+    if (['c11', 'c12', 'entrance'].includes(norm)) {
         const portalKey = shortKeyToPortalKey(norm);
         if (typeof isSectionLocked === 'function' && isSectionLocked(portalKey)) {
             showSectionLockedModal(norm);
@@ -1629,15 +1703,16 @@ function switchPortal(portalId) {
     }
 
     // GUEST ROUTING GUARD: Guests cannot enter class workspaces directly
-    if (!isAuth && ['c10', 'c11', 'c12', 'entrance'].includes(norm) && targetId !== 'view-home') {
+    if (!isAuth && ['c11', 'c12', 'entrance'].includes(norm) && targetId !== 'view-home') {
         openAuthModal('signup', norm);
         return;
     }
 
-    // AUTHENTICATED EXCLUSIVE ROUTING: If visiting home or a different class
+    // AUTHENTICATED ROUTING: Class 11 & Class 12 students can open IOE ('entrance') side-by-side!
     if (isAuth && targetId !== 'view-home') {
         const myClass = getStudentRegisteredClass();
-        if (['c10', 'c11', 'c12', 'entrance'].includes(norm) && norm !== myClass) {
+        const isSideBySideIoe = norm === 'entrance' && (myClass === 'c11' || myClass === 'c12' || myClass === 'entrance');
+        if (['c11', 'c12', 'entrance'].includes(norm) && norm !== myClass && !isSideBySideIoe) {
             showRestrictedAccessModal(norm);
             return;
         }
@@ -1680,6 +1755,7 @@ function switchPortal(portalId) {
     }
 
     if (typeof closeClassesDropdown === 'function') closeClassesDropdown();
+    if (typeof closePostsDropdown === 'function') closePostsDropdown();
     if (typeof closeMobileNav === 'function') closeMobileNav();
     if (typeof closeUserDropdown === 'function') closeUserDropdown();
 

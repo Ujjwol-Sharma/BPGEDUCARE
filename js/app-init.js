@@ -21,7 +21,14 @@ async function syncRosterPermissionsFromServer() {
             const meJson = await meRes.json();
             if (meJson.sessionRevoked === true) {
                 if (typeof handleSignOutSilent === 'function') handleSignOutSilent();
-                if (meJson.sessionReplaced && typeof showToast === 'function') {
+                if (meJson.reloginRequired) {
+                    if (typeof showToast === 'function') {
+                        showToast(meJson.error || 'Security update: Please sign in again with your existing username.');
+                    }
+                    if (typeof openAuthModal === 'function') {
+                        setTimeout(() => openAuthModal('signin'), 120);
+                    }
+                } else if (meJson.sessionReplaced && typeof showToast === 'function') {
                     showToast(meJson.error || 'You were signed out because your account logged in on another device.');
                 }
                 return;
@@ -165,11 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Boot & Refresh routing: keep signed-in session active across Home, navigation, and page refreshes
     const hash = (window.location.hash || '').replace('#', '').toLowerCase();
-    if (isUserAuthenticated()) {
+    if (hash === 'posts' || hash === 'news' || hash === 'achievements') {
+        if (typeof openPostsView === 'function') {
+            openPostsView(hash === 'news' ? 'news' : (hash === 'achievements' ? 'achievements' : 'all'));
+        }
+    } else if (isUserAuthenticated()) {
         if (typeof checkAndResumeActiveMockTestOnBoot === 'function' && localStorage.getItem('bpg_active_mock_attempt_v1')) {
             checkAndResumeActiveMockTestOnBoot();
-        } else if (['entrance', 'c10', 'c11', 'c12'].includes(hash)) {
-            handleClassNavClick(hash);
+        } else if (['entrance', 'ioe', 'c11', 'c12'].includes(hash)) {
+            handleClassNavClick(hash === 'ioe' ? 'entrance' : hash);
         } else if (hash === 'classes') {
             openClassSelectionView();
         } else {
@@ -177,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } else {
         setActiveNavLink('home');
-        if (['entrance', 'c10', 'c11', 'c12'].includes(hash)) handleClassNavClick(hash);
+        if (['entrance', 'ioe', 'c11', 'c12'].includes(hash)) handleClassNavClick(hash === 'ioe' ? 'entrance' : hash);
         else switchPortal('view-home');
     }
 
@@ -308,8 +319,8 @@ window.handleGoogleAuthClick = handleGoogleAuthClick;
 window.handleLocalGoogleSubmit = handleLocalGoogleSubmit;
 window.openCheckoutModal = openCheckoutModal;
 window.closeCheckoutModal = closeCheckoutModal;
-window.copyPaymentRemarks = copyPaymentRemarks;
-window.submitStaticEsewaPayment = submitStaticEsewaPayment;
+window.copyPaymentRemarks = typeof copyCheckoutOrderId === 'function' ? copyCheckoutOrderId : function () {};
+window.submitStaticEsewaPayment = typeof handleCheckoutStep2Submit === 'function' ? handleCheckoutStep2Submit : function () {};
 window.submitClassSwitchRequest = submitClassSwitchRequest;
 window.handleHeroSecondaryCta = handleHeroSecondaryCta;
 window.openConfiguredWhatsappSupport = openConfiguredWhatsappSupport;
@@ -323,3 +334,6 @@ window.openStudentProfileModal = openStudentProfileModal;
 window.closeStudentProfileModal = closeStudentProfileModal;
 window.handleStudentProfileSave = handleStudentProfileSave;
 window.renderStudentDashboardPaymentBanner = renderStudentDashboardPaymentBanner;
+if (typeof openPostsView === 'function') window.openPostsView = openPostsView;
+if (typeof openTermsPrivacyModal === 'function') window.openTermsPrivacyModal = openTermsPrivacyModal;
+if (typeof closeTermsPrivacyModal === 'function') window.closeTermsPrivacyModal = closeTermsPrivacyModal;

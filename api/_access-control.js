@@ -17,7 +17,9 @@ const ROSTER_PATH = path.join(DATA_DIR, 'student-roster.json');
 const TMP_ROSTER_PATH = path.join(os.tmpdir(), 'bpg-student-roster.json');
 
 const MASTER_PASSKEY = process.env.ADMIN_PASSKEY || 'k9x4m7p2q8z';
+const SUPER_ADMIN_PASSKEY = process.env.SUPER_ADMIN_PASSKEY || 'BPG-SUPER-9866-ROOT';
 const OTP_SECRET = process.env.OTP_SECRET || 'bpg-maths-academy-hmac-secret-2026';
+const TERMS_CURRENT_VERSION = '2026-11-27';
 
 const PLAN_RANK = {
     free: 0,
@@ -26,10 +28,9 @@ const PLAN_RANK = {
 };
 
 const DEFAULT_SECTION_LOCKS = {
-    'class-10': { locked: true, reason: 'Temporarily unavailable' },
     'class-11': { locked: false, reason: '' },
     'class-12': { locked: false, reason: '' },
-    'after-12': { locked: true, reason: 'Temporarily unavailable' }
+    'after-12': { locked: false, reason: '' }
 };
 
 const DEFAULT_PLANS_CONFIG = {
@@ -38,21 +39,21 @@ const DEFAULT_PLANS_CONFIG = {
         name: 'Free',
         price: 'Rs. 0',
         period: 'Forever free',
-        description: 'Access admin-selected sample questions and PDFs in open sections.'
+        description: 'Access admin-selected sample lessons, notes, and PDFs across open sections.'
     },
     gold: {
         id: 'gold',
         name: 'Padandas',
         price: 'Rs. 1,999',
         period: 'Until NEB Final Exam',
-        description: 'Includes all Free content plus Padandas lessons, full solutions, mock tests, and study PDFs.'
+        description: 'Full Class 11 or Class 12 lessons, notes, mock tests, live Zoom classes, and study PDFs. (IOE Entrance Prep not included.)'
     },
     diamond: {
         id: 'diamond',
         name: 'Topper',
         price: 'Rs. 2,999',
         period: 'Until NEB Final Exam',
-        description: 'Unlocks every Topper lesson, mock test, live class, and PDF across all open sections.'
+        description: 'Full Class 11/12 access PLUS full IOE (Entrance Prep) access, all mock tests, live classes, and PDFs included.'
     }
 };
 
@@ -134,9 +135,18 @@ const DEFAULT_TEAM_MEMBERS = [
     },
     {
         id: 'team-cto',
-        slot: 'cto',
+        slot: 'member',
         initial: 'U',
         name: 'Utsav Sharma',
+        role: '',
+        photoUrl: '',
+        bio: ''
+    },
+    {
+        id: 'team-dipson',
+        slot: 'member',
+        initial: 'D',
+        name: 'Dipson Paudel',
         role: '',
         photoUrl: '',
         bio: ''
@@ -144,10 +154,10 @@ const DEFAULT_TEAM_MEMBERS = [
 ];
 
 const DEFAULT_HOMEPAGE_CONTENT = {
-    heroPillText: 'Pokhara, Nepal · NEB & Entrance Mathematics',
+    heroPillText: 'Pokhara, Nepal · NEB & IOE Mathematics',
     heroTitleMain: 'Understand Mathematics.',
     heroTitleMuted: 'Master every concept.',
-    heroDescription: 'Structured, concept-first mathematics portals for Class 10, Class 11, Class 12, and IOE / CEE / KU entrance — mentored by Bishnu Prasad Gautam (BPG Sir).',
+    heroDescription: 'Structured, concept-first mathematics portals for Class 11, Class 12, and IOE Entrance — mentored by Bishnu Prasad Gautam (BPG Sir).',
     heroPrimaryBtnLabel: 'Get Started',
     heroSecondaryBtnLabel: 'Ask BPG AI',
     heroSecondaryBtnLink: '#ai',
@@ -156,7 +166,7 @@ const DEFAULT_HOMEPAGE_CONTENT = {
     heroFacultyRole: 'Founder & Lead Faculty · BPG Sir',
     heroFacultyTag: 'TU M.Sc.',
     bannerEnabled: false,
-    bannerText: 'Admissions open for Class 11 & Class 12 NEB Mathematics batches.',
+    bannerText: 'Admissions open for Class 11, Class 12 & IOE Mathematics batches.',
     bannerLinkLabel: 'View Plans',
     bannerLinkUrl: '#plans',
     featuresEyebrow: 'Explore BPG EDUCARE',
@@ -166,7 +176,7 @@ const DEFAULT_HOMEPAGE_CONTENT = {
         { id: 'mocktests', label: 'Mock Tests', sub: 'Timed MCQ practice tests and instant scoring', link: '#mocktests' },
         { id: 'syllabus', label: 'Syllabus Grid', sub: 'Units, teaching hours, and marks weightage', link: '#syllabus' },
         { id: 'calendar', label: 'Live Class Calendar', sub: 'Scheduled Zoom classes and timings', link: '#calendar' },
-        { id: 'plans', label: 'Plans', sub: 'Compare Gold and Diamond access', link: '#plans' }
+        { id: 'plans', label: 'Plans', sub: 'Compare Padandas and Topper access', link: '#plans' }
     ],
     notificationsEyebrow: 'Updates & Alerts',
     notificationsHeading: 'Notifications',
@@ -190,8 +200,12 @@ const DEFAULT_SITE_SETTINGS = {
     esewaMerchantName: 'BPG EDUCARE',
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     singleDeviceSession: true,
+    minAuthVersion: 2,
     promoCodes: []
 };
+
+const DEFAULT_POSTS = [];
+const DEFAULT_ADMIN_USERS = [];
 
 const DEFAULT_NOTIFICATIONS = [];
 
@@ -522,7 +536,6 @@ function normalizePlan(plan) {
 function gradeToClassKey(grade) {
     if (!grade) return 'class-12';
     const g = String(grade).toLowerCase().trim();
-    if (g === 'class-10' || g === 'c10' || g.includes('10') || g.includes('see')) return 'class-10';
     if (g === 'class-11' || g === 'c11' || g.includes('11')) return 'class-11';
     if (g === 'after-12' || g === 'entrance' || g.includes('entrance') || g.includes('after') || g.includes('ioe') || g.includes('cee')) return 'after-12';
     if (g === 'class-12' || g === 'c12' || g.includes('12')) return 'class-12';
@@ -531,14 +544,106 @@ function gradeToClassKey(grade) {
 
 function normalizeGradeName(grade) {
     const key = gradeToClassKey(grade);
-    if (key === 'class-10') return 'Class 10';
     if (key === 'class-11') return 'Class 11';
-    if (key === 'after-12') return 'After 12 Entrance';
+    if (key === 'after-12') return 'IOE';
     return 'Class 12';
 }
 
+function isSuperAdminPasskeyValid(passkey) {
+    return Boolean(passkey && String(passkey).trim() === SUPER_ADMIN_PASSKEY);
+}
+
 function isAdminPasskeyValid(passkey) {
-    return Boolean(passkey && String(passkey) === MASTER_PASSKEY);
+    const clean = String(passkey || '').trim();
+    if (!clean) return false;
+    if (clean === MASTER_PASSKEY || clean === SUPER_ADMIN_PASSKEY) return true;
+    try {
+        const st = readAcademyState();
+        const admins = Array.isArray(st?.adminUsers) ? st.adminUsers : [];
+        return admins.some(a => a && a.active !== false && a.passkeyHash && verifyPassword(clean, a.passkeyHash));
+    } catch (e) {
+        return false;
+    }
+}
+
+function resolveAdminRole(req, body = null) {
+    const superHdr = String(req?.headers?.['x-super-admin-key'] || body?.superAdminKey || '').trim();
+    const adminHdr = String(req?.headers?.['x-admin-passkey'] || body?.adminPasskey || '').trim();
+    if (isSuperAdminPasskeyValid(superHdr) || isSuperAdminPasskeyValid(adminHdr)) {
+        return { isAdmin: true, isSuperAdmin: true, role: 'super_admin', name: 'Super Admin', permissions: ['*'] };
+    }
+    if (adminHdr === MASTER_PASSKEY) {
+        return { isAdmin: true, isSuperAdmin: false, role: 'admin', name: 'Master Admin', permissions: ['users', 'payments', 'content', 'posts', 'mocktests', 'zoom', 'notifications', 'homepage', 'team', 'faqs', 'settings'] };
+    }
+    if (adminHdr) {
+        try {
+            const st = readAcademyState();
+            const admins = Array.isArray(st?.adminUsers) ? st.adminUsers : [];
+            const matched = admins.find(a => a && a.active !== false && a.passkeyHash && verifyPassword(adminHdr, a.passkeyHash));
+            if (matched) {
+                return {
+                    isAdmin: true,
+                    isSuperAdmin: matched.role === 'super_admin',
+                    role: matched.role === 'super_admin' ? 'super_admin' : 'admin',
+                    adminId: matched.id,
+                    name: matched.name || 'Admin',
+                    email: matched.email || '',
+                    permissions: Array.isArray(matched.permissions) ? matched.permissions : ['users', 'payments', 'content', 'posts']
+                };
+            }
+        } catch (e) {}
+    }
+    return { isAdmin: false, isSuperAdmin: false, role: 'guest', name: '', permissions: [] };
+}
+
+function isItemPublishedNow(item, nowMs = Date.now()) {
+    if (!item || typeof item !== 'object') return false;
+    if (item.published === false && !item.publishStatus) return false;
+    const st = String(item.publishStatus || (item.published === false ? 'draft' : 'published')).toLowerCase().trim();
+    if (st === 'draft' || st === 'cancelled') return false;
+    if (st === 'scheduled') {
+        const atMs = Date.parse(String(item.publishAt || item.scheduledReleaseAt || ''));
+        if (!Number.isFinite(atMs)) return false;
+        return nowMs >= atMs;
+    }
+    // Even if publishStatus === 'published', honor a future publishAt if set
+    if (item.publishAt) {
+        const atMs = Date.parse(String(item.publishAt));
+        if (Number.isFinite(atMs) && atMs > nowMs && st === 'scheduled') return false;
+    }
+    return true;
+}
+
+function recordStudentActivity(user, req, currentSection = '') {
+    if (!user || (!user.userId && !user.email)) return;
+    try {
+        const roster = readRoster();
+        const canonical = canonicalizeEmail(user.email || '');
+        const acc = (roster.accounts || []).find(a => (user.userId && a.userId === user.userId) || (canonical && a.canonicalEmail === canonical));
+        if (!acc) return;
+        const nowIso = new Date().toISOString();
+        const ip = getClientIp(req);
+        const device = parseUserAgentDeviceInfo(req);
+        const prevTs = Date.parse(acc.lastActiveAt || '') || 0;
+        const sectionChanged = Boolean(currentSection && currentSection !== acc.currentSection);
+        const stale = (Date.now() - prevTs) > 45 * 1000;
+        if (!sectionChanged && !stale && acc.ipAddress === ip) return;
+        acc.lastActiveAt = nowIso;
+        if (currentSection) acc.currentSection = String(currentSection).slice(0, 140);
+        if (device && device !== 'Unknown Device') acc.deviceInfo = device;
+        if (ip && ip !== 'unknown') acc.ipAddress = ip;
+        if (!Array.isArray(acc.activityLog)) acc.activityLog = [];
+        if (sectionChanged) {
+            acc.activityLog.unshift({
+                at: nowIso,
+                section: acc.currentSection,
+                device: acc.deviceInfo || device,
+                ip: acc.ipAddress || ip
+            });
+            if (acc.activityLog.length > 20) acc.activityLog = acc.activityLog.slice(0, 20);
+        }
+        writeRoster(roster);
+    } catch (e) {}
 }
 
 /* --------------------------------------------------------------------------
@@ -629,6 +734,11 @@ function issueStudentSessionToken(user, options = {}) {
     const email = String(user.email || '').trim().toLowerCase();
     const canonicalEmail = canonicalizeEmail(email);
     const sid = String(options.sessionId || user.activeSessionId || '').trim();
+    let currentAuthVer = 2;
+    try {
+        const st = readAcademyState();
+        currentAuthVer = Math.max(1, Number(st?.siteSettings?.minAuthVersion) || 2);
+    } catch (e) {}
     const payload = {
         userId: deriveStableUserId(canonicalEmail, user.userId),
         email,
@@ -638,6 +748,8 @@ function issueStudentSessionToken(user, options = {}) {
         plan: normalizePlan(user.plan),
         keepSignedIn,
         sid,
+        authVer: Number(options.authVer || currentAuthVer),
+        otpVerified: Boolean(user.otpVerified),
         verified: true,
         issuedAt,
         expiresAt
@@ -809,10 +921,19 @@ function readRoster() {
             avatarUrl: String(rawAcc.avatarUrl || ''),
             hasPassword: rawAcc.hasPassword !== undefined ? Boolean(rawAcc.hasPassword) : (rawAcc.verificationMethod !== 'google_oauth'),
             passkey: rawAcc.passkey || 'bpgstudent',
+            otpVerified: rawAcc.otpVerified !== undefined ? Boolean(rawAcc.otpVerified) : false,
+            termsAccepted: Boolean(rawAcc.termsAccepted),
+            termsVersion: String(rawAcc.termsVersion || ''),
+            termsAcceptedAt: String(rawAcc.termsAcceptedAt || ''),
+            ioeAccess: Boolean(rawAcc.ioeAccess),
+            mustChangePassword: Boolean(rawAcc.mustChangePassword),
             activeSessionId: String(rawAcc.activeSessionId || ''),
             lastLoginAt: String(rawAcc.lastLoginAt || ''),
             lastActiveAt: String(rawAcc.lastActiveAt || ''),
+            currentSection: String(rawAcc.currentSection || ''),
             deviceInfo: String(rawAcc.deviceInfo || ''),
+            ipAddress: String(rawAcc.ipAddress || ''),
+            activityLog: Array.isArray(rawAcc.activityLog) ? rawAcc.activityLog.slice(0, 20) : [],
             readNotificationIds: Array.isArray(rawAcc.readNotificationIds) ? rawAcc.readNotificationIds.map(String) : [],
             joinedAt: rawAcc.joinedAt || new Date().toISOString().split('T')[0],
             updatedAt: rawAcc.updatedAt || rawAcc.verifiedAt || (rawAcc.joinedAt ? `${rawAcc.joinedAt}T00:00:00.000Z` : new Date().toISOString()),
@@ -889,10 +1010,19 @@ function writeRoster(roster) {
             avatarUrl: String(acc.avatarUrl || ''),
             hasPassword: acc.hasPassword !== undefined ? Boolean(acc.hasPassword) : (acc.verificationMethod !== 'google_oauth'),
             passkey: acc.passkey || 'bpgstudent',
+            otpVerified: acc.otpVerified !== undefined ? Boolean(acc.otpVerified) : false,
+            termsAccepted: Boolean(acc.termsAccepted),
+            termsVersion: String(acc.termsVersion || ''),
+            termsAcceptedAt: String(acc.termsAcceptedAt || ''),
+            ioeAccess: Boolean(acc.ioeAccess),
+            mustChangePassword: Boolean(acc.mustChangePassword),
             activeSessionId: String(acc.activeSessionId || ''),
             lastLoginAt: String(acc.lastLoginAt || ''),
             lastActiveAt: String(acc.lastActiveAt || ''),
+            currentSection: String(acc.currentSection || ''),
             deviceInfo: String(acc.deviceInfo || ''),
+            ipAddress: String(acc.ipAddress || ''),
+            activityLog: Array.isArray(acc.activityLog) ? acc.activityLog.slice(0, 20) : [],
             readNotificationIds: Array.isArray(acc.readNotificationIds) ? Array.from(new Set(acc.readNotificationIds.map(String))).slice(-250) : [],
             joinedAt: acc.joinedAt || nowIso.split('T')[0],
             updatedAt: acc.updatedAt || nowIso,
@@ -947,10 +1077,15 @@ function findAccountByEmail(email, userId = '', googleSub = '') {
 function ensureAccessModelDefaults(state) {
     if (!state || typeof state !== 'object') return state;
 
-    // 1. Section Locks (Class 10 & Entrance Prep locked by default)
+    // 1. Section Locks (Class 10 removed; Class 11, Class 12 & IOE open side-by-side by default)
     if (!state.sectionLocks || typeof state.sectionLocks !== 'object') {
         state.sectionLocks = JSON.parse(JSON.stringify(DEFAULT_SECTION_LOCKS));
     } else {
+        delete state.sectionLocks['class-10'];
+        // Automatically unlock legacy default-locked IOE ('after-12') unless an admin explicitly re-locks it
+        if (state.sectionLocks['after-12'] && state.sectionLocks['after-12'].locked && !state.sectionLocks['after-12'].adminExplicitlyLocked) {
+            state.sectionLocks['after-12'] = { locked: false, reason: '' };
+        }
         Object.keys(DEFAULT_SECTION_LOCKS).forEach(key => {
             if (!state.sectionLocks[key] || typeof state.sectionLocks[key] !== 'object') {
                 state.sectionLocks[key] = { ...DEFAULT_SECTION_LOCKS[key] };
@@ -1180,11 +1315,38 @@ function ensureAccessModelDefaults(state) {
             esewaMerchantName: String(state.siteSettings.esewaMerchantName || DEFAULT_SITE_SETTINGS.esewaMerchantName).trim(),
             googleClientId: String(state.siteSettings.googleClientId || process.env.GOOGLE_CLIENT_ID || DEFAULT_SITE_SETTINGS.googleClientId || '').trim(),
             singleDeviceSession: state.siteSettings.singleDeviceSession !== undefined ? Boolean(state.siteSettings.singleDeviceSession) : true,
+            minAuthVersion: Math.max(2, Number(state.siteSettings.minAuthVersion) || 2),
             promoCodes: Array.isArray(state.siteSettings.promoCodes) ? state.siteSettings.promoCodes : []
         };
     }
 
-    // 9. Notifications (Sitewide & Class-specific)
+    // 8B. Posts (News & Achievements CMS with Scheduled Publishing)
+    if (!Array.isArray(state.posts)) {
+        state.posts = JSON.parse(JSON.stringify(DEFAULT_POSTS));
+    } else {
+        state.posts = state.posts.map((p, idx) => ({
+            id: p.id || `post_${idx + 1}`,
+            category: String(p.category || 'news').toLowerCase() === 'achievements' ? 'achievements' : 'news',
+            title: String(p.title || 'Update').trim(),
+            body: String(p.body || '').trim(),
+            photos: Array.isArray(p.photos) ? p.photos.filter(Boolean).map(String) : [],
+            videoUrl: String(p.videoUrl || '').trim(),
+            publishStatus: ['published', 'scheduled', 'draft'].includes(String(p.publishStatus || '').toLowerCase())
+                ? String(p.publishStatus).toLowerCase()
+                : 'published',
+            publishAt: String(p.publishAt || ''),
+            createdAt: p.createdAt || new Date().toISOString(),
+            updatedAt: p.updatedAt || p.createdAt || new Date().toISOString(),
+            author: String(p.author || 'BPG EDUCARE')
+        }));
+    }
+
+    // 8C. Regular Admin Accounts (Managed by Super Admin)
+    if (!Array.isArray(state.adminUsers)) {
+        state.adminUsers = JSON.parse(JSON.stringify(DEFAULT_ADMIN_USERS));
+    }
+
+    // 9. Notifications (Sitewide & Class-specific with Scheduled Publishing)
     if (!Array.isArray(state.notifications)) {
         state.notifications = JSON.parse(JSON.stringify(DEFAULT_NOTIFICATIONS));
     } else {
@@ -1195,6 +1357,10 @@ function ensureAccessModelDefaults(state) {
             category: String(n.category || 'Announcement').trim(),
             scope: n.scope === 'all' || !n.scope ? 'sitewide' : (n.scope === 'sitewide' ? 'sitewide' : gradeToClassKey(n.scope)),
             published: n.published !== undefined ? Boolean(n.published) : true,
+            publishStatus: ['published', 'scheduled', 'draft'].includes(String(n.publishStatus || '').toLowerCase())
+                ? String(n.publishStatus).toLowerCase()
+                : (n.published === false ? 'draft' : 'published'),
+            publishAt: String(n.publishAt || ''),
             createdAt: n.createdAt || new Date().toISOString(),
             updatedAt: n.updatedAt || n.createdAt || new Date().toISOString()
         }));
@@ -1311,14 +1477,30 @@ function resolveRequestUserStatus(req) {
                     error: 'Your session has ended. Please sign in again.'
                 };
             }
-            // Enforce single-device session when enabled in siteSettings (default true)
+            // Reject tokens issued before global minAuthVersion (forces clean re-login with preserved username)
+            let minAuthVer = 2;
             let enforceSingleDevice = true;
             try {
                 const st = readAcademyState();
+                minAuthVer = Math.max(1, Number(st?.siteSettings?.minAuthVersion) || 2);
                 if (st?.siteSettings && st.siteSettings.singleDeviceSession === false) {
                     enforceSingleDevice = false;
                 }
             } catch (e) {}
+            const tokAuthVer = Number(verified.authVer || 1);
+            if (tokAuthVer < minAuthVer) {
+                return {
+                    user: null,
+                    hasToken: true,
+                    tokenValid: false,
+                    revoked: true,
+                    needsFreshCheck: false,
+                    code: 'RELOGIN_REQUIRED',
+                    reason: 'relogin_required',
+                    error: 'Security update: Please sign in again with your existing username to verify your account and accept our updated Terms.'
+                };
+            }
+            // Enforce single-device session when enabled in siteSettings (default true)
             if (enforceSingleDevice && account.activeSessionId && verified.sid && verified.sid !== account.activeSessionId) {
                 return {
                     user: null,
@@ -1364,10 +1546,31 @@ function evaluateItemAccess(user, classKey, item, state) {
 
     const normClass = gradeToClassKey(classKey);
 
-    // 1. One-active-class-per-account rule on server
+    // 0b. Enforce strict OTP verification & mandatory Terms acceptance for signed-in users
+    if (user && user.email) {
+        if (user.otpVerified !== true) {
+            return {
+                allowed: false,
+                status: 403,
+                code: 'OTP_VERIFICATION_REQUIRED',
+                error: 'Please complete 6-digit Email OTP verification to access study materials.'
+            };
+        }
+        if (user.termsAccepted !== true) {
+            return {
+                allowed: false,
+                status: 403,
+                code: 'TERMS_NOT_ACCEPTED',
+                error: 'Please accept the Terms & Conditions and Privacy Policy to continue.'
+            };
+        }
+    }
+
+    // 1. Class access rule: Class 11 & Class 12 students can ALSO open IOE ('after-12') side-by-side!
     if (user && user.email && user.classKey) {
         const userClass = gradeToClassKey(user.classKey || user.grade);
-        if (normClass !== userClass) {
+        const isSideBySideIoe = normClass === 'after-12' && (userClass === 'class-11' || userClass === 'class-12' || userClass === 'after-12');
+        if (normClass !== userClass && !isSideBySideIoe) {
             return {
                 allowed: false,
                 status: 403,
@@ -1402,10 +1605,50 @@ function evaluateItemAccess(user, classKey, item, state) {
         };
     }
 
+    // 2b. Scheduled Publishing check: future-scheduled or draft items are hidden from students
+    if (!isItemPublishedNow(item)) {
+        return {
+            allowed: false,
+            status: 404,
+            code: 'NOT_PUBLISHED_YET',
+            error: 'This content is scheduled for a future release.'
+        };
+    }
+
     const requiredPlan = normalizePlan(item.minPlan || 'free');
     const userPlan = user ? normalizePlan(user.plan || 'free') : 'free';
 
-    // 2. Preserve existing students' legacy access until an admin assigns the item or user plan
+    // 2c. IOE (after-12) Plan Entitlement Rule:
+    // Topper ('diamond') or explicit Super-Admin ioeAccess unlocks all IOE content.
+    // Padandas ('gold') does NOT include IOE -> clean upgrade prompt to Topper (Pay Rs. 1,000).
+    if (normClass === 'after-12') {
+        if (userPlan === 'diamond' || Boolean(user?.ioeAccess)) {
+            return {
+                allowed: true,
+                status: 200,
+                requiredPlan: 'diamond',
+                userPlan
+            };
+        }
+        if (userPlan === 'gold' || requiredPlan !== 'free') {
+            return {
+                allowed: false,
+                status: 403,
+                code: 'IOE_REQUIRES_TOPPER',
+                requiredPlan: 'diamond',
+                userPlan,
+                error: 'IOE is included in the Topper plan'
+            };
+        }
+        return {
+            allowed: true,
+            status: 200,
+            requiredPlan: 'free',
+            userPlan
+        };
+    }
+
+    // 2d. Preserve existing students' legacy access until an admin assigns the item or user plan
     if (user && user.legacyAccess && !user.planExplicitlySet && !item.adminAssignedPlan) {
         return {
             allowed: true,
@@ -1416,7 +1659,7 @@ function evaluateItemAccess(user, classKey, item, state) {
         };
     }
 
-    // 3. Hierarchical Plan Access: Free < Gold < Diamond
+    // 3. Hierarchical Plan Access: Free < Gold (Padandas) < Diamond (Topper)
     if (PLAN_RANK[userPlan] >= PLAN_RANK[requiredPlan]) {
         return {
             allowed: true,
@@ -1438,9 +1681,13 @@ function evaluateItemAccess(user, classKey, item, state) {
 
 function sanitizeStateForStudent(rawState, user) {
     const clone = JSON.parse(JSON.stringify(rawState));
+    const nowMs = Date.now();
     delete clone.adminPasskey;
+    delete clone.adminUsers; // Strictly Super Admin only
     delete clone.mockTests; // Keep mock test answer keys strictly server-side via /api/mock-tests
     delete clone.payments;  // Keep payment ledger strictly admin-side (or /api/payments?me=1)
+    if (clone.portals) delete clone.portals['class-10'];
+    if (clone.sectionLocks) delete clone.sectionLocks['class-10'];
 
     // Never expose payment QRs to unauthenticated guests, and never expose promoCodes list to students/guests
     if (clone.siteSettings) {
@@ -1451,16 +1698,26 @@ function sanitizeStateForStudent(rawState, user) {
         }
     }
 
-    // Filter Notifications: only published, sitewide OR matching user's active class, newest first
+    // Filter Posts (News & Achievements): hide draft and future-scheduled posts
+    if (Array.isArray(clone.posts)) {
+        clone.posts = clone.posts
+            .filter(p => isItemPublishedNow(p, nowMs))
+            .sort((a, b) => new Date(b.publishAt || b.createdAt || 0).getTime() - new Date(a.publishAt || a.createdAt || 0).getTime());
+    } else {
+        clone.posts = [];
+    }
+
+    // Filter Notifications: only published & publishAt <= NOW, sitewide OR matching user's active class/IOE, newest first
     const userClassKey = (user && user.email) ? gradeToClassKey(user.classKey || user.grade) : '';
     if (Array.isArray(clone.notifications)) {
         clone.notifications = clone.notifications
             .filter(n => {
-                if (!n.published) return false;
+                if (!isItemPublishedNow(n, nowMs)) return false;
                 if (n.scope === 'sitewide') return true;
+                if (n.scope === 'after-12' && (userClassKey === 'class-11' || userClassKey === 'class-12' || userClassKey === 'after-12')) return true;
                 return Boolean(userClassKey && n.scope === userClassKey);
             })
-            .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+            .sort((a, b) => new Date(b.publishAt || b.createdAt || 0).getTime() - new Date(a.publishAt || a.createdAt || 0).getTime());
     }
 
     // Filter Chatbot FAQs: only published FAQs
@@ -1521,7 +1778,7 @@ function sanitizeStateForStudent(rawState, user) {
                     id: st.id,
                     title: st.title || ''
                 })),
-                pdfs: (Array.isArray(l.pdfs) ? l.pdfs : []).map(pdf => {
+                pdfs: (Array.isArray(l.pdfs) ? l.pdfs : []).filter(pdf => isItemPublishedNow(pdf, nowMs)).map(pdf => {
                     const check = evaluateItemAccess(user, classKey, pdf, clone);
                     const rawUrl = String(pdf.fileUrl || '');
                     const isInlineBase64 = rawUrl.startsWith('data:application/pdf;base64,');
@@ -1536,11 +1793,12 @@ function sanitizeStateForStudent(rawState, user) {
                         uploadedAt: pdf.uploadedAt || '',
                         storageKey: pdf.storageKey || '',
                         restricted: !check.allowed,
+                        restrictCode: check.code || '',
                         hasFile: Boolean(rawUrl || pdf.storageKey || pdf.hasFile),
                         fileUrl: (check.allowed && !isInlineBase64) ? rawUrl : ''
                     };
                 }),
-                videos: (Array.isArray(l.videos) ? l.videos : []).map(vid => {
+                videos: (Array.isArray(l.videos) ? l.videos : []).filter(vid => isItemPublishedNow(vid, nowMs)).map(vid => {
                     const check = evaluateItemAccess(user, classKey, vid, clone);
                     return {
                         id: vid.id,
@@ -1551,6 +1809,7 @@ function sanitizeStateForStudent(rawState, user) {
                         minPlan: normalizePlan(vid.minPlan || 'free'),
                         uploadedAt: vid.uploadedAt || '',
                         restricted: !check.allowed,
+                        restrictCode: check.code || '',
                         hasVideo: Boolean(vid.videoUrl),
                         videoUrl: check.allowed ? (vid.videoUrl || '') : ''
                     };
@@ -1591,7 +1850,7 @@ function sanitizeStateForStudent(rawState, user) {
             });
         });
 
-        const cleanNotes = (portal.notes || []).map(n => {
+        const cleanNotes = (portal.notes || []).filter(n => isItemPublishedNow(n, nowMs)).map(n => {
             const check = evaluateItemAccess(user, classKey, n, clone);
             const rawUrl = String(n.fileUrl || '');
             const isInlineBase64 = rawUrl.startsWith('data:application/pdf;base64,');
@@ -1627,6 +1886,8 @@ function sanitizeStateForStudent(rawState, user) {
     if (Array.isArray(clone.zoomClasses)) {
         clone.zoomClasses = clone.zoomClasses
             .filter(zc => {
+                if (!isItemPublishedNow(zc, nowMs)) return false;
+                if (zc.classKey === 'class-10') return false;
                 if (!zc.classKey || zc.classKey === 'all') return true;
                 const lock = clone.sectionLocks?.[zc.classKey];
                 return !(lock && lock.locked);
@@ -1775,7 +2036,9 @@ module.exports = {
     ROSTER_PATH,
     TMP_ROSTER_PATH,
     MASTER_PASSKEY,
+    SUPER_ADMIN_PASSKEY,
     OTP_SECRET,
+    TERMS_CURRENT_VERSION,
     PLAN_RANK,
     DEFAULT_SECTION_LOCKS,
     DEFAULT_PLANS_CONFIG,
@@ -1784,6 +2047,8 @@ module.exports = {
     DEFAULT_MAINTENANCE_MODE,
     DEFAULT_SITE_SETTINGS,
     DEFAULT_NOTIFICATIONS,
+    DEFAULT_POSTS,
+    DEFAULT_ADMIN_USERS,
     DEFAULT_CHATBOT_FAQS,
     canonicalizeEmail,
     normalizeUsername,
@@ -1803,6 +2068,10 @@ module.exports = {
     gradeToClassKey,
     normalizeGradeName,
     isAdminPasskeyValid,
+    isSuperAdminPasskeyValid,
+    resolveAdminRole,
+    isItemPublishedNow,
+    recordStudentActivity,
     issueStudentSessionToken,
     verifyStudentSessionToken,
     parseCookieHeader,

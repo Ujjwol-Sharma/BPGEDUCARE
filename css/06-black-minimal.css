@@ -6215,3 +6215,659 @@ body.bpg-global-screenshot-shield #pdfViewerModal .modal-card {
         gap: 3px;
     }
 }
+
+/* ==========================================================================
+   20. REFINED SMALLER LEADERSHIP SECTION, POLISHED PHONE LAYOUT (320-430px),
+       IOE UPGRADE LOCK CARD, POSTS FEED & WINDOWS 11 CALCULATOR
+   ========================================================================== */
+
+/* Prevent horizontal scroll anywhere on desktop or phone */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Slightly Smaller Leadership / Our Team Section (Desktop & Mobile) */
+.home-team-section {
+    padding: 24px 0 30px !important;
+}
+
+.home-team-section .home-section-head {
+    margin: 0 auto 14px !important;
+}
+
+.home-team-section .minimal-section-label {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.08em;
+}
+
+.home-team-section .section-heading-lg {
+    font-size: clamp(1.06rem, 1.6vw, 1.24rem) !important;
+}
+
+.team-row-founder {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.team-row-founder .team-profile-card {
+    width: auto;
+    min-width: 210px;
+    max-width: 270px;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 11px;
+    padding: 10px 14px !important;
+}
+
+.team-card-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-width: 0;
+}
+
+.team-row-founder .team-card-text {
+    align-items: flex-start;
+}
+
+.team-row-members {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.team-profile-card {
+    padding: 10px 9px !important;
+    border-radius: 10px !important;
+    gap: 6px !important;
+}
+
+.team-avatar-wrap {
+    width: 40px !important;
+    height: 40px !important;
+    flex-shrink: 0;
+}
+
+.team-profile-card.is-founder-card .team-avatar-wrap {
+    width: 46px !important;
+    height: 46px !important;
+}
+
+.team-avatar-fallback {
+    font-size: 0.88rem !important;
+}
+
+.team-role-badge {
+    font-size: 0.64rem !important;
+    padding: 2px 7px !important;
+}
+
+.team-member-name {
+    font-size: 0.82rem !important;
+    line-height: 1.28 !important;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+/* IOE Padandas -> Topper Lock Card */
+.ioe-upgrade-lock-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(99, 102, 241, 0.08));
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.ioe-lock-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #111114;
+    color: #fbbf24;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .ioe-lock-icon {
+    background: #27272f;
+}
+
+.ioe-lock-copy {
+    flex: 1;
+    min-width: 200px;
+}
+
+.ioe-lock-copy strong {
+    display: block;
+    font-size: 0.96rem;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.ioe-lock-copy p {
+    margin: 0;
+    font-size: 0.83rem;
+    line-height: 1.48;
+    color: var(--text-secondary);
+}
+
+.ioe-lock-cta {
+    padding: 9px 15px !important;
+    font-size: 0.84rem !important;
+    white-space: nowrap;
+}
+
+/* Posts Feed (1. News & 2. Achievements) */
+.posts-filter-tabs {
+    display: inline-flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.posts-feed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+}
+
+.post-feed-card {
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--border-subtle, #e4e4e7);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow-xs);
+}
+
+.post-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.post-cat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.post-cat-badge.is-news {
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+}
+
+.post-cat-badge.is-achievement {
+    background: rgba(217, 119, 6, 0.14);
+    color: #b45309;
+}
+
+[data-theme="dark"] .post-cat-badge.is-news { color: #93c5fd; }
+[data-theme="dark"] .post-cat-badge.is-achievement { color: #fcd34d; }
+
+.post-card-date {
+    font-size: 0.76rem;
+    color: var(--text-tertiary);
+}
+
+.post-card-title {
+    margin: 0;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.32;
+}
+
+.post-card-body {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.post-photos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.post-photos-grid.is-single {
+    grid-template-columns: 1fr;
+}
+
+.post-photo-thumb {
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+    background: var(--surface-soft);
+    cursor: pointer;
+    display: block;
+    aspect-ratio: 16 / 10;
+}
+
+.post-photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.post-photo-thumb:hover img {
+    transform: scale(1.03);
+}
+
+.post-video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0d0d10;
+    border: 1px solid var(--border-subtle);
+}
+
+.post-video-wrap iframe,
+.post-video-wrap video {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    object-fit: contain;
+}
+
+/* Windows 11-Style Calculator Polish */
+.calc-flyout-window.calc-win11 {
+    border-radius: 14px !important;
+    width: min(340px, calc(100vw - 20px)) !important;
+    background: #f3f3f3 !important;
+    border: 1px solid #d4d4d8 !important;
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.22) !important;
+}
+
+.calc-flyout-window.calc-win11.is-scientific {
+    width: min(378px, calc(100vw - 20px)) !important;
+}
+
+[data-theme="dark"] .calc-flyout-window.calc-win11 {
+    background: #202020 !important;
+    border-color: #36363c !important;
+    color: #f4f4f5 !important;
+}
+
+.calc-win11 .win11-screen {
+    padding: 8px 14px 10px !important;
+    background: transparent !important;
+    border-bottom: none !important;
+}
+
+.calc-win11 .calc-lcd-screen {
+    font-family: 'Segoe UI', 'Inter', sans-serif !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+    min-height: 44px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    background: transparent !important;
+    border: none !important;
+    padding: 2px 0 !important;
+    color: #111114 !important;
+}
+
+[data-theme="dark"] .calc-win11 .calc-lcd-screen {
+    color: #ffffff !important;
+}
+
+.calc-memory-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+    padding: 0 8px 6px;
+}
+
+.calc-mem-btn {
+    border: none;
+    background: transparent;
+    color: #27272a;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 6px 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.14s ease;
+}
+
+.calc-mem-btn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.calc-mem-btn:disabled {
+    opacity: 0.36;
+    cursor: default;
+}
+
+[data-theme="dark"] .calc-mem-btn {
+    color: #e4e4e7;
+}
+
+[data-theme="dark"] .calc-mem-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.calc-mem-indicator {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(37, 99, 235, 0.14);
+    color: #2563eb;
+}
+
+.calc-win11 .win11-sci-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    padding: 0 8px 6px;
+}
+
+.calc-win11 .win11-std-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    padding: 0 8px 10px;
+}
+
+.calc-win11 .calc-key {
+    min-height: 40px;
+    border-radius: 6px !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    border: 1px solid rgba(0, 0, 0, 0.07) !important;
+    background: #fafafa !important;
+    color: #111114 !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04) !important;
+}
+
+.calc-win11 .calc-key.num {
+    background: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+}
+
+.calc-win11 .calc-key.sci {
+    min-height: 34px;
+    font-size: 0.78rem !important;
+}
+
+.calc-win11 .calc-key.sci.is-active-2nd {
+    background: #0067c0 !important;
+    color: #ffffff !important;
+    border-color: #0067c0 !important;
+}
+
+.calc-win11 .calc-key.equals {
+    background: #0067c0 !important;
+    color: #ffffff !important;
+    border-color: #0067c0 !important;
+    font-size: 1.1rem !important;
+}
+
+.calc-win11 .calc-key.equals:hover {
+    background: #005a9e !important;
+}
+
+[data-theme="dark"] .calc-win11 .calc-key {
+    background: #323232 !important;
+    color: #f4f4f5 !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] .calc-win11 .calc-key.num {
+    background: #3b3b3b !important;
+}
+
+[data-theme="dark"] .calc-win11 .calc-key.equals {
+    background: #4cc2ff !important;
+    color: #111114 !important;
+    border-color: #4cc2ff !important;
+}
+
+/* ==========================================================================
+   PHONE-FIRST POLISH ACROSS 320px, 375px, 390px & 430px VIEWPORTS
+   Matches laptop colors, fonts, icons & section order with tighter rhythm
+   ========================================================================== */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    /* Compact Hero matching laptop feel without oversized gaps */
+    .bpg-hero,
+    .bpg-hero.bpg-hero-full {
+        padding: 20px 0 24px !important;
+        min-height: auto !important;
+    }
+
+    .bpg-hero-grid {
+        gap: 18px !important;
+    }
+
+    .bpg-hero-title {
+        font-size: clamp(1.52rem, 6.4vw, 1.95rem) !important;
+        line-height: 1.15 !important;
+        margin-bottom: 8px !important;
+    }
+
+    .bpg-hero-lead {
+        font-size: 0.9rem !important;
+        line-height: 1.52 !important;
+        margin-bottom: 14px !important;
+    }
+
+    .bpg-hero-actions {
+        gap: 8px !important;
+    }
+
+    .bpg-hero-actions .btn-lg {
+        padding: 10px 15px !important;
+        font-size: 0.86rem !important;
+    }
+
+    .bpg-portrait-card {
+        max-width: 280px !important;
+        margin: 0 auto !important;
+    }
+
+    .bpg-portrait-frame {
+        max-height: 245px !important;
+    }
+
+    .bpg-portrait-caption-inline {
+        padding: 9px 11px !important;
+        font-size: 0.78rem !important;
+    }
+
+    /* Tighter section spacing */
+    .home-features-section,
+    .home-notifications-section,
+    .student-clean-home {
+        padding: 24px 0 !important;
+    }
+
+    .home-section-head {
+        margin-bottom: 14px !important;
+    }
+
+    .section-heading-lg {
+        font-size: 1.18rem !important;
+    }
+
+    /* Clean 2-column compact feature cards on phones with small laptop-like icons */
+    .home-features-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .lessons-hero-card,
+    .feature-card-item {
+        padding: 13px 11px !important;
+        border-radius: 12px !important;
+        gap: 6px !important;
+        min-height: 0 !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+
+    .lessons-book-icon {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 0.82rem !important;
+        border-radius: 8px !important;
+        margin-bottom: 2px !important;
+    }
+
+    .lessons-card-label {
+        font-size: 0.86rem !important;
+        line-height: 1.25 !important;
+    }
+
+    .lessons-card-sub {
+        font-size: 0.74rem !important;
+        line-height: 1.35 !important;
+    }
+
+    /* Leadership Section on Phones: Compact Founder top + Clean 2-Column Team Grid */
+    .home-team-section {
+        padding: 20px 0 24px !important;
+    }
+
+    .team-row-founder .team-profile-card {
+        max-width: 100%;
+        padding: 9px 13px !important;
+    }
+
+    .team-row-members {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .team-profile-card {
+        padding: 9px 8px !important;
+    }
+
+    .team-avatar-wrap {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    .team-profile-card.is-founder-card .team-avatar-wrap {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .team-member-name {
+        font-size: 0.78rem !important;
+        line-height: 1.25 !important;
+    }
+
+    /* Student Dashboard & Class Workspaces on Phones */
+    .student-home-title,
+    .course-workspace-hero h1 {
+        font-size: 1.28rem !important;
+        line-height: 1.22 !important;
+    }
+
+    .understated-tab-strip {
+        gap: 4px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .understated-tab-strip::-webkit-scrollbar {
+        display: none;
+    }
+
+    .strip-tab-btn {
+        padding: 8px 11px !important;
+        font-size: 0.8rem !important;
+        white-space: nowrap !important;
+    }
+
+    .premium-programs-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .premium-program-card {
+        padding: 16px 14px !important;
+    }
+
+    .posts-feed-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Compact floating dock so it never crowds small 320px/375px screens */
+    .floating-dock-container {
+        bottom: 14px !important;
+        right: 12px !important;
+        gap: 7px !important;
+    }
+
+    .floating-dock-btn.calc-btn,
+    .floating-dock-btn.whatsapp-btn {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 0.92rem !important;
+    }
+
+    .floating-dock-btn.ai-trigger-btn,
+    #btnSiteGuide {
+        padding: 9px 13px !important;
+        font-size: 0.8rem !important;
+        gap: 6px !important;
+    }
+}
+
+@media (max-width: 350px) {
+    .bpg-brand-name {
+        font-size: 0.86rem !important;
+    }
+    #headerLoginBtn {
+        padding: 6px 9px !important;
+        font-size: 0.76rem !important;
+    }
+    .lessons-card-label {
+        font-size: 0.8rem !important;
+    }
+    .lessons-card-sub {
+        font-size: 0.7rem !important;
+    }
+    .team-member-name {
+        font-size: 0.74rem !important;
+    }
+}

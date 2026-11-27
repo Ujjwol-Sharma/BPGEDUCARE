@@ -11,6 +11,8 @@ const {
     resolveRequestUserStatus,
     evaluateItemAccess,
     isAdminPasskeyValid,
+    isItemPublishedNow,
+    recordStudentActivity,
     normalizePlan
 } = require('./_access-control');
 const { readDurablePdfBuffer } = require('./_durable-storage');
@@ -40,16 +42,42 @@ module.exports = async function contentAccessHandler(req, res) {
     const state = readAcademyState();
     const isAdmin = isAdminPasskeyValid(req.headers['x-admin-passkey'] || body.adminPasskey);
     const userStatus = resolveRequestUserStatus(req);
-    if (!isAdmin && userStatus.reason === 'session_replaced') {
+    if (!isAdmin && (userStatus.reason === 'session_replaced' || userStatus.reason === 'relogin_required')) {
         res.statusCode = 401;
         res.end(JSON.stringify({
             ok: false,
-            code: 'SESSION_REPLACED',
-            error: userStatus.error || 'Signed in on another device. Please sign in again.'
+            code: userStatus.code || 'SESSION_REPLACED',
+            error: userStatus.error || 'Please sign in again to continue.'
         }));
         return;
     }
     const user = userStatus.user;
+    if (!isAdmin && user && user.email) {
+        if (user.otpVerified !== true) {
+            res.statusCode = 403;
+            res.end(JSON.stringify({
+                ok: false,
+                code: 'OTP_VERIFICATION_REQUIRED',
+                email: user.email,
+                username: user.username || '',
+                error: 'Please verify your 6-digit Email OTP to access study materials.'
+            }));
+            return;
+        }
+        if (user.termsAccepted !== true) {
+            res.statusCode = 403;
+            res.end(JSON.stringify({
+                ok: false,
+                code: 'TERMS_NOT_ACCEPTED',
+                error: 'Please accept the Terms & Conditions and Privacy Policy to continue.'
+            }));
+            return;
+        }
+        const sectionLabel = itemType === 'lesson-pdf'
+            ? `Viewing ${classKey.toUpperCase()} PDF`
+            : (itemType === 'lesson' ? `Viewing ${classKey.toUpperCase()} Lesson` : `Viewing ${classKey.toUpperCase()}`);
+        recordStudentActivity(user, req, sectionLabel);
+    }
     const portal = state.portals?.[classKey];
 
     // 0. Enforce Maintenance Mode for non-admin requests
@@ -63,17 +91,21 @@ module.exports = async function contentAccessHandler(req, res) {
         return;
     }
 
-    // 0b. Enforce one-active-class-per-account rule on server when signed in
-    if (!isAdmin && user && user.email && user.classKey && classKey !== gradeToClassKey(user.classKey || user.grade)) {
-        res.statusCode = 403;
-        res.end(JSON.stringify({
-            ok: false,
-            code: 'CLASS_MISMATCH',
-            currentClass: gradeToClassKey(user.classKey || user.grade),
-            requestedClass: classKey,
-            error: `Your account is enrolled in ${user.grade || user.classKey}. Submit a class switch request to access another class.`
-        }));
-        return;
+    // 0b. Class access rule: Class 11 & Class 12 students can ALSO open IOE ('after-12') side-by-side!
+    if (!isAdmin && user && user.email && user.classKey) {
+        const uClass = gradeToClassKey(user.classKey || user.grade);
+        const isSideBySideIoe = classKey === 'after-12' && (uClass === 'class-11' || uClass === 'class-12' || uClass === 'after-12');
+        if (classKey !== uClass && !isSideBySideIoe) {
+            res.statusCode = 403;
+            res.end(JSON.stringify({
+                ok: false,
+                code: 'CLASS_MISMATCH',
+                currentClass: uClass,
+                requestedClass: classKey,
+                error: `Your account is enrolled in ${user.grade || user.classKey}. Submit a class switch request to access another class.`
+            }));
+            return;
+        }
     }
 
     // 1. Always enforce section lock FIRST for students (even Diamond!)
@@ -142,10 +174,11 @@ module.exports = async function contentAccessHandler(req, res) {
             id: st.id,
             title: st.title || ''
         }));
-        const pdfs = (Array.isArray(lesson.pdfs) ? lesson.pdfs : []).map(pdf => {
+        const pdfs = (Array.isArray(lesson.pdfs) ? lesson.pdfs : [])
+            .filter(pdf => isAdmin || isItemPublishedNow(pdf))
+            .map(pdf => {
             const check = isAdmin ? { allowed: true } : evaluateItemAccess(user, classKey, pdf, state);
             const rawUrl = String(pdf.fileUrl || '');
-            const isInlineBase64 = rawUrl.startsWith('data:application/pdf;base64,');
             return {
                 id: pdf.id,
                 title: pdf.title || pdf.fileName || 'PDF Document',
@@ -156,11 +189,14 @@ module.exports = async function contentAccessHandler(req, res) {
                 minPlan: normalizePlan(pdf.minPlan || 'free'),
                 storageKey: pdf.storageKey || '',
                 restricted: !check.allowed,
+                restrictCode: check.code || '',
                 hasFile: Boolean(rawUrl || pdf.storageKey || pdf.hasFile),
                 fileUrl: ''
             };
         });
-        const videos = (Array.isArray(lesson.videos) ? lesson.videos : []).map(vid => {
+        const videos = (Array.isArray(lesson.videos) ? lesson.videos : [])
+            .filter(vid => isAdmin || isItemPublishedNow(vid))
+            .map(vid => {
             const check = isAdmin ? { allowed: true } : evaluateItemAccess(user, classKey, vid, state);
             return {
                 id: vid.id,
@@ -170,6 +206,7 @@ module.exports = async function contentAccessHandler(req, res) {
                 subTopicTitle: vid.subTopicTitle || '',
                 minPlan: normalizePlan(vid.minPlan || 'free'),
                 restricted: !check.allowed,
+                restrictCode: check.code || '',
                 hasVideo: Boolean(vid.videoUrl),
                 videoUrl: check.allowed ? (vid.videoUrl || '') : ''
             };

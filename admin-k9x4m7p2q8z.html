@@ -82,6 +82,9 @@
                 <span class="save-status-pill is-saved" id="adminLiveSyncBadge" style="font-size:0.74rem;" title="Two-way 1.5s real-time sync active">Live Sync &middot; 1.5s</span>
             </div>
             <div class="topbar-right">
+                <a href="./super-admin-r7v3x9m2k5p.html" class="btn-topbar" style="border-color:#7c3aed; color:#7c3aed;" title="Super Admin Portal">
+                    <i class="fa-solid fa-user-shield" aria-hidden="true"></i> Super Admin
+                </a>
                 <a href="./index.html" target="_blank" class="btn-topbar">Open Website</a>
                 <button type="button" class="btn-topbar" onclick="lockAdminSession()" title="Lock Admin Console">
                     <i class="fa-solid fa-lock" aria-hidden="true"></i> Lock
@@ -116,6 +119,12 @@
             <button type="button" class="adm-tab-btn" id="tabBtn-notifications"
                 onclick="switchAdminTab('notifications')">
                 Notifications
+            </button>
+            <button type="button" class="adm-tab-btn" id="tabBtn-posts" onclick="switchAdminTab('posts')">
+                Posts
+            </button>
+            <button type="button" class="adm-tab-btn" id="tabBtn-scheduled" onclick="switchAdminTab('scheduled')">
+                Scheduled <span id="scheduledQueueBadge" class="adm-nav-badge" style="display:none;">0</span>
             </button>
             <button type="button" class="adm-tab-btn" id="tabBtn-homepage" onclick="switchAdminTab('homepage')">
                 Homepage
@@ -170,13 +179,12 @@
                         <select id="newUserGrade" class="adm-select">
                             <option value="Class 12" selected>Class 12</option>
                             <option value="Class 11">Class 11</option>
-                            <option value="Class 10">Class 10</option>
-                            <option value="After 12 Entrance">Entrance Prep</option>
+                            <option value="IOE">IOE (Entrance Prep)</option>
                         </select>
                         <select id="newUserPlan" class="adm-select">
                             <option value="free" selected>Free</option>
-                            <option value="gold">Gold</option>
-                            <option value="diamond">Diamond</option>
+                            <option value="gold">Padandas (Rs. 1,999)</option>
+                            <option value="diamond">Topper (Rs. 2,999)</option>
                         </select>
                         <button type="submit" class="btn-adm-dark">Add Student</button>
                     </form>
@@ -196,8 +204,7 @@
                             <option value="all">All Classes</option>
                             <option value="class-12">Class 12</option>
                             <option value="class-11">Class 11</option>
-                            <option value="class-10">Class 10</option>
-                            <option value="after-12">Entrance Prep</option>
+                            <option value="after-12">IOE (Entrance Prep)</option>
                         </select>
                     </div>
 
@@ -280,16 +287,14 @@
                         </div>
                     </div>
 
-                    <!-- 4 Clearly Labeled Class Sections -->
+                    <!-- 3 Clearly Labeled Class Sections (Class 12, Class 11, IOE) -->
                     <div class="adm-class-sections-bar" id="adminClassSectionsBar">
                         <button type="button" class="adm-class-pill active" id="classSecBtn-class-12"
                             onclick="selectAdminContentClass('class-12')">Class 12</button>
                         <button type="button" class="adm-class-pill" id="classSecBtn-class-11"
                             onclick="selectAdminContentClass('class-11')">Class 11</button>
-                        <button type="button" class="adm-class-pill" id="classSecBtn-class-10"
-                            onclick="selectAdminContentClass('class-10')">Class 10</button>
                         <button type="button" class="adm-class-pill" id="classSecBtn-after-12"
-                            onclick="selectAdminContentClass('after-12')">Entrance Prep</button>
+                            onclick="selectAdminContentClass('after-12')">IOE (Entrance Prep)</button>
                     </div>
 
                     <!-- Subject Bar + Syllabus-Ordered Lessons Mount -->
@@ -310,16 +315,14 @@
                         </div>
                     </div>
 
-                    <!-- 4 Clearly Labeled Class Sections -->
+                    <!-- 3 Clearly Labeled Class Sections (Class 12, Class 11, IOE) -->
                     <div class="adm-class-sections-bar" id="adminMockClassSectionsBar">
                         <button type="button" class="adm-class-pill active" id="mockClassBtn-class-12"
                             onclick="selectAdminMockClass('class-12')">Class 12</button>
                         <button type="button" class="adm-class-pill" id="mockClassBtn-class-11"
                             onclick="selectAdminMockClass('class-11')">Class 11</button>
-                        <button type="button" class="adm-class-pill" id="mockClassBtn-class-10"
-                            onclick="selectAdminMockClass('class-10')">Class 10</button>
                         <button type="button" class="adm-class-pill" id="mockClassBtn-after-12"
-                            onclick="selectAdminMockClass('after-12')">Entrance Prep</button>
+                            onclick="selectAdminMockClass('after-12')">IOE (Entrance Prep)</button>
                     </div>
 
                     <div id="mockTestsAdminMount"></div>
@@ -378,6 +381,38 @@
                             Notification</button>
                     </div>
                     <div id="notificationsAdminMount"></div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 TAB 2.8B: POSTS MANAGER (1. NEWS & 2. ACHIEVEMENTS)
+                 ============================================================== -->
+            <section class="adm-pane" id="pane-posts">
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Posts Manager (News &amp; Achievements)</h2>
+                            <p class="adm-card-subtitle">Create, edit, delete, and schedule posts with photos and videos (MP4 or YouTube URL) shown in the navbar Posts section.</p>
+                        </div>
+                        <button type="button" class="btn-adm-dark" onclick="startCreateAdminPost()">+ New Post</button>
+                    </div>
+                    <div id="postsAdminMount"></div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 TAB 2.8C: UNIFIED SCHEDULED PUBLISHING QUEUE
+                 ============================================================== -->
+            <section class="adm-pane" id="pane-scheduled">
+                <div class="adm-card">
+                    <div class="adm-card-head">
+                        <div>
+                            <h2 class="adm-card-title">Scheduled Publishing Queue</h2>
+                            <p class="adm-card-subtitle">All upcoming scheduled Posts, Notifications, Lesson PDFs/Videos, Mock Tests, and Live Classes (Nepal Time · Asia/Kathmandu). Items auto-publish once their scheduled time passes.</p>
+                        </div>
+                        <button type="button" class="btn-topbar" onclick="loadAdminData()">Refresh Queue</button>
+                    </div>
+                    <div id="scheduledQueueAdminMount"></div>
                 </div>
             </section>
 
@@ -496,8 +531,7 @@
                                 <option value="all">All Subjects</option>
                                 <option value="class-12">Class 12</option>
                                 <option value="class-11">Class 11</option>
-                                <option value="class-10">Class 10 (SEE)</option>
-                                <option value="after-12">Entrance Prep</option>
+                                <option value="after-12">IOE (Entrance Prep)</option>
                             </select>
                             <select id="planFilterType" class="adm-select" style="width:auto;"
                                 onchange="renderPlanAccessTable()">
@@ -590,7 +624,7 @@
 
     <div id="adminToastContainer" class="adm-toast-container"></div>
 
-    <script src="./js/admin-studio.js?v=20261127v1"></script>
+    <script src="./js/admin-studio.js?v=20261127v2"></script>
 </body>
 
 </html>

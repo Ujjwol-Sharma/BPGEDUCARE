@@ -7,10 +7,9 @@
    ========================================================================== */
 
 const CLASS_DISPLAY_PREFIX = {
-    'class-10': 'Class 10',
     'class-11': 'Grade XI',
     'class-12': 'Grade XII',
-    'after-12': 'Entrance Prep'
+    'after-12': 'IOE (Entrance Prep)'
 };
 
 let selectedSubjectByClass = {};
@@ -79,8 +78,9 @@ function renderEntireStudentPortal() {
     renderAnnouncementsDrawer();
     renderHomepageTeamSection();
     renderClassSelectionView();
+    if (typeof renderPostsFeed === 'function') renderPostsFeed();
 
-    ['class-10', 'class-11', 'class-12', 'after-12'].forEach(classKey => {
+    ['class-11', 'class-12', 'after-12'].forEach(classKey => {
         const pData = ACADEMY_STATE.portals?.[classKey];
         if (!pData) return;
 
@@ -207,7 +207,34 @@ function renderNotesLessonsView(classKey, subject) {
         return;
     }
 
+    // Padandas -> Topper IOE Lock Banner (IOE is included in the Topper plan)
+    let ioeUpgradeCardHtml = '';
+    if (classKey === 'after-12') {
+        const stuPlan = typeof getStudentPlan === 'function' ? getStudentPlan() : 'free';
+        const stuSession = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
+        const hasIoe = stuPlan === 'diamond' || Boolean(stuSession?.ioeAccess);
+        if (!hasIoe) {
+            const isPadandas = stuPlan === 'gold';
+            ioeUpgradeCardHtml = `
+                <div class="ioe-upgrade-lock-card">
+                    <div class="ioe-lock-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></div>
+                    <div class="ioe-lock-copy">
+                        <strong>IOE is included in the Topper plan</strong>
+                        <p>${isPadandas
+                            ? 'Your Padandas plan covers Class 11/12. Upgrade to Topper by paying only the Rs. 1,000 difference to unlock all IOE lessons, PDFs, and mock tests.'
+                            : 'Unlock full IOE (Entrance Prep) along with Class 11/12 notes, mock tests, and live Zoom classes with the Topper plan.'}</p>
+                    </div>
+                    <button type="button" class="btn btn-primary ioe-lock-cta" onclick="openCheckoutModal('diamond')">
+                        <i class="fa-solid fa-gem" aria-hidden="true"></i>
+                        ${isPadandas ? 'Upgrade to Topper (Pay Rs. 1,000)' : 'Get Topper Plan (Rs. 2,999)'}
+                    </button>
+                </div>
+            `;
+        }
+    }
+
     notesBox.innerHTML = `
+        ${ioeUpgradeCardHtml}
         <div class="notes-lessons-list">
             ${lessons.map((lesson, idx) => {
                 const pdfCount = (lesson.pdfs || []).length;
@@ -1112,8 +1139,7 @@ function renderHomepageNotifications() {
         sitewide: 'Sitewide',
         'class-12': 'Class 12',
         'class-11': 'Class 11',
-        'class-10': 'Class 10',
-        'after-12': 'Entrance Prep'
+        'after-12': 'IOE'
     };
 
     mount.innerHTML = sorted.slice(0, 6).map(n => {
@@ -1144,17 +1170,18 @@ function formatTeamBioHtml(rawBio) {
 function renderTeamCardHtml(member) {
     const safeName = escapeHtml(member.name || 'Team Member');
     const isFounder = String(member.slot || '').toLowerCase() === 'founder' || String(member.role || '').toLowerCase().includes('founder');
-    const safeRole = escapeHtml(member.role || 'Founder');
     const initial = escapeHtml((member.initial || (member.name || 'B').trim().charAt(0) || 'T').toUpperCase());
     const photoHtml = member.photoUrl
-        ? `<img src="${escapeHtml(member.photoUrl)}" alt="${safeName}" class="team-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><span class="team-avatar-fallback" style="display:none;">${initial}</span>`
+        ? `<img src="${escapeHtml(member.photoUrl)}" alt="" class="team-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><span class="team-avatar-fallback" style="display:none;">${initial}</span>`
         : `<span class="team-avatar-fallback">${initial}</span>`;
 
     return `
         <article class="team-profile-card ${isFounder ? 'is-founder-card' : ''}">
             <div class="team-avatar-wrap">${photoHtml}</div>
-            ${isFounder ? `<span class="team-role-badge">${safeRole}</span>` : ''}
-            <h3 class="team-member-name">${safeName}</h3>
+            <div class="team-card-text">
+                ${isFounder ? `<span class="team-role-badge">Founder</span>` : ''}
+                <h3 class="team-member-name">${safeName}</h3>
+            </div>
         </article>
     `;
 }
@@ -1163,37 +1190,167 @@ function renderHomepageTeamSection() {
     const mount = document.getElementById('homeTeamMount');
     if (!mount) return;
 
-    const members = Array.isArray(ACADEMY_STATE.teamMembers) && ACADEMY_STATE.teamMembers.length > 0
+    const rawMembers = Array.isArray(ACADEMY_STATE.teamMembers) && ACADEMY_STATE.teamMembers.length > 0
         ? ACADEMY_STATE.teamMembers
         : [
-            { id: 'team-founder', slot: 'founder', initial: 'B', name: 'Bishnu Prasad Gautam', role: 'Founder', photoUrl: './images/bpg_sir.jpg', bio: 'M.Sc. Mathematics (TU, CGPA 3.9/4.0) with 12+ years mentoring NEB and IOE / CEE mathematics students in Pokhara, Nepal.' },
-            { id: 'team-ceo', slot: 'ceo', initial: 'P', name: 'Paribesh Thapa', role: 'CEO', photoUrl: '', bio: '**Education | Youth | Social Impact**\nBridging education and grassroots social work to turn youth potential into lasting community impact.' },
-            { id: 'team-cco', slot: 'cco', initial: 'U', name: 'Ujjwol Sharma', role: 'CCO', photoUrl: '', bio: 'Merges creative content and smart EdTech to deliver accessible, high-impact NEB & entrance-aligned curricula.' },
-            { id: 'team-cto', slot: 'cto', initial: 'U', name: 'Utsav Sharma', role: 'CTO', photoUrl: '', bio: 'Architects fast, scalable learning platforms that make digital education seamless, accessible, and built for the future.' }
+            { id: 'team-founder', slot: 'founder', initial: 'B', name: 'Bishnu Prasad Gautam', role: 'Founder', photoUrl: './images/bpg_sir.jpg', bio: '' },
+            { id: 'team-paribesh', slot: 'member', initial: 'P', name: 'Paribesh Thapa', role: '', photoUrl: '', bio: '' },
+            { id: 'team-ujjwol', slot: 'member', initial: 'U', name: 'Ujjwol Sharma', role: '', photoUrl: '', bio: '' },
+            { id: 'team-utsav', slot: 'member', initial: 'U', name: 'Utsav Sharma', role: '', photoUrl: '', bio: '' },
+            { id: 'team-dipson', slot: 'member', initial: 'D', name: 'Dipson Paudel', role: '', photoUrl: '', bio: '' }
         ];
 
-    const classifySlot = (m) => {
+    // Deduplicate by normalized name so Bishnu Prasad Gautam never appears twice
+    const seenNames = new Set();
+    const members = [];
+    for (const m of rawMembers) {
+        if (!m || !m.name) continue;
+        const norm = String(m.name).trim().toLowerCase().replace(/\s+/g, ' ');
+        if (!norm || seenNames.has(norm)) continue;
+        seenNames.add(norm);
+        members.push(m);
+    }
+
+    const isFounderFn = (m) => {
         const s = String(m.slot || '').toLowerCase();
         const r = String(m.role || '').toLowerCase();
-        if (s === 'founder' || r.includes('founder')) return 'founder';
-        if (s === 'ceo' || r === 'ceo' || r.includes('chief executive')) return 'ceo';
-        if (s === 'cco' || r === 'cco' || r.includes('chief content') || r.includes('chief curriculum')) return 'cco';
-        if (s === 'cto' || r === 'cto' || r.includes('chief technology')) return 'cto';
-        return 'member';
+        const n = String(m.name || '').toLowerCase();
+        return s === 'founder' || r.includes('founder') || n.includes('bishnu prasad gautam');
     };
 
-    const founders = members.filter(m => classifySlot(m) === 'founder');
-    const ceoList = members.filter(m => classifySlot(m) === 'ceo');
-    const ccoList = members.filter(m => classifySlot(m) === 'cco');
-    const ctoList = members.filter(m => classifySlot(m) === 'cto');
-    const secondRow = [...ceoList, ...ccoList, ...ctoList];
-    const extras = members.filter(m => classifySlot(m) === 'member');
+    const founders = members.filter(isFounderFn).slice(0, 1);
+    const nonFounders = members.filter(m => !isFounderFn(m));
+
+    // Order Paribesh Thapa, Ujjwol Sharma, Utsav Sharma, Dipson Paudel cleanly first
+    const preferredOrder = ['paribesh thapa', 'ujjwol sharma', 'utsav sharma', 'dipson paudel'];
+    nonFounders.sort((a, b) => {
+        const ia = preferredOrder.indexOf(String(a.name || '').trim().toLowerCase());
+        const ib = preferredOrder.indexOf(String(b.name || '').trim().toLowerCase());
+        if (ia !== -1 && ib !== -1) return ia - ib;
+        if (ia !== -1) return -1;
+        if (ib !== -1) return 1;
+        return 0;
+    });
 
     mount.innerHTML = `
         ${founders.length ? `<div class="team-row-founder">${founders.map(renderTeamCardHtml).join('')}</div>` : ''}
-        ${secondRow.length ? `<div class="team-row-execs">${secondRow.map(renderTeamCardHtml).join('')}</div>` : ''}
-        ${extras.length ? `<div class="team-row-execs team-row-extra">${extras.map(renderTeamCardHtml).join('')}</div>` : ''}
+        ${nonFounders.length ? `<div class="team-row-members">${nonFounders.map(renderTeamCardHtml).join('')}</div>` : ''}
     `;
+}
+
+let activePostsFilter = 'all';
+
+function setPostsFilter(cat = 'all') {
+    activePostsFilter = ['news', 'achievements'].includes(cat) ? cat : 'all';
+    ['All', 'News', 'Achievements'].forEach(label => {
+        const key = label.toLowerCase();
+        const btn = document.getElementById(`postsTab${label}`);
+        if (btn) btn.classList.toggle('active', activePostsFilter === key);
+    });
+    const heading = document.getElementById('postsViewHeading');
+    if (heading) {
+        heading.textContent = activePostsFilter === 'news'
+            ? 'News & Announcements'
+            : (activePostsFilter === 'achievements' ? 'Student Achievements' : 'News & Achievements');
+    }
+    renderPostsFeed();
+}
+
+function toYoutubeEmbedUrl(rawUrl) {
+    const u = String(rawUrl || '').trim();
+    if (!u) return '';
+    const m = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,})/);
+    return m ? `https://www.youtube.com/embed/${m[1]}` : '';
+}
+
+function openPostPhotoLightbox(src, caption = '') {
+    const modal = document.getElementById('postPhotoLightboxModal');
+    const img = document.getElementById('postLightboxImg');
+    const cap = document.getElementById('postLightboxCaption');
+    if (!modal || !img) return;
+    img.src = src;
+    if (cap) cap.textContent = caption || '';
+    modal.classList.add('open');
+}
+
+function closePostPhotoLightbox() {
+    document.getElementById('postPhotoLightboxModal')?.classList.remove('open');
+}
+
+function renderPostsFeed() {
+    const mount = document.getElementById('postsFeedMount');
+    if (!mount) return;
+    const allPosts = Array.isArray(ACADEMY_STATE.posts) ? ACADEMY_STATE.posts : [];
+    const nowMs = Date.now();
+    const visible = allPosts
+        .filter(p => {
+            if (!p) return false;
+            const st = String(p.publishStatus || 'published').toLowerCase();
+            if (st === 'draft') return false;
+            if (st === 'scheduled' && p.publishAt && Date.parse(p.publishAt) > nowMs) return false;
+            if (activePostsFilter === 'all') return true;
+            return String(p.category || 'news').toLowerCase() === activePostsFilter;
+        })
+        .sort((a, b) => new Date(b.publishAt || b.createdAt || 0).getTime() - new Date(a.publishAt || a.createdAt || 0).getTime());
+
+    if (visible.length === 0) {
+        mount.innerHTML = `
+            <div class="mock-empty-card" style="grid-column:1 / -1;">
+                <i class="fa-regular fa-newspaper" aria-hidden="true"></i>
+                <h3>No ${activePostsFilter === 'all' ? 'posts' : activePostsFilter} published yet</h3>
+                <p>Academy news, exam alerts, and student achievements will appear here as soon as they are published.</p>
+            </div>
+        `;
+        return;
+    }
+
+    mount.innerHTML = visible.map(p => {
+        const isAch = String(p.category || '').toLowerCase() === 'achievements';
+        const dateStr = (p.publishAt || p.createdAt)
+            ? new Date(p.publishAt || p.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : '';
+        const photos = Array.isArray(p.photos) ? p.photos.filter(Boolean) : [];
+        const ytEmbed = toYoutubeEmbedUrl(p.videoUrl);
+        const isDirectVideo = Boolean(p.videoUrl && !ytEmbed);
+        const safeTitle = escapeHtml(p.title || 'Update');
+        const safeTitleAttr = safeTitle.replace(/'/g, "\\'");
+
+        const photosHtml = photos.length > 0 ? `
+            <div class="post-photos-grid ${photos.length === 1 ? 'is-single' : ''}">
+                ${photos.map(src => `
+                    <button type="button" class="post-photo-thumb" onclick="openPostPhotoLightbox('${escapeHtml(src).replace(/'/g, "\\'")}', '${safeTitleAttr}')" aria-label="View full photo">
+                        <img src="${escapeHtml(src)}" alt="${safeTitle}" loading="lazy">
+                    </button>
+                `).join('')}
+            </div>
+        ` : '';
+
+        const videoHtml = ytEmbed ? `
+            <div class="post-video-wrap">
+                <iframe src="${escapeHtml(ytEmbed)}" title="${safeTitle}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+            </div>
+        ` : (isDirectVideo ? `
+            <div class="post-video-wrap">
+                <video controls playsinline preload="metadata" src="${escapeHtml(p.videoUrl)}"></video>
+            </div>
+        ` : '');
+
+        return `
+            <article class="post-feed-card">
+                <div class="post-card-meta">
+                    <span class="post-cat-badge ${isAch ? 'is-achievement' : 'is-news'}">
+                        <i class="fa-solid ${isAch ? 'fa-trophy' : 'fa-newspaper'}" aria-hidden="true"></i>
+                        ${isAch ? 'Achievement' : 'News'}
+                    </span>
+                    ${dateStr ? `<span class="post-card-date">${escapeHtml(dateStr)}</span>` : ''}
+                </div>
+                <h2 class="post-card-title">${safeTitle}</h2>
+                <div class="post-card-body">${escapeHtml(p.body || '').replace(/\n/g, '<br>')}</div>
+                ${photosHtml}
+                ${videoHtml}
+            </article>
+        `;
+    }).join('');
 }
 
 function renderClassSelectionView() {
@@ -1206,8 +1363,7 @@ function renderClassSelectionView() {
     const cards = [
         { short: 'c12', key: 'class-12', title: 'Class 12 Mathematics', sub: 'Grade XII · NEB Mat. 102', desc: 'Calculus, 3D Vectors, Conic Sections, Differential Equations & Board Model Sets.' },
         { short: 'c11', key: 'class-11', title: 'Class 11 Mathematics', sub: 'Grade XI · NEB Mat. 101', desc: 'Logic, Algebra, Complex Numbers, Coordinate Geometry & First-Principle Calculus.' },
-        { short: 'c10', key: 'class-10', title: 'Class 10 (SEE)', sub: 'SEE Foundation', desc: 'Compulsory & Optional Mathematics, Circle Theorems, Sets & Trigonometry.' },
-        { short: 'entrance', key: 'after-12', title: 'Entrance Prep', sub: 'IOE / CEE / KU', desc: 'Pulchowk CBT Speed Calculus, 15-Year Past Papers & Casio FX-991 Techniques.' }
+        { short: 'entrance', key: 'after-12', title: 'IOE (Entrance Prep)', sub: 'Side-by-Side · Included in Topper', desc: 'IOE Pulchowk CBT Speed Calculus, 15-Year Past Papers & Scientific Speed Techniques.' }
     ];
 
     grid.innerHTML = cards.map(c => {
@@ -1278,7 +1434,7 @@ function buildZoomClassCardHtml(zc, isModal = false) {
     const start12 = formatNepalTime12h(zc.startTime);
     const end12 = computeNepalEndTime(zc.startTime, zc.durationMinutes);
     const dateLabel = formatNepalDateReadable(zc.date);
-    const classLabelMap = { 'class-12': 'Class 12', 'class-11': 'Class 11', 'class-10': 'Class 10', 'after-12': 'Entrance Prep', all: 'All Programs' };
+    const classLabelMap = { 'class-12': 'Class 12', 'class-11': 'Class 11', 'after-12': 'IOE', all: 'All Programs' };
     const classLabel = classLabelMap[zc.classKey] || zc.classKey || '';
     const planLabel = typeof formatPlanLabel === 'function' ? formatPlanLabel(zc.minPlan || 'free') : (zc.minPlan || 'Free');
     const safeTitle = escapeHtml(zc.title || 'Live Zoom Class');

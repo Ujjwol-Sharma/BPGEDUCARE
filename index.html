@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPG EDUCARE — Mathematics for Class 10, 11, 12 &amp; Entrance</title>
+    <title>BPG EDUCARE — Mathematics for Class 11, Class 12 &amp; IOE</title>
     <meta name="description"
-        content="BPG EDUCARE, Pokhara, Nepal. Mathematics for Class 10, Class 11, Class 12 and IOE / CEE / KU entrance by Bishnu Prasad Gautam (BPG Sir).">
+        content="BPG EDUCARE, Pokhara, Nepal. Mathematics for Class 11, Class 12, and IOE Entrance by Bishnu Prasad Gautam (BPG Sir).">
     <meta name="theme-color" content="#ffffff">
     <meta property="og:title" content="BPG EDUCARE — Mathematics Education">
     <meta property="og:description"
-        content="Concept-first mathematics for Class 10, 11, 12 and IOE / CEE / KU entrance with Bishnu Prasad Gautam (BPG Sir), Pokhara.">
+        content="Concept-first mathematics for Class 11, Class 12, and IOE Entrance with Bishnu Prasad Gautam (BPG Sir), Pokhara.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bpg_sir.jpg">
     <link rel="icon" href="images/bpg-educare-logo.jpg" type="image/jpeg">
@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="./css/03-modern-extensions.css?v=20261122v6">
     <link rel="stylesheet" href="./css/04-canonical-theme.css?v=20261122v6">
     <link rel="stylesheet" href="./css/05-brand-guide-darkmode.css?v=20261122v6">
-    <link rel="stylesheet" href="./css/06-black-minimal.css?v=20261127v1">
+    <link rel="stylesheet" href="./css/06-black-minimal.css?v=20261127v2">
 </head>
 
 <body class="bpg-premium">
@@ -87,25 +87,46 @@
                                     id="navBadge-class-11"></span></div>
                             <small id="navSub-class-11">NEB Mat. 101 &middot; Foundations</small>
                         </button>
-                        <button type="button" role="menuitem" class="classes-dropdown-item is-locked-section"
-                            data-section-key="class-10"
-                            onclick="handleClassNavClick('c10'); closeClassesDropdown(); closeMobileNav();">
-                            <div class="dropdown-item-head"><strong>Class 10</strong><span
-                                    class="section-status-badge locked" id="navBadge-class-10">Locked</span></div>
-                            <small id="navSub-class-10">Temporarily unavailable</small>
-                        </button>
-                        <button type="button" role="menuitem" class="classes-dropdown-item is-locked-section"
+                        <button type="button" role="menuitem" class="classes-dropdown-item"
                             data-section-key="after-12"
                             onclick="handleClassNavClick('entrance'); closeClassesDropdown(); closeMobileNav();">
-                            <div class="dropdown-item-head"><strong>Entrance Prep</strong><span
-                                    class="section-status-badge locked" id="navBadge-after-12">Locked</span></div>
-                            <small id="navSub-after-12">Temporarily unavailable</small>
+                            <div class="dropdown-item-head"><strong>IOE</strong><span
+                                    class="section-status-badge" id="navBadge-after-12"></span></div>
+                            <small id="navSub-after-12">Entrance Prep &middot; Included in Topper</small>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown-wrap bpg-nav-dropdown" id="navPostsWrap">
+                    <button type="button" class="bpg-nav-link dropdown-trigger" id="navPostsBtn" data-nav="posts"
+                        onclick="togglePostsDropdown(event)" aria-haspopup="true" aria-expanded="false"
+                        aria-controls="navPostsMenu">
+                        Posts <i class="fa-solid fa-chevron-down nav-chevron-icon" aria-hidden="true"></i>
+                    </button>
+                    <div class="classes-dropdown-menu bpg-dropdown" id="navPostsMenu" role="menu">
+                        <button type="button" role="menuitem" class="classes-dropdown-item"
+                            onclick="openPostsView('news'); closePostsDropdown(); closeMobileNav();">
+                            <div class="dropdown-item-head"><strong>1. News</strong></div>
+                            <small>Official academy notices, schedules &amp; updates</small>
+                        </button>
+                        <button type="button" role="menuitem" class="classes-dropdown-item"
+                            onclick="openPostsView('achievements'); closePostsDropdown(); closeMobileNav();">
+                            <div class="dropdown-item-head"><strong>2. Achievements</strong></div>
+                            <small>Student toppers, IOE ranks &amp; milestones</small>
                         </button>
                     </div>
                 </div>
 
                 <!-- Mobile Drawer Quick Links & Auth Actions -->
                 <div class="mobile-nav-extras">
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="openPostsView('news'); closeMobileNav();">
+                        <span><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Posts &middot; News</span>
+                    </button>
+                    <button type="button" class="bpg-nav-link mobile-extra-link"
+                        onclick="openPostsView('achievements'); closeMobileNav();">
+                        <span><i class="fa-solid fa-trophy" aria-hidden="true"></i> Posts &middot; Achievements</span>
+                    </button>
                     <button type="button" class="bpg-nav-link mobile-extra-link"
                         onclick="openMyLessonsView(); closeMobileNav();">
                         <span><i class="fa-solid fa-book-open" aria-hidden="true"></i> Lessons</span>
@@ -297,8 +318,8 @@
                         <span class="hero-muted" id="heroTitleMuted">Master every concept.</span>
                     </h1>
                     <p class="bpg-hero-lead" id="heroLeadText">
-                        Structured, concept-first mathematics portals for Class 10, Class 11, Class 12, and IOE / CEE /
-                        KU entrance — mentored by <strong>Bishnu Prasad Gautam (BPG Sir)</strong>.
+                        Structured, concept-first mathematics portals for Class 11, Class 12, and IOE Entrance
+                        &mdash; mentored by <strong>Bishnu Prasad Gautam (BPG Sir)</strong>.
                     </p>
                     <div class="bpg-hero-actions">
                         <button type="button" class="btn-primary btn-lg" id="heroPrimaryCtaBtn"
@@ -383,7 +404,7 @@
                             <i class="fa-solid fa-crown"></i>
                         </span>
                         <span class="lessons-card-label">Plans</span>
-                        <span class="lessons-card-sub">Compare Gold and Diamond access</span>
+                        <span class="lessons-card-sub">Compare Padandas and Topper access</span>
                     </button>
                 </div>
             </div>
@@ -490,10 +511,30 @@
                         onclick="openPlanComparisonModal('', '')">
                         <span class="lessons-book-icon" aria-hidden="true"><i class="fa-solid fa-crown"></i></span>
                         <span class="lessons-card-label">Plans</span>
-                        <span class="lessons-card-sub">Compare Gold and Diamond access</span>
+                        <span class="lessons-card-sub">Compare Padandas and Topper access</span>
                     </button>
                 </div>
             </div>
+        </div>
+    </main>
+
+    <!-- Posts View (1. News & 2. Achievements with Photos & Videos) -->
+    <main class="view-container portal-view student-clean-home" id="view-posts" style="display:none;" tabindex="-1">
+        <div class="container">
+            <div class="workspace-top-bar" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:18px;">
+                <button type="button" class="btn-back" onclick="handleHomeClick()">&larr; Home</button>
+                <div class="posts-filter-tabs" role="tablist" aria-label="Filter Posts">
+                    <button type="button" class="subject-pill-btn active" id="postsTabAll" onclick="setPostsFilter('all')">All</button>
+                    <button type="button" class="subject-pill-btn" id="postsTabNews" onclick="setPostsFilter('news')">1. News</button>
+                    <button type="button" class="subject-pill-btn" id="postsTabAchievements" onclick="setPostsFilter('achievements')">2. Achievements</button>
+                </div>
+            </div>
+            <div class="home-section-head" style="text-align:left; margin:0 0 20px;">
+                <span class="minimal-section-label">BPG EDUCARE Updates</span>
+                <h1 class="student-home-title" id="postsViewHeading" style="margin:2px 0 4px;">News &amp; Achievements</h1>
+                <p style="color:var(--text-secondary); margin:0; font-size:0.9rem;">Latest academy news, exam announcements, student toppers, photos, and videos.</p>
+            </div>
+            <div id="postsFeedMount" class="posts-feed-grid"></div>
         </div>
     </main>
 
@@ -506,6 +547,7 @@
             <div class="minimal-footer-row">
                 <span id="footerCopyrightText">&copy; 2026 BPG EDUCARE &middot; Pokhara, Nepal</span>
                 <div class="minimal-footer-links">
+                    <a href="#terms" onclick="openTermsPrivacyModal(); return false;">Terms &amp; Privacy</a>
                     <a id="footerWhatsappLink"
                         href="https://wa.me/9779866064252?text=Namaste%20BPG%20Sir%2C%20I%20have%20an%20academic%20inquiry%20regarding%20BPG%20EDUCARE"
                         target="_blank" rel="noopener">
@@ -531,14 +573,14 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <!-- Application Scripts (Durable Cloud Storage Active) -->
-    <script src="./js/ui-templates.js?v=20261127v1"></script>
-    <script src="./js/state-sync.js?v=20261127v1"></script>
-    <script src="./js/portal-renderer.js?v=20261127v1"></script>
-    <script src="./js/mock-tests-student.js?v=20261127v1"></script>
-    <script src="./js/router-access.js?v=20261127v1"></script>
-    <script src="./js/widgets-ai.js?v=20261127v1"></script>
-    <script src="./js/auth-otp.js?v=20261127v1"></script>
-    <script src="./js/app-init.js?v=20261127v1"></script>
+    <script src="./js/ui-templates.js?v=20261127v2"></script>
+    <script src="./js/state-sync.js?v=20261127v2"></script>
+    <script src="./js/portal-renderer.js?v=20261127v2"></script>
+    <script src="./js/mock-tests-student.js?v=20261127v2"></script>
+    <script src="./js/router-access.js?v=20261127v2"></script>
+    <script src="./js/widgets-ai.js?v=20261127v2"></script>
+    <script src="./js/auth-otp.js?v=20261127v2"></script>
+    <script src="./js/app-init.js?v=20261127v2"></script>
 </body>
 
 </html>

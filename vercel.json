@@ -33,6 +33,7 @@
     { "source": "/api/admin/payments/:orderId/approve", "destination": "/api/academy-state?__route=payments&__action=ADMIN_APPROVE_ORDER&orderId=:orderId" },
     { "source": "/api/admin/payments/:orderId/reject", "destination": "/api/academy-state?__route=payments&__action=ADMIN_REJECT_ORDER&orderId=:orderId" },
     { "source": "/api/payments", "destination": "/api/academy-state?__route=payments" },
+    { "source": "/api/super-admin", "destination": "/api/academy-state?__route=super-admin" },
     { "source": "/api/ai-tutor", "destination": "/api/academy-state?__route=ai-tutor" },
     { "source": "/admin", "destination": "/_not_found" },
     { "source": "/admin/(.*)", "destination": "/_not_found" },
@@ -43,6 +44,13 @@
   "headers": [
     {
       "source": "/admin-k9x4m7p2q8z(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+      ]
+    },
+    {
+      "source": "/super-admin-r7v3x9m2k5p(.*)",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
         { "key": "Cache-Control", "value": "no-store, max-age=0" }

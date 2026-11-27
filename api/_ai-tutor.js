@@ -9,13 +9,12 @@
  * - Clearly states when a topic is outside the loaded course material
  */
 
-const { readAcademyState, gradeToClassKey } = require('./_access-control');
+const { readAcademyState, gradeToClassKey, isItemPublishedNow } = require('./_access-control');
 
 const GRADE_LABELS = {
     'class-12': 'Grade XII (Class 12)',
     'class-11': 'Grade XI (Class 11)',
-    'class-10': 'Class 10 (SEE)',
-    'after-12': 'Entrance Prep (IOE / CEE / KU)'
+    'after-12': 'IOE (Entrance Prep)'
 };
 
 function esc(str) {
@@ -822,8 +821,8 @@ function generateTutorReply(message, history, context, state) {
     // 7.5. Public Sitewide Notifications query (only published & sitewide!)
     if (/(latest\s*(news|update|notification|announcement)|what'?s\s*new|recent\s*announcement)/i.test(ql)) {
         const pubNotifs = (state.notifications || [])
-            .filter(n => n.published && n.scope === 'sitewide')
-            .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+            .filter(n => isItemPublishedNow(n) && n.scope === 'sitewide')
+            .sort((a, b) => new Date(b.publishAt || b.createdAt || 0).getTime() - new Date(a.publishAt || a.createdAt || 0).getTime())
             .slice(0, 4);
         if (pubNotifs.length > 0) {
             return {
@@ -844,17 +843,16 @@ function generateTutorReply(message, history, context, state) {
     }
 
     // 8. Plans / Membership query
-    if (/(plan|pricing|gold|diamond|free\s*plan|membership|upgrade|how\s*much)/i.test(ql) && !/(esewa|qr|whatsapp|pay|remark|transaction)/i.test(ql)) {
+    if (/(plan|pricing|padandas|topper|gold|diamond|free\s*plan|membership|upgrade|how\s*much|ioe\s*plan)/i.test(ql) && !/(esewa|qr|whatsapp|pay|remark|transaction)/i.test(ql)) {
         const plans = state.plansConfig || {};
         return {
             html: `
                 ${ctxNote}
-                <p><strong>BPG EDUCARE Plans:</strong></p>
+                <p><strong>BPG EDUCARE Plans (Class 11, Class 12 &amp; IOE):</strong></p>
                 <ul>
-                    ${['free', 'gold', 'diamond'].map(id => {
-                        const p = plans[id] || { name: id, price: '', description: '' };
-                        return `<li><strong>${esc(p.name)} (${esc(p.price)}):</strong> ${esc(p.description)}</li>`;
-                    }).join('')}
+                    <li><strong>Free (Rs. 0):</strong> Sample lessons and PDFs across open sections.</li>
+                    <li><strong>${esc(plans.gold?.name || 'Padandas')} (${esc(plans.gold?.price || 'Rs. 1,999')}):</strong> Full Class 11 or Class 12 access (lessons, notes, mock tests, live Zoom classes &amp; PDFs). <em>IOE Entrance Prep is not included.</em></li>
+                    <li><strong>${esc(plans.diamond?.name || 'Topper')} (${esc(plans.diamond?.price || 'Rs. 2,999')}):</strong> Full Class 11/12 access <strong>PLUS full IOE (Entrance Prep) access included</strong>. Existing Padandas members upgrade for just <strong>Rs. 1,000</strong>.</li>
                 </ul>
                 <div class="ai-inline-actions">
                     <button type="button" class="ai-action-chip" onclick="closeWebsiteGuide(); openPlanComparisonModal('', '');">Compare Plans &rarr;</button>
@@ -866,7 +864,7 @@ function generateTutorReply(message, history, context, state) {
     }
 
     // 9. Team / BPG Sir query
-    if (/(team|founder|ceo|cco|cto|who\s+is\s+bpg|bishnu|paribesh|ujjwol|utsav)/i.test(ql)) {
+    if (/(team|founder|ceo|cco|cto|who\s+is\s+bpg|bishnu|paribesh|ujjwol|utsav|dipson)/i.test(ql)) {
         const members = state.teamMembers || [];
         return {
             html: `

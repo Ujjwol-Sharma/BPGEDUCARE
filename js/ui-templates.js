@@ -11,10 +11,9 @@
     const workspacesMount = document.getElementById('bpgWorkspacesMount');
     if (workspacesMount) {
         const classes = [
-            { short: 'c10', key: 'class-10', label: 'Class 10', defaultHeading: 'Class 10 Mathematics' },
-            { short: 'c11', key: 'class-11', label: 'Grade XI', defaultHeading: 'Grade XI Mathematics' },
-            { short: 'c12', key: 'class-12', label: 'Grade XII', defaultHeading: 'Grade XII Mathematics' },
-            { short: 'entrance', key: 'after-12', label: 'Entrance Prep', defaultHeading: 'Entrance Prep Mathematics' }
+            { short: 'c11', key: 'class-11', label: 'Class 11', defaultHeading: 'Grade XI Mathematics' },
+            { short: 'c12', key: 'class-12', label: 'Class 12', defaultHeading: 'Grade XII Mathematics' },
+            { short: 'entrance', key: 'after-12', label: 'IOE', defaultHeading: 'IOE (Entrance Prep) Mathematics' }
         ];
 
         workspacesMount.outerHTML = classes.map(c => `
@@ -112,7 +111,7 @@
                 </div>
                 <div class="guide-msg-content">
                     <p><strong>Namaste!</strong> I&rsquo;m the <strong>BPG EDUCARE AI</strong>.</p>
-                    <p>Ask me anything about <strong>Class 10, Class 11, Class 12, or IOE / CEE Entrance</strong> &mdash; syllabus units, marks weightage, live Zoom timings, notes, or how to enroll.</p>
+                    <p>Ask me anything about <strong>Class 11, Class 12, or IOE Entrance</strong> &mdash; syllabus units, marks weightage, live Zoom timings, plans (Padandas &amp; Topper), notes, or how to enroll.</p>
                 </div>
             </div>
         </div>
@@ -142,61 +141,83 @@
         </form>
     </div>
 
-    <!-- Redesigned Scientific & Basic Calculator -->
-    <div class="calc-flyout-window calc-redesigned" id="calcFlyoutWindow" role="dialog" aria-label="BPG Calculator">
+    <!-- Windows 11-Style Standard & Scientific Calculator -->
+    <div class="calc-flyout-window calc-redesigned calc-win11" id="calcFlyoutWindow" role="dialog" aria-label="BPG Calculator">
         <div class="calc-window-header" id="calcDragHandle">
             <div class="calc-header-left">
                 <i class="fa-solid fa-calculator" aria-hidden="true"></i>
-                <span>Calculator</span>
+                <span id="calcModeTitleLabel">Standard</span>
             </div>
             <div class="calc-header-controls">
-                <button type="button" class="calc-mode-pill active" id="calcModeBasicBtn" onclick="setCalculatorMode('basic')">Basic</button>
+                <button type="button" class="calc-mode-pill active" id="calcModeBasicBtn" onclick="setCalculatorMode('basic')">Standard</button>
                 <button type="button" class="calc-mode-pill" id="calcModeSciBtn" onclick="setCalculatorMode('scientific')">Scientific</button>
-                <button type="button" class="calc-angle-pill mode-deg" id="calcAngleToggleBtn" onclick="toggleMiniCalcAngle()" title="Angle mode: Degrees (click to switch to Radians)" aria-label="Angle mode DEG">DEG</button>
+                <button type="button" class="calc-angle-pill mode-deg" id="calcAngleToggleBtn" onclick="toggleMiniCalcAngle()" title="Click to cycle DEG / RAD / GRAD" aria-label="Angle mode DEG">DEG</button>
                 <button type="button" class="calc-hist-pill" id="calcHistoryToggleBtn" onclick="toggleMiniCalcHistory()" title="Calculation History" aria-label="Toggle History"><i class="fa-solid fa-clock-rotate-left"></i></button>
                 <button type="button" class="calc-close-btn" onclick="toggleMiniCalculator()" aria-label="Close Calculator"><i class="fa-solid fa-xmark"></i></button>
             </div>
         </div>
-        <div class="calc-screen-area">
+        <div class="calc-screen-area win11-screen">
             <div class="calc-screen-status-row">
-                <span class="calc-active-angle-badge mode-deg" id="calcActiveAngleBadge" onclick="toggleMiniCalcAngle()" title="Click to toggle DEG / RAD">DEG</span>
-                <div class="calc-history-line" id="calcHistoryLine">Basic Mode</div>
+                <span class="calc-active-angle-badge mode-deg" id="calcActiveAngleBadge" onclick="toggleMiniCalcAngle()" title="Click to cycle DEG / RAD / GRAD">DEG</span>
+                <span class="calc-mem-indicator" id="calcMemoryIndicator" style="display:none;">M</span>
+                <div class="calc-history-line" id="calcHistoryLine"></div>
             </div>
             <div class="calc-lcd-screen" id="calcScreen" aria-live="polite">0</div>
             <div class="calc-error-line" id="calcErrorLine" role="alert" style="display:none;"></div>
         </div>
+        <!-- Windows 11 Memory Bar -->
+        <div class="calc-memory-bar" role="group" aria-label="Calculator Memory">
+            <button type="button" class="calc-mem-btn" id="calcBtnMC" onclick="calcMemoryClear()" title="Memory Clear" disabled>MC</button>
+            <button type="button" class="calc-mem-btn" id="calcBtnMR" onclick="calcMemoryRecall()" title="Memory Recall" disabled>MR</button>
+            <button type="button" class="calc-mem-btn" onclick="calcMemoryAdd()" title="Memory Add">M+</button>
+            <button type="button" class="calc-mem-btn" onclick="calcMemorySub()" title="Memory Subtract">M&minus;</button>
+            <button type="button" class="calc-mem-btn" onclick="calcMemoryStore()" title="Memory Store">MS</button>
+        </div>
         <div class="calc-history-drawer" id="calcHistoryDrawer" style="display:none;">
             <div class="calc-history-head">
                 <span>History</span>
-                <button type="button" class="calc-hist-clear-btn" onclick="clearMiniCalcHistory()">Clear</button>
+                <button type="button" class="calc-hist-clear-btn" onclick="clearMiniCalcHistory()">Clear History</button>
             </div>
             <div class="calc-history-list" id="calcHistoryList">
-                <div class="calc-history-empty">No calculations yet.</div>
+                <div class="calc-history-empty">There&rsquo;s no history yet.</div>
             </div>
         </div>
-        <div class="calc-sci-row" id="calcSciKeypad" style="display:none;">
-            <button type="button" class="calc-key sci" onclick="calcAppend('sin(')" title="Sine">sin</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('cos(')" title="Cosine">cos</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('tan(')" title="Tangent">tan</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('log₁₀(')" title="Base-10 Logarithm">log<sub>10</sub></button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('ln(')" title="Natural Logarithm">ln</button>
-
-            <button type="button" class="calc-key sci" onclick="calcAppend('sin⁻¹(')" title="Inverse Sine">sin<sup>&minus;1</sup></button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('cos⁻¹(')" title="Inverse Cosine">cos<sup>&minus;1</sup></button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('tan⁻¹(')" title="Inverse Tangent">tan<sup>&minus;1</sup></button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('√(')" title="Square Root">&radic;</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('^')" title="Power (x to the y)">x<sup>y</sup></button>
-
-            <button type="button" class="calc-key sci" onclick="calcAppend('²')" title="Square">x&sup2;</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('³')" title="Cube">x&sup3;</button>
-            <button type="button" class="calc-key sci" onclick="calcAppend('°')" title="Degree symbol">&deg;</button>
+        <!-- Scientific Mode Keypad (Windows 11 Scientific with 2nd toggle) -->
+        <div class="calc-sci-row win11-sci-grid" id="calcSciKeypad" style="display:none;">
+            <button type="button" class="calc-key sci" id="calcBtn2nd" onclick="toggleCalcSecondFn()" title="Toggle 2nd functions">2<sup>nd</sup></button>
             <button type="button" class="calc-key sci" onclick="calcAppend('π')" title="Pi">&pi;</button>
             <button type="button" class="calc-key sci" onclick="calcAppend('e')" title="Euler's number e">e</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('abs(')" title="Absolute value">|x|</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('!')" title="Factorial">n!</button>
+
+            <button type="button" class="calc-key sci" id="calcSciSin" onclick="calcTriggerSci('sin')" title="Sine">sin</button>
+            <button type="button" class="calc-key sci" id="calcSciCos" onclick="calcTriggerSci('cos')" title="Cosine">cos</button>
+            <button type="button" class="calc-key sci" id="calcSciTan" onclick="calcTriggerSci('tan')" title="Tangent">tan</button>
+            <button type="button" class="calc-key sci" id="calcSciLog" onclick="calcTriggerSci('log')" title="Base-10 Logarithm">log</button>
+            <button type="button" class="calc-key sci" id="calcSciLn" onclick="calcTriggerSci('ln')" title="Natural Logarithm">ln</button>
+
+            <button type="button" class="calc-key sci" id="calcSciPow" onclick="calcTriggerSci('pow')" title="Power">x<sup>y</sup></button>
+            <button type="button" class="calc-key sci" id="calcSci10x" onclick="calcTriggerSci('tenx')" title="10 to the power of x">10<sup>x</sup></button>
+            <button type="button" class="calc-key sci" id="calcSciEx" onclick="calcTriggerSci('ex')" title="e to the power of x">e<sup>x</sup></button>
+            <button type="button" class="calc-key sci" id="calcSciCube" onclick="calcTriggerSci('cube')" title="Cube">x&sup3;</button>
+            <button type="button" class="calc-key sci" id="calcSciCbrt" onclick="calcTriggerSci('cbrt')" title="Cube Root">&sup3;&radic;x</button>
+
+            <button type="button" class="calc-key sci" onclick="calcAppend('(')" title="Open parenthesis">(</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend(')')" title="Close parenthesis">)</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend(' mod ')" title="Modulo">mod</button>
+            <button type="button" class="calc-key sci" onclick="calcAppend('°')" title="Degrees">&deg;</button>
+            <button type="button" class="calc-key sci-ans" onclick="calcUseLastAns()" title="Insert last answer">Ans</button>
         </div>
-        <div class="calc-keypad-grid calc-basic-grid">
-            <button type="button" class="calc-key func-clear" onclick="calcClear()" title="All Clear (Esc)">AC</button>
-            <button type="button" class="calc-key func-del" onclick="calcBackspace()" title="Backspace">DEL</button>
-            <button type="button" class="calc-key op" onclick="calcToggleSign()" title="Toggle Positive / Negative">+/&minus;</button>
+        <!-- Standard Windows 11 4x6 Keypad -->
+        <div class="calc-keypad-grid calc-basic-grid win11-std-grid">
+            <button type="button" class="calc-key op" onclick="calcAppend('%')" title="Percent">%</button>
+            <button type="button" class="calc-key func-clear" onclick="calcClearEntry()" title="Clear Entry">CE</button>
+            <button type="button" class="calc-key func-clear" onclick="calcClear()" title="Clear All (Esc)">C</button>
+            <button type="button" class="calc-key func-del" onclick="calcBackspace()" title="Backspace">&#9003;</button>
+
+            <button type="button" class="calc-key op" onclick="calcReciprocal()" title="Reciprocal (1/x)"><sup>1</sup>/<sub>x</sub></button>
+            <button type="button" class="calc-key op" onclick="calcAppend('²')" title="Square">x&sup2;</button>
+            <button type="button" class="calc-key op" onclick="calcSquareRoot()" title="Square Root">&sup2;&radic;x</button>
             <button type="button" class="calc-key op" onclick="calcAppend('÷')" title="Divide">&divide;</button>
 
             <button type="button" class="calc-key num" onclick="calcAppend('7')">7</button>
@@ -214,14 +235,10 @@
             <button type="button" class="calc-key num" onclick="calcAppend('3')">3</button>
             <button type="button" class="calc-key op" onclick="calcAppend('+')" title="Add">+</button>
 
-            <button type="button" class="calc-key num" onclick="calcAppend('(')">(</button>
+            <button type="button" class="calc-key num" onclick="calcToggleSign()" title="Negate">+/&minus;</button>
             <button type="button" class="calc-key num" onclick="calcAppend('0')">0</button>
-            <button type="button" class="calc-key num" onclick="calcAppend(')')">)</button>
             <button type="button" class="calc-key num" onclick="calcAppend('.')">.</button>
-
-            <button type="button" class="calc-key op" onclick="calcAppend('%')" title="Percent">%</button>
-            <button type="button" class="calc-key sci-ans" onclick="calcUseLastAns()" title="Last Answer">Ans</button>
-            <button type="button" class="calc-key equals calc-equals-wide" onclick="calcEvaluate()" title="Evaluate (Enter)">=</button>
+            <button type="button" class="calc-key equals" onclick="calcEvaluate()" title="Evaluate (Enter)">=</button>
         </div>
     </div>
 
@@ -302,6 +319,10 @@
                             <input type="checkbox" id="signinKeepSignedIn" checked>
                             <span>Keep me signed in (30 days)</span>
                         </label>
+                        <label class="auth-check-item" id="signinTermsWrap" style="margin-top:6px;">
+                            <input type="checkbox" id="signinTermsAgree">
+                            <span>I agree to the <button type="button" class="btn-link-action" onclick="openTermsPrivacyModal()" style="font-size:inherit; padding:0; text-decoration:underline;">Terms &amp; Conditions and Privacy Policy</button></span>
+                        </label>
                     </div>
 
                     <button type="submit" class="btn-submit-action" id="btnSignInSubmit">
@@ -376,8 +397,7 @@
                         <select id="signupGrade" class="modal-input" required>
                             <option value="Class 12" selected>Class 12 (NEB Mat. 102)</option>
                             <option value="Class 11">Class 11 (NEB Mat. 101)</option>
-                            <option value="Class 10" id="signupOpt-class-10" disabled>Class 10 (Coming soon)</option>
-                            <option value="After 12" id="signupOpt-after-12" disabled>Entrance Prep (Coming soon)</option>
+                            <option value="IOE" id="signupOpt-after-12">IOE (Entrance Prep)</option>
                         </select>
                     </div>
 
@@ -385,6 +405,10 @@
                         <label class="auth-check-item">
                             <input type="checkbox" id="signupKeepSignedIn" checked>
                             <span>Keep me signed in (30 days)</span>
+                        </label>
+                        <label class="auth-check-item" style="margin-top:6px;">
+                            <input type="checkbox" id="signupTermsAgree" required>
+                            <span>I agree to the <button type="button" class="btn-link-action" onclick="openTermsPrivacyModal()" style="font-size:inherit; padding:0; text-decoration:underline;">Terms &amp; Conditions and Privacy Policy</button></span>
                         </label>
                     </div>
 
@@ -490,16 +514,87 @@
                         <input type="text" maxlength="1" class="otp-digit-box" id="otpDigit5" inputmode="numeric" oninput="handleOtpBoxInput(5, this)" onkeydown="handleOtpBoxKeydown(5, event)" required>
                     </div>
 
+                    <div class="auth-checkbox-group" id="otpTermsWrap" style="margin:10px 0;">
+                        <label class="auth-check-item">
+                            <input type="checkbox" id="otpTermsAgree">
+                            <span>I agree to the <button type="button" class="btn-link-action" onclick="openTermsPrivacyModal()" style="font-size:inherit; padding:0; text-decoration:underline;">Terms &amp; Conditions and Privacy Policy</button></span>
+                        </label>
+                    </div>
+
                     <button type="submit" class="btn-submit-action" id="btnVerifyOtpSubmit">
                         Verify &amp; Activate Account
                     </button>
 
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:0.84rem; gap:8px;">
                         <button type="button" class="btn-resend-link" id="btnResendOtp" onclick="resendEmailOtpCode()">Resend Verification Code</button>
-                        <button type="button" class="btn-link-action" onclick="switchAuthTab('signup')">&larr; Change Email</button>
+                        <button type="button" class="btn-link-action" onclick="switchAuthTab('signin')">&larr; Back to Sign In</button>
                     </div>
                 </form>
             </div>
+
+            <!-- STEP 2C: SET NEW PERMANENT PASSWORD (AFTER SUPER ADMIN TEMP PASSWORD) -->
+            <div id="authTempPwdContainer" class="auth-pane" style="display:none;">
+                <h3 class="modal-title">Set Your New Password</h3>
+                <p class="modal-sub">A temporary one-time password was issued for your account. Choose a new permanent password below to continue.</p>
+                <div id="tempPwdErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
+                <form onsubmit="handleCompleteTempPassword(event)">
+                    <div class="modal-field">
+                        <label for="tempPwdNewInput">New Password</label>
+                        <input type="password" id="tempPwdNewInput" class="modal-input" minlength="6" placeholder="At least 6 characters" required>
+                    </div>
+                    <div class="modal-field">
+                        <label for="tempPwdConfirmInput">Confirm New Password</label>
+                        <input type="password" id="tempPwdConfirmInput" class="modal-input" minlength="6" placeholder="Repeat new password" required>
+                    </div>
+                    <div class="auth-checkbox-group" style="margin:6px 0 12px;">
+                        <label class="auth-check-item">
+                            <input type="checkbox" id="tempPwdTermsAgree" required>
+                            <span>I agree to the <button type="button" class="btn-link-action" onclick="openTermsPrivacyModal()" style="font-size:inherit; padding:0; text-decoration:underline;">Terms &amp; Conditions and Privacy Policy</button></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-submit-action" id="btnCompleteTempPwd">Save New Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         TERMS & CONDITIONS AND PRIVACY POLICY MODAL
+         ========================================================================== -->
+    <div class="modal-backdrop" id="termsPrivacyModal" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
+        <div class="modal-card" style="max-width:600px; max-height:86vh; overflow-y:auto; padding:24px; text-align:left;">
+            <button type="button" class="btn-modal-dismiss" onclick="closeTermsPrivacyModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <span class="modal-head-tag" style="margin-bottom:8px; display:inline-block;">BPG EDUCARE Policies &middot; Updated 2026</span>
+            <h3 id="termsModalTitle" style="font-size:1.22rem; font-weight:700; margin:0 0 12px;">Terms &amp; Conditions and Privacy Policy</h3>
+
+            <div style="font-size:0.86rem; line-height:1.65; color:var(--text-secondary); display:flex; flex-direction:column; gap:14px;">
+                <section style="padding:12px 14px; border-radius:10px; background:var(--surface-soft); border:1px solid var(--border-subtle);">
+                    <strong style="color:var(--text-primary); display:block; margin-bottom:4px;">1. Strict No Screenshots, No Screen Recording &amp; No Content Sharing</strong>
+                    All PDFs, lecture notes, mock tests, solutions, and recorded videos on BPG EDUCARE are proprietary intellectual property watermarked with your identity. Taking screenshots, screen recording, downloading, redistributing, or sharing academy content with others is strictly prohibited and will result in immediate account suspension without refund.
+                </section>
+                <section style="padding:12px 14px; border-radius:10px; background:var(--surface-soft); border:1px solid var(--border-subtle);">
+                    <strong style="color:var(--text-primary); display:block; margin-bottom:4px;">2. Data Privacy Policy</strong>
+                    We collect only the information needed to deliver your classes (name, username, verified Gmail address, selected class, membership records, and study progress). Passwords are strictly one-way hashed (never stored in plaintext). Your personal data is protected and is never sold or shared with third-party advertisers.
+                </section>
+                <section style="padding:12px 14px; border-radius:10px; background:var(--surface-soft); border:1px solid var(--border-subtle);">
+                    <strong style="color:var(--text-primary); display:block; margin-bottom:4px;">3. Single-User Account &amp; Academic Year Access Rules</strong>
+                    Each BPG EDUCARE account is licensed for one individual student and enforces single-device active sessions. Paid memberships (Padandas for Class 11/12; Topper for Class 11/12 + IOE Entrance Prep) remain valid until the relevant NEB / IOE Final Exam academic cycle. Account sharing or credential resale is strictly prohibited.
+                </section>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+                <button type="button" class="btn btn-primary" onclick="closeTermsPrivacyModal()" style="padding:9px 18px; font-size:0.86rem;">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         POST PHOTO LIGHTBOX MODAL
+         ========================================================================== -->
+    <div class="modal-backdrop" id="postPhotoLightboxModal" role="dialog" aria-modal="true" onclick="if(event.target===this) closePostPhotoLightbox()">
+        <div class="modal-card" style="max-width:840px; padding:14px; text-align:center; background:#0d0d10; border-color:#2a2a32;">
+            <button type="button" class="btn-modal-dismiss" onclick="closePostPhotoLightbox()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <img id="postLightboxImg" src="" alt="Post photo" style="max-width:100%; max-height:78vh; border-radius:8px; object-fit:contain; display:block; margin:0 auto;">
+            <div id="postLightboxCaption" style="margin-top:10px; font-size:0.86rem; color:#e4e4ec;"></div>
         </div>
     </div>
 

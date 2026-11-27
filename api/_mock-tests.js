@@ -434,14 +434,18 @@ module.exports = function mockTestsHandler(req, res) {
 
         const user = resolveRequestUser(req);
         const classKey = gradeToClassKey(rawClass || user?.classKey || 'class-12');
-        if (user && user.email && user.classKey && classKey !== gradeToClassKey(user.classKey || user.grade)) {
-            res.statusCode = 403;
-            res.end(JSON.stringify({
-                ok: false,
-                code: 'CLASS_MISMATCH',
-                error: `Your account is enrolled in ${user.grade || user.classKey}.`
-            }));
-            return;
+        if (user && user.email && user.classKey) {
+            const uClass = gradeToClassKey(user.classKey || user.grade);
+            const isSideBySideIoe = classKey === 'after-12' && (uClass === 'class-11' || uClass === 'class-12' || uClass === 'after-12');
+            if (classKey !== uClass && !isSideBySideIoe) {
+                res.statusCode = 403;
+                res.end(JSON.stringify({
+                    ok: false,
+                    code: 'CLASS_MISMATCH',
+                    error: `Your account is enrolled in ${user.grade || user.classKey}.`
+                }));
+                return;
+            }
         }
         const lock = state.sectionLocks?.[classKey] || { locked: false, reason: '' };
 
