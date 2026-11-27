@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:36:47.661Z",
+  "lastUpdated": "2026-11-27T15:36:52.509Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3612,6 +3612,44 @@
   ],
   "payments": [
     {
+      "id": "pay_1795793812509_4u1v",
+      "orderId": "BPG-2026-00103",
+      "userId": "usr_358b294bfb3b",
+      "studentName": "Binisa Gautam",
+      "fullName": "Binisa Gautam",
+      "username": "bishnupdgautam2",
+      "email": "bishnupdgautam2@gmail.com",
+      "canonicalEmail": "bishnupdgautam2@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planKey": "diamond",
+      "planId": "diamond",
+      "planLabel": "Topper",
+      "planName": "Topper",
+      "isUpgrade": false,
+      "baseAmount": 2999,
+      "discountAmount": 0,
+      "promoCode": "",
+      "finalAmount": 2999,
+      "expectedAmount": 2999,
+      "amount": "Rs. 2,999",
+      "currency": "NPR",
+      "wallet": "eSewa",
+      "method": "eSewa",
+      "txCode": "",
+      "transactionId": "",
+      "senderInfo": "",
+      "orderSignature": "b579945e75bf821b8db51f6aa822d066dd36748dabce1a898fed3808d8ccc123",
+      "status": "created",
+      "rejectionReason": "",
+      "verifiedBy": "",
+      "verifiedAt": "",
+      "adminNote": "Order created on server; awaiting QR payment and transaction code.",
+      "createdAt": "2026-11-27T15:36:52.509Z",
+      "updatedAt": "2026-11-27T15:36:52.509Z",
+      "reviewedAt": ""
+    },
+    {
       "id": "pay_1795793807661_pz38",
       "orderId": "BPG-2026-00102",
       "userId": "usr_974c713f29dd",
@@ -4701,6 +4739,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 260,
+  "revision": 261,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
