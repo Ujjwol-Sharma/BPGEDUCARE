@@ -1,6 +1,6 @@
 {
-  "revision": 379,
-  "lastUpdated": "2026-11-27T15:38:26.959Z",
+  "revision": 380,
+  "lastUpdated": "2026-11-27T15:38:29.047Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793909047_vizh",
+      "timestamp": "2026-11-27T15:38:29.047Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Creative Chess Club: payment BPG-2026-00101 marked FAILED"
+    },
     {
       "id": "raud_1795793906959_q9b8",
       "timestamp": "2026-11-27T15:38:26.959Z",
@@ -962,15 +971,6 @@
       "actor": "1 2 3 (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795695571453_bp84",
-      "timestamp": "2026-11-26T12:19:31.453Z",
-      "userId": "usr_6bc9380a4bae",
-      "email": "milanofnp@gmail.com",
-      "actor": "Milan Adhikari (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1219,9 +1219,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:38:13.973Z",
+      "updatedAt": "2026-11-27T15:38:29.047Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795793909047_ek0p",
+          "timestamp": "2026-11-27T15:38:29.047Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order BPG-2026-00101 marked FAILED (Payment verification failed or transaction code not found.)"
+        },
         {
           "id": "aud_1795793893973_edbj",
           "timestamp": "2026-11-27T15:38:13.973Z",
