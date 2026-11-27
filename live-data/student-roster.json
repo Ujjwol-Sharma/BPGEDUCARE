@@ -1,6 +1,6 @@
 {
-  "revision": 402,
-  "lastUpdated": "2026-11-27T16:28:00.431Z",
+  "revision": 403,
+  "lastUpdated": "2026-11-27T16:28:01.522Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795796881522_s7b3",
+      "timestamp": "2026-11-27T16:28:01.522Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+      "details": "Creative Chess Club: DIAMOND active via verified payment (BPG-2026-00105)"
+    },
     {
       "id": "raud_1795796880431_yg2i",
       "timestamp": "2026-11-27T16:28:00.431Z",
@@ -962,15 +971,6 @@
       "actor": "Manoj Thapa (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795696911684_r9i9",
-      "timestamp": "2026-11-26T12:41:51.684Z",
-      "userId": "usr_8848460eb814",
-      "email": "aadarshaa92@gmail.com",
-      "actor": "Aadarsha Adhikari (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -983,7 +983,7 @@
       "grade": "Class 12",
       "classKey": "class-12",
       "plan": "diamond",
-      "planExpiresAt": "",
+      "planExpiresAt": "2027-11-27T16:28:01.522Z",
       "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
@@ -1036,9 +1036,16 @@
       ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T16:28:00.431Z",
+      "updatedAt": "2026-11-27T16:28:01.522Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795796881522_7c96",
+          "timestamp": "2026-11-27T16:28:01.522Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+          "details": "Order BPG-2026-00105 (Txn N/A, NPR 2999) confirmed PAID. Plan DIAMOND -> DIAMOND (expires 2027-11-27)"
+        },
         {
           "id": "aud_1795796880431_c1qe",
           "timestamp": "2026-11-27T16:28:00.431Z",
