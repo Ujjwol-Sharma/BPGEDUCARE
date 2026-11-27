@@ -1,6 +1,6 @@
 {
-  "revision": 394,
-  "lastUpdated": "2026-11-27T16:27:23.750Z",
+  "revision": 397,
+  "lastUpdated": "2026-11-27T16:27:29.587Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1004,11 +1004,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_cfc27201bec9fbbad47e79e0",
       "lastLoginAt": "2026-11-27T16:26:51.029Z",
-      "lastActiveAt": "2026-11-27T16:26:56.490Z",
-      "currentSection": "Grade XII Mathematics · notes",
+      "lastActiveAt": "2026-11-27T16:27:29.587Z",
+      "currentSection": "IOE (Entrance Prep) Mathematics · notes",
       "deviceInfo": "Chrome on Windows",
       "ipAddress": "27.34.72.129",
       "activityLog": [
+        {
+          "at": "2026-11-27T16:27:29.587Z",
+          "section": "IOE (Entrance Prep) Mathematics · notes",
+          "device": "Chrome on Windows",
+          "ip": "27.34.72.129"
+        },
         {
           "at": "2026-11-27T16:26:56.490Z",
           "section": "Grade XII Mathematics · notes",
@@ -1060,11 +1066,23 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_cd7e4ec56f579ca46fe498aa",
       "lastLoginAt": "2026-11-27T16:27:15.213Z",
-      "lastActiveAt": "2026-11-27T16:27:23.750Z",
-      "currentSection": "Grade XII Mathematics · live",
+      "lastActiveAt": "2026-11-27T16:27:26.866Z",
+      "currentSection": "Viewing Posts (news)",
       "deviceInfo": "Chrome on macOS",
       "ipAddress": "27.34.73.64",
       "activityLog": [
+        {
+          "at": "2026-11-27T16:27:26.866Z",
+          "section": "Viewing Posts (news)",
+          "device": "Chrome on macOS",
+          "ip": "27.34.73.64"
+        },
+        {
+          "at": "2026-11-27T16:27:24.806Z",
+          "section": "Grade XII Mathematics · notes",
+          "device": "Chrome on macOS",
+          "ip": "27.34.73.64"
+        },
         {
           "at": "2026-11-27T16:27:23.750Z",
           "section": "Grade XII Mathematics · live",
