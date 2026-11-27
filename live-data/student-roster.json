@@ -1,6 +1,6 @@
 {
-  "revision": 368,
-  "lastUpdated": "2026-11-27T15:36:06.197Z",
+  "revision": 369,
+  "lastUpdated": "2026-11-27T15:36:37.790Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793797790_vuqs",
+      "timestamp": "2026-11-27T15:36:37.790Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "UJJWOL SHARMA (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795793751101_r2b3",
       "timestamp": "2026-11-27T15:35:51.101Z",
@@ -962,18 +971,49 @@
       "actor": "Bidhan Parajuli (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795695473393_00e6",
-      "timestamp": "2026-11-26T12:17:53.393Z",
-      "userId": "usr_c8cdbe5a4b5a",
-      "email": "sonish.diyali.cs@gmail.com",
-      "actor": "Sonish Diyali (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_974c713f29dd",
+      "name": "UJJWOL SHARMA",
+      "username": "ujjwol",
+      "email": "intumintuchintu76@gmail.com",
+      "canonicalEmail": "intumintuchintu76@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T15:36:37.729Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$db5c05f8b5e46d27536d02781c7662f8$f03f21850c44b2500466e799afd9a69f8fc01fc7c4067e4ff14f319617f78bb7ef8660ffefd4063f7530d002b975efeeedb29f1246209a576cdd2cdbeadc5d92",
+      "activeSessionId": "sid_3b7c277a6395d23212c5f2c9",
+      "lastLoginAt": "2026-11-27T15:36:37.729Z",
+      "lastActiveAt": "2026-11-27T15:36:37.729Z",
+      "deviceInfo": "Chrome on macOS",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T15:36:37.790Z",
+      "lastModifiedBy": "UJJWOL SHARMA (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795793797790_ohcj",
+          "timestamp": "2026-11-27T15:36:37.790Z",
+          "actor": "UJJWOL SHARMA (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_03976352f8cf",
       "name": "shlok",
