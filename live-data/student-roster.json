@@ -1,6 +1,6 @@
 {
-  "revision": 357,
-  "lastUpdated": "2026-11-27T15:18:21.519Z",
+  "revision": 358,
+  "lastUpdated": "2026-11-27T15:18:23.156Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795792703156_swdk",
+      "timestamp": "2026-11-27T15:18:23.156Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Creative Chess Club: payment ORD-1795792008416-F4CCC5 marked FAILED"
+    },
     {
       "id": "raud_1795792701519_8wdp",
       "timestamp": "2026-11-27T15:18:21.519Z",
@@ -962,15 +971,6 @@
       "actor": "Mayank Adhikari (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795694926300_sah3",
-      "timestamp": "2026-11-26T12:08:46.300Z",
-      "userId": "usr_294718ced58a",
-      "email": "rawalashim2009@gmail.com",
-      "actor": "Ashim Rawal (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1106,9 +1106,16 @@
       "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:18:21.519Z",
+      "updatedAt": "2026-11-27T15:18:23.156Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795792703156_to4u",
+          "timestamp": "2026-11-27T15:18:23.156Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795792008416-F4CCC5 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795792701519_yxkd",
           "timestamp": "2026-11-27T15:18:21.519Z",
