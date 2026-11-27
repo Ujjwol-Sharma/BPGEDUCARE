@@ -1,6 +1,6 @@
 {
-  "revision": 300,
-  "lastUpdated": "2026-11-27T02:17:02.315Z",
+  "revision": 301,
+  "lastUpdated": "2026-11-27T02:24:41.424Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795746281424_b0an",
+      "timestamp": "2026-11-27T02:24:41.424Z",
+      "userId": "usr_adaee21c929a",
+      "email": "owlxlite@gmail.com",
+      "actor": "owlxlite (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795745822315_ixmc",
       "timestamp": "2026-11-27T02:17:02.315Z",
@@ -962,15 +971,6 @@
       "actor": "UJJWOL SHARMA (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795656857475_329p",
-      "timestamp": "2026-11-26T01:34:17.475Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Ujjwol Sharma (intumintuchintu76@gmail.com)"
     }
   ],
   "accounts": [
@@ -998,9 +998,16 @@
       "passkey": "scrypt$16aba33a7a10afb0d35dac1332a1556d$f02e5112bf43136c375149a68727dfde2239aab6f799c2da10a72a24fa32debe153ea3df6f4487dfc6e5f00f36ac7088cfbdc0d1523f44011eb358e466a59de7",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T02:17:02.315Z",
-      "lastModifiedBy": "owlxlite (Google Sign-Up)",
+      "updatedAt": "2026-11-27T02:24:41.424Z",
+      "lastModifiedBy": "owlxlite (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795746281424_mivx",
+          "timestamp": "2026-11-27T02:24:41.424Z",
+          "actor": "owlxlite (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795745822315_atjm",
           "timestamp": "2026-11-27T02:17:02.315Z",
