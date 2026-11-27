@@ -1,6 +1,6 @@
 {
-  "revision": 390,
-  "lastUpdated": "2026-11-27T16:26:59.881Z",
+  "revision": 391,
+  "lastUpdated": "2026-11-27T16:27:15.213Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1058,10 +1058,10 @@
       "termsAcceptedAt": "2026-11-27T16:26:27.858Z",
       "ioeAccess": false,
       "mustChangePassword": false,
-      "activeSessionId": "sid_a40aae61241f767116f6e5dd",
-      "lastLoginAt": "2026-11-27T16:26:59.881Z",
-      "lastActiveAt": "2026-11-27T16:26:59.881Z",
-      "currentSection": "",
+      "activeSessionId": "sid_cd7e4ec56f579ca46fe498aa",
+      "lastLoginAt": "2026-11-27T16:27:15.213Z",
+      "lastActiveAt": "2026-11-27T16:27:15.213Z",
+      "currentSection": "Signed in (Class 12)",
       "deviceInfo": "Chrome on macOS",
       "ipAddress": "27.34.73.64",
       "activityLog": [],
