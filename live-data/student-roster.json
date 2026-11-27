@@ -1,6 +1,6 @@
 {
-  "revision": 299,
-  "lastUpdated": "2026-11-27T02:13:51.814Z",
+  "revision": 300,
+  "lastUpdated": "2026-11-27T02:17:02.315Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795745822315_ixmc",
+      "timestamp": "2026-11-27T02:17:02.315Z",
+      "userId": "usr_adaee21c929a",
+      "email": "owlxlite@gmail.com",
+      "actor": "owlxlite (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795745617901_yi0v",
       "timestamp": "2026-11-27T02:13:37.901Z",
@@ -962,18 +971,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account Ujjwol Sharma (intumintuchintu76@gmail.com)"
-    },
-    {
-      "id": "raud_1795630169552_vdzs",
-      "timestamp": "2026-11-25T18:09:29.552Z",
-      "userId": "usr_b312fe6586f8",
-      "email": "bpg.verify.mwwfu3hj@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Live Verify Student (bpg.verify.mwwfu3hj@gmail.com)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_adaee21c929a",
+      "name": "owlxlite",
+      "username": "owlxlite",
+      "email": "owlxlite@gmail.com",
+      "canonicalEmail": "owlxlite@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T02:17:02.252Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_adaee21c929ab507",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$16aba33a7a10afb0d35dac1332a1556d$f02e5112bf43136c375149a68727dfde2239aab6f799c2da10a72a24fa32debe153ea3df6f4487dfc6e5f00f36ac7088cfbdc0d1523f44011eb358e466a59de7",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T02:17:02.315Z",
+      "lastModifiedBy": "owlxlite (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795745822315_atjm",
+          "timestamp": "2026-11-27T02:17:02.315Z",
+          "actor": "owlxlite (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_7a2bd34269c2",
       "name": "SUBRAT GAUTAM",
