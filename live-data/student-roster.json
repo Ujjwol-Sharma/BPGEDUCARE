@@ -1,6 +1,6 @@
 {
-  "revision": 342,
-  "lastUpdated": "2026-11-27T13:38:10.689Z",
+  "revision": 343,
+  "lastUpdated": "2026-11-27T14:08:30.864Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795788510864_rban",
+      "timestamp": "2026-11-27T14:08:30.864Z",
+      "userId": "usr_1b558269b9fa",
+      "email": "thapaparibesh01@gmail.com",
+      "actor": "Paribesh Thapa (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795786690689_lefi",
       "timestamp": "2026-11-27T13:38:10.689Z",
@@ -962,15 +971,6 @@
       "actor": "Ram Prasad Ojha (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795665954448_6he6",
-      "timestamp": "2026-11-26T04:05:54.448Z",
-      "userId": "usr_10d588688c4c",
-      "email": "poudelaradhya@gmail.com",
-      "actor": "safdfafadwd (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
@@ -6166,9 +6166,16 @@
         "notif_mock_live_mt_1795626947423"
       ],
       "joinedAt": "2026-11-24",
-      "updatedAt": "2026-11-27T10:59:21.188Z",
+      "updatedAt": "2026-11-27T14:08:30.864Z",
       "lastModifiedBy": "Paribesh Thapa (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795788510864_xnti",
+          "timestamp": "2026-11-27T14:08:30.864Z",
+          "actor": "Paribesh Thapa (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795777161188_mwg8",
           "timestamp": "2026-11-27T10:59:21.188Z",
