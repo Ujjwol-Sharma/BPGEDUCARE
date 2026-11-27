@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:37:20.567Z",
+  "lastUpdated": "2026-11-27T15:38:26.958Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3678,14 +3678,14 @@
       "transactionId": "3SGER",
       "senderInfo": "",
       "orderSignature": "a09928f05465965ce169ed36a90789af61dd5041b12c73a6a060abcd0bb810e5",
-      "status": "pending",
-      "rejectionReason": "",
-      "verifiedBy": "",
+      "status": "failed",
+      "rejectionReason": "Payment verification failed or transaction code not found.",
+      "verifiedBy": "Admin Console",
       "verifiedAt": "",
-      "adminNote": "Submitted eSewa TxCode 3SGER; pending admin verification.",
+      "adminNote": "Payment verification failed or transaction code not found.",
       "createdAt": "2026-11-27T15:36:47.661Z",
-      "updatedAt": "2026-11-27T15:37:20.567Z",
-      "reviewedAt": ""
+      "updatedAt": "2026-11-27T15:38:26.958Z",
+      "reviewedAt": "2026-11-27T15:38:26.958Z"
     },
     {
       "id": "pay_1795793612518_u1lv",
@@ -4739,6 +4739,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 262,
+  "revision": 264,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }

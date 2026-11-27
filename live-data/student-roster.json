@@ -1,6 +1,6 @@
 {
-  "revision": 378,
-  "lastUpdated": "2026-11-27T15:38:19.208Z",
+  "revision": 379,
+  "lastUpdated": "2026-11-27T15:38:26.959Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793906959_q9b8",
+      "timestamp": "2026-11-27T15:38:26.959Z",
+      "userId": "usr_974c713f29dd",
+      "email": "intumintuchintu76@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "UJJWOL SHARMA: payment BPG-2026-00102 marked FAILED"
+    },
     {
       "id": "raud_1795793893973_sepy",
       "timestamp": "2026-11-27T15:38:13.973Z",
@@ -962,15 +971,6 @@
       "actor": "Milan Adhikari (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795695570264_uxes",
-      "timestamp": "2026-11-26T12:19:30.264Z",
-      "userId": "usr_7ac3f881b452",
-      "email": "adarshkunwar2009@gmail.com",
-      "actor": "Adarsh Kunwar (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -987,7 +987,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-27T15:36:37.729Z",
       "verificationMethod": "email_otp",
@@ -1002,9 +1002,16 @@
       "deviceInfo": "Chrome on macOS",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:37:20.608Z",
-      "lastModifiedBy": "UJJWOL SHARMA (Student)",
+      "updatedAt": "2026-11-27T15:38:26.959Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795793906959_pcsh",
+          "timestamp": "2026-11-27T15:38:26.959Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order BPG-2026-00102 marked FAILED (Payment verification failed or transaction code not found.)"
+        },
         {
           "id": "aud_1795793840608_63qq",
           "timestamp": "2026-11-27T15:37:20.608Z",
