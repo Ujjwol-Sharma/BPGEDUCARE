@@ -1,6 +1,6 @@
 {
-  "revision": 352,
-  "lastUpdated": "2026-11-27T15:14:36.577Z",
+  "revision": 353,
+  "lastUpdated": "2026-11-27T15:17:41.919Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1106,9 +1106,16 @@
       "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:14:36.577Z",
+      "updatedAt": "2026-11-27T15:17:41.919Z",
       "lastModifiedBy": "Creative Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795792661919_i6gy",
+          "timestamp": "2026-11-27T15:17:41.919Z",
+          "actor": "Creative Chess Club (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795792661918-BDDE23 (Padandas, NPR 1999) is pending"
+        },
         {
           "id": "aud_1795792476577_uofe",
           "timestamp": "2026-11-27T15:14:36.577Z",
