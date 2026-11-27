@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:36:52.509Z",
+  "lastUpdated": "2026-11-27T15:37:20.567Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3674,17 +3674,17 @@
       "currency": "NPR",
       "wallet": "eSewa",
       "method": "eSewa",
-      "txCode": "",
-      "transactionId": "",
+      "txCode": "3SGER",
+      "transactionId": "3SGER",
       "senderInfo": "",
       "orderSignature": "a09928f05465965ce169ed36a90789af61dd5041b12c73a6a060abcd0bb810e5",
-      "status": "created",
+      "status": "pending",
       "rejectionReason": "",
       "verifiedBy": "",
       "verifiedAt": "",
-      "adminNote": "Order created on server; awaiting QR payment and transaction code.",
+      "adminNote": "Submitted eSewa TxCode 3SGER; pending admin verification.",
       "createdAt": "2026-11-27T15:36:47.661Z",
-      "updatedAt": "2026-11-27T15:36:47.661Z",
+      "updatedAt": "2026-11-27T15:37:20.567Z",
       "reviewedAt": ""
     },
     {
@@ -4739,6 +4739,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 261,
+  "revision": 262,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }

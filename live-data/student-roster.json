@@ -1,6 +1,6 @@
 {
-  "revision": 372,
-  "lastUpdated": "2026-11-27T15:37:19.356Z",
+  "revision": 373,
+  "lastUpdated": "2026-11-27T15:37:20.608Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -987,7 +987,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-27T15:36:37.729Z",
       "verificationMethod": "email_otp",
@@ -1002,9 +1002,16 @@
       "deviceInfo": "Chrome on macOS",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:36:37.790Z",
-      "lastModifiedBy": "UJJWOL SHARMA (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-27T15:37:20.608Z",
+      "lastModifiedBy": "UJJWOL SHARMA (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795793840608_63qq",
+          "timestamp": "2026-11-27T15:37:20.608Z",
+          "actor": "UJJWOL SHARMA (Student)",
+          "action": "PAYMENT_PROOF_SUBMITTED",
+          "details": "Order BPG-2026-00102 (Topper, Rs. 2,999, eSewa, TxCode 3SGER) submitted for verification"
+        },
         {
           "id": "aud_1795793797790_ohcj",
           "timestamp": "2026-11-27T15:36:37.790Z",
