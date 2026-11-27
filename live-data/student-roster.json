@@ -1,6 +1,6 @@
 {
-  "revision": 384,
-  "lastUpdated": "2026-11-27T15:38:53.946Z",
+  "revision": 385,
+  "lastUpdated": "2026-11-27T15:40:01.194Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795794001194_4umv",
+      "timestamp": "2026-11-27T15:40:01.194Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Creative Chess Club (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795793931321_o53g",
       "timestamp": "2026-11-27T15:38:51.321Z",
@@ -962,18 +971,49 @@
       "actor": "Ishan Thapa (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795695973060_4dwo",
-      "timestamp": "2026-11-26T12:26:13.060Z",
-      "userId": "usr_6b739595b4d1",
-      "email": "gautamashim123410@gmail.com",
-      "actor": "Ashim Gautam (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_25e888886ae4",
+      "name": "Creative Chess Club",
+      "username": "prachan",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T15:40:01.109Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$7664d876bb1e24e530d4cfb3f5605232$30908210dd57286a604916735c367f78acd154378d632b0028d5920da1104e81fdaf06b6e6b3289cfe0a225bea8a24599785389c1c2a489ae8e78af41d6c5ce7",
+      "activeSessionId": "sid_826cdd3aa094ca0439e652fd",
+      "lastLoginAt": "2026-11-27T15:40:01.109Z",
+      "lastActiveAt": "2026-11-27T15:40:01.109Z",
+      "deviceInfo": "Chrome on Windows",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T15:40:01.194Z",
+      "lastModifiedBy": "Creative Chess Club (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795794001194_326j",
+          "timestamp": "2026-11-27T15:40:01.194Z",
+          "actor": "Creative Chess Club (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_974c713f29dd",
       "name": "UJJWOL SHARMA",
