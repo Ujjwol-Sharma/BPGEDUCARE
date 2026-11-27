@@ -1,6 +1,6 @@
 {
-  "revision": 397,
-  "lastUpdated": "2026-11-27T16:27:29.587Z",
+  "revision": 398,
+  "lastUpdated": "2026-11-27T16:27:29.988Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1066,11 +1066,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_cd7e4ec56f579ca46fe498aa",
       "lastLoginAt": "2026-11-27T16:27:15.213Z",
-      "lastActiveAt": "2026-11-27T16:27:26.866Z",
-      "currentSection": "Viewing Posts (news)",
+      "lastActiveAt": "2026-11-27T16:27:29.988Z",
+      "currentSection": "Viewing Posts (achievements)",
       "deviceInfo": "Chrome on macOS",
       "ipAddress": "27.34.73.64",
       "activityLog": [
+        {
+          "at": "2026-11-27T16:27:29.988Z",
+          "section": "Viewing Posts (achievements)",
+          "device": "Chrome on macOS",
+          "ip": "27.34.73.64"
+        },
         {
           "at": "2026-11-27T16:27:26.866Z",
           "section": "Viewing Posts (news)",
