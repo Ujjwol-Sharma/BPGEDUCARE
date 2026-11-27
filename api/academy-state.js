@@ -286,6 +286,13 @@ async function academyStateHandler(req, res) {
         return await SUB_ROUTE_HANDLERS[subRoute](req, res);
     }
     const cleanPath = parsedRouteUrl.pathname.replace(/^\/api\//, '').replace(/\.js$/, '');
+    if (cleanPath === 'auth/session') {
+        req.url = '/api/student-roster?me=1';
+        return await studentRosterHandler(req, res);
+    }
+    if (cleanPath.startsWith('payments/') || cleanPath.startsWith('admin/payments/')) {
+        return await paymentsHandler(req, res);
+    }
     if (cleanPath && cleanPath !== 'academy-state' && SUB_ROUTE_HANDLERS[cleanPath]) {
         return await SUB_ROUTE_HANDLERS[cleanPath](req, res);
     }
@@ -338,6 +345,8 @@ async function academyStateHandler(req, res) {
             let roster = readRoster();
             let user = null;
             let sessionRevoked = false;
+            let sessionReplaced = false;
+            let sessionRevokedError = '';
             if (!isAdmin) {
                 const { resolveRequestUserStatus } = require('./_access-control');
                 const { isDurableHydrationAuthoritative } = require('./_durable-storage');
@@ -356,6 +365,8 @@ async function academyStateHandler(req, res) {
                     userStatus = resolveRequestUserStatus(req);
                 }
                 user = userStatus.user;
+                sessionReplaced = userStatus.reason === 'session_replaced';
+                sessionRevokedError = userStatus.error || '';
                 // Only confirm revocation when explicitly suspended/invalid token OR confirmed absent after authoritative durable hydration
                 sessionRevoked = Boolean(
                     userStatus.revoked ||
@@ -424,6 +435,8 @@ async function academyStateHandler(req, res) {
                     timestamp: rawData.lastUpdated || new Date().toISOString(),
                     currentUser: safeUser,
                     sessionRevoked,
+                    sessionReplaced,
+                    sessionRevokedError: sessionReplaced ? sessionRevokedError : undefined,
                     myPayments,
                     mySwitchRequests,
                     notifications: visibleNotifications,
@@ -487,6 +500,8 @@ async function academyStateHandler(req, res) {
                     rosterRevision: Number(roster.revision) || 0,
                     currentUser: safeUser,
                     sessionRevoked,
+                    sessionReplaced,
+                    sessionRevokedError: sessionReplaced ? sessionRevokedError : undefined,
                     myPayments,
                     mySwitchRequests
                 };

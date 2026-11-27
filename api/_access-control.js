@@ -42,17 +42,17 @@ const DEFAULT_PLANS_CONFIG = {
     },
     gold: {
         id: 'gold',
-        name: 'Gold',
-        price: 'Rs. 1,499',
-        period: 'Per academic year',
-        description: 'Includes all Free content plus Gold questions, full answers, and study PDFs.'
+        name: 'Padandas',
+        price: 'Rs. 1,999',
+        period: 'Until NEB Final Exam',
+        description: 'Includes all Free content plus Padandas lessons, full solutions, mock tests, and study PDFs.'
     },
     diamond: {
         id: 'diamond',
-        name: 'Diamond',
+        name: 'Topper',
         price: 'Rs. 2,999',
-        period: 'Per academic year',
-        description: 'Unlocks every question, solution, and PDF across all open sections.'
+        period: 'Until NEB Final Exam',
+        description: 'Unlocks every Topper lesson, mock test, live class, and PDF across all open sections.'
     }
 };
 
@@ -184,9 +184,13 @@ const DEFAULT_MAINTENANCE_MODE = {
 
 const DEFAULT_SITE_SETTINGS = {
     whatsappNumber: '9779866064252',
-    esewaQrUrl: 'images/payment_qr.png',
+    esewaQrUrl: 'images/payment_qr_esewa.jpg',
+    bankQrUrl: 'images/payment_qr_bank.jpg',
+    bankName: 'Prime Commercial Bank Ltd. (Fonepay)',
     esewaMerchantName: 'BPG EDUCARE',
-    googleClientId: process.env.GOOGLE_CLIENT_ID || ''
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    singleDeviceSession: true,
+    promoCodes: []
 };
 
 const DEFAULT_NOTIFICATIONS = [];
@@ -538,15 +542,93 @@ function isAdminPasskeyValid(passkey) {
 }
 
 /* --------------------------------------------------------------------------
-   2. SESSION TOKEN SIGNING & VERIFICATION
+   2. SESSION TOKEN SIGNING, HTTP-ONLY COOKIES & DEVICE TRACKING
    -------------------------------------------------------------------------- */
+const SESSION_COOKIE_NAME = 'bpg_session';
+
+function parseCookieHeader(req) {
+    const out = {};
+    const raw = String(req?.headers?.cookie || '');
+    if (!raw) return out;
+    raw.split(';').forEach(part => {
+        const idx = part.indexOf('=');
+        if (idx <= 0) return;
+        const k = part.slice(0, idx).trim();
+        const v = part.slice(idx + 1).trim();
+        try { out[k] = decodeURIComponent(v); } catch (e) { out[k] = v; }
+    });
+    return out;
+}
+
+function isSecureRequest(req) {
+    const proto = String(req?.headers?.['x-forwarded-proto'] || '').toLowerCase();
+    if (proto === 'https') return true;
+    const host = String(req?.headers?.host || '').toLowerCase();
+    return Boolean(host && !host.startsWith('localhost') && !host.startsWith('127.0.0.1'));
+}
+
+function buildSessionCookieHeader(token, keepSignedIn = true, req = null) {
+    const parts = [
+        `${SESSION_COOKIE_NAME}=${encodeURIComponent(String(token || ''))}`,
+        'Path=/',
+        'HttpOnly',
+        'SameSite=Lax'
+    ];
+    if (keepSignedIn) {
+        parts.push(`Max-Age=${30 * 24 * 60 * 60}`);
+    }
+    if (isSecureRequest(req)) {
+        parts.push('Secure');
+    }
+    return parts.join('; ');
+}
+
+function buildClearSessionCookieHeader(req = null) {
+    const parts = [
+        `${SESSION_COOKIE_NAME}=`,
+        'Path=/',
+        'HttpOnly',
+        'SameSite=Lax',
+        'Max-Age=0'
+    ];
+    if (isSecureRequest(req)) {
+        parts.push('Secure');
+    }
+    return parts.join('; ');
+}
+
+function parseUserAgentDeviceInfo(req) {
+    const ua = String(req?.headers?.['user-agent'] || '').trim();
+    if (!ua) return 'Unknown Device';
+    let browser = 'Browser';
+    if (/Edg\//i.test(ua)) browser = 'Edge';
+    else if (/OPR\/|Opera/i.test(ua)) browser = 'Opera';
+    else if (/Firefox\//i.test(ua)) browser = 'Firefox';
+    else if (/Chrome\/|CriOS\//i.test(ua)) browser = 'Chrome';
+    else if (/Safari\//i.test(ua)) browser = 'Safari';
+
+    let osName = 'Web';
+    if (/Android/i.test(ua)) osName = 'Android';
+    else if (/iPhone/i.test(ua)) osName = 'iPhone';
+    else if (/iPad/i.test(ua)) osName = 'iPad';
+    else if (/Macintosh|Mac OS X/i.test(ua)) osName = 'macOS';
+    else if (/Windows/i.test(ua)) osName = 'Windows';
+    else if (/Linux/i.test(ua)) osName = 'Linux';
+    return `${browser} on ${osName}`;
+}
+
+function generateSessionId() {
+    return 'sid_' + crypto.randomBytes(12).toString('hex');
+}
+
 function issueStudentSessionToken(user, options = {}) {
     const issuedAt = Date.now();
     const keepSignedIn = options.keepSignedIn !== false;
-    const ttlMs = keepSignedIn ? (30 * 24 * 60 * 60 * 1000) : (12 * 60 * 60 * 1000);
+    const ttlMs = keepSignedIn ? (30 * 24 * 60 * 60 * 1000) : (24 * 60 * 60 * 1000);
     const expiresAt = issuedAt + ttlMs;
     const email = String(user.email || '').trim().toLowerCase();
     const canonicalEmail = canonicalizeEmail(email);
+    const sid = String(options.sessionId || user.activeSessionId || '').trim();
     const payload = {
         userId: deriveStableUserId(canonicalEmail, user.userId),
         email,
@@ -555,6 +637,7 @@ function issueStudentSessionToken(user, options = {}) {
         grade: normalizeGradeName(user.grade || user.classKey),
         plan: normalizePlan(user.plan),
         keepSignedIn,
+        sid,
         verified: true,
         issuedAt,
         expiresAt
@@ -726,6 +809,10 @@ function readRoster() {
             avatarUrl: String(rawAcc.avatarUrl || ''),
             hasPassword: rawAcc.hasPassword !== undefined ? Boolean(rawAcc.hasPassword) : (rawAcc.verificationMethod !== 'google_oauth'),
             passkey: rawAcc.passkey || 'bpgstudent',
+            activeSessionId: String(rawAcc.activeSessionId || ''),
+            lastLoginAt: String(rawAcc.lastLoginAt || ''),
+            lastActiveAt: String(rawAcc.lastActiveAt || ''),
+            deviceInfo: String(rawAcc.deviceInfo || ''),
             readNotificationIds: Array.isArray(rawAcc.readNotificationIds) ? rawAcc.readNotificationIds.map(String) : [],
             joinedAt: rawAcc.joinedAt || new Date().toISOString().split('T')[0],
             updatedAt: rawAcc.updatedAt || rawAcc.verifiedAt || (rawAcc.joinedAt ? `${rawAcc.joinedAt}T00:00:00.000Z` : new Date().toISOString()),
@@ -802,6 +889,10 @@ function writeRoster(roster) {
             avatarUrl: String(acc.avatarUrl || ''),
             hasPassword: acc.hasPassword !== undefined ? Boolean(acc.hasPassword) : (acc.verificationMethod !== 'google_oauth'),
             passkey: acc.passkey || 'bpgstudent',
+            activeSessionId: String(acc.activeSessionId || ''),
+            lastLoginAt: String(acc.lastLoginAt || ''),
+            lastActiveAt: String(acc.lastActiveAt || ''),
+            deviceInfo: String(acc.deviceInfo || ''),
             readNotificationIds: Array.isArray(acc.readNotificationIds) ? Array.from(new Set(acc.readNotificationIds.map(String))).slice(-250) : [],
             joinedAt: acc.joinedAt || nowIso.split('T')[0],
             updatedAt: acc.updatedAt || nowIso,
@@ -1073,15 +1164,23 @@ function ensureAccessModelDefaults(state) {
         };
     }
 
-    // 8. Site Settings (WhatsApp number, eSewa QR, Google Client ID)
+    // 8. Site Settings (WhatsApp number, eSewa & Bank QR, Promo Codes, Single-Device Session, Google Client ID)
     if (!state.siteSettings || typeof state.siteSettings !== 'object') {
         state.siteSettings = JSON.parse(JSON.stringify(DEFAULT_SITE_SETTINGS));
     } else {
+        const rawEsewaQr = String(state.siteSettings.esewaQrUrl || '').trim();
+        const resolvedEsewaQr = (!rawEsewaQr || rawEsewaQr === 'images/payment_qr.png')
+            ? DEFAULT_SITE_SETTINGS.esewaQrUrl
+            : rawEsewaQr;
         state.siteSettings = {
             whatsappNumber: String(state.siteSettings.whatsappNumber || DEFAULT_SITE_SETTINGS.whatsappNumber).replace(/[^\d]/g, '') || DEFAULT_SITE_SETTINGS.whatsappNumber,
-            esewaQrUrl: String(state.siteSettings.esewaQrUrl || DEFAULT_SITE_SETTINGS.esewaQrUrl).trim(),
+            esewaQrUrl: resolvedEsewaQr,
+            bankQrUrl: String(state.siteSettings.bankQrUrl !== undefined ? state.siteSettings.bankQrUrl : DEFAULT_SITE_SETTINGS.bankQrUrl).trim(),
+            bankName: String(state.siteSettings.bankName || DEFAULT_SITE_SETTINGS.bankName).trim(),
             esewaMerchantName: String(state.siteSettings.esewaMerchantName || DEFAULT_SITE_SETTINGS.esewaMerchantName).trim(),
-            googleClientId: String(state.siteSettings.googleClientId || process.env.GOOGLE_CLIENT_ID || DEFAULT_SITE_SETTINGS.googleClientId || '').trim()
+            googleClientId: String(state.siteSettings.googleClientId || process.env.GOOGLE_CLIENT_ID || DEFAULT_SITE_SETTINGS.googleClientId || '').trim(),
+            singleDeviceSession: state.siteSettings.singleDeviceSession !== undefined ? Boolean(state.siteSettings.singleDeviceSession) : true,
+            promoCodes: Array.isArray(state.siteSettings.promoCodes) ? state.siteSettings.promoCodes : []
         };
     }
 
@@ -1170,11 +1269,23 @@ function readAcademyState() {
 
 function resolveRequestUserStatus(req) {
     let token = req.headers['x-session-token'] || '';
+    if (!token && req.headers['authorization']) {
+        const authHdr = String(req.headers['authorization']).trim();
+        if (/^Bearer\s+/i.test(authHdr)) {
+            token = authHdr.replace(/^Bearer\s+/i, '').trim();
+        }
+    }
     if (!token && req.url) {
         try {
             const parsed = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
             token = parsed.searchParams.get('token') || '';
         } catch (e) { }
+    }
+    if (!token) {
+        const cookies = parseCookieHeader(req);
+        if (cookies[SESSION_COOKIE_NAME]) {
+            token = cookies[SESSION_COOKIE_NAME];
+        }
     }
 
     if (token) {
@@ -1187,7 +1298,40 @@ function resolveRequestUserStatus(req) {
             if (account.emailVerified === false || account.accountStatus === 'suspended') {
                 return { user: null, hasToken: true, tokenValid: true, revoked: true, needsFreshCheck: false, reason: 'suspended' };
             }
-            return { user: account, hasToken: true, tokenValid: true, revoked: false, needsFreshCheck: false, reason: '' };
+            // Reject tokens after explicit server-side sign-out (even if single-device enforcement is off)
+            if (account.activeSessionId && String(account.activeSessionId).startsWith('revoked_')) {
+                return {
+                    user: null,
+                    hasToken: true,
+                    tokenValid: false,
+                    revoked: true,
+                    needsFreshCheck: false,
+                    code: 'SIGNED_OUT',
+                    reason: 'signed_out',
+                    error: 'Your session has ended. Please sign in again.'
+                };
+            }
+            // Enforce single-device session when enabled in siteSettings (default true)
+            let enforceSingleDevice = true;
+            try {
+                const st = readAcademyState();
+                if (st?.siteSettings && st.siteSettings.singleDeviceSession === false) {
+                    enforceSingleDevice = false;
+                }
+            } catch (e) {}
+            if (enforceSingleDevice && account.activeSessionId && verified.sid && verified.sid !== account.activeSessionId) {
+                return {
+                    user: null,
+                    hasToken: true,
+                    tokenValid: true,
+                    revoked: true,
+                    needsFreshCheck: false,
+                    code: 'SESSION_REPLACED',
+                    reason: 'session_replaced',
+                    error: 'You were signed out because your account logged in on another device.'
+                };
+            }
+            return { user: account, hasToken: true, tokenValid: true, revoked: false, needsFreshCheck: false, verified, reason: '' };
         }
         return { user: null, hasToken: true, tokenValid: true, revoked: false, needsFreshCheck: true, verified, reason: 'not_found_in_cache' };
     }
@@ -1298,9 +1442,13 @@ function sanitizeStateForStudent(rawState, user) {
     delete clone.mockTests; // Keep mock test answer keys strictly server-side via /api/mock-tests
     delete clone.payments;  // Keep payment ledger strictly admin-side (or /api/payments?me=1)
 
-    // Never expose eSewa QR URL to unauthenticated guests
-    if (clone.siteSettings && (!user || !user.email)) {
-        delete clone.siteSettings.esewaQrUrl;
+    // Never expose payment QRs to unauthenticated guests, and never expose promoCodes list to students/guests
+    if (clone.siteSettings) {
+        delete clone.siteSettings.promoCodes;
+        if (!user || !user.email) {
+            delete clone.siteSettings.esewaQrUrl;
+            delete clone.siteSettings.bankQrUrl;
+        }
     }
 
     // Filter Notifications: only published, sitewide OR matching user's active class, newest first
@@ -1657,6 +1805,11 @@ module.exports = {
     isAdminPasskeyValid,
     issueStudentSessionToken,
     verifyStudentSessionToken,
+    parseCookieHeader,
+    buildSessionCookieHeader,
+    buildClearSessionCookieHeader,
+    parseUserAgentDeviceInfo,
+    generateSessionId,
     readRoster,
     writeRoster,
     findAccountByEmail,

@@ -23,8 +23,8 @@ const {
     findAccountByEmail
 } = require('./_access-control');
 
-const OTP_TTL_MS = 5 * 60 * 1000; // 5 minutes
-const RESEND_COOLDOWN_MS = 30 * 1000; // 30 seconds
+const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const RESEND_COOLDOWN_MS = 60 * 1000; // 60 seconds
 
 async function verifyEmailDomainHasMx(email) {
     const domain = String(email || '').split('@')[1] || '';
@@ -134,7 +134,7 @@ function buildOtpEmailHtml({ name, email, grade, otp, mode }) {
             <h1 style="font-size:22px; margin:0 0 12px;">${title}</h1>
             <p style="font-size:15px; line-height:1.6; color:#52525c; margin:0 0 20px;">${bodyText}</p>
             <div style="background:#f8f8fa; border:1px solid #e6e6eb; border-radius:10px; padding:20px; text-align:center; margin:20px 0;">
-                <div style="font-size:12px; color:#7c7c88; margin-bottom:6px;">6-Digit Verification Code (Valid for 5 minutes)</div>
+                <div style="font-size:12px; color:#7c7c88; margin-bottom:6px;">6-Digit Verification Code (Valid for 10 minutes)</div>
                 <div style="font-family:monospace; font-size:32px; font-weight:700; letter-spacing:8px; color:#111114;">${safeOtp}</div>
             </div>
             <p style="font-size:12px; color:#7c7c88; margin:16px 0 0;">If you did not request this code, you can safely ignore this email.</p>
@@ -159,7 +159,7 @@ module.exports = async function handler(req, res) {
 
     try {
         const clientIp = getClientIp(req);
-        const ipLimit = checkRateLimit(`otp_ip:${clientIp}`, 15, 15 * 60 * 1000);
+        const ipLimit = checkRateLimit(`otp_ip:${clientIp}`, 15, 60 * 60 * 1000);
         if (!ipLimit.allowed) {
             return res.status(429).json({
                 ok: false,
@@ -212,7 +212,7 @@ module.exports = async function handler(req, res) {
         }
 
         const canonical = canonicalizeEmail(email);
-        const emailLimit = checkRateLimit(`otp_email:${canonical}`, 5, 15 * 60 * 1000);
+        const emailLimit = checkRateLimit(`otp_email:${canonical}`, 5, 60 * 60 * 1000);
         if (!emailLimit.allowed) {
             return res.status(429).json({
                 ok: false,

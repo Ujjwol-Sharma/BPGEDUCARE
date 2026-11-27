@@ -517,8 +517,8 @@ const DEFAULT_SECTION_LOCKS_CLIENT = {
 
 const DEFAULT_PLANS_CONFIG_CLIENT = {
     free: { id: 'free', name: 'Free', price: 'Rs. 0', period: 'Forever free', description: 'Access admin-selected sample questions and PDFs in open sections.' },
-    gold: { id: 'gold', name: 'Gold', price: 'Rs. 1,499', period: 'Per academic year', description: 'Includes all Free content plus Gold questions, full answers, and study PDFs.' },
-    diamond: { id: 'diamond', name: 'Diamond', price: 'Rs. 2,999', period: 'Per academic year', description: 'Unlocks every question, solution, and PDF across all open sections.' }
+    gold: { id: 'gold', name: 'Padandas', price: 'Rs. 1,999', period: 'Until NEB Final Exam', description: 'Includes all Free content plus Padandas lessons, full answers, mock tests, and study PDFs.' },
+    diamond: { id: 'diamond', name: 'Topper', price: 'Rs. 2,999', period: 'Until NEB Final Exam', description: 'Unlocks every Topper lesson, mock test, live class, and PDF across all open sections.' }
 };
 
 function getSectionLockInfo(classKey) {
@@ -610,7 +610,7 @@ function reconcileStudentLiveSessionPayload(payload) {
     const session = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
     if (session && session.sessionToken) {
         if (payload.sessionRevoked === true) {
-            // Account was explicitly deleted, suspended, or token expired/invalid on the authoritative server
+            // Account was explicitly deleted, suspended, token expired, or signed in on another device
             if (typeof handleSignOutSilent === 'function') {
                 handleSignOutSilent();
             } else {
@@ -619,6 +619,9 @@ function reconcileStudentLiveSessionPayload(payload) {
                 localStorage.removeItem('bpg_student_session');
                 if (typeof updateAuthUserPill === 'function') updateAuthUserPill();
                 if (typeof switchPortal === 'function') switchPortal('view-home');
+            }
+            if (payload.sessionReplaced && typeof showToast === 'function') {
+                showToast(payload.sessionRevokedError || 'You were signed out because your account logged in on another device.');
             }
             return true;
         }
@@ -702,6 +705,7 @@ async function syncWithServerDatabase(isLight = false) {
             : '/api/academy-state?_t=' + Date.now();
         const res = await fetch(url, {
             cache: 'no-store',
+            credentials: 'same-origin',
             headers: getStudentAuthHeaders()
         });
         if (!res.ok) return false;

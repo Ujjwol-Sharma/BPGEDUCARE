@@ -8,7 +8,7 @@
 const {
     gradeToClassKey,
     readAcademyState,
-    resolveRequestUser,
+    resolveRequestUserStatus,
     evaluateItemAccess,
     isAdminPasskeyValid,
     normalizePlan
@@ -16,7 +16,9 @@ const {
 const { readDurablePdfBuffer } = require('./_durable-storage');
 
 module.exports = async function contentAccessHandler(req, res) {
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -37,7 +39,17 @@ module.exports = async function contentAccessHandler(req, res) {
     const classKey = gradeToClassKey(rawClass);
     const state = readAcademyState();
     const isAdmin = isAdminPasskeyValid(req.headers['x-admin-passkey'] || body.adminPasskey);
-    const user = resolveRequestUser(req);
+    const userStatus = resolveRequestUserStatus(req);
+    if (!isAdmin && userStatus.reason === 'session_replaced') {
+        res.statusCode = 401;
+        res.end(JSON.stringify({
+            ok: false,
+            code: 'SESSION_REPLACED',
+            error: userStatus.error || 'Signed in on another device. Please sign in again.'
+        }));
+        return;
+    }
+    const user = userStatus.user;
     const portal = state.portals?.[classKey];
 
     // 0. Enforce Maintenance Mode for non-admin requests
@@ -145,7 +157,7 @@ module.exports = async function contentAccessHandler(req, res) {
                 storageKey: pdf.storageKey || '',
                 restricted: !check.allowed,
                 hasFile: Boolean(rawUrl || pdf.storageKey || pdf.hasFile),
-                fileUrl: (check.allowed && !isInlineBase64) ? rawUrl : ''
+                fileUrl: ''
             };
         });
         const videos = (Array.isArray(lesson.videos) ? lesson.videos : []).map(vid => {

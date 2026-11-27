@@ -629,8 +629,11 @@ function renderActiveMockTestRunner(container) {
 
     const maskedWm = typeof getMaskedStudentWatermarkId === 'function' ? escapeHtml(getMaskedStudentWatermarkId()) : '';
 
+    const dynamicWm = typeof buildDynamicTiledWatermarkHtml === 'function' ? buildDynamicTiledWatermarkHtml() : '';
+
     container.innerHTML = `
         <div class="mock-runner-shell bpg-protected-content">
+            ${dynamicWm}
             <div class="bpg-protected-rule-bar" role="note" style="margin-bottom:12px;">
                 <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
                 <span>Screenshots and screen recordings are prohibited.</span>

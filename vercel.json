@@ -21,11 +21,17 @@
     { "source": "/bpg-cms-data.json", "destination": "/_not_found", "permanent": false }
   ],
   "rewrites": [
+    { "source": "/api/auth/session", "destination": "/api/academy-state?__route=student-roster&me=1" },
     { "source": "/api/student-roster", "destination": "/api/academy-state?__route=student-roster" },
     { "source": "/api/send-email-otp", "destination": "/api/academy-state?__route=send-email-otp" },
     { "source": "/api/verify-otp", "destination": "/api/academy-state?__route=verify-otp" },
     { "source": "/api/content-access", "destination": "/api/academy-state?__route=content-access" },
     { "source": "/api/mock-tests", "destination": "/api/academy-state?__route=mock-tests" },
+    { "source": "/api/payments/create-order", "destination": "/api/academy-state?__route=payments&__action=CREATE_ORDER" },
+    { "source": "/api/payments/validate-promo", "destination": "/api/academy-state?__route=payments&__action=VALIDATE_PROMO" },
+    { "source": "/api/payments/submit-proof", "destination": "/api/academy-state?__route=payments&__action=SUBMIT_PROOF" },
+    { "source": "/api/admin/payments/:orderId/approve", "destination": "/api/academy-state?__route=payments&__action=ADMIN_APPROVE_ORDER&orderId=:orderId" },
+    { "source": "/api/admin/payments/:orderId/reject", "destination": "/api/academy-state?__route=payments&__action=ADMIN_REJECT_ORDER&orderId=:orderId" },
     { "source": "/api/payments", "destination": "/api/academy-state?__route=payments" },
     { "source": "/api/ai-tutor", "destination": "/api/academy-state?__route=ai-tutor" },
     { "source": "/admin", "destination": "/_not_found" },

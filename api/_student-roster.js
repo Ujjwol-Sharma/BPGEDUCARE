@@ -15,6 +15,12 @@ const {
     normalizeGradeName,
     isAdminPasskeyValid,
     issueStudentSessionToken,
+    buildSessionCookieHeader,
+    buildClearSessionCookieHeader,
+    parseUserAgentDeviceInfo,
+    generateSessionId,
+    getClientIp,
+    checkRateLimit,
     readRoster,
     writeRoster,
     deriveStableUserId,
@@ -186,6 +192,9 @@ module.exports = async function studentRosterHandler(req, res) {
 
             let me = null;
             let sessionRevoked = false;
+            let sessionReplaced = false;
+            let sessionRevokedError = '';
+            let slidingSessionToken = '';
             let liveRoster = roster;
             if (!isAdmin) {
                 let status = resolveRequestUserStatus(req);
@@ -195,7 +204,24 @@ module.exports = async function studentRosterHandler(req, res) {
                     status = resolveRequestUserStatus(req);
                 }
                 me = status.user;
+                sessionReplaced = status.reason === 'session_replaced';
+                sessionRevokedError = status.error || '';
                 sessionRevoked = Boolean(status.revoked || (status.needsFreshCheck && isDurableHydrationAuthoritative()));
+
+                if (me && status.verified && status.verified.keepSignedIn !== false) {
+                    const tokenAgeMs = Date.now() - Number(status.verified.issuedAt || 0);
+                    // Sliding 30-day session extension when active (> 24 hours since last token issuance)
+                    if (tokenAgeMs > 24 * 60 * 60 * 1000) {
+                        slidingSessionToken = issueStudentSessionToken(me, {
+                            keepSignedIn: true,
+                            sessionId: me.activeSessionId || status.verified.sid || ''
+                        });
+                        res.setHeader('Set-Cookie', buildSessionCookieHeader(slidingSessionToken, true, req));
+                    }
+                }
+                if (sessionRevoked) {
+                    res.setHeader('Set-Cookie', buildClearSessionCookieHeader(req));
+                }
             }
 
             if (checkMe && !isAdmin) {
@@ -212,9 +238,14 @@ module.exports = async function studentRosterHandler(req, res) {
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
+                    authenticated: Boolean(me),
                     rosterRevision: Number(liveRoster.revision) || 0,
                     account: me ? stripSensitiveAccountFields(me) : null,
+                    sessionToken: slidingSessionToken || undefined,
                     sessionRevoked,
+                    sessionReplaced,
+                    code: sessionReplaced ? 'SESSION_REPLACED' : undefined,
+                    error: sessionReplaced ? (sessionRevokedError || 'You were signed out because your account logged in on another device.') : undefined,
                     mySwitchRequests,
                     myPayments
                 }));
@@ -263,10 +294,37 @@ module.exports = async function studentRosterHandler(req, res) {
         try {
             const roster = readRoster();
 
-            // 0. GOOGLE SIGN-IN / ACCOUNT LINKING (Links by stable userId / googleSub / canonicalEmail; never creates duplicates)
+            // 0-OUT. SIGN OUT (revokes server activeSessionId & clears HttpOnly session cookie)
+            if (payload.action === 'SIGN_OUT') {
+                const user = resolveRequestUser(req);
+                if (user && user.email) {
+                    const canonical = canonicalizeEmail(user.email);
+                    const acc = roster.accounts.find(a => a.userId === user.userId || a.canonicalEmail === canonical);
+                    if (acc) {
+                        acc.activeSessionId = 'revoked_' + generateSessionId();
+                        writeRoster(roster);
+                    }
+                }
+                res.setHeader('Set-Cookie', buildClearSessionCookieHeader(req));
+                res.statusCode = 200;
+                res.end(JSON.stringify({ success: true, message: 'Signed out cleanly.' }));
+                return;
+            }
+
+            // 0. GOOGLE SIGN-IN / ACCOUNT LINKING (Requires verified Google OAuth token when Google Client ID is configured)
             if (payload.action === 'GOOGLE_SIGN_IN') {
                 const configuredClientId = String(state.siteSettings?.googleClientId || process.env.GOOGLE_CLIENT_ID || '').trim();
                 let googleProfile = null;
+
+                if (!configuredClientId) {
+                    res.statusCode = 403;
+                    res.end(JSON.stringify({
+                        success: false,
+                        code: 'GOOGLE_OAUTH_NOT_CONFIGURED',
+                        error: 'Google Sign-In is not currently configured. Please sign in with your Email/Username and Password or 6-digit Gmail code.'
+                    }));
+                    return;
+                }
 
                 if (payload.accessToken || payload.idToken) {
                     googleProfile = payload.accessToken
@@ -277,19 +335,9 @@ module.exports = async function studentRosterHandler(req, res) {
                         res.end(JSON.stringify({ success: false, error: 'Invalid, unverified, or expired Google Sign-In token.' }));
                         return;
                     }
-                } else if (payload.googleChooserEmail && isValidEmailFormat(String(payload.googleChooserEmail).trim().toLowerCase())) {
-                    // Built-in Google Account Chooser flow when external Google OAuth Client ID is not yet configured
-                    const rawG = String(payload.googleChooserEmail).trim().toLowerCase();
-                    const canonicalG = canonicalizeEmail(rawG);
-                    googleProfile = {
-                        email: rawG,
-                        name: String(payload.name || rawG.split('@')[0] || 'Student').trim(),
-                        googleSub: String(payload.googleSub || ('gsub_' + crypto.createHash('sha256').update(canonicalG).digest('hex').slice(0, 16))),
-                        avatarUrl: String(payload.avatarUrl || '')
-                    };
                 } else {
                     res.statusCode = 400;
-                    res.end(JSON.stringify({ success: false, error: 'Google account token or email is required.' }));
+                    res.end(JSON.stringify({ success: false, error: 'Verified Google OAuth token is required.' }));
                     return;
                 }
 
@@ -385,7 +433,20 @@ module.exports = async function studentRosterHandler(req, res) {
                 }
 
                 const keepSignedIn = payload.keepSignedIn !== false;
-                const sessionToken = issueStudentSessionToken(account, { keepSignedIn });
+                const newSessionId = generateSessionId();
+                const nowLoginIso = new Date().toISOString();
+                const deviceInfo = parseUserAgentDeviceInfo(req);
+                const liveIdx = roster.accounts.findIndex(a => a.userId === account.userId || a.canonicalEmail === canonical);
+                if (liveIdx >= 0) {
+                    roster.accounts[liveIdx].activeSessionId = newSessionId;
+                    roster.accounts[liveIdx].lastLoginAt = nowLoginIso;
+                    roster.accounts[liveIdx].lastActiveAt = nowLoginIso;
+                    roster.accounts[liveIdx].deviceInfo = deviceInfo;
+                    const savedAfterSession = writeRoster(roster);
+                    account = savedAfterSession.accounts.find(a => a.userId === account.userId || a.canonicalEmail === canonical) || account;
+                }
+                const sessionToken = issueStudentSessionToken(account, { keepSignedIn, sessionId: newSessionId });
+                res.setHeader('Set-Cookie', buildSessionCookieHeader(sessionToken, keepSignedIn, req));
                 const mySwitchRequests = (roster.classSwitchRequests || []).filter(
                     r => (r.userId && r.userId === account.userId) || canonicalizeEmail(r.email) === canonical
                 );
@@ -397,6 +458,7 @@ module.exports = async function studentRosterHandler(req, res) {
                     success: true,
                     linkedExisting,
                     sessionToken,
+                    keepSignedIn,
                     user: stripSensitiveAccountFields(account),
                     mySwitchRequests,
                     myPayments
@@ -621,16 +683,18 @@ module.exports = async function studentRosterHandler(req, res) {
                 return;
             }
 
-            // 1. SIGN IN (verifies username + Gmail + password against original account, protects privacy, never creates duplicates)
+            // 1. SIGN IN (Supports single "Email or Username" input OR legacy username+email; rate-limited; sets persistent HttpOnly cookie & single-device session)
             if (payload.action === 'SIGN_IN') {
-                const rawEmail = String(payload.email || '').trim().toLowerCase();
-                const rawUsername = String(payload.username || '').trim();
+                const rawIdentifier = String(payload.identifier || payload.email || payload.username || '').trim();
+                const rawEmail = String(payload.email || (rawIdentifier.includes('@') ? rawIdentifier : '')).trim().toLowerCase();
+                const rawUsername = String(payload.username || (!rawIdentifier.includes('@') ? rawIdentifier : '')).trim();
                 const normUsername = normalizeUsername(rawUsername);
                 const enteredPass = String(payload.password || payload.passkey || '');
                 const keepSignedIn = payload.keepSignedIn !== false;
-                if (!rawEmail || !isValidEmailFormat(rawEmail)) {
+
+                if (!rawIdentifier) {
                     res.statusCode = 400;
-                    res.end(JSON.stringify({ success: false, code: 'INVALID_EMAIL', error: 'Please enter a valid Gmail address.' }));
+                    res.end(JSON.stringify({ success: false, code: 'MISSING_IDENTIFIER', error: 'Please enter your email address or username.' }));
                     return;
                 }
                 if (!enteredPass) {
@@ -638,17 +702,47 @@ module.exports = async function studentRosterHandler(req, res) {
                     res.end(JSON.stringify({ success: false, code: 'MISSING_PASSWORD', error: 'Please enter your password.' }));
                     return;
                 }
-                const canonical = canonicalizeEmail(rawEmail);
-                const account = roster.accounts.find(a => a.canonicalEmail === canonical);
-                const genericCredError = "We couldn't sign you in with that username, Gmail, and password. Check your details, try Sign in with Gmail code, or click Forgot password?.";
+
+                // Brute-force protection: 5 wrong attempts -> 10-minute cooldown
+                const clientIp = getClientIp(req);
+                const idKey = rawEmail ? canonicalizeEmail(rawEmail) : normUsername;
+                const failBucketKey = `signin_fail:${clientIp}:${idKey}`;
+                const existingFailEntry = require('./_access-control').getOtpStoreEntry(`rl:${failBucketKey}`);
+                if (existingFailEntry && existingFailEntry.count >= 5 && Date.now() < existingFailEntry.resetAt) {
+                    const retrySec = Math.max(1, Math.ceil((existingFailEntry.resetAt - Date.now()) / 1000));
+                    const mins = Math.ceil(retrySec / 60);
+                    res.statusCode = 429;
+                    res.end(JSON.stringify({
+                        success: false,
+                        code: 'RATE_LIMITED',
+                        retryAfterSeconds: retrySec,
+                        error: `Too many failed sign-in attempts. Please wait ${mins} minute${mins === 1 ? '' : 's'} or use Reset Password.`
+                    }));
+                    return;
+                }
+
+                const canonical = rawEmail ? canonicalizeEmail(rawEmail) : '';
+                let account = null;
+                if (canonical) {
+                    account = roster.accounts.find(a => a.canonicalEmail === canonical) || null;
+                }
+                if (!account && normUsername) {
+                    const noDots = normUsername.replace(/\./g, '');
+                    account = roster.accounts.find(a => {
+                        const accU = normalizeUsername(a.username || (a.email ? a.email.split('@')[0] : ''));
+                        const accNoDots = accU.replace(/\./g, '');
+                        return accU === normUsername || (noDots && accNoDots === noDots);
+                    }) || null;
+                }
 
                 if (!account) {
+                    checkRateLimit(failBucketKey, 5, 10 * 60 * 1000);
                     console.info('[BPG Auth SIGN_IN] rejected', { reason: 'account_not_found' });
                     res.statusCode = 401;
                     res.end(JSON.stringify({
                         success: false,
-                        code: 'INVALID_CREDENTIALS',
-                        error: genericCredError
+                        code: 'ACCOUNT_NOT_FOUND',
+                        error: 'No account found with this email/username. Want to Create Account?'
                     }));
                     return;
                 }
@@ -673,34 +767,46 @@ module.exports = async function studentRosterHandler(req, res) {
                     return;
                 }
 
-                // Verify password first (supports exact + trimmed compatibility, never logs password)
+                // Verify password (supports scrypt + legacy plaintext with transparent upgrade on success; never logs password)
                 const expectedPass = account.passkey || '';
                 if (!verifyPassword(enteredPass, expectedPass)) {
+                    const rl = checkRateLimit(failBucketKey, 5, 10 * 60 * 1000);
                     const isGoogleOnly = account.hasPassword === false && Boolean(account.googleLinked);
                     console.info('[BPG Auth SIGN_IN] rejected', {
                         reason: isGoogleOnly ? 'google_only_no_password_set' : 'password_mismatch',
                         userId: account.userId
                     });
+                    if (!rl.allowed) {
+                        const mins = Math.ceil((rl.retryAfterSeconds || 600) / 60);
+                        res.statusCode = 429;
+                        res.end(JSON.stringify({
+                            success: false,
+                            code: 'RATE_LIMITED',
+                            retryAfterSeconds: rl.retryAfterSeconds,
+                            error: `Too many failed sign-in attempts. Please wait ${mins} minute${mins === 1 ? '' : 's'} or use Reset Password.`
+                        }));
+                        return;
+                    }
                     res.statusCode = 401;
                     res.end(JSON.stringify({
                         success: false,
-                        code: isGoogleOnly ? 'GOOGLE_ACCOUNT_NO_PASSWORD' : 'INVALID_CREDENTIALS',
+                        code: isGoogleOnly ? 'GOOGLE_ACCOUNT_NO_PASSWORD' : 'WRONG_PASSWORD',
                         error: isGoogleOnly
-                            ? "This account was created with Google Sign-In and doesn't have a password set yet. Use Continue with Google, or click Forgot password? to create a password."
-                            : genericCredError
+                            ? "This account was created with Google Sign-In and doesn't have a password set yet. Click Forgot password? or Sign in with Gmail code."
+                            : 'Incorrect password. Forgot it? Use Reset Password or Email Code.'
                     }));
                     return;
                 }
 
-                // Verify username matches the saved profile (also tolerates browser autofilling Gmail, dot-free Gmail local part,
-                // or display name on older accounts whose username was auto-generated from the Gmail prefix)
-                if (rawUsername) {
+                // Backward compatibility: if both email AND a distinct username were explicitly provided by older clients, verify they match
+                const accountCanon = account.canonicalEmail || canonicalizeEmail(account.email);
+                if (payload.email && payload.username && rawUsername && rawEmail) {
                     const emailLocal = account.email ? account.email.split('@')[0] : '';
-                    const canonicalLocal = canonical.split('@')[0] || '';
+                    const canonicalLocal = accountCanon.split('@')[0] || '';
                     const accountUsername = normalizeUsername(account.username || emailLocal);
                     const accountUsernameNoDots = accountUsername.replace(/\./g, '');
                     const enteredNoDots = normUsername.replace(/\./g, '');
-                    const enteredIsOwnEmail = rawUsername.includes('@') && canonicalizeEmail(rawUsername) === canonical;
+                    const enteredIsOwnEmail = rawUsername.includes('@') && canonicalizeEmail(rawUsername) === accountCanon;
                     const isAutoGeneratedUsername = accountUsername === normalizeUsername(emailLocal);
                     const accountDisplayNorm = normalizeUsername(account.name || '');
                     const matchesSavedUsername = Boolean(
@@ -710,30 +816,50 @@ module.exports = async function studentRosterHandler(req, res) {
                         (isAutoGeneratedUsername && normUsername && accountDisplayNorm && normUsername === accountDisplayNorm)
                     );
                     if (!matchesSavedUsername) {
+                        checkRateLimit(failBucketKey, 5, 10 * 60 * 1000);
                         console.info('[BPG Auth SIGN_IN] rejected', { reason: 'username_mismatch', userId: account.userId });
                         res.statusCode = 401;
                         res.end(JSON.stringify({
                             success: false,
                             code: 'INVALID_CREDENTIALS',
-                            error: genericCredError
+                            error: 'Username does not match this Gmail account. Try signing in with your Email or Username only.'
                         }));
                         return;
                     }
                 }
-                const sessionToken = issueStudentSessionToken(account, { keepSignedIn });
-                const mySwitchRequests = (roster.classSwitchRequests || []).filter(
-                    r => (r.userId && r.userId === account.userId) || canonicalizeEmail(r.email) === canonical
+
+                // Clear failed login counter on success
+                require('./_access-control').deleteOtpStoreEntry(`rl:${failBucketKey}`);
+
+                // Transparently upgrade any legacy plaintext password to scrypt$ + update device/session tracking
+                const newSessionId = generateSessionId();
+                const nowLoginIso = new Date().toISOString();
+                if (!String(account.passkey || '').startsWith('scrypt$')) {
+                    account.passkey = hashPassword(enteredPass);
+                    account.hasPassword = true;
+                }
+                account.activeSessionId = newSessionId;
+                account.lastLoginAt = nowLoginIso;
+                account.lastActiveAt = nowLoginIso;
+                account.deviceInfo = parseUserAgentDeviceInfo(req);
+                const savedRoster = writeRoster(roster);
+                const freshAccount = savedRoster.accounts.find(a => a.userId === account.userId || a.canonicalEmail === accountCanon) || account;
+
+                const sessionToken = issueStudentSessionToken(freshAccount, { keepSignedIn, sessionId: newSessionId });
+                res.setHeader('Set-Cookie', buildSessionCookieHeader(sessionToken, keepSignedIn, req));
+                const mySwitchRequests = (savedRoster.classSwitchRequests || []).filter(
+                    r => (r.userId && r.userId === freshAccount.userId) || canonicalizeEmail(r.email) === accountCanon
                 );
                 const myPayments = (Array.isArray(state.payments) ? state.payments : []).filter(
-                    p => (p.userId && p.userId === account.userId) || canonicalizeEmail(p.email) === canonical
+                    p => (p.userId && p.userId === freshAccount.userId) || canonicalizeEmail(p.email) === accountCanon
                 );
-                console.info('[BPG Auth SIGN_IN] success', { userId: account.userId, plan: account.plan });
+                console.info('[BPG Auth SIGN_IN] success', { userId: freshAccount.userId, plan: freshAccount.plan, device: freshAccount.deviceInfo });
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                     success: true,
                     sessionToken,
                     keepSignedIn,
-                    user: stripSensitiveAccountFields(account),
+                    user: stripSensitiveAccountFields(freshAccount),
                     mySwitchRequests,
                     myPayments
                 }));

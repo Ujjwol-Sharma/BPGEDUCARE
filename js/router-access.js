@@ -473,26 +473,38 @@ function closePlanComparisonModal() {
 }
 
 /* --------------------------------------------------------------------------
-   1B. SIGNED-IN SERVER-BACKED ESEWA + WHATSAPP CHECKOUT FLOW
+   1B. SIGNED-IN 3-STEP QR -> TRANSACTION CODE -> WHATSAPP CHECKOUT WIZARD
    -------------------------------------------------------------------------- */
 let activeCheckoutPlanId = 'gold';
 let activeCheckoutOrder = null;
+let activeCheckoutStep = 1;
+let activeCheckoutQrTab = 'esewa';
+let activeCheckoutQrUrls = {
+    esewa: 'images/payment_qr_esewa.jpg',
+    bank: 'images/payment_qr_bank.jpg',
+    bankName: 'Prime Commercial Bank Ltd. (Fonepay)',
+    whatsappNumber: '9779866064252'
+};
+let checkoutProofSubmitting = false;
 
 function formatPaymentStatusDisplay(status) {
     const s = String(status || '').trim().toLowerCase();
     if (s === 'paid' || s === 'verified' || s === 'complete' || s === 'confirmed') {
-        return { key: 'paid', label: 'Confirmed', color: '#16a34a', bg: 'rgba(22,163,74,0.12)', desc: 'Payment confirmed on server. Your Premium plan is active.' };
+        return { key: 'verified', label: 'Verified', color: '#16a34a', bg: 'rgba(22,163,74,0.12)', desc: 'Payment verified. Your membership is active.' };
     }
-    if (s === 'awaiting_confirmation' || s === 'awaiting') {
-        return { key: 'awaiting_confirmation', label: 'Pending', color: '#d97706', bg: 'rgba(217,119,6,0.14)', desc: 'Payment submitted and awaiting confirmation. Tap "Check Pending Status" to refresh without paying again.' };
+    if (s === 'pending' || s === 'awaiting_confirmation' || s === 'awaiting') {
+        return { key: 'pending', label: 'Pending Verification', color: '#d97706', bg: 'rgba(217,119,6,0.14)', desc: 'Payment proof saved and awaiting admin verification.' };
     }
     if (s === 'failed' || s === 'rejected' || s === 'unsuccessful') {
-        return { key: 'failed', label: 'Unsuccessful', color: '#dc2626', bg: 'rgba(220,38,38,0.12)', desc: 'Payment was unsuccessful or could not be matched. You can safely retry your payment.' };
+        return { key: 'rejected', label: 'Rejected', color: '#dc2626', bg: 'rgba(220,38,38,0.12)', desc: 'Payment could not be verified. Check the reason below and try again.' };
     }
     if (s === 'refunded') {
         return { key: 'refunded', label: 'Refunded', color: '#6366f1', bg: 'rgba(99,102,241,0.12)', desc: 'This payment was refunded and subscription access was adjusted.' };
     }
-    return { key: 'pending', label: 'Pending', color: '#b45309', bg: 'rgba(245,158,11,0.12)', desc: 'Order ready. Complete eSewa payment and submit your Transaction ID, or check pending status.' };
+    if (s === 'created') {
+        return { key: 'created', label: 'Awaiting Tx Code', color: '#6366f1', bg: 'rgba(99,102,241,0.12)', desc: 'Order created. Complete QR payment and enter your Transaction Code.' };
+    }
+    return { key: 'pending', label: 'Pending Verification', color: '#b45309', bg: 'rgba(245,158,11,0.12)', desc: 'Awaiting admin verification.' };
 }
 
 function formatPlanExpiryDateDisplay(iso) {
@@ -502,13 +514,115 @@ function formatPlanExpiryDateDisplay(iso) {
     return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-function buildPaymentRemarksText(session, planName, orderId = '') {
-    const fullName = session?.name || 'Student';
-    const className = session?.grade || getClassDisplayTitle(getStudentRegisteredClass());
-    const email = session?.email || '';
-    const username = session?.username || (email.includes('@') ? email.split('@')[0] : 'student');
-    const ordPart = orderId ? ` | Order: ${orderId}` : '';
-    return `Name: ${fullName} | Class: ${className} | Username: ${username} | Gmail: ${email} | Plan: ${planName}${ordPart}`;
+function copyTextWithFallback(text, successMsg = 'Copied to clipboard.') {
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); showToast(successMsg); } catch (e2) {}
+            ta.remove();
+        });
+    } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); showToast(successMsg); } catch (e2) {}
+        ta.remove();
+    }
+}
+
+function goToCheckoutStep(stepNum) {
+    activeCheckoutStep = Math.max(1, Math.min(3, Number(stepNum) || 1));
+    [1, 2, 3].forEach(n => {
+        const pane = document.getElementById(`checkoutStep${n}Pane`);
+        const pill = document.getElementById(`checkoutStepPill${n}`);
+        if (pane) pane.style.display = n === activeCheckoutStep ? 'block' : 'none';
+        if (pill) {
+            pill.classList.toggle('is-active', n === activeCheckoutStep);
+            pill.classList.toggle('is-done', n < activeCheckoutStep);
+        }
+    });
+    const errBox = document.getElementById('checkoutStep2Error');
+    if (errBox) errBox.style.display = 'none';
+    if (activeCheckoutStep === 2) {
+        const walletSel = document.getElementById('checkoutWalletSelect');
+        if (walletSel && activeCheckoutQrTab === 'bank' && walletSel.value === 'eSewa') {
+            walletSel.value = 'Fonepay / Mobile Banking';
+        }
+        setTimeout(() => document.getElementById('checkoutTransactionId')?.focus(), 60);
+    }
+}
+
+function switchCheckoutQrTab(tab = 'esewa') {
+    activeCheckoutQrTab = tab === 'bank' ? 'bank' : 'esewa';
+    const tabE = document.getElementById('qrTabEsewa');
+    const tabB = document.getElementById('qrTabBank');
+    const img = document.getElementById('checkoutActiveQrImg');
+    const cap = document.getElementById('checkoutQrCaption');
+
+    if (tabE) {
+        tabE.classList.toggle('active', activeCheckoutQrTab === 'esewa');
+        tabE.setAttribute('aria-selected', String(activeCheckoutQrTab === 'esewa'));
+    }
+    if (tabB) {
+        tabB.classList.toggle('active', activeCheckoutQrTab === 'bank');
+        tabB.setAttribute('aria-selected', String(activeCheckoutQrTab === 'bank'));
+    }
+    if (img) {
+        img.style.display = 'block';
+        img.src = activeCheckoutQrTab === 'bank' ? activeCheckoutQrUrls.bank : activeCheckoutQrUrls.esewa;
+    }
+    if (cap) {
+        cap.textContent = activeCheckoutQrTab === 'bank'
+            ? (activeCheckoutQrUrls.bankName || 'Prime Commercial Bank Ltd. (Fonepay)')
+            : 'eSewa · Bishnu Prasad Gautam (9866064252)';
+    }
+}
+
+function copyCheckoutOrderId() {
+    const oid = activeCheckoutOrder?.orderId || document.getElementById('checkoutShortOrderId')?.textContent || '';
+    if (!oid || oid === 'Generating...') return;
+    copyTextWithFallback(oid, `Order ID ${oid} copied!`);
+}
+
+function copyCheckoutWhatsappMessage() {
+    const msg = document.getElementById('checkoutWaMessagePreview')?.value || '';
+    copyTextWithFallback(msg, 'WhatsApp message copied!');
+}
+
+function updateCheckoutPricingDisplay(order) {
+    if (!order) return;
+    const priceEl = document.getElementById('checkoutPlanPriceLine');
+    const durEl = document.getElementById('checkoutPlanDurationLine');
+    const upgEl = document.getElementById('checkoutUpgradeNote');
+    const discEl = document.getElementById('checkoutDiscountSubline');
+    const oidEl = document.getElementById('checkoutShortOrderId');
+
+    const finalAmt = Number(order.finalAmount ?? order.expectedAmount ?? 0);
+    if (priceEl) priceEl.textContent = `Rs. ${finalAmt.toLocaleString()} (NPR)`;
+    if (durEl) durEl.textContent = order.planPeriod || 'Until NEB Final Exam';
+    if (oidEl) oidEl.textContent = order.orderId || '—';
+
+    if (upgEl) {
+        if (order.isUpgrade) {
+            upgEl.style.display = 'block';
+            upgEl.innerHTML = `<i class="fa-solid fa-sparkles" aria-hidden="true"></i> Padandas &rarr; Topper Upgrade: paying only the Rs. ${Number(order.baseAmount || finalAmt).toLocaleString()} difference!`;
+        } else {
+            upgEl.style.display = 'none';
+        }
+    }
+    if (discEl) {
+        if (Number(order.discountAmount) > 0 && order.promoCode) {
+            discEl.style.display = 'block';
+            discEl.textContent = `Promo ${order.promoCode}: -Rs. ${Number(order.discountAmount).toLocaleString()} applied`;
+        } else {
+            discEl.style.display = 'none';
+        }
+    }
 }
 
 async function openCheckoutModal(planId = 'gold') {
@@ -519,6 +633,7 @@ async function openCheckoutModal(planId = 'gold') {
     const normalized = (planId === 'diamond' || planId === 'gold') ? planId : 'gold';
     if (!isUserAuthenticated()) {
         window.pendingCheckoutPlan = normalized;
+        window.pendingAuthIntent = { type: 'checkout', planId: normalized };
         closePlanComparisonModal();
         openAuthModal('signin');
         showToast('Please sign in first to purchase a plan.');
@@ -528,51 +643,53 @@ async function openCheckoutModal(planId = 'gold') {
     activeCheckoutPlanId = normalized;
     activeCheckoutOrder = null;
     closePlanComparisonModal();
+    closeStudentProfileModal();
 
     const plans = typeof getPlansConfig === 'function' ? getPlansConfig() : {};
-    const cfg = plans[normalized] || { name: normalized, price: '' };
-    const session = getStoredStudentSession();
+    const cfg = plans[normalized] || { name: normalized === 'diamond' ? 'Topper' : 'Padandas', price: normalized === 'diamond' ? 'Rs. 2,999' : 'Rs. 1,999', period: 'Until NEB Final Exam' };
+    const currentPlan = getStudentPlan();
+    const isUpgPreview = currentPlan === 'gold' && normalized === 'diamond';
 
     const titleEl = document.getElementById('checkoutPlanTitle');
-    if (titleEl) titleEl.textContent = `Upgrade to ${cfg.name} Plan`;
+    if (titleEl) titleEl.textContent = isUpgPreview ? `Upgrade to ${cfg.name}` : `Buy ${cfg.name} Plan`;
     const priceEl = document.getElementById('checkoutPlanPriceLine');
-    if (priceEl) priceEl.textContent = `${cfg.price || '—'} (NPR)`;
+    if (priceEl) priceEl.textContent = isUpgPreview ? 'Rs. 1,000 (Upgrade Difference)' : `${cfg.price || '—'} (NPR)`;
     const durationEl = document.getElementById('checkoutPlanDurationLine');
-    if (durationEl) durationEl.textContent = cfg.period || '12 Months (Full Academic Year)';
+    if (durationEl) durationEl.textContent = cfg.period || 'Until NEB Final Exam';
 
-    const qrImg = document.getElementById('checkoutEsewaQrImg');
-    const rawQrUrl = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings?.esewaQrUrl)
-        ? ACADEMY_STATE.siteSettings.esewaQrUrl
-        : 'images/payment_qr.png';
-    const qrUrl = rawQrUrl.includes('payment_qr.png') && !rawQrUrl.includes('?')
-        ? `${rawQrUrl}?v=20261123qr2`
-        : rawQrUrl;
-    if (qrImg) {
-        qrImg.src = qrUrl;
-        qrImg.style.display = 'block';
-    }
+    const siteCfg = (typeof ACADEMY_STATE !== 'undefined' && ACADEMY_STATE?.siteSettings) ? ACADEMY_STATE.siteSettings : {};
+    activeCheckoutQrUrls = {
+        esewa: (siteCfg.esewaQrUrl && siteCfg.esewaQrUrl !== 'images/payment_qr.png') ? siteCfg.esewaQrUrl : 'images/payment_qr_esewa.jpg',
+        bank: siteCfg.bankQrUrl || 'images/payment_qr_bank.jpg',
+        bankName: siteCfg.bankName || 'Prime Commercial Bank Ltd. (Fonepay)',
+        whatsappNumber: siteCfg.whatsappNumber || '9779866064252'
+    };
+    const bankTabBtn = document.getElementById('qrTabBank');
+    if (bankTabBtn) bankTabBtn.style.display = activeCheckoutQrUrls.bank ? 'block' : 'none';
+    switchCheckoutQrTab('esewa');
 
-    const remarksEl = document.getElementById('checkoutRemarksPreview');
-    if (remarksEl) {
-        remarksEl.textContent = buildPaymentRemarksText(session, cfg.name);
-    }
-
-    const ordBadge = document.getElementById('checkoutServerOrderBadge');
-    if (ordBadge) ordBadge.textContent = 'Creating server order...';
-
+    const oidEl = document.getElementById('checkoutShortOrderId');
+    if (oidEl) oidEl.textContent = 'Generating...';
+    const promoIn = document.getElementById('checkoutPromoInput');
+    if (promoIn) promoIn.value = '';
+    const promoFb = document.getElementById('checkoutPromoFeedback');
+    if (promoFb) promoFb.style.display = 'none';
     const txnInput = document.getElementById('checkoutTransactionId');
     if (txnInput) txnInput.value = '';
-
+    const senderIn = document.getElementById('checkoutSenderInfo');
+    if (senderIn) senderIn.value = '';
     const statusBanner = document.getElementById('checkoutStatusBanner');
     if (statusBanner) statusBanner.style.display = 'none';
 
+    goToCheckoutStep(1);
     document.getElementById('checkoutModal')?.classList.add('open');
 
-    // Create authoritative server order using server plan price & currency (NPR)
+    // Create authoritative server order via POST /api/payments/create-order
     try {
         const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
-        const res = await fetch('/api/payments', {
+        const res = await fetch('/api/payments/create-order', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
             body: JSON.stringify({
                 action: 'CREATE_ORDER',
@@ -582,25 +699,169 @@ async function openCheckoutModal(planId = 'gold') {
         const data = await res.json();
         if (res.ok && data.ok && data.order) {
             activeCheckoutOrder = data.order;
-            if (ordBadge) {
-                ordBadge.textContent = `Order: ${data.order.orderId} · NPR ${Number(data.order.expectedAmount).toLocaleString()}`;
-            }
-            if (remarksEl) {
-                remarksEl.textContent = buildPaymentRemarksText(session, data.order.planName || cfg.name, data.order.orderId);
-            }
+            if (data.esewaQrUrl) activeCheckoutQrUrls.esewa = data.esewaQrUrl;
+            if (data.bankQrUrl !== undefined) activeCheckoutQrUrls.bank = data.bankQrUrl;
+            if (data.bankName) activeCheckoutQrUrls.bankName = data.bankName;
+            if (data.whatsappNumber) activeCheckoutQrUrls.whatsappNumber = data.whatsappNumber;
+            switchCheckoutQrTab(activeCheckoutQrTab);
+            updateCheckoutPricingDisplay(data.order);
             if (data.payment) {
-                const existingIdx = (window.MY_PAYMENTS || []).findIndex(p => p.id === data.payment.id);
+                const existingIdx = (window.MY_PAYMENTS || []).findIndex(p => p.id === data.payment.id || p.orderId === data.payment.orderId);
                 if (existingIdx >= 0) window.MY_PAYMENTS[existingIdx] = data.payment;
                 else window.MY_PAYMENTS = [data.payment, ...(window.MY_PAYMENTS || [])];
-                renderStudentDashboardPaymentBanner();
-                refreshOpenCheckoutStatusLive();
             }
-            if (typeof broadcastStudentMutation === 'function') {
-                broadcastStudentMutation('PAYMENT_UPDATED', { orderId: data.order.orderId, status: data.payment?.status || 'pending' });
-            }
+        } else {
+            if (oidEl) oidEl.textContent = 'Unavailable';
+            showToast(data.error || 'Could not create payment order.');
         }
     } catch (e) {
-        if (ordBadge) ordBadge.textContent = '';
+        if (oidEl) oidEl.textContent = 'Retry needed';
+        showToast('Network error creating order. Please try again.');
+    }
+}
+
+async function applyCheckoutPromoCode() {
+    const code = (document.getElementById('checkoutPromoInput')?.value || '').trim().toUpperCase();
+    const fb = document.getElementById('checkoutPromoFeedback');
+    const btn = document.getElementById('btnApplyPromo');
+    if (!code) {
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.color = '#dc2626';
+            fb.textContent = 'Enter a promo code first.';
+        }
+        return;
+    }
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/payments/validate-promo', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'VALIDATE_PROMO',
+                planId: activeCheckoutPlanId,
+                orderId: activeCheckoutOrder?.orderId || '',
+                promoCode: code
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+            if (fb) {
+                fb.style.display = 'block';
+                fb.style.color = '#dc2626';
+                fb.textContent = data.error || 'Invalid promo code.';
+            }
+            return;
+        }
+        if (data.pricing && activeCheckoutOrder) {
+            activeCheckoutOrder.baseAmount = data.pricing.baseAmount;
+            activeCheckoutOrder.discountAmount = data.pricing.discountAmount;
+            activeCheckoutOrder.promoCode = data.pricing.promoCode;
+            activeCheckoutOrder.finalAmount = data.pricing.finalAmount;
+            activeCheckoutOrder.expectedAmount = data.pricing.finalAmount;
+            updateCheckoutPricingDisplay(activeCheckoutOrder);
+        }
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.color = '#16a34a';
+            fb.textContent = data.message || 'Promo code applied!';
+        }
+    } catch (e) {
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.color = '#dc2626';
+            fb.textContent = 'Could not validate promo code right now.';
+        }
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Apply'; }
+    }
+}
+
+async function submitCheckoutPaymentProof(e) {
+    if (e) e.preventDefault();
+    if (checkoutProofSubmitting) return;
+    if (isMaintenanceModeActive()) {
+        showMaintenanceLockNotice();
+        return;
+    }
+
+    const txInput = document.getElementById('checkoutTransactionId');
+    const txCode = String(txInput?.value || '').trim().toUpperCase().replace(/\s+/g, '');
+    if (txInput) txInput.value = txCode;
+    const wallet = document.getElementById('checkoutWalletSelect')?.value || 'eSewa';
+    const senderInfo = (document.getElementById('checkoutSenderInfo')?.value || '').trim();
+    const promoCode = (document.getElementById('checkoutPromoInput')?.value || '').trim().toUpperCase();
+    const errBox = document.getElementById('checkoutStep2Error');
+    if (errBox) errBox.style.display = 'none';
+
+    if (!txCode || txCode.length < 4 || txCode.length > 50) {
+        const msg = 'Transaction Code must be between 4 and 50 characters.';
+        if (errBox) { errBox.textContent = msg; errBox.style.display = 'block'; }
+        txInput?.focus();
+        return;
+    }
+
+    checkoutProofSubmitting = true;
+    const btn = document.getElementById('btnCheckoutSubmitProof');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Saving order...';
+    }
+
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        const res = await fetch('/api/payments/submit-proof', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({
+                action: 'SUBMIT_PROOF',
+                orderId: activeCheckoutOrder?.orderId || '',
+                planId: activeCheckoutPlanId,
+                txCode,
+                wallet,
+                senderInfo,
+                promoCode
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+            const errMsg = data.error || 'Could not save payment proof. Please verify your Transaction Code.';
+            if (errBox) { errBox.textContent = errMsg; errBox.style.display = 'block'; }
+            showToast(errMsg);
+            return;
+        }
+
+        if (data.payment) {
+            activeCheckoutOrder = Object.assign({}, activeCheckoutOrder || {}, data.payment);
+            const idx = (window.MY_PAYMENTS || []).findIndex(p => p.id === data.payment.id || p.orderId === data.payment.orderId);
+            if (idx >= 0) window.MY_PAYMENTS[idx] = data.payment;
+            else window.MY_PAYMENTS = [data.payment, ...(window.MY_PAYMENTS || [])];
+        }
+
+        const waPreview = document.getElementById('checkoutWaMessagePreview');
+        if (waPreview) waPreview.value = data.whatsappMessage || '';
+        const waBtn = document.getElementById('btnOpenWhatsappSend');
+        if (waBtn) waBtn.href = data.whatsappUrl || `https://wa.me/${activeCheckoutQrUrls.whatsappNumber}?text=${encodeURIComponent(data.whatsappMessage || '')}`;
+
+        renderStudentDashboardPaymentBanner();
+        if (typeof broadcastStudentMutation === 'function') {
+            broadcastStudentMutation('PAYMENT_UPDATED', { orderId: data.payment?.orderId || '', status: 'pending' });
+        }
+        goToCheckoutStep(3);
+        showToast('Order saved! Tap Open WhatsApp & Send Message.');
+    } catch (err) {
+        const msg = 'Network error saving payment proof. Please try again.';
+        if (errBox) { errBox.textContent = msg; errBox.style.display = 'block'; }
+        showToast(msg);
+    } finally {
+        checkoutProofSubmitting = false;
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = 'Save &amp; Prepare WhatsApp Message &rarr;';
+        }
     }
 }
 
@@ -612,8 +873,8 @@ function refreshOpenCheckoutStatusLive() {
     const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
     const match = activeCheckoutOrder
         ? myPays.find(p => p.orderId === activeCheckoutOrder.orderId || p.id === activeCheckoutOrder.paymentId)
-        : myPays[0];
-    if (!match) return;
+        : null;
+    if (!match || match.status === 'created') return;
 
     const st = formatPaymentStatusDisplay(match.status);
     statusBanner.style.display = 'block';
@@ -624,7 +885,7 @@ function refreshOpenCheckoutStatusLive() {
             <strong style="color:${st.color};">Status: ${escapeHtml ? escapeHtml(st.label) : st.label}</strong>
             <code style="font-size:0.76rem;">${escapeHtml ? escapeHtml(match.orderId || match.id) : (match.orderId || match.id)}</code>
         </div>
-        <p style="margin:0; font-size:0.83rem;">${escapeHtml ? escapeHtml(st.desc) : st.desc}</p>
+        <p style="margin:0; font-size:0.82rem;">${escapeHtml ? escapeHtml(match.rejectionReason || st.desc) : (match.rejectionReason || st.desc)}</p>
     `;
 }
 
@@ -632,90 +893,8 @@ function closeCheckoutModal() {
     document.getElementById('checkoutModal')?.classList.remove('open');
 }
 
-async function copyPaymentRemarks() {
-    const remarksEl = document.getElementById('checkoutRemarksPreview');
-    const text = remarksEl ? remarksEl.textContent : '';
-    if (!text) return;
-    try {
-        await navigator.clipboard.writeText(text);
-        showToast('Payment remarks copied to clipboard.');
-    } catch (e) {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); showToast('Payment remarks copied.'); } catch (e2) {}
-        ta.remove();
-    }
-}
-
-async function submitStaticEsewaPayment() {
-    if (isMaintenanceModeActive()) {
-        showMaintenanceLockNotice();
-        return;
-    }
-    const session = getStoredStudentSession();
-    if (!session || !session.email) {
-        openAuthModal('signin');
-        return;
-    }
-
-    const transactionId = (document.getElementById('checkoutTransactionId')?.value || '').trim();
-    const btn = document.getElementById('btnCheckoutWhatsappConfirm');
-    const statusBanner = document.getElementById('checkoutStatusBanner');
-
-    if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting for confirmation...';
-    }
-
-    try {
-        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
-        const res = await fetch('/api/payments', {
-            method: 'POST',
-            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
-            body: JSON.stringify({
-                action: 'CREATE_PAYMENT',
-                orderId: activeCheckoutOrder?.orderId || '',
-                planId: activeCheckoutPlanId,
-                transactionId
-            })
-        });
-        const data = await res.json();
-        if (!res.ok || !data.ok) {
-            throw new Error(data.error || 'Could not record payment.');
-        }
-
-        if (data.order) activeCheckoutOrder = data.order;
-        if (data.payment) {
-            const idx = (window.MY_PAYMENTS || []).findIndex(p => p.id === data.payment.id || p.orderId === data.payment.orderId);
-            if (idx >= 0) window.MY_PAYMENTS[idx] = data.payment;
-            else window.MY_PAYMENTS = [data.payment, ...(window.MY_PAYMENTS || [])];
-        }
-
-        refreshOpenCheckoutStatusLive();
-        renderStudentDashboardPaymentBanner();
-
-        if (typeof broadcastStudentMutation === 'function') {
-            broadcastStudentMutation('PAYMENT_UPDATED', {
-                orderId: data.payment?.orderId || '',
-                transactionId,
-                status: data.payment?.status || 'awaiting_confirmation'
-            });
-        }
-
-        if (data.whatsappUrl) {
-            window.open(data.whatsappUrl, '_blank', 'noopener');
-        }
-        showToast('Payment reference submitted — Awaiting confirmation.');
-    } catch (err) {
-        showToast(err.message || 'Could not submit payment.');
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-lock" aria-hidden="true" style="margin-right:6px;"></i> Pay Now &amp; Confirm via eSewa / WhatsApp';
-        }
-    }
+function submitStaticEsewaPayment() {
+    return submitCheckoutPaymentProof(null);
 }
 
 async function checkStudentPendingPaymentStatus(orderId = '', triggerBtn = null) {
@@ -900,48 +1079,58 @@ function renderStudentProfileModalContent() {
     const body = document.getElementById('studentProfileModalBody');
     if (!body) return;
     const session = getStoredStudentSession() || {};
-    const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
+    const myPays = (Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : []).filter(p => p && p.status !== 'created');
     const latestPay = myPays[0] || null;
-    const latestConfirmedPay = myPays.find(p => String(p.status || '').toLowerCase() === 'paid' || String(p.status || '').toLowerCase() === 'verified') || null;
+    const latestConfirmedPay = myPays.find(p => {
+        const s = String(p.status || '').toLowerCase();
+        return s === 'paid' || s === 'verified';
+    }) || null;
     const payDisplay = latestPay
         ? formatPaymentStatusDisplay(latestPay.status)
         : (session.plan && session.plan !== 'free'
-            ? formatPaymentStatusDisplay('paid')
+            ? formatPaymentStatusDisplay('verified')
             : { label: 'Free Plan', color: 'var(--text-secondary)', bg: 'var(--surface-soft)' });
 
-    const planName = String(session.plan || 'free').toLowerCase();
+    const planKey = String(session.plan || 'free').toLowerCase();
+    const friendlyPlan = formatPlanLabel(planKey);
     const expiryIso = session.planExpiresAt || (latestConfirmedPay && latestConfirmedPay.expiresAt) || '';
-    const expiryLabel = planName === 'free'
-        ? 'No active subscription'
-        : (formatPlanExpiryDateDisplay(expiryIso) || 'Active (Academic Year)');
+    const expiryLabel = planKey === 'free'
+        ? 'No active paid plan'
+        : (formatPlanExpiryDateDisplay(expiryIso) || 'Until NEB Final Exam');
 
     const safeEsc = (v) => (typeof escapeHtml === 'function' ? escapeHtml(v) : String(v || ''));
+
+    const upgradeBtnHtml = planKey === 'gold'
+        ? `<button type="button" class="btn btn-primary" onclick="closeStudentProfileModal(); openCheckoutModal('diamond');" style="padding:8px 14px; font-size:0.82rem;">
+                <i class="fa-solid fa-gem" aria-hidden="true" style="margin-right:5px;"></i> Upgrade to Topper &mdash; Pay Rs. 1,000
+           </button>`
+        : `<button type="button" class="btn btn-primary" onclick="closeStudentProfileModal(); openPlanComparisonModal('', '');" style="padding:8px 14px; font-size:0.82rem;">
+                <i class="fa-solid fa-crown" aria-hidden="true" style="margin-right:5px;"></i> ${planKey === 'diamond' ? 'View Plans' : 'Upgrade Plan'}
+           </button>`;
 
     body.innerHTML = `
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; padding:14px; border-radius:12px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-soft, #e5e7eb); margin-bottom:14px; font-size:0.82rem;">
             <div>
-                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Current Plan</div>
-                <strong style="text-transform:uppercase; font-size:0.95rem; color:${planName === 'free' ? 'var(--text-primary)' : '#16a34a'};">${safeEsc(planName)}</strong>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Active Plan</div>
+                <strong style="font-size:0.98rem; color:${planKey === 'free' ? 'var(--text-primary)' : '#16a34a'};">${safeEsc(friendlyPlan)}</strong>
             </div>
             <div>
-                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Plan Expiry</div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Class Scope</div>
+                <strong>${safeEsc(session.grade || 'Class 12')}</strong>
+            </div>
+            <div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Valid Until</div>
                 <strong>${safeEsc(expiryLabel)}</strong>
             </div>
             <div>
-                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Payment Status</div>
+                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Latest Order</div>
                 <strong style="color:${payDisplay.color};">${safeEsc(payDisplay.label)}</strong>
-            </div>
-            <div>
-                <div style="color:var(--text-secondary); font-size:0.72rem; text-transform:uppercase;">Member ID</div>
-                <code style="font-weight:700;">${safeEsc(session.userId || 'Assigned')}</code>
             </div>
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
-            <small style="color:var(--text-secondary);">Active Class: <strong>${safeEsc(session.grade || 'Class 12')}</strong> &middot; Account: <strong>${safeEsc((session.accountStatus || 'active').replace('_', ' '))}</strong></small>
-            <button type="button" class="btn btn-primary" onclick="closeStudentProfileModal(); openPlanComparisonModal('', '');" style="padding:7px 14px; font-size:0.82rem;">
-                <i class="fa-solid fa-crown" aria-hidden="true" style="margin-right:5px;"></i> ${planName === 'diamond' ? 'Renew / View Plans' : 'Upgrade Plan'}
-            </button>
+            <small style="color:var(--text-secondary);">Member ID: <code>${safeEsc(session.userId || 'Assigned')}</code></small>
+            ${upgradeBtnHtml}
         </div>
 
         <form onsubmit="handleStudentProfileSave(event)" style="margin-bottom:18px; padding-top:12px; border-top:1px solid var(--border-soft, #e5e7eb);">
@@ -956,55 +1145,60 @@ function renderStudentProfileModalContent() {
                 </div>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-                <small style="color:var(--text-secondary);">Gmail: <strong>${safeEsc(session.email || '')}</strong></small>
+                <small style="color:var(--text-secondary);">Email: <strong>${safeEsc(session.email || '')}</strong></small>
                 <button type="submit" class="btn btn-secondary" id="btnSaveStudentProfile" style="padding:7px 14px; font-size:0.82rem;">
                     Save Profile
                 </button>
             </div>
         </form>
 
-        <h4 style="font-size:0.94rem; margin:0 0 8px 0;">Payment History (${myPays.length})</h4>
+        <h4 style="font-size:0.94rem; margin:0 0 8px 0;">Submitted Orders &amp; Verified Receipts (${myPays.length})</h4>
         ${myPays.length === 0 ? `
-            <div style="padding:12px; border:1px dashed var(--border-soft); border-radius:8px; font-size:0.83rem; color:var(--text-secondary);">
-                No payment orders yet. Click <strong>Upgrade Plan</strong> above to choose Gold or Diamond.
+            <div style="padding:14px; border:1px dashed var(--border-soft); border-radius:10px; font-size:0.83rem; color:var(--text-secondary);">
+                No submitted payment orders yet. Click <strong>Upgrade Plan</strong> above to choose Padandas or Topper.
             </div>
         ` : `
-            <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:10px;">
+            <div style="max-height:240px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:10px;">
                 <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
                     <thead>
                         <tr style="background:var(--surface-soft); text-align:left;">
-                            <th style="padding:8px 10px;">Order / Plan</th>
-                            <th style="padding:8px 10px;">Amount</th>
-                            <th style="padding:8px 10px;">Reference</th>
-                            <th style="padding:8px 10px;">Status &amp; Expiry</th>
+                            <th style="padding:8px 10px;">Order &amp; Plan</th>
+                            <th style="padding:8px 10px;">Amount &amp; Method</th>
+                            <th style="padding:8px 10px;">Tx Code</th>
+                            <th style="padding:8px 10px;">Status</th>
                             <th style="padding:8px 10px;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${myPays.map(p => {
                             const st = formatPaymentStatusDisplay(p.status);
-                            const isPending = st.key === 'pending' || st.key === 'awaiting_confirmation';
-                            const isFailed = st.key === 'failed';
+                            const isVerified = st.key === 'verified';
+                            const isRejected = st.key === 'rejected';
                             const ordEsc = safeEsc(p.orderId || p.id);
-                            const expText = p.expiresAt ? formatPlanExpiryDateDisplay(p.expiresAt) : '';
+                            const planLbl = safeEsc(p.planLabel || p.planName || formatPlanLabel(p.planKey || p.planId));
+                            const txVal = safeEsc(p.txCode || p.transactionId || '—');
+                            const reasonText = isRejected && (p.rejectionReason || p.adminNote) ? safeEsc(p.rejectionReason || p.adminNote) : '';
                             return `
                                 <tr style="border-top:1px solid var(--border-soft);">
                                     <td style="padding:8px 10px;">
-                                        <strong>${safeEsc(p.planName || p.planId)}</strong><br>
+                                        <strong>${planLbl}</strong>${p.isUpgrade ? ' <small style="color:#16a34a;">(Upgrade)</small>' : ''}<br>
                                         <code style="font-size:0.72rem;">${ordEsc}</code>
                                     </td>
-                                    <td style="padding:8px 10px;">${safeEsc(p.amount)}</td>
-                                    <td style="padding:8px 10px;"><code>${safeEsc(p.transactionId || '—')}</code></td>
                                     <td style="padding:8px 10px;">
-                                        <span style="padding:2px 8px; border-radius:999px; font-weight:600; font-size:0.74rem; color:${st.color}; background:${st.bg};">
+                                        <strong>${safeEsc(p.amount)}</strong><br>
+                                        <small style="color:var(--text-secondary);">${safeEsc(p.wallet || p.method || 'eSewa')}</small>
+                                    </td>
+                                    <td style="padding:8px 10px;"><code>${txVal}</code></td>
+                                    <td style="padding:8px 10px;">
+                                        <span style="padding:2px 8px; border-radius:999px; font-weight:600; font-size:0.73rem; color:${st.color}; background:${st.bg}; display:inline-block;">
                                             ${safeEsc(st.label)}
                                         </span>
-                                        ${expText ? `<div style="font-size:0.71rem; color:var(--text-secondary); margin-top:3px;">Exp: ${safeEsc(expText)}</div>` : ''}
+                                        ${reasonText ? `<div style="font-size:0.72rem; color:#dc2626; margin-top:4px; max-width:170px;">Reason: ${reasonText}</div>` : ''}
                                     </td>
                                     <td style="padding:8px 10px;">
-                                        ${isPending ? `<button type="button" class="btn btn-secondary" style="padding:4px 8px; font-size:0.72rem;" onclick="checkStudentPendingPaymentStatus('${ordEsc}', this)">Check Status</button>` : ''}
-                                        ${isFailed ? `<button type="button" class="btn btn-primary" style="padding:4px 8px; font-size:0.72rem;" onclick="closeStudentProfileModal(); openCheckoutModal('${safeEsc(p.planId || 'gold')}')">Retry</button>` : ''}
-                                        ${(!isPending && !isFailed) ? '<span style="color:var(--text-secondary); font-size:0.75rem;">—</span>' : ''}
+                                        ${isVerified ? `<button type="button" class="btn btn-primary" style="padding:4px 9px; font-size:0.72rem;" onclick="openPaymentReceiptModal('${ordEsc}')"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Receipt</button>` : ''}
+                                        ${isRejected ? `<button type="button" class="btn btn-secondary" style="padding:4px 9px; font-size:0.72rem;" onclick="closeStudentProfileModal(); openCheckoutModal('${safeEsc(p.planKey || p.planId || 'gold')}')">Resubmit</button>` : ''}
+                                        ${(!isVerified && !isRejected) ? `<span style="font-size:0.73rem; color:var(--text-secondary);">In Review</span>` : ''}
                                     </td>
                                 </tr>
                             `;
@@ -1014,6 +1208,69 @@ function renderStudentProfileModalContent() {
             </div>
         `}
     `;
+}
+
+function openPaymentReceiptModal(orderId) {
+    const myPays = Array.isArray(window.MY_PAYMENTS) ? window.MY_PAYMENTS : [];
+    const p = myPays.find(x => (x.orderId === orderId || x.id === orderId));
+    const body = document.getElementById('receiptModalBody');
+    if (!p || !body) return;
+    const safeEsc = (v) => (typeof escapeHtml === 'function' ? escapeHtml(v) : String(v || ''));
+    const verifiedDate = (p.verifiedAt || p.reviewedAt || p.updatedAt || p.createdAt)
+        ? new Date(p.verifiedAt || p.reviewedAt || p.updatedAt || p.createdAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
+        : '—';
+    const expiryDate = p.expiresAt ? formatPlanExpiryDateDisplay(p.expiresAt) : 'Until NEB Final Exam';
+
+    body.innerHTML = `
+        <div class="receipt-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding-bottom:14px; border-bottom:1px solid var(--border-subtle); margin-bottom:14px;">
+                <div>
+                    <strong style="font-size:1.12rem; display:block;" id="receiptModalTitle">BPG EDUCARE</strong>
+                    <small style="color:var(--text-secondary);">Official Verified Membership Receipt</small>
+                </div>
+                <span style="padding:4px 10px; border-radius:999px; background:rgba(22,163,74,0.14); color:#16a34a; font-weight:700; font-size:0.76rem;">
+                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i> VERIFIED
+                </span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; font-size:0.84rem; margin-bottom:16px;">
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Order ID</div><code><strong>${safeEsc(p.orderId || p.id)}</strong></code></div>
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Verified Date</div><strong>${safeEsc(verifiedDate)}</strong></div>
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Student Name</div><strong>${safeEsc(p.studentName || p.fullName || 'Student')}</strong></div>
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Class</div><strong>${safeEsc(p.className || p.classKey || 'Class 12')}</strong></div>
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Plan</div><strong>${safeEsc(p.planLabel || p.planName || formatPlanLabel(p.planKey || p.planId))}</strong></div>
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Valid Until</div><strong>${safeEsc(expiryDate)}</strong></div>
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Payment Method</div><strong>${safeEsc(p.wallet || p.method || 'eSewa')}</strong></div>
+                <div><div style="font-size:0.72rem; color:var(--text-secondary);">Transaction Code</div><code><strong>${safeEsc(p.txCode || p.transactionId || '—')}</strong></code></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-radius:10px; background:var(--surface-soft); border:1px solid var(--border-subtle); margin-bottom:16px;">
+                <span style="font-size:0.86rem; font-weight:600;">Total Amount Paid (NPR)</span>
+                <strong style="font-size:1.15rem; color:#16a34a;">${safeEsc(p.amount || ('Rs. ' + Number(p.finalAmount || p.expectedAmount || 0).toLocaleString()))}</strong>
+            </div>
+
+            <div class="receipt-no-print" style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+                <button type="button" class="btn btn-secondary" onclick="closeReceiptModal()" style="padding:8px 14px; font-size:0.84rem;">Close</button>
+                <button type="button" class="btn btn-primary" onclick="printPaymentReceipt()" style="padding:8px 16px; font-size:0.84rem;">
+                    <i class="fa-solid fa-print" aria-hidden="true"></i> Print / Save Receipt
+                </button>
+            </div>
+        </div>
+    `;
+    document.getElementById('receiptModal')?.classList.add('open');
+}
+
+function closeReceiptModal() {
+    document.getElementById('receiptModal')?.classList.remove('open');
+}
+
+function printPaymentReceipt() {
+    document.body.classList.add('bpg-printing-receipt');
+    try {
+        window.print();
+    } finally {
+        setTimeout(() => document.body.classList.remove('bpg-printing-receipt'), 500);
+    }
 }
 
 async function handleStudentProfileSave(e) {
@@ -1131,6 +1388,7 @@ function openMyWorkspaceTab(tabKey) {
         return;
     }
     if (!isUserAuthenticated()) {
+        window.pendingAuthIntent = { type: 'tab', tabKey: tabKey || 'notes' };
         openAuthModal('signin');
         return;
     }
@@ -1562,7 +1820,20 @@ function closeUserDropdown() {
     document.getElementById('userDropdownMenu')?.classList.remove('open');
 }
 
-function handleSignOut() {
+async function handleSignOut() {
+    const current = getStoredStudentSession();
+    if (current && current.email && typeof saveRememberedLastAccount === 'function') {
+        saveRememberedLastAccount(current.email, current.name || '');
+    }
+    try {
+        const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
+        await fetch('/api/student-roster', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
+            body: JSON.stringify({ action: 'SIGN_OUT' })
+        });
+    } catch (e) {}
     handleSignOutSilent();
     showToast('Signed out of BPG EDUCARE');
 }

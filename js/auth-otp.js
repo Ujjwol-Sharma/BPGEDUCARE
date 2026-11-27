@@ -1,10 +1,66 @@
 /* BPG Academy — Gmail-Unique Auth, Password Reset & OTP Engine (js/auth-otp.js) */
 
 var BPG_ACCOUNTS_KEY = window.BPG_ACCOUNTS_KEY || 'bpg_maths_academy_accounts_v2';
+const BPG_LAST_LOGIN_ACCT_KEY = 'bpg_last_login_account_v1';
 let authRequestInFlight = false;
 
-// Clean up any legacy remembered-email key (saved-email option removed by policy)
-try { localStorage.removeItem('bpg_remembered_email_v1'); } catch (e) {}
+function saveRememberedLastAccount(identifier, studentName = '') {
+    try {
+        const cleanId = String(identifier || '').trim();
+        if (!cleanId) return;
+        localStorage.setItem(BPG_LAST_LOGIN_ACCT_KEY, JSON.stringify({
+            identifier: cleanId,
+            name: String(studentName || '').trim(),
+            savedAt: Date.now()
+        }));
+    } catch (e) {}
+}
+
+function getRememberedLastAccount() {
+    try {
+        const raw = localStorage.getItem(BPG_LAST_LOGIN_ACCT_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed && parsed.identifier ? parsed : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function renderRememberedLastAccountCard() {
+    const card = document.getElementById('authRememberedCard');
+    const emailInput = document.getElementById('signinEmail');
+    if (!card) return;
+    const saved = getRememberedLastAccount();
+    if (!saved || !saved.identifier) {
+        card.style.display = 'none';
+        return;
+    }
+    const avatar = document.getElementById('authRememberedAvatar');
+    const greet = document.getElementById('authRememberedGreeting');
+    const idEl = document.getElementById('authRememberedIdentifier');
+    const labelName = saved.name || saved.identifier.split('@')[0] || 'Student';
+    if (avatar) avatar.textContent = labelName.charAt(0).toUpperCase();
+    if (greet) greet.textContent = saved.name ? `Welcome back, ${saved.name}` : 'Welcome back';
+    if (idEl) idEl.textContent = saved.identifier;
+    if (emailInput && !emailInput.value) {
+        emailInput.value = saved.identifier;
+    }
+    card.style.display = 'flex';
+}
+
+function clearRememberedLastAccount() {
+    try { localStorage.removeItem(BPG_LAST_LOGIN_ACCT_KEY); } catch (e) {}
+    const card = document.getElementById('authRememberedCard');
+    if (card) card.style.display = 'none';
+    const emailInput = document.getElementById('signinEmail');
+    if (emailInput) {
+        emailInput.value = '';
+        emailInput.focus();
+    }
+    const pwdInput = document.getElementById('signinPassword');
+    if (pwdInput) pwdInput.value = '';
+}
 
 function togglePasswordVisibility(inputId, btnEl) {
     const input = document.getElementById(inputId);
@@ -123,6 +179,9 @@ function openAuthModal(initialTab = 'signin', targetClass = null) {
 
     clearAuthInlineAlerts();
     switchAuthTab(initialTab);
+    if (initialTab === 'signin') {
+        renderRememberedLastAccountCard();
+    }
     modal.classList.add('open');
 }
 
@@ -165,7 +224,7 @@ function startOtpExpiryTimer(expiresAt) {
             otpExpiryInterval = null;
             if (verifyBtn) verifyBtn.disabled = true;
             if (errBanner) {
-                errBanner.innerHTML = '<p style="margin:0;">Verification code expired after 5 minutes. Please click <strong>Resend Verification Code</strong>.</p>';
+                errBanner.innerHTML = '<p style="margin:0;">Verification code expired after 10 minutes. Please click <strong>Resend Verification Code</strong>.</p>';
                 errBanner.style.display = 'block';
             }
         } else if (verifyBtn) {
@@ -176,9 +235,9 @@ function startOtpExpiryTimer(expiresAt) {
     otpExpiryInterval = setInterval(update, 1000);
 }
 
-function startResendCooldown(seconds = 30) {
+function startResendCooldown(seconds = 60) {
     if (otpResendInterval) clearInterval(otpResendInterval);
-    otpResendRemaining = Math.max(0, Math.ceil(Number(seconds) || 30));
+    otpResendRemaining = Math.max(0, Math.ceil(Number(seconds) || 60));
     const resendBtn = document.getElementById('btnResendOtp');
 
     const update = () => {
@@ -224,19 +283,39 @@ function switchAuthTab(tab) {
 
     clearAuthInlineAlerts();
 
-    if (signInPane) signInPane.style.display = tab === 'signin' ? 'block' : 'none';
-    if (step1Pane) step1Pane.style.display = tab === 'signup' ? 'block' : 'none';
-    if (googlePane) googlePane.style.display = tab === 'google' ? 'block' : 'none';
-    if (resetPane) resetPane.style.display = tab === 'reset' ? 'block' : 'none';
-    if (step2Pane) step2Pane.style.display = 'none';
+    if (signInPane) {
+        signInPane.style.display = tab === 'signin' ? 'block' : 'none';
+        signInPane.classList.toggle('active', tab === 'signin');
+    }
+    if (step1Pane) {
+        step1Pane.style.display = tab === 'signup' ? 'block' : 'none';
+        step1Pane.classList.toggle('active', tab === 'signup');
+    }
+    if (googlePane) {
+        googlePane.style.display = tab === 'google' ? 'block' : 'none';
+        googlePane.classList.toggle('active', tab === 'google');
+    }
+    if (resetPane) {
+        resetPane.style.display = tab === 'reset' ? 'block' : 'none';
+        resetPane.classList.toggle('active', tab === 'reset');
+    }
+    if (step2Pane) {
+        step2Pane.style.display = 'none';
+        step2Pane.classList.remove('active');
+    }
 
     if (tabSignIn) {
-        tabSignIn.classList.toggle('active', tab === 'signin' || tab === 'reset' || tab === 'google');
-        tabSignIn.setAttribute('aria-selected', String(tab === 'signin'));
+        const signInActive = tab === 'signin' || tab === 'reset' || tab === 'google';
+        tabSignIn.classList.toggle('active', signInActive);
+        tabSignIn.setAttribute('aria-selected', String(signInActive));
     }
     if (tabSignUp) {
-        tabSignUp.classList.toggle('active', tab === 'signup');
-        tabSignUp.setAttribute('aria-selected', String(tab === 'signup'));
+        const signUpActive = tab === 'signup';
+        tabSignUp.classList.toggle('active', signUpActive);
+        tabSignUp.setAttribute('aria-selected', String(signUpActive));
+    }
+    if (tab === 'signin') {
+        renderRememberedLastAccountCard();
     }
 }
 
@@ -250,10 +329,11 @@ function getConfiguredGoogleClientId() {
 }
 
 function syncGoogleOAuthButtonsVisibility() {
+    const hasGoogle = Boolean(getConfiguredGoogleClientId());
     const signInWrap = document.getElementById('googleOAuthSignInWrap');
     const signUpWrap = document.getElementById('googleOAuthSignUpWrap');
-    if (signInWrap) signInWrap.style.display = 'block';
-    if (signUpWrap) signUpWrap.style.display = 'block';
+    if (signInWrap) signInWrap.style.display = hasGoogle ? 'block' : 'none';
+    if (signUpWrap) signUpWrap.style.display = hasGoogle ? 'block' : 'none';
 }
 
 function getSelectedSignupGradeForGoogle() {
@@ -382,11 +462,11 @@ function handleGoogleAuthClick(mode = 'signin') {
     const clientId = getConfiguredGoogleClientId();
 
     if (!clientId) {
-        openInteractiveGoogleChooser(mode);
+        showToast('Google Sign-In is unavailable. Please sign in with your Email/Username and Password or 6-digit Gmail code.');
         return;
     }
 
-    // 1. Primary: Official Google OAuth 2.0 Account Chooser Popup Window
+    // Official Google OAuth 2.0 Account Chooser Popup Window
     if (window.google?.accounts?.oauth2?.initTokenClient) {
         try {
             const tokenClient = window.google.accounts.oauth2.initTokenClient({
@@ -408,8 +488,7 @@ function handleGoogleAuthClick(mode = 'signin') {
         } catch (e) {}
     }
 
-    // 2. Fallback: Interactive Google Account Chooser
-    openInteractiveGoogleChooser(mode);
+    showToast('Google Sign-In popup could not open. Please try again or use Gmail code.');
 }
 
 function openOfficialGoogleButtonPane(clientId) {
@@ -483,8 +562,9 @@ async function handleGmailOtpSubmit(e) {
             grade,
             password: '',
             mode: 'gmail_otp',
+            keepSignedIn: document.getElementById('gmailOtpKeepSignedIn')?.checked !== false,
             otpToken: data.otpToken || '',
-            expiresAt: data.expiresAt || (Date.now() + 5 * 60 * 1000)
+            expiresAt: data.expiresAt || (Date.now() + 10 * 60 * 1000)
         };
 
         document.getElementById('googleLocalChooserContainer').style.display = 'none';
@@ -496,7 +576,7 @@ async function handleGmailOtpSubmit(e) {
         if (otpErr) otpErr.style.display = 'none';
 
         startOtpExpiryTimer(pendingOtpSession.expiresAt);
-        startResendCooldown(data.cooldownSeconds || 30);
+        startResendCooldown(data.cooldownSeconds || 60);
 
         clearOtpDigitBoxes();
         setTimeout(() => document.getElementById('otpDigit0')?.focus(), 80);
@@ -582,20 +662,15 @@ async function handleSignInSubmit(e) {
     if (e) e.preventDefault();
     if (authRequestInFlight) return;
 
-    const username = (document.getElementById('signinUsername')?.value || '').trim().replace(/^@+/, '');
-    const email = (document.getElementById('signinEmail')?.value || '').trim().toLowerCase();
+    const identifier = (document.getElementById('signinEmail')?.value || '').trim();
     const password = String(document.getElementById('signinPassword')?.value || '');
+    const keepSignedIn = document.getElementById('signinKeepSignedIn')?.checked !== false;
     const errBanner = document.getElementById('signinErrorBanner');
 
     if (errBanner) errBanner.style.display = 'none';
 
-    if (!username) {
-        showToast('Please enter your username.');
-        document.getElementById('signinUsername')?.focus();
-        return;
-    }
-    if (!email) {
-        showToast('Please enter your Gmail address.');
+    if (!identifier) {
+        showToast('Please enter your email address or username.');
         document.getElementById('signinEmail')?.focus();
         return;
     }
@@ -615,15 +690,23 @@ async function handleSignInSubmit(e) {
     try {
         const res = await fetch('/api/student-roster', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'SIGN_IN', username, email, password, keepSignedIn: true })
+            body: JSON.stringify({
+                action: 'SIGN_IN',
+                identifier,
+                email: identifier.includes('@') ? identifier.toLowerCase() : undefined,
+                username: !identifier.includes('@') ? identifier.replace(/^@+/, '') : undefined,
+                password,
+                keepSignedIn
+            })
         });
 
         let data = {};
         try { data = await res.json(); } catch (parseErr) {}
 
         if (res.status >= 500) {
-            const msg = 'Temporary server issue while signing in. Your credentials may be fine — please try again in a moment.';
+            const msg = 'Temporary server issue while signing in. Please try again in a moment.';
             if (errBanner) {
                 errBanner.innerHTML = `<p style="margin:0;">${msg}</p>`;
                 errBanner.style.display = 'block';
@@ -633,15 +716,15 @@ async function handleSignInSubmit(e) {
         }
 
         if (!res.ok || !data.success) {
-            const msg = data.error || "We couldn't sign you in with that username, Gmail, and password.";
+            const msg = data.error || 'Incorrect credentials. Please check your email/username and password.';
             if (errBanner) {
-                const isVerifyPending = data.code === 'EMAIL_NOT_VERIFIED';
-                errBanner.innerHTML = `
-                    <p style="margin:0${isVerifyPending ? ' 0 8px 0' : ''};">${msg}</p>
-                    ${isVerifyPending ? `
-                        <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem;" onclick="openGmailOtpPane()">Verify with Gmail code</button>
-                    ` : ''}
-                `;
+                let extraAction = '';
+                if (data.code === 'EMAIL_NOT_VERIFIED') {
+                    extraAction = `<button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem; margin-top:8px;" onclick="openGmailOtpPane()">Verify with Gmail code</button>`;
+                } else if (data.code === 'ACCOUNT_NOT_FOUND') {
+                    extraAction = `<button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.78rem; margin-top:8px;" onclick="switchAuthTab('signup')">Create Account &rarr;</button>`;
+                }
+                errBanner.innerHTML = `<p style="margin:0;">${msg}</p>${extraAction}`;
                 errBanner.style.display = 'block';
             }
             showToast(msg);
@@ -656,12 +739,13 @@ async function handleSignInSubmit(e) {
         }
         const user = Object.assign({}, data.user, {
             sessionToken: data.sessionToken,
-            keepSignedIn: true,
+            keepSignedIn,
             verified: true
         });
+        saveRememberedLastAccount(user.email || identifier, user.name || '');
         await finalizeVerifiedStudentAccount(user, false, true);
     } catch (err) {
-        const netMsg = 'Could not reach the server. Check your internet connection and try again — your password was not rejected.';
+        const netMsg = 'Connection issue. Please check your internet and try again.';
         if (errBanner) {
             errBanner.innerHTML = `<p style="margin:0;">${netMsg}</p>`;
             errBanner.style.display = 'block';
@@ -687,12 +771,35 @@ function clearOtpDigitBoxes() {
     }
 }
 
+function maybeAutoSubmitOtpBoxes() {
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+        code += (document.getElementById(`otpDigit${i}`)?.value || '').trim();
+    }
+    if (/^\d{6}$/.test(code) && !authRequestInFlight) {
+        setTimeout(() => {
+            if (!authRequestInFlight) handleVerifyEmailOtp(null);
+        }, 60);
+    }
+}
+
 function handleOtpBoxInput(idx, inputEl) {
-    const val = inputEl.value.replace(/\D/g, '');
-    inputEl.value = val.slice(-1);
+    const rawDigits = String(inputEl.value || '').replace(/\D/g, '');
+    if (rawDigits.length > 1) {
+        // Support mobile SMS autofill or multi-digit paste directly into any box
+        for (let i = 0; i < 6; i++) {
+            const box = document.getElementById(`otpDigit${i}`);
+            if (box) box.value = rawDigits[i] || '';
+        }
+        document.getElementById(`otpDigit${Math.min(5, rawDigits.length - 1)}`)?.focus();
+        maybeAutoSubmitOtpBoxes();
+        return;
+    }
+    inputEl.value = rawDigits.slice(-1);
     if (inputEl.value && idx < 5) {
         document.getElementById(`otpDigit${idx + 1}`)?.focus();
     }
+    maybeAutoSubmitOtpBoxes();
 }
 
 function handleOtpBoxKeydown(idx, e) {
@@ -797,8 +904,9 @@ async function handleRequestEmailOtp(e) {
             grade,
             password,
             mode: 'signup',
+            keepSignedIn: document.getElementById('signupKeepSignedIn')?.checked !== false,
             otpToken: data.otpToken || '',
-            expiresAt: data.expiresAt || (Date.now() + 5 * 60 * 1000)
+            expiresAt: data.expiresAt || (Date.now() + 10 * 60 * 1000)
         };
 
         document.getElementById('otpStep1Container').style.display = 'none';
@@ -810,7 +918,7 @@ async function handleRequestEmailOtp(e) {
         if (otpErr) otpErr.style.display = 'none';
 
         startOtpExpiryTimer(pendingOtpSession.expiresAt);
-        startResendCooldown(data.cooldownSeconds || 30);
+        startResendCooldown(data.cooldownSeconds || 60);
 
         clearOtpDigitBoxes();
         setTimeout(() => document.getElementById('otpDigit0')?.focus(), 80);
@@ -877,8 +985,9 @@ async function handleRequestPasswordResetOtp(e) {
             grade: '',
             password: newPassword,
             mode: 'reset',
+            keepSignedIn: true,
             otpToken: data.otpToken || '',
-            expiresAt: data.expiresAt || (Date.now() + 5 * 60 * 1000)
+            expiresAt: data.expiresAt || (Date.now() + 10 * 60 * 1000)
         };
 
         document.getElementById('authResetContainer').style.display = 'none';
@@ -892,7 +1001,7 @@ async function handleRequestPasswordResetOtp(e) {
         if (otpErr) otpErr.style.display = 'none';
 
         startOtpExpiryTimer(pendingOtpSession.expiresAt);
-        startResendCooldown(data.cooldownSeconds || 30);
+        startResendCooldown(data.cooldownSeconds || 60);
 
         clearOtpDigitBoxes();
         setTimeout(() => document.getElementById('otpDigit0')?.focus(), 80);
@@ -923,7 +1032,8 @@ function resendEmailOtpCode() {
 }
 
 async function handleVerifyEmailOtp(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    if (authRequestInFlight) return;
     const errBanner = document.getElementById('otpVerifyErrorBanner');
     if (errBanner) errBanner.style.display = 'none';
 
@@ -942,6 +1052,7 @@ async function handleVerifyEmailOtp(e) {
         return;
     }
 
+    authRequestInFlight = true;
     const btn = document.getElementById('btnVerifyOtpSubmit');
     if (btn) {
         btn.disabled = true;
@@ -951,6 +1062,7 @@ async function handleVerifyEmailOtp(e) {
     try {
         const res = await fetch('/api/verify-otp', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 name: pendingOtpSession.name,
@@ -959,6 +1071,7 @@ async function handleVerifyEmailOtp(e) {
                 grade: pendingOtpSession.grade,
                 newPassword: pendingOtpSession.password,
                 mode: pendingOtpSession.mode || 'signup',
+                keepSignedIn: pendingOtpSession.keepSignedIn !== false,
                 otp: enteredOtp,
                 otpToken: pendingOtpSession.otpToken
             })
@@ -994,8 +1107,10 @@ async function handleVerifyEmailOtp(e) {
         }
         const user = Object.assign({}, data.user, {
             sessionToken: data.sessionToken,
+            keepSignedIn: pendingOtpSession.keepSignedIn !== false,
             verified: true
         });
+        saveRememberedLastAccount(user.email || pendingOtpSession.email, user.name || '');
         await finalizeVerifiedStudentAccount(user, false, true);
     } catch (err) {
         const msg = 'Verification error. Please check your 6-digit code.';
@@ -1005,6 +1120,7 @@ async function handleVerifyEmailOtp(e) {
         }
         showToast(msg);
     } finally {
+        authRequestInFlight = false;
         if (btn) {
             btn.disabled = false;
             btn.textContent = 'Verify & Activate Account';
@@ -1078,6 +1194,25 @@ async function finalizeVerifiedStudentAccount(userObj, shouldPostToRoster = fals
         window.pendingCheckoutPlan = null;
         openCheckoutModal(planToBuy);
         return;
+    }
+
+    // Smart Intent Resume (open specific tab/lesson/mock test user clicked while signed out)
+    if (window.pendingAuthIntent && typeof window.pendingAuthIntent === 'object') {
+        const intent = window.pendingAuthIntent;
+        window.pendingAuthIntent = null;
+        if (intent.type === 'tab' && typeof openMyWorkspaceTab === 'function') {
+            openMyWorkspaceTab(intent.tabKey || 'notes');
+            return;
+        }
+        if (intent.type === 'lesson' && typeof openNotesLesson === 'function') {
+            openMyWorkspaceTab('notes');
+            openNotesLesson(intent.classKey || normKey, intent.lessonId);
+            return;
+        }
+        if (intent.type === 'checkout' && typeof openCheckoutModal === 'function') {
+            openCheckoutModal(intent.planId || 'gold');
+            return;
+        }
     }
 
     // Redirect to user's class dashboard after verification or when a target class was selected

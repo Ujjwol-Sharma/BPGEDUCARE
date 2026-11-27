@@ -8,22 +8,22 @@ async function syncRosterPermissionsFromServer() {
         const authHeaders = typeof getStudentAuthHeaders === 'function' ? getStudentAuthHeaders() : {};
         const session = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
 
-        if (!session || !session.sessionToken) {
-            return;
-        }
-
-        const meRes = await fetch('/api/student-roster?me=1&_t=' + Date.now(), {
+        const meRes = await fetch('/api/auth/session?_t=' + Date.now(), {
             cache: 'no-store',
+            credentials: 'same-origin',
             headers: authHeaders
         });
         if (meRes.status === 401) {
-            if (typeof handleSignOutSilent === 'function') handleSignOutSilent();
+            if (session && typeof handleSignOutSilent === 'function') handleSignOutSilent();
             return;
         }
         if (meRes.ok) {
             const meJson = await meRes.json();
             if (meJson.sessionRevoked === true) {
                 if (typeof handleSignOutSilent === 'function') handleSignOutSilent();
+                if (meJson.sessionReplaced && typeof showToast === 'function') {
+                    showToast(meJson.error || 'You were signed out because your account logged in on another device.');
+                }
                 return;
             }
             if (Array.isArray(meJson.mySwitchRequests)) {
@@ -34,19 +34,48 @@ async function syncRosterPermissionsFromServer() {
             }
             if (meJson.account) {
                 const match = meJson.account;
+                // Restore session seamlessly from HttpOnly 30-day cookie even if localStorage was cleared!
+                if (!session) {
+                    const restored = {
+                        userId: match.userId || '',
+                        name: match.name || 'Student',
+                        username: match.username || (match.email || '').split('@')[0] || 'student',
+                        email: match.email || '',
+                        grade: match.grade || 'Class 12',
+                        classKey: normalizeClassKey(match.grade || match.classKey),
+                        plan: (match.plan || 'free').toLowerCase(),
+                        planExpiresAt: match.planExpiresAt || '',
+                        paymentStatus: match.paymentStatus || (match.plan && match.plan !== 'free' ? 'paid' : 'none'),
+                        accountStatus: match.accountStatus || 'active',
+                        legacyAccess: Boolean(match.legacyAccess),
+                        planExplicitlySet: Boolean(match.planExplicitlySet),
+                        readNotificationIds: Array.isArray(match.readNotificationIds) ? match.readNotificationIds : [],
+                        sessionToken: meJson.sessionToken || 'cookie-session',
+                        keepSignedIn: true,
+                        verified: true
+                    };
+                    if (typeof saveStoredStudentSession === 'function') {
+                        saveStoredStudentSession(restored, true);
+                    }
+                    updateAuthUserPill();
+                    syncWithServerDatabase(false);
+                    return;
+                }
                 const gradeChanged = match.grade && match.grade !== session.grade;
                 const planChanged = match.plan && match.plan !== session.plan;
                 const expiryChanged = (match.planExpiresAt || '') !== (session.planExpiresAt || '');
                 const usernameChanged = match.username && match.username !== session.username;
+                const tokenRefreshed = Boolean(meJson.sessionToken && meJson.sessionToken !== session.sessionToken);
                 const legacyChanged = Boolean(match.legacyAccess) !== Boolean(session.legacyAccess);
 
-                if (gradeChanged || planChanged || expiryChanged || usernameChanged || legacyChanged) {
+                if (gradeChanged || planChanged || expiryChanged || usernameChanged || tokenRefreshed || legacyChanged) {
                     session.grade = match.grade || session.grade;
                     session.classKey = normalizeClassKey(session.grade);
                     session.username = match.username || session.username;
                     session.plan = match.plan || 'free';
                     session.planExpiresAt = match.planExpiresAt || '';
                     session.paymentStatus = match.paymentStatus || (session.plan !== 'free' ? 'paid' : 'none');
+                    if (meJson.sessionToken) session.sessionToken = meJson.sessionToken;
                     session.legacyAccess = Boolean(match.legacyAccess);
                     session.planExplicitlySet = Boolean(match.planExplicitlySet);
                     if (typeof saveStoredStudentSession === 'function') {
@@ -109,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 150);
 
-    // 6-digit OTP box paste support
+    // 6-digit OTP box paste support (auto-submits when 6 digits pasted!)
     document.getElementById('otpBoxesWrap')?.addEventListener('paste', e => {
         const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
         if (pasted.length > 0) {
@@ -119,6 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (box) box.value = pasted[i] || '';
             }
             document.getElementById(`otpDigit${Math.min(5, pasted.length - 1)}`)?.focus();
+            if (pasted.length === 6 && typeof maybeAutoSubmitOtpBoxes === 'function') {
+                maybeAutoSubmitOtpBoxes();
+            }
         }
     });
 
@@ -189,8 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial Unified Database, Member Profile & Payment Hydration on Load
-    syncWithServerDatabase(false).then(() => {
+    // Initial Unified Database, Persistent Cookie Session & Payment Hydration on Load (Zero-Flicker Auto-Restore)
+    syncRosterPermissionsFromServer().then(() => {
+        return syncWithServerDatabase(false);
+    }).then(() => {
+        if (typeof syncGoogleOAuthButtonsVisibility === 'function') syncGoogleOAuthButtonsVisibility();
         if (typeof renderHeaderNotificationsBell === 'function') renderHeaderNotificationsBell();
         if (typeof handleGatewayPaymentReturn === 'function') {
             handleGatewayPaymentReturn();

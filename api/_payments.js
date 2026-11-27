@@ -81,7 +81,99 @@ function parsePlanNumericPrice(priceStr, planId = 'gold') {
         const val = parseFloat(m[0]);
         if (Number.isFinite(val) && val > 0) return val;
     }
-    return planId === 'diamond' ? 2999 : 1499;
+    return planId === 'diamond' ? 2999 : 1999;
+}
+
+function getPlanFriendlyLabel(state, planId) {
+    const pid = normalizePlan(planId);
+    const cfgName = String(state?.plansConfig?.[pid]?.name || '').trim();
+    if (cfgName && cfgName.toLowerCase() !== 'gold' && cfgName.toLowerCase() !== 'diamond') return cfgName;
+    if (pid === 'diamond') return 'Topper';
+    if (pid === 'gold') return 'Padandas';
+    return 'Free';
+}
+
+function generateReadableOrderId(existingPayments = []) {
+    const year = new Date().getFullYear();
+    const prefix = `BPG-${year}-`;
+    let maxSeq = 100;
+    for (const p of (existingPayments || [])) {
+        const oid = String(p?.orderId || '');
+        if (oid.startsWith(prefix)) {
+            const num = parseInt(oid.slice(prefix.length), 10);
+            if (Number.isFinite(num) && num > maxSeq) maxSeq = num;
+        }
+    }
+    let nextSeq = maxSeq + 1;
+    let candidate = `${prefix}${String(nextSeq).padStart(5, '0')}`;
+    const existingSet = new Set((existingPayments || []).map(p => String(p?.orderId || '')));
+    while (existingSet.has(candidate)) {
+        nextSeq += 1;
+        candidate = `${prefix}${String(nextSeq).padStart(5, '0')}`;
+    }
+    return candidate;
+}
+
+function validatePromoCodeServer(state, rawCode, planId, baseAmount) {
+    const code = String(rawCode || '').trim().toUpperCase();
+    if (!code) {
+        return { applied: false, code: '', discountAmount: 0, finalAmount: baseAmount, message: '' };
+    }
+    const list = Array.isArray(state?.siteSettings?.promoCodes) ? state.siteSettings.promoCodes : [];
+    const promo = list.find(p => p && String(p.code || '').trim().toUpperCase() === code);
+    if (!promo || promo.active === false) {
+        return { applied: false, invalid: true, code, discountAmount: 0, finalAmount: baseAmount, message: `Promo code "${code}" is invalid or inactive.` };
+    }
+    if (promo.expiresAt && Date.now() > Date.parse(promo.expiresAt)) {
+        return { applied: false, invalid: true, code, discountAmount: 0, finalAmount: baseAmount, message: `Promo code "${code}" has expired.` };
+    }
+    const targetPlan = String(promo.planKey || 'all').toLowerCase();
+    if (targetPlan !== 'all' && targetPlan !== normalizePlan(planId)) {
+        return { applied: false, invalid: true, code, discountAmount: 0, finalAmount: baseAmount, message: `Promo code "${code}" does not apply to this plan.` };
+    }
+    const val = Math.max(0, Number(promo.value) || 0);
+    const type = String(promo.type || 'flat').toLowerCase();
+    let discountAmount = type === 'percent'
+        ? Math.round((baseAmount * Math.min(100, val)) / 100)
+        : Math.round(val);
+    discountAmount = Math.max(0, Math.min(baseAmount, discountAmount));
+    const finalAmount = Math.max(0, baseAmount - discountAmount);
+    return {
+        applied: true,
+        invalid: false,
+        code,
+        discountAmount,
+        finalAmount,
+        message: `Promo "${code}" applied: -Rs. ${discountAmount.toLocaleString()}`
+    };
+}
+
+function computeServerOrderPricing(state, user, planId, promoCode = '') {
+    const targetPlan = normalizePlan(planId || 'gold');
+    const goldCfg = state.plansConfig?.gold || { name: 'Padandas', price: 'Rs. 1,999', period: 'Until NEB Final Exam' };
+    const diamondCfg = state.plansConfig?.diamond || { name: 'Topper', price: 'Rs. 2,999', period: 'Until NEB Final Exam' };
+    const goldPrice = parsePlanNumericPrice(goldCfg.price, 'gold');
+    const diamondPrice = parsePlanNumericPrice(diamondCfg.price, 'diamond');
+    const currentPlan = normalizePlan(user?.plan || 'free');
+    const isUpgrade = currentPlan === 'gold' && targetPlan === 'diamond';
+    const fullPrice = targetPlan === 'diamond' ? diamondPrice : goldPrice;
+    const baseAmount = isUpgrade ? Math.max(0, diamondPrice - goldPrice) : fullPrice;
+    const promo = validatePromoCodeServer(state, promoCode, targetPlan, baseAmount);
+    const planLabel = getPlanFriendlyLabel(state, targetPlan);
+    const planPeriod = String((targetPlan === 'diamond' ? diamondCfg.period : goldCfg.period) || 'Until NEB Final Exam');
+    return {
+        planKey: targetPlan,
+        planLabel,
+        planPeriod,
+        currentPlan,
+        isUpgrade,
+        fullPrice,
+        baseAmount,
+        discountAmount: promo.applied ? promo.discountAmount : 0,
+        promoCode: promo.applied ? promo.code : '',
+        promoResult: promo,
+        finalAmount: promo.applied ? promo.finalAmount : baseAmount
+    };
 }
 
 function signServerOrder({ orderId, userId, planId, expectedAmount, currency = 'NPR' }) {
@@ -127,19 +219,27 @@ function verifyEsewaV2EncodedData(encodedData, secretKey) {
     }
 }
 
-function buildWhatsappConfirmMessage({ fullName, className, username, email, planName, amount, orderId, transactionId }) {
-    return [
-        "Hello, I've paid via eSewa and would like to confirm my plan purchase.",
+function buildWhatsappConfirmMessage({ fullName, className, username, email, planName, amount, orderId, transactionId, wallet, senderInfo }) {
+    const cleanAmt = String(amount || '').replace(/^Rs\.?\s*/i, '').trim() || '0';
+    const lines = [
+        'Namaste BPG Sir,',
+        'I have completed my membership payment on BPG EDUCARE.',
         '',
-        `Name: ${fullName || 'Student'}`,
-        `Class: ${className || 'Class 12'}`,
-        `Username: ${username || 'student'}`,
-        `Gmail: ${email || ''}`,
-        `Selected plan: ${planName || 'Gold'}`,
-        `Amount paid: ${amount || ''}`,
         `Order ID: ${orderId || ''}`,
-        `eSewa transaction ID: ${transactionId || 'Not provided'}`
-    ].join('\n');
+        `Student Name: ${fullName || 'Student'}`,
+        `Username: ${username || 'student'}`,
+        `Email: ${email || ''}`,
+        `Class: ${className || 'Class 12'}`,
+        `Plan: ${planName || 'Padandas'}`,
+        `Amount Paid: Rs. ${cleanAmt}`,
+        `Payment Method: ${wallet || 'eSewa'}`,
+        `Transaction Code: ${transactionId || 'Not provided'}`
+    ];
+    if (senderInfo && String(senderInfo).trim()) {
+        lines.push(`Paid From: ${String(senderInfo).trim()}`);
+    }
+    lines.push('', 'Please verify and activate my account. Thank you!');
+    return lines.join('\n');
 }
 
 function buildWhatsappUrl(whatsappNumber, messageText) {
@@ -501,12 +601,81 @@ module.exports = async function paymentsHandler(req, res) {
         return;
     }
 
-    const action = String(body.action || '').toUpperCase();
+    const parsedReqUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+    const cleanPayPath = parsedReqUrl.pathname.replace(/^\/api\//, '').replace(/\/+$/, '');
+    let inferredAction = String(body.action || parsedReqUrl.searchParams.get('__action') || '').trim().toUpperCase();
+    let routeOrderId = String(parsedReqUrl.searchParams.get('orderId') || '').trim();
+    if (!inferredAction) {
+        if (cleanPayPath === 'payments/create-order') inferredAction = 'CREATE_ORDER';
+        else if (cleanPayPath === 'payments/validate-promo') inferredAction = 'VALIDATE_PROMO';
+        else if (cleanPayPath === 'payments/submit-proof') inferredAction = 'SUBMIT_PROOF';
+        else {
+            const mApprove = cleanPayPath.match(/^admin\/payments\/([^/]+)\/approve$/i);
+            const mReject = cleanPayPath.match(/^admin\/payments\/([^/]+)\/reject$/i);
+            if (mApprove) { inferredAction = 'ADMIN_APPROVE_ORDER'; routeOrderId = decodeURIComponent(mApprove[1]); }
+            else if (mReject) { inferredAction = 'ADMIN_REJECT_ORDER'; routeOrderId = decodeURIComponent(mReject[1]); }
+        }
+    }
+    const action = inferredAction;
     const whatsappNumber = state.siteSettings?.whatsappNumber || '9779866064252';
-    const esewaQrUrl = state.siteSettings?.esewaQrUrl || 'images/payment_qr.png';
+    const esewaQrUrl = state.siteSettings?.esewaQrUrl || 'images/payment_qr_esewa.jpg';
+    const bankQrUrl = state.siteSettings?.bankQrUrl || 'images/payment_qr_bank.jpg';
+    const bankName = state.siteSettings?.bankName || 'Prime Commercial Bank Ltd. (Fonepay)';
 
     // -------------------------------------------------------------------------
-    // 1. CREATE_ORDER / CREATE_PAYMENT (Server-authoritative pricing & currency)
+    // 0. VALIDATE_PROMO (Server-side promo calculation for Step 1)
+    // -------------------------------------------------------------------------
+    if (action === 'VALIDATE_PROMO') {
+        const user = resolveRequestUser(req);
+        if (!user || !user.email) {
+            res.statusCode = 401;
+            res.end(JSON.stringify({ ok: false, error: 'Please sign in first.' }));
+            return;
+        }
+        const planId = normalizePlan(body.planId || body.planKey || 'gold');
+        if (planId === 'free') {
+            res.statusCode = 400;
+            res.end(JSON.stringify({ ok: false, error: 'Please select Padandas or Topper plan.' }));
+            return;
+        }
+        const pricing = computeServerOrderPricing(state, user, planId, body.promoCode || '');
+        if (body.promoCode && pricing.promoResult.invalid) {
+            res.statusCode = 400;
+            res.end(JSON.stringify({
+                ok: false,
+                valid: false,
+                error: pricing.promoResult.message,
+                pricing
+            }));
+            return;
+        }
+        // If orderId was passed, also update the open created order's promo/finalAmount server-side
+        const openOrderId = String(body.orderId || '').trim();
+        if (openOrderId) {
+            const ord = state.payments.find(p => (p.orderId === openOrderId || p.id === openOrderId) && (p.userId === user.userId || p.canonicalEmail === canonicalizeEmail(user.email)));
+            if (ord && (ord.status === 'created' || ord.status === 'pending')) {
+                ord.baseAmount = pricing.baseAmount;
+                ord.discountAmount = pricing.discountAmount;
+                ord.promoCode = pricing.promoCode;
+                ord.finalAmount = pricing.finalAmount;
+                ord.expectedAmount = pricing.finalAmount;
+                ord.amount = `Rs. ${pricing.finalAmount.toLocaleString()}`;
+                ord.updatedAt = new Date().toISOString();
+                writeStateToDisk(state);
+            }
+        }
+        res.statusCode = 200;
+        res.end(JSON.stringify({
+            ok: true,
+            valid: Boolean(pricing.promoResult.applied || !body.promoCode),
+            message: pricing.promoResult.message || 'Price updated.',
+            pricing
+        }));
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    // 1. CREATE_ORDER / CREATE_PAYMENT (Server-authoritative pricing, upgrade diff & BPG-YYYY-XXXXX)
     // -------------------------------------------------------------------------
     if (action === 'CREATE_ORDER' || action === 'CREATE_PAYMENT') {
         const user = resolveRequestUser(req);
@@ -516,22 +685,18 @@ module.exports = async function paymentsHandler(req, res) {
             return;
         }
 
-        const planId = normalizePlan(body.planId || 'gold');
+        const planId = normalizePlan(body.planId || body.planKey || 'gold');
         if (planId === 'free') {
             res.statusCode = 400;
-            res.end(JSON.stringify({ ok: false, error: 'Please select Gold or Diamond plan to purchase.' }));
+            res.end(JSON.stringify({ ok: false, error: 'Please select Padandas or Topper plan to purchase.' }));
             return;
         }
 
-        // Server-authoritative plan pricing & currency
-        const planCfg = state.plansConfig?.[planId] || {
-            name: planId === 'diamond' ? 'Diamond' : 'Gold',
-            price: planId === 'diamond' ? 'Rs. 2,999' : 'Rs. 1,499'
-        };
-        const planName = String(planCfg.name || planId);
-        const expectedAmount = parsePlanNumericPrice(planCfg.price, planId);
+        const pricing = computeServerOrderPricing(state, user, planId, body.promoCode || '');
+        const planName = pricing.planLabel;
+        const expectedAmount = pricing.finalAmount;
         const currency = 'NPR';
-        const formattedAmount = planCfg.price || `Rs. ${expectedAmount.toLocaleString()}`;
+        const formattedAmount = `Rs. ${expectedAmount.toLocaleString()}`;
 
         const email = String(user.email).trim().toLowerCase();
         const canonical = canonicalizeEmail(email);
@@ -540,7 +705,9 @@ module.exports = async function paymentsHandler(req, res) {
         const classKey = gradeToClassKey(user.classKey || user.grade);
         const className = normalizeGradeName(classKey);
         const username = String(user.username || email.split('@')[0] || 'student').trim();
-        const transactionId = String(body.transactionId || '').trim();
+        const transactionId = String(body.transactionId || body.txCode || '').trim().toUpperCase();
+        const wallet = String(body.wallet || body.method || 'eSewa').trim();
+        const senderInfo = String(body.senderInfo || '').trim();
         const clientOrderId = String(body.orderId || '').trim();
 
         // Idempotency check: reuse existing order if matching orderId or non-empty transactionId exists
@@ -550,15 +717,18 @@ module.exports = async function paymentsHandler(req, res) {
         }
         if (!existingPayment && transactionId) {
             existingPayment = state.payments.find(
-                p => p.transactionId && p.transactionId.toLowerCase() === transactionId.toLowerCase()
+                p => {
+                    const pTx = String(p.txCode || p.transactionId || '').trim().toUpperCase();
+                    const pSt = normalizePaymentStatusValue(p.status);
+                    return pTx && pTx === transactionId && (pSt === 'pending' || pSt === 'awaiting_confirmation' || pSt === 'paid');
+                }
             );
-            // Prevent another user from claiming someone else's already verified transaction ID
             if (existingPayment && existingPayment.canonicalEmail !== canonical) {
                 res.statusCode = 409;
                 res.end(JSON.stringify({
                     ok: false,
                     code: 'DUPLICATE_TRANSACTION_ID',
-                    error: 'This eSewa transaction ID has already been submitted by another account.'
+                    error: 'This Transaction Code has already been submitted in another pending or verified order.'
                 }));
                 return;
             }
@@ -566,18 +736,20 @@ module.exports = async function paymentsHandler(req, res) {
 
         const roster = readRoster();
         if (existingPayment) {
-            // Update transactionId if student is submitting a reference for their open order
-            if (transactionId && !existingPayment.transactionId) {
+            if (transactionId && !existingPayment.txCode) {
+                existingPayment.txCode = transactionId;
                 existingPayment.transactionId = transactionId;
             }
-            if (action === 'CREATE_PAYMENT' && existingPayment.status === 'pending' && transactionId) {
+            if (wallet) existingPayment.wallet = wallet;
+            if (senderInfo) existingPayment.senderInfo = senderInfo;
+            if (action === 'CREATE_PAYMENT' && (existingPayment.status === 'created' || existingPayment.status === 'pending') && transactionId) {
                 applyPaymentLifecycleTransition({
                     state,
                     roster,
                     payment: existingPayment,
-                    nextStatus: 'awaiting_confirmation',
+                    nextStatus: 'pending',
                     actor: `${fullName} (Student)`,
-                    note: 'eSewa transaction submitted; awaiting server/admin confirmation.',
+                    note: `Transaction code ${transactionId} (${wallet}) submitted for admin verification.`,
                     transactionId
                 });
             } else {
@@ -590,10 +762,12 @@ module.exports = async function paymentsHandler(req, res) {
                 className,
                 username,
                 email,
-                planName: existingPayment.planName,
+                planName: existingPayment.planLabel || existingPayment.planName,
                 amount: existingPayment.amount,
                 orderId: existingPayment.orderId,
-                transactionId: existingPayment.transactionId
+                transactionId: existingPayment.txCode || existingPayment.transactionId,
+                wallet: existingPayment.wallet || wallet,
+                senderInfo: existingPayment.senderInfo || senderInfo
             });
 
             res.statusCode = 200;
@@ -606,70 +780,91 @@ module.exports = async function paymentsHandler(req, res) {
                     paymentId: existingPayment.id,
                     userId: existingPayment.userId,
                     planId: existingPayment.planId,
-                    planName: existingPayment.planName,
-                    expectedAmount: existingPayment.expectedAmount,
+                    planKey: existingPayment.planKey || existingPayment.planId,
+                    planName: existingPayment.planLabel || existingPayment.planName,
+                    planLabel: existingPayment.planLabel || existingPayment.planName,
+                    planPeriod: pricing.planPeriod,
+                    isUpgrade: Boolean(existingPayment.isUpgrade),
+                    baseAmount: Number(existingPayment.baseAmount ?? existingPayment.expectedAmount),
+                    discountAmount: Number(existingPayment.discountAmount || 0),
+                    promoCode: existingPayment.promoCode || '',
+                    finalAmount: Number(existingPayment.finalAmount ?? existingPayment.expectedAmount),
+                    expectedAmount: Number(existingPayment.finalAmount ?? existingPayment.expectedAmount),
                     currency: existingPayment.currency || 'NPR',
-                    orderSignature: existingPayment.orderSignature,
-                    esewaForm: {
-                        amount: existingPayment.expectedAmount,
-                        tax_amount: 0,
-                        total_amount: existingPayment.expectedAmount,
-                        transaction_uuid: existingPayment.orderId,
-                        product_code: esewaCfg.merchantCode,
-                        signed_field_names: 'total_amount,transaction_uuid,product_code',
-                        signature: signEsewaV2Payload(existingPayment.expectedAmount, existingPayment.orderId, esewaCfg.merchantCode, esewaCfg.secretKey)
-                    }
+                    durationDays: Number(existingPayment.durationDays || 365),
+                    orderSignature: existingPayment.orderSignature
                 },
                 whatsappNumber,
                 whatsappUrl: buildWhatsappUrl(whatsappNumber, waMessage),
                 whatsappMessage: waMessage,
-                esewaQrUrl
+                esewaQrUrl,
+                bankQrUrl,
+                bankName
             }));
             return;
         }
 
-        const orderId = 'ORD-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase();
+        const orderId = generateReadableOrderId(state.payments);
         const orderSignature = signServerOrder({ orderId, userId, planId, expectedAmount, currency });
-        const initialStatus = (action === 'CREATE_PAYMENT' && transactionId) ? 'awaiting_confirmation' : 'pending';
+        const initialStatus = (action === 'CREATE_PAYMENT' && transactionId) ? 'pending' : 'created';
         const nowIso = new Date().toISOString();
 
         const payment = {
             id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
             orderId,
             userId,
+            studentName: fullName,
             fullName,
             username,
             email,
             canonicalEmail: canonical,
             classKey,
             className,
+            planKey: planId,
             planId,
+            planLabel: planName,
             planName,
-            amount: formattedAmount,
+            isUpgrade: pricing.isUpgrade,
+            baseAmount: pricing.baseAmount,
+            discountAmount: pricing.discountAmount,
+            promoCode: pricing.promoCode,
+            finalAmount: expectedAmount,
             expectedAmount,
+            amount: formattedAmount,
             currency,
+            wallet: wallet || 'eSewa',
+            method: wallet || 'eSewa',
+            txCode: transactionId,
             transactionId,
+            senderInfo,
             orderSignature,
-            method: body.method || 'esewa_qr',
             status: initialStatus,
-            adminNote: initialStatus === 'awaiting_confirmation'
-                ? 'eSewa payment reference submitted; awaiting confirmation.'
-                : 'Order created on server; awaiting eSewa payment.',
+            rejectionReason: '',
+            verifiedBy: '',
+            verifiedAt: '',
+            adminNote: initialStatus === 'pending'
+                ? `Transaction code ${transactionId} submitted; pending admin verification.`
+                : 'Order created on server; awaiting QR payment and transaction code.',
             createdAt: nowIso,
             updatedAt: nowIso,
             reviewedAt: ''
         };
 
         state.payments.unshift(payment);
-        applyPaymentLifecycleTransition({
-            state,
-            roster,
-            payment,
-            nextStatus: initialStatus,
-            actor: `${fullName} (Student)`,
-            note: payment.adminNote,
-            transactionId
-        });
+        if (initialStatus === 'pending') {
+            applyPaymentLifecycleTransition({
+                state,
+                roster,
+                payment,
+                nextStatus: 'pending',
+                actor: `${fullName} (Student)`,
+                note: payment.adminNote,
+                transactionId
+            });
+        } else {
+            state.lastUpdated = nowIso;
+            writeStateToDisk(state);
+        }
 
         const waMessage = buildWhatsappConfirmMessage({
             fullName,
@@ -679,7 +874,9 @@ module.exports = async function paymentsHandler(req, res) {
             planName,
             amount: formattedAmount,
             orderId,
-            transactionId
+            transactionId,
+            wallet: payment.wallet,
+            senderInfo
         });
 
         res.statusCode = 200;
@@ -692,25 +889,204 @@ module.exports = async function paymentsHandler(req, res) {
                 paymentId: payment.id,
                 userId,
                 planId,
+                planKey: planId,
                 planName,
+                planLabel: planName,
+                planPeriod: pricing.planPeriod,
+                isUpgrade: pricing.isUpgrade,
+                baseAmount: pricing.baseAmount,
+                discountAmount: pricing.discountAmount,
+                promoCode: pricing.promoCode,
+                finalAmount: expectedAmount,
                 expectedAmount,
                 currency,
                 durationDays: Number(payment.durationDays || 365),
-                orderSignature,
-                esewaForm: {
-                    amount: expectedAmount,
-                    tax_amount: 0,
-                    total_amount: expectedAmount,
-                    transaction_uuid: orderId,
-                    product_code: esewaCfg.merchantCode,
-                    signed_field_names: 'total_amount,transaction_uuid,product_code',
-                    signature: signEsewaV2Payload(expectedAmount, orderId, esewaCfg.merchantCode, esewaCfg.secretKey)
-                }
+                orderSignature
             },
             whatsappNumber,
             whatsappUrl: buildWhatsappUrl(whatsappNumber, waMessage),
             whatsappMessage: waMessage,
-            esewaQrUrl
+            esewaQrUrl,
+            bankQrUrl,
+            bankName
+        }));
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    // 1B. SUBMIT_PROOF (Step 2 -> Step 3: Validate TxCode, block duplicates, save pending, prepare WhatsApp)
+    // -------------------------------------------------------------------------
+    if (action === 'SUBMIT_PROOF') {
+        const user = resolveRequestUser(req);
+        if (!user || !user.email) {
+            res.statusCode = 401;
+            res.end(JSON.stringify({ ok: false, error: 'Please sign in before submitting payment proof.' }));
+            return;
+        }
+        const canonical = canonicalizeEmail(user.email);
+        const orderId = String(body.orderId || body.paymentId || '').trim();
+        const rawTx = String(body.txCode || body.transactionId || '').trim().toUpperCase().replace(/\s+/g, '');
+        const wallet = String(body.wallet || body.paymentMethod || 'eSewa').trim().slice(0, 60);
+        const senderInfo = String(body.senderInfo || '').trim().slice(0, 100);
+        const promoCode = String(body.promoCode || '').trim().toUpperCase();
+
+        if (!rawTx || rawTx.length < 4 || rawTx.length > 50 || !/^[A-Z0-9._\-/]+$/.test(rawTx)) {
+            res.statusCode = 400;
+            res.end(JSON.stringify({
+                ok: false,
+                code: 'INVALID_TX_CODE',
+                error: 'Please enter a valid Transaction Code (4–50 characters, letters and numbers only).'
+            }));
+            return;
+        }
+
+        const allowedWallets = ['eSewa', 'Fonepay / Mobile Banking', 'Khalti', 'ConnectIPS'];
+        const cleanWallet = allowedWallets.includes(wallet) ? wallet : (wallet || 'eSewa');
+
+        let payment = orderId
+            ? state.payments.find(p => (p.orderId === orderId || p.id === orderId) && ((p.userId && p.userId === user.userId) || p.canonicalEmail === canonical))
+            : null;
+
+        // Duplicate TxCode protection across ALL other pending/verified orders!
+        const dupOrder = state.payments.find(p => {
+            if (!p) return false;
+            if (payment && (p.id === payment.id || p.orderId === payment.orderId)) return false;
+            const pTx = String(p.txCode || p.transactionId || '').trim().toUpperCase();
+            if (!pTx || pTx !== rawTx) return false;
+            const st = String(p.status || '').toLowerCase();
+            return st === 'pending' || st === 'awaiting_confirmation' || st === 'verified' || st === 'paid';
+        });
+        if (dupOrder) {
+            res.statusCode = 409;
+            res.end(JSON.stringify({
+                ok: false,
+                code: 'DUPLICATE_TX_CODE',
+                error: `Transaction Code "${rawTx}" has already been submitted in another pending or verified order. Please check your receipt or contact BPG Sir on WhatsApp.`
+            }));
+            return;
+        }
+
+        const roster = readRoster();
+        const nowIso = new Date().toISOString();
+        const planId = normalizePlan(payment?.planKey || payment?.planId || body.planId || 'gold');
+        const pricing = computeServerOrderPricing(state, user, planId, promoCode || payment?.promoCode || '');
+        const fullName = String(user.name || 'Student').trim();
+        const classKey = gradeToClassKey(user.classKey || user.grade);
+        const className = normalizeGradeName(classKey);
+        const username = String(user.username || user.email.split('@')[0] || 'student').trim();
+        const formattedAmount = `Rs. ${pricing.finalAmount.toLocaleString()}`;
+
+        if (!payment) {
+            const newOrderId = generateReadableOrderId(state.payments);
+            payment = {
+                id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                orderId: newOrderId,
+                userId: deriveStableUserId(canonical, user.userId),
+                studentName: fullName,
+                fullName,
+                username,
+                email: String(user.email).trim().toLowerCase(),
+                canonicalEmail: canonical,
+                classKey,
+                className,
+                planKey: planId,
+                planId,
+                planLabel: pricing.planLabel,
+                planName: pricing.planLabel,
+                isUpgrade: pricing.isUpgrade,
+                baseAmount: pricing.baseAmount,
+                discountAmount: pricing.discountAmount,
+                promoCode: pricing.promoCode,
+                finalAmount: pricing.finalAmount,
+                expectedAmount: pricing.finalAmount,
+                amount: formattedAmount,
+                currency: 'NPR',
+                wallet: cleanWallet,
+                method: cleanWallet,
+                txCode: rawTx,
+                transactionId: rawTx,
+                senderInfo,
+                orderSignature: signServerOrder({ orderId: newOrderId, userId: deriveStableUserId(canonical, user.userId), planId, expectedAmount: pricing.finalAmount, currency: 'NPR' }),
+                status: 'pending',
+                rejectionReason: '',
+                verifiedBy: '',
+                verifiedAt: '',
+                adminNote: `Submitted ${cleanWallet} TxCode ${rawTx}; pending admin verification.`,
+                createdAt: nowIso,
+                updatedAt: nowIso,
+                reviewedAt: ''
+            };
+            state.payments.unshift(payment);
+        } else {
+            if (normalizePaymentStatusValue(payment.status) === 'paid') {
+                res.statusCode = 409;
+                res.end(JSON.stringify({ ok: false, error: 'This order is already verified.' }));
+                return;
+            }
+            payment.txCode = rawTx;
+            payment.transactionId = rawTx;
+            payment.wallet = cleanWallet;
+            payment.method = cleanWallet;
+            payment.senderInfo = senderInfo;
+            payment.studentName = fullName;
+            payment.fullName = fullName;
+            payment.username = username;
+            payment.classKey = classKey;
+            payment.className = className;
+            payment.planKey = planId;
+            payment.planId = planId;
+            payment.planLabel = pricing.planLabel;
+            payment.planName = pricing.planLabel;
+            payment.isUpgrade = pricing.isUpgrade;
+            payment.baseAmount = pricing.baseAmount;
+            payment.discountAmount = pricing.discountAmount;
+            payment.promoCode = pricing.promoCode;
+            payment.finalAmount = pricing.finalAmount;
+            payment.expectedAmount = pricing.finalAmount;
+            payment.amount = formattedAmount;
+            payment.status = 'pending';
+            payment.rejectionReason = '';
+            payment.updatedAt = nowIso;
+            payment.adminNote = `Submitted ${cleanWallet} TxCode ${rawTx}; pending admin verification.`;
+        }
+
+        const acc = roster.accounts.find(a => (payment.userId && a.userId === payment.userId) || a.canonicalEmail === canonical);
+        if (acc) {
+            payment.userId = acc.userId;
+            if (normalizePlan(acc.plan) === 'free') {
+                acc.paymentStatus = 'pending';
+            }
+            appendAccountAuditEntry(acc, {
+                actor: `${fullName} (Student)`,
+                action: 'PAYMENT_PROOF_SUBMITTED',
+                details: `Order ${payment.orderId} (${payment.planLabel}, ${payment.amount}, ${cleanWallet}, TxCode ${rawTx}) submitted for verification`
+            });
+            writeRoster(roster);
+        }
+        state.lastUpdated = nowIso;
+        writeStateToDisk(state);
+
+        const waMessage = buildWhatsappConfirmMessage({
+            fullName: payment.studentName || fullName,
+            className: payment.className || className,
+            username: payment.username || username,
+            email: payment.email,
+            planName: payment.planLabel || payment.planName,
+            amount: payment.amount,
+            orderId: payment.orderId,
+            transactionId: payment.txCode,
+            wallet: payment.wallet,
+            senderInfo: payment.senderInfo
+        });
+
+        res.statusCode = 200;
+        res.end(JSON.stringify({
+            ok: true,
+            payment,
+            whatsappNumber,
+            whatsappMessage: waMessage,
+            whatsappUrl: buildWhatsappUrl(whatsappNumber, waMessage),
+            message: 'Order saved! Send the ready-made WhatsApp message for fast verification.'
         }));
         return;
     }
@@ -1000,7 +1376,7 @@ module.exports = async function paymentsHandler(req, res) {
         return;
     }
 
-    const paymentId = String(body.paymentId || body.orderId || '').trim();
+    const paymentId = String(routeOrderId || body.paymentId || body.orderId || '').trim();
     const adminActor = String(body.adminActor || req.headers['x-admin-actor'] || 'Admin Console').trim();
 
     if (action === 'ADMIN_RECONCILE_ENTITLEMENTS') {
@@ -1107,9 +1483,11 @@ module.exports = async function paymentsHandler(req, res) {
         return;
     }
 
-    if (action === 'ADMIN_VERIFY_PAYMENT') {
-        const targetPlan = normalizePlan(body.planId || payment.planId || 'gold');
+    if (action === 'ADMIN_VERIFY_PAYMENT' || action === 'ADMIN_APPROVE_ORDER') {
+        const alreadyPaid = normalizePaymentStatusValue(payment.status) === 'paid';
+        const targetPlan = normalizePlan(body.planId || payment.planKey || payment.planId || 'gold');
         payment.planId = targetPlan;
+        payment.planKey = targetPlan;
         const roster = readRoster();
         const transition = applyPaymentLifecycleTransition({
             state,
@@ -1117,22 +1495,31 @@ module.exports = async function paymentsHandler(req, res) {
             payment,
             nextStatus: 'paid',
             actor: adminActor,
-            note: String(body.adminNote || 'Payment verified and plan activated by Admin.').trim(),
-            transactionId: body.transactionId || payment.transactionId
+            note: String(body.adminNote || 'Payment verified and plan unlocked by Admin.').trim(),
+            transactionId: body.transactionId || payment.txCode || payment.transactionId
         });
+        transition.payment.verifiedAt = transition.payment.verifiedAt || transition.payment.reviewedAt || new Date().toISOString();
+        transition.payment.verifiedBy = transition.payment.verifiedBy || adminActor;
+        transition.payment.rejectionReason = '';
+        writeStateToDisk(state);
 
+        const friendlyPlan = getPlanFriendlyLabel(state, targetPlan);
         res.statusCode = 200;
         res.end(JSON.stringify({
             ok: true,
-            idempotentReplay: transition.idempotentReplay,
-            message: `Payment confirmed PAID and ${targetPlan.toUpperCase()} plan activated for ${payment.email}.`,
+            idempotentReplay: Boolean(alreadyPaid || transition.idempotentReplay),
+            message: alreadyPaid
+                ? `Order ${payment.orderId || payment.id} was already verified (no duplicate activation).`
+                : `Order ${payment.orderId || payment.id} verified and ${friendlyPlan} unlocked for ${payment.email}.`,
             payment: transition.payment,
             payments: state.payments
         }));
         return;
     }
 
-    if (action === 'ADMIN_REJECT_PAYMENT' || action === 'ADMIN_FAIL_PAYMENT') {
+    if (action === 'ADMIN_REJECT_PAYMENT' || action === 'ADMIN_REJECT_ORDER' || action === 'ADMIN_FAIL_PAYMENT') {
+        const reason = String(body.rejectionReason || body.reason || body.adminNote || 'Payment verification failed or transaction code not found.').trim();
+        payment.rejectionReason = reason;
         const roster = readRoster();
         const transition = applyPaymentLifecycleTransition({
             state,
@@ -1140,14 +1527,16 @@ module.exports = async function paymentsHandler(req, res) {
             payment,
             nextStatus: 'failed',
             actor: adminActor,
-            note: String(body.adminNote || 'Payment verification failed or rejected by Admin.').trim(),
-            transactionId: body.transactionId || payment.transactionId
+            note: reason,
+            transactionId: body.transactionId || payment.txCode || payment.transactionId
         });
+        transition.payment.rejectionReason = reason;
+        writeStateToDisk(state);
 
         res.statusCode = 200;
         res.end(JSON.stringify({
             ok: true,
-            message: 'Payment marked as Failed.',
+            message: `Order ${payment.orderId || payment.id} rejected: ${reason}`,
             payment: transition.payment,
             payments: state.payments
         }));

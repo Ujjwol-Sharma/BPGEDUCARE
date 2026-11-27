@@ -423,7 +423,8 @@ function renderSelectedLessonContent(notesBox, classKey, subject, lesson) {
     }
 
     notesBox.innerHTML = `
-        <div class="notes-lesson-detail">
+        <div class="notes-lesson-detail bpg-protected-content">
+            ${buildDynamicTiledWatermarkHtml()}
             <div class="notes-lesson-detail-head">
                 <button type="button" class="btn-back" onclick="backToNotesLessonList('${escapeHtml(classKey)}')">
                     &larr; All Lessons
@@ -439,6 +440,7 @@ function renderSelectedLessonContent(notesBox, classKey, subject, lesson) {
     `;
 
     hydrateFallbackPdfCovers(notesBox);
+    ensureDriftingWatermarkLoop();
 }
 
 async function hydrateFallbackPdfCovers(container) {
@@ -534,28 +536,75 @@ function findLocalLessonPdf(classKey, subjectId, lessonId, pdfId) {
     return null;
 }
 
-function getPdfWatermarkText() {
-    if (typeof getMaskedStudentWatermarkId === 'function') {
-        return `BPG EDUCARE · ${getMaskedStudentWatermarkId()}`;
+function getFullDynamicWatermarkText() {
+    const s = typeof getStoredStudentSession === 'function' ? getStoredStudentSession() : null;
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    if (s && s.email) {
+        const name = String(s.name || 'Student').trim();
+        const uname = String(s.username || s.email.split('@')[0] || 'student').trim();
+        return `${name} • @${uname} • ${s.email} • ${stamp}`;
     }
-    return 'BPG EDUCARE · Protected';
+    return `BPG EDUCARE • Protected • ${stamp}`;
+}
+
+function getPdfWatermarkText() {
+    return getFullDynamicWatermarkText();
+}
+
+function buildDynamicTiledWatermarkHtml() {
+    const text = escapeHtml(getFullDynamicWatermarkText());
+    const tiles = Array.from({ length: 18 }, () => `<span class="bpg-dynamic-wm-tile">${text}</span>`).join('');
+    return `
+        <div class="bpg-dynamic-wm-grid" aria-hidden="true">${tiles}</div>
+        <div class="bpg-drifting-wm-badge" aria-hidden="true">${text}</div>
+    `;
+}
+
+function ensureDriftingWatermarkLoop() {
+    if (window.__BPG_DRIFT_WM_TIMER__) return;
+    window.__BPG_DRIFT_WM_TIMER__ = setInterval(() => {
+        const badges = document.querySelectorAll('.bpg-drifting-wm-badge');
+        if (!badges.length) return;
+        const nextTop = 10 + Math.floor(Math.random() * 72);
+        const nextLeft = 8 + Math.floor(Math.random() * 58);
+        const freshText = getFullDynamicWatermarkText();
+        badges.forEach(b => {
+            b.style.top = `${nextTop}%`;
+            b.style.left = `${nextLeft}%`;
+            b.textContent = freshText;
+        });
+    }, 20000);
 }
 
 function paintCanvasWatermark(canvas) {
     try {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-        const wmText = getPdfWatermarkText();
+        const wmText = getFullDynamicWatermarkText();
         const w = canvas.width;
         const h = canvas.height;
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         ctx.save();
-        // Subtle margin-only watermark kept clear of central lesson text, equations, and answers
-        ctx.font = '500 12px Inter, sans-serif';
-        ctx.fillStyle = 'rgba(17, 17, 20, 0.22)';
-        ctx.textAlign = 'right';
-        ctx.fillText(wmText, w - 18, 20);
-        ctx.textAlign = 'left';
-        ctx.fillText(wmText, 18, h - 12);
+        ctx.font = '600 13px Inter, sans-serif';
+        ctx.fillStyle = isDark ? 'rgba(200, 200, 210, 0.16)' : 'rgba(128, 128, 128, 0.16)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Full-page tiled diagonal watermark grid rotated -30deg
+        const angle = (-30 * Math.PI) / 180;
+        const textWidth = Math.max(260, ctx.measureText(wmText).width + 90);
+        const rowGap = 150;
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate(angle);
+        const diag = Math.hypot(w, h);
+        for (let y = -diag; y <= diag; y += rowGap) {
+            const offset = ((Math.round(y / rowGap) % 2) * textWidth) / 2;
+            for (let x = -diag - textWidth; x <= diag + textWidth; x += textWidth) {
+                ctx.fillText(wmText, x + offset, y);
+            }
+        }
         ctx.restore();
     } catch (e) {}
 }
@@ -610,13 +659,57 @@ async function renderPdfPagesIntoContainer(pdfBytesOrUrl, containerEl) {
     }
 }
 
+function ensureWorkspaceBlurOverlay() {
+    let ov = document.getElementById('bpgWorkspaceBlurOverlay');
+    if (!ov) {
+        ov = document.createElement('div');
+        ov.id = 'bpgWorkspaceBlurOverlay';
+        ov.className = 'bpg-workspace-blur-overlay';
+        ov.setAttribute('role', 'dialog');
+        ov.setAttribute('aria-modal', 'true');
+        ov.innerHTML = `
+            <div class="bpg-capture-shield-box">
+                <i class="fa-solid fa-shield-halved" style="font-size:2rem; margin-bottom:10px;" aria-hidden="true"></i>
+                <strong style="font-size:1.05rem; margin-bottom:6px;">Protected Study Content Paused</strong>
+                <p id="bpgWorkspaceBlurMsg" style="margin:0 0 14px 0; font-size:0.88rem; opacity:0.9;">
+                    Content was shielded while the app or tab lost focus. Tap anywhere to resume.
+                </p>
+                <button type="button" class="btn btn-primary" style="padding:8px 18px; font-size:0.86rem;">Tap to Resume</button>
+            </div>
+        `;
+        ov.onclick = () => dismissScreenshotBlurShield();
+        document.body.appendChild(ov);
+    }
+    return ov;
+}
+
+function isProtectedWorkspaceContentVisible() {
+    const pdfOpen = Boolean(document.getElementById('pdfViewerModal')?.classList.contains('open'));
+    if (pdfOpen) return true;
+    const activePortal = document.querySelector('#bpgWorkspacesMount .portal-view.active');
+    if (!activePortal) return false;
+    return Boolean(activePortal.querySelector('.notes-lesson-detail, .mock-runner-shell'));
+}
+
 function activateScreenshotBlurShield(reasonMsg) {
-    const bodyEl = document.getElementById('pdfModalBody');
-    const overlay = document.getElementById('pdfCaptureShieldOverlay');
-    const msgEl = document.getElementById('pdfCaptureShieldMsg');
-    if (bodyEl) bodyEl.classList.add('is-capture-blurred');
-    if (msgEl && reasonMsg) msgEl.textContent = reasonMsg + ' Click here to resume reading.';
-    if (overlay) overlay.style.display = 'flex';
+    const pdfOpen = Boolean(document.getElementById('pdfViewerModal')?.classList.contains('open'));
+    if (pdfOpen) {
+        const bodyEl = document.getElementById('pdfModalBody');
+        const overlay = document.getElementById('pdfCaptureShieldOverlay');
+        const msgEl = document.getElementById('pdfCaptureShieldMsg');
+        if (bodyEl) bodyEl.classList.add('is-capture-blurred');
+        if (msgEl && reasonMsg) msgEl.textContent = reasonMsg + ' Tap here to resume reading.';
+        if (overlay) overlay.style.display = 'flex';
+        return;
+    }
+    const ws = document.getElementById('bpgWorkspacesMount');
+    if (ws && isProtectedWorkspaceContentVisible()) {
+        ws.classList.add('is-capture-blurred');
+        const ov = ensureWorkspaceBlurOverlay();
+        const msgEl = document.getElementById('bpgWorkspaceBlurMsg');
+        if (msgEl && reasonMsg) msgEl.textContent = reasonMsg + ' Tap anywhere to resume.';
+        ov.style.display = 'flex';
+    }
 }
 
 function dismissScreenshotBlurShield() {
@@ -624,6 +717,10 @@ function dismissScreenshotBlurShield() {
     const overlay = document.getElementById('pdfCaptureShieldOverlay');
     if (bodyEl) bodyEl.classList.remove('is-capture-blurred');
     if (overlay) overlay.style.display = 'none';
+    const ws = document.getElementById('bpgWorkspacesMount');
+    if (ws) ws.classList.remove('is-capture-blurred');
+    const wsOv = document.getElementById('bpgWorkspaceBlurOverlay');
+    if (wsOv) wsOv.style.display = 'none';
 }
 
 function displayPdfInViewerModal(pdf, fileUrl) {
@@ -861,16 +958,16 @@ function triggerGlobalScreenshotPenalty(msg = 'Screenshots and screen capture ar
         }
     }, true);
 
-    // 2. Blur protected PDF immediately when window loses focus (e.g., Snipping Tool, Screenshot overlay, or App Switcher)
+    // 2. Blur ALL protected content (PDFs, Lesson Notes, Mock Tests) when window/app loses focus
     window.addEventListener('blur', () => {
-        if (document.getElementById('pdfViewerModal')?.classList.contains('open')) {
-            activateScreenshotBlurShield('Protected PDF paused while window is out of focus.');
+        if (isProtectedWorkspaceContentVisible()) {
+            activateScreenshotBlurShield('Protected study content paused while window is out of focus.');
         }
     });
 
     document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden' && document.getElementById('pdfViewerModal')?.classList.contains('open')) {
-            activateScreenshotBlurShield('Protected PDF paused while tab was hidden.');
+        if (document.visibilityState === 'hidden' && isProtectedWorkspaceContentVisible()) {
+            activateScreenshotBlurShield('Protected study content paused while tab or app was switched.');
         }
     });
 

@@ -19,6 +19,9 @@ const {
     gradeToClassKey,
     normalizeGradeName,
     issueStudentSessionToken,
+    buildSessionCookieHeader,
+    parseUserAgentDeviceInfo,
+    generateSessionId,
     readRoster,
     writeRoster,
     readAcademyState,
@@ -306,6 +309,12 @@ module.exports = async function handler(req, res) {
                 action: 'PASSWORD_RESET',
                 details: 'Reset password via verified 6-digit email code'
             });
+            const newSessionId = generateSessionId();
+            const nowResetIso = new Date().toISOString();
+            roster.accounts[existingIdx].activeSessionId = newSessionId;
+            roster.accounts[existingIdx].lastLoginAt = nowResetIso;
+            roster.accounts[existingIdx].lastActiveAt = nowResetIso;
+            roster.accounts[existingIdx].deviceInfo = parseUserAgentDeviceInfo(req);
             writeRoster(roster);
             const acc = roster.accounts[existingIdx];
             const state = readAcademyState();
@@ -315,12 +324,14 @@ module.exports = async function handler(req, res) {
             const myPayments = (Array.isArray(state.payments) ? state.payments : []).filter(
                 p => (p.userId && p.userId === acc.userId) || canonicalizeEmail(p.email) === canonical
             );
-            const sessionToken = issueStudentSessionToken(acc, { keepSignedIn });
+            const sessionToken = issueStudentSessionToken(acc, { keepSignedIn, sessionId: newSessionId });
+            res.setHeader('Set-Cookie', buildSessionCookieHeader(sessionToken, keepSignedIn, req));
             const { passkey, ...safeUser } = acc;
             return res.status(200).json({
                 ok: true,
                 verified: true,
                 mode: 'reset',
+                keepSignedIn,
                 sessionToken,
                 user: { ...safeUser, verified: true, emailVerified: true },
                 mySwitchRequests,
@@ -346,9 +357,15 @@ module.exports = async function handler(req, res) {
                     error: 'Your account has been suspended by an administrator. Please contact BPG EDUCARE support.'
                 });
             }
+            const newSessionId = generateSessionId();
+            const nowOtpIso = new Date().toISOString();
             acc.emailVerified = true;
             if (acc.accountStatus === 'pending_verification') acc.accountStatus = 'active';
-            if (!acc.verifiedAt) acc.verifiedAt = new Date().toISOString();
+            if (!acc.verifiedAt) acc.verifiedAt = nowOtpIso;
+            acc.activeSessionId = newSessionId;
+            acc.lastLoginAt = nowOtpIso;
+            acc.lastActiveAt = nowOtpIso;
+            acc.deviceInfo = parseUserAgentDeviceInfo(req);
             writeRoster(roster);
             const state = readAcademyState();
             const mySwitchRequests = (roster.classSwitchRequests || []).filter(
@@ -357,13 +374,15 @@ module.exports = async function handler(req, res) {
             const myPayments = (Array.isArray(state.payments) ? state.payments : []).filter(
                 p => (p.userId && p.userId === acc.userId) || canonicalizeEmail(p.email) === canonical
             );
-            const sessionToken = issueStudentSessionToken(acc, { keepSignedIn });
+            const sessionToken = issueStudentSessionToken(acc, { keepSignedIn, sessionId: newSessionId });
+            res.setHeader('Set-Cookie', buildSessionCookieHeader(sessionToken, keepSignedIn, req));
             const { passkey, ...safeUser } = acc;
             return res.status(200).json({
                 ok: true,
                 verified: true,
                 linkedExisting: true,
                 mode: 'gmail_otp',
+                keepSignedIn,
                 sessionToken,
                 user: { ...safeUser, verified: true, emailVerified: true },
                 mySwitchRequests,
@@ -394,6 +413,7 @@ module.exports = async function handler(req, res) {
 
         const nowIso = new Date().toISOString();
         const stableUserId = deriveStableUserId(canonical);
+        const newSessionId = generateSessionId();
         const newAccount = {
             userId: stableUserId,
             name,
@@ -412,6 +432,10 @@ module.exports = async function handler(req, res) {
             verificationMethod: 'email_otp',
             hasPassword: true,
             passkey: hashPassword(newPassword || crypto.randomBytes(16).toString('hex')),
+            activeSessionId: newSessionId,
+            lastLoginAt: nowIso,
+            lastActiveAt: nowIso,
+            deviceInfo: parseUserAgentDeviceInfo(req),
             readNotificationIds: [],
             joinedAt: nowIso.split('T')[0],
             updatedAt: nowIso,
@@ -434,15 +458,19 @@ module.exports = async function handler(req, res) {
         const savedRoster = writeRoster(roster);
         const savedAccount = savedRoster.accounts.find(a => a.userId === stableUserId || a.canonicalEmail === canonical) || newAccount;
 
-        const sessionToken = issueStudentSessionToken(savedAccount, { keepSignedIn });
+        const sessionToken = issueStudentSessionToken(savedAccount, { keepSignedIn, sessionId: newSessionId });
+        res.setHeader('Set-Cookie', buildSessionCookieHeader(sessionToken, keepSignedIn, req));
         const { passkey, ...safeUser } = savedAccount;
 
         return res.status(200).json({
             ok: true,
             verified: true,
             mode: 'signup',
+            keepSignedIn,
             sessionToken,
             user: { ...safeUser, verified: true, emailVerified: true },
+            myPayments: [],
+            mySwitchRequests: [],
             message: 'Email verified! Your account is now active.'
         });
     } catch (err) {

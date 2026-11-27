@@ -246,32 +246,42 @@
                 <button type="button" class="auth-tab-btn" id="authTabSignUp" onclick="switchAuthTab('signup')" role="tab" aria-selected="false">Create Account</button>
             </div>
 
-            <!-- PANE 1: SIGN IN (RETURNING STUDENTS) -->
+            <!-- PANE 1: SIGN IN (RETURNING STUDENTS — SIMPLE 2-FIELD EMAIL/USERNAME + PASSWORD) -->
             <div id="authSignInContainer" class="auth-pane active">
                 <h3 class="modal-title" id="authModalActiveHeading">Sign In</h3>
                 <p class="modal-sub">
-                    Enter your username, Gmail address, and password to continue to your class.
+                    Enter your email or username and password to continue to your class.
                 </p>
 
-                <div id="googleOAuthSignInWrap" style="display:block;">
+                <div id="googleOAuthSignInWrap" style="display:none;">
                     <button type="button" class="btn-google-oauth" id="btnGoogleSignIn" onclick="handleGoogleAuthClick('signin')">
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
                     </button>
-                    <div class="auth-or-divider"><span>or sign in with username &amp; Gmail</span></div>
+                    <div class="auth-or-divider"><span>or sign in with email or username</span></div>
+                </div>
+
+                <!-- Safe Welcome Back Card (Shown when returning after manual logout; never stores passwords) -->
+                <div id="authRememberedCard" class="auth-remembered-card" style="display:none;">
+                    <div class="auth-remembered-info">
+                        <span class="auth-remembered-avatar" id="authRememberedAvatar">S</span>
+                        <div style="min-width:0; flex:1;">
+                            <div style="font-size:0.84rem; font-weight:700; color:var(--text-primary);" id="authRememberedGreeting">Welcome back</div>
+                            <div style="font-size:0.77rem; color:var(--text-secondary); word-break:break-all;" id="authRememberedIdentifier"></div>
+                        </div>
+                    </div>
+                    <div class="auth-remembered-actions">
+                        <span style="color:var(--text-secondary);">Enter password to sign back in</span>
+                        <button type="button" class="btn-link-action" onclick="clearRememberedLastAccount()" style="font-size:0.78rem;">Not you? Switch account</button>
+                    </div>
                 </div>
 
                 <div id="signinErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
 
                 <form id="signinForm" onsubmit="handleSignInSubmit(event)" autocomplete="on">
                     <div class="modal-field">
-                        <label for="signinUsername">Username</label>
-                        <input type="text" id="signinUsername" name="bpg_handle" class="modal-input" placeholder="Your saved username (e.g. aarav_12)" autocomplete="off" autocapitalize="none" spellcheck="false" required>
-                    </div>
-
-                    <div class="modal-field">
-                        <label for="signinEmail">Gmail address</label>
-                        <input type="email" id="signinEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="username email" inputmode="email" required>
+                        <label for="signinEmail">Email or Username</label>
+                        <input type="text" id="signinEmail" name="username" class="modal-input" placeholder="student@gmail.com or username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
                     </div>
 
                     <div class="modal-field">
@@ -287,6 +297,13 @@
                         </div>
                     </div>
 
+                    <div class="auth-checkbox-group">
+                        <label class="auth-check-item">
+                            <input type="checkbox" id="signinKeepSignedIn" checked>
+                            <span>Keep me signed in (30 days)</span>
+                        </label>
+                    </div>
+
                     <button type="submit" class="btn-submit-action" id="btnSignInSubmit">
                         <i class="fa-solid fa-right-to-bracket" aria-hidden="true" style="margin-right:6px;"></i>Sign In
                     </button>
@@ -298,14 +315,14 @@
                 </form>
             </div>
 
-            <!-- PANE 2: CREATE ACCOUNT (NEW STUDENTS) -->
+            <!-- PANE 2: CREATE ACCOUNT (COMPACT 2-COLUMN ON DESKTOP, FITS CLEANLY ON 390px MOBILE) -->
             <div id="otpStep1Container" class="auth-pane" style="display:none;">
                 <h3 class="modal-title">Create Account</h3>
                 <p class="modal-sub">
                     Create your student account with a unique username and verified Gmail address.
                 </p>
 
-                <div id="googleOAuthSignUpWrap" style="display:block;">
+                <div id="googleOAuthSignUpWrap" style="display:none;">
                     <button type="button" class="btn-google-oauth" id="btnGoogleSignUp" onclick="handleGoogleAuthClick('signup')">
                         <svg class="google-g-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
                         <span>Continue with Google</span>
@@ -322,16 +339,18 @@
                 </div>
 
                 <form id="signupForm" onsubmit="handleRequestEmailOtp(event)" autocomplete="on">
-                    <div class="modal-field">
-                        <label for="signupName">Full Name</label>
-                        <input type="text" id="signupName" name="name" class="modal-input" placeholder="Your full name" autocomplete="name" required>
-                    </div>
+                    <div class="auth-field-row-2">
+                        <div class="modal-field">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" id="signupName" name="name" class="modal-input" placeholder="Your full name" autocomplete="name" required>
+                        </div>
 
-                    <div class="modal-field">
-                        <label for="signupUsername">Unique Username</label>
-                        <input type="text" id="signupUsername" name="bpg_new_handle" class="modal-input" placeholder="e.g. aarav_12 (no spaces)" autocomplete="off" autocapitalize="none" spellcheck="false" minlength="3" maxlength="30" oninput="updateSignupUsernameUI(this)" required>
-                        <div id="signupUsernameHint" style="font-size:0.78rem; margin-top:4px; color:var(--text-secondary);">3–30 characters: letters, numbers, dots (.), hyphens (-), or underscores (_).</div>
+                        <div class="modal-field">
+                            <label for="signupUsername">Username</label>
+                            <input type="text" id="signupUsername" name="bpg_new_handle" class="modal-input" placeholder="e.g. aarav_12" autocomplete="off" autocapitalize="none" spellcheck="false" minlength="3" maxlength="30" oninput="updateSignupUsernameUI(this)" required>
+                        </div>
                     </div>
+                    <div id="signupUsernameHint" style="font-size:0.75rem; margin:-6px 0 9px; color:var(--text-secondary);">3–30 chars: letters, numbers, dots, hyphens, or underscores.</div>
 
                     <div class="modal-field">
                         <label for="signupEmail">Gmail address</label>
@@ -346,9 +365,9 @@
                                 <i class="fa-regular fa-eye" aria-hidden="true"></i>
                             </button>
                         </div>
-                        <ul class="auth-pwd-reqs" id="signupPwdReqs" aria-live="polite">
-                            <li data-req="len"><i class="fa-regular fa-circle" aria-hidden="true"></i> At least 6 characters (required)</li>
-                            <li data-req="mix"><i class="fa-regular fa-circle" aria-hidden="true"></i> Include letters &amp; numbers (recommended)</li>
+                        <ul class="auth-pwd-reqs is-inline" id="signupPwdReqs" aria-live="polite">
+                            <li data-req="len"><i class="fa-regular fa-circle" aria-hidden="true"></i> 6+ chars (required)</li>
+                            <li data-req="mix"><i class="fa-regular fa-circle" aria-hidden="true"></i> Letters &amp; numbers</li>
                         </ul>
                     </div>
 
@@ -357,63 +376,48 @@
                         <select id="signupGrade" class="modal-input" required>
                             <option value="Class 12" selected>Class 12 (NEB Mat. 102)</option>
                             <option value="Class 11">Class 11 (NEB Mat. 101)</option>
-                            <option value="Class 10" id="signupOpt-class-10">Class 10 (Locked — Temporarily unavailable)</option>
-                            <option value="After 12" id="signupOpt-after-12">Entrance Prep (Locked — Temporarily unavailable)</option>
+                            <option value="Class 10" id="signupOpt-class-10" disabled>Class 10 (Coming soon)</option>
+                            <option value="After 12" id="signupOpt-after-12" disabled>Entrance Prep (Coming soon)</option>
                         </select>
+                    </div>
+
+                    <div class="auth-checkbox-group" style="margin:2px 0 10px;">
+                        <label class="auth-check-item">
+                            <input type="checkbox" id="signupKeepSignedIn" checked>
+                            <span>Keep me signed in (30 days)</span>
+                        </label>
                     </div>
 
                     <button type="submit" class="btn-submit-action" id="btnSendOtpSubmit">
                         Continue &amp; Verify Gmail
                     </button>
 
-                    <div style="text-align:center; margin-top:14px; font-size:0.84rem;">
+                    <div style="text-align:center; margin-top:10px; font-size:0.84rem;">
                         <button type="button" class="btn-link-action" onclick="switchAuthTab('signin')">Already have an account? Sign In</button>
                     </div>
                 </form>
             </div>
 
-            <!-- PANE 2B: CONTINUE WITH GOOGLE / PASSWORDLESS SIGN IN WITH 6-DIGIT EMAIL CODE -->
+            <!-- PANE 2B: PASSWORDLESS SIGN IN WITH 6-DIGIT GMAIL CODE -->
             <div id="googleLocalChooserContainer" class="auth-pane" style="display:none;">
-                <h3 class="modal-title" id="googlePaneTitle">Continue with Google</h3>
+                <h3 class="modal-title" id="googlePaneTitle">Sign In with Gmail Code</h3>
                 <p class="modal-sub" id="googlePaneSubtitle">
-                    Sign in or create your account with your Google email. Existing accounts link automatically to the same member ID without creating duplicates.
+                    Enter your registered Gmail address and we&rsquo;ll send a 6-digit login code valid for 10 minutes.
                 </p>
                 <div id="googleChooserErrorBanner" class="auth-inline-alert" role="alert" style="display:none;"></div>
                 <div id="googleOfficialBtnContainer" style="display:none; justify-content:center; margin:18px 0;"></div>
 
-                <!-- Interactive Google Account Chooser Form -->
-                <form id="googleAccountQuickForm" onsubmit="handleLocalGoogleSubmit(event)">
-                    <div class="modal-field">
-                        <label for="googleChooserName">Google Account Name</label>
-                        <input type="text" id="googleChooserName" class="modal-input" placeholder="Your full name" autocomplete="name" required>
-                    </div>
-                    <div class="modal-field">
-                        <label for="googleChooserEmail">Gmail Address</label>
-                        <input type="email" id="googleChooserEmail" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
-                    </div>
-                    <div class="modal-field" id="googleChooserGradeWrap">
-                        <label for="googleChooserGrade">Enrolled Class (for new accounts)</label>
-                        <select id="googleChooserGrade" class="modal-input">
-                            <option value="Class 12" selected>Class 12 (NEB Mat. 102)</option>
-                            <option value="Class 11">Class 11 (NEB Mat. 101)</option>
-                            <option value="Class 10">Class 10 (SEE Foundation)</option>
-                            <option value="After 12">Entrance Prep (IOE / CEE / KU)</option>
-                        </select>
-                    </div>
-                    <label class="auth-check-item" style="margin-bottom:14px;">
-                        <input type="checkbox" id="googleKeepSignedIn" checked>
-                        <span>Keep me signed in on this device</span>
-                    </label>
-                    <button type="submit" class="btn-submit-action" id="btnGoogleChooserSubmit">
-                        Continue with Google Account
-                    </button>
-                </form>
-
                 <!-- 6-Digit Email Code Form -->
-                <form id="googleGmailOtpForm" onsubmit="handleGmailOtpSubmit(event)" style="display:none;">
+                <form id="googleGmailOtpForm" onsubmit="handleGmailOtpSubmit(event)">
                     <div class="modal-field">
-                        <label for="googleLocalEmail">Registered Email</label>
-                        <input type="email" id="googleLocalEmail" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
+                        <label for="googleLocalEmail">Registered Gmail Address</label>
+                        <input type="email" id="googleLocalEmail" name="email" class="modal-input" placeholder="student@gmail.com" autocomplete="email" inputmode="email" required>
+                    </div>
+                    <div class="auth-checkbox-group">
+                        <label class="auth-check-item">
+                            <input type="checkbox" id="gmailOtpKeepSignedIn" checked>
+                            <span>Keep me signed in (30 days)</span>
+                        </label>
                     </div>
                     <button type="submit" class="btn-submit-action" id="btnGoogleLocalSubmit">
                         Send 6-Digit Login Code
@@ -550,63 +554,146 @@
     </div>
 
     <!-- ==========================================================================
-         SIGNED-IN CHECKOUT MODAL (SHORT FLOW: PLAN, TOTAL IN NPR, DURATION, PAY NOW)
+         SIGNED-IN 3-STEP CHECKOUT WIZARD (QR -> TRANSACTION CODE -> WHATSAPP)
          ========================================================================== -->
-    <div class="modal-backdrop" id="checkoutModal" role="dialog" aria-modal="true">
-        <div class="modal-card checkout-modal-card" style="max-width:560px; padding:28px;">
-            <button class="btn-modal-dismiss" onclick="closeCheckoutModal()"><i class="fa-solid fa-xmark"></i></button>
-            <span class="modal-head-tag" style="margin-bottom:10px; display:inline-block;">Secure Checkout &middot; eSewa &amp; WhatsApp</span>
-            <h3 id="checkoutPlanTitle" style="font-size:1.25rem; font-weight:700; margin:0 0 6px 0;">Upgrade Plan</h3>
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; border-radius:10px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-subtle, #e4e4e7); margin:0 0 14px 0;">
+    <div class="modal-backdrop" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutPlanTitle">
+        <div class="modal-card checkout-modal-card" style="max-width:560px; padding:24px;">
+            <button type="button" class="btn-modal-dismiss" onclick="closeCheckoutModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <span class="modal-head-tag" style="margin-bottom:8px; display:inline-block;">Secure 3-Step Payment</span>
+            <h3 id="checkoutPlanTitle" style="font-size:1.22rem; font-weight:700; margin:0 0 2px 0;">Upgrade Plan</h3>
+            <div id="checkoutUpgradeNote" style="display:none; font-size:0.8rem; color:#16a34a; font-weight:600; margin-bottom:6px;"></div>
+
+            <!-- 3-Step Progress Bar -->
+            <div class="checkout-stepper" role="list" aria-label="Checkout progress">
+                <div class="checkout-step-pill is-active" id="checkoutStepPill1" role="listitem">
+                    <span class="checkout-step-num">1</span>
+                    <span>Scan QR &amp; Pay</span>
+                </div>
+                <div class="checkout-step-pill" id="checkoutStepPill2" role="listitem">
+                    <span class="checkout-step-num">2</span>
+                    <span>Tx Code</span>
+                </div>
+                <div class="checkout-step-pill" id="checkoutStepPill3" role="listitem">
+                    <span class="checkout-step-num">3</span>
+                    <span>WhatsApp</span>
+                </div>
+            </div>
+
+            <!-- Amount & Validity Summary -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; border-radius:10px; background:var(--surface-soft, #f8f8fa); border:1px solid var(--border-subtle, #e4e4e7); margin:0 0 12px 0;">
                 <div>
-                    <div style="font-size:0.74rem; color:var(--text-secondary); text-transform:uppercase;">Total (NPR)</div>
-                    <strong id="checkoutPlanPriceLine" style="font-size:1.05rem; color:var(--text-primary);"></strong>
+                    <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase;">Payable Amount</div>
+                    <strong id="checkoutPlanPriceLine" style="font-size:1.08rem; color:var(--text-primary);"></strong>
+                    <div id="checkoutDiscountSubline" style="display:none; font-size:0.74rem; color:#16a34a; font-weight:600;"></div>
                 </div>
                 <div style="text-align:right;">
-                    <div style="font-size:0.74rem; color:var(--text-secondary); text-transform:uppercase;">Plan Duration</div>
-                    <strong id="checkoutPlanDurationLine" style="font-size:0.9rem; color:var(--text-primary);">12 Months (Full Academic Year)</strong>
+                    <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase;">Plan Validity</div>
+                    <strong id="checkoutPlanDurationLine" style="font-size:0.86rem; color:var(--text-primary);">Until NEB Final Exam</strong>
                 </div>
             </div>
-            <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">
-                Available payment methods: <strong>eSewa QR / Wallet</strong> (verified on server via eSewa &amp; WhatsApp confirmation).
-            </div>
 
-            <div class="checkout-qr-box" id="checkoutQrBox">
-                <img id="checkoutEsewaQrImg" src="" alt="eSewa Payment QR" class="checkout-qr-img" onerror="this.style.display='none'">
-                <div class="checkout-qr-instructions">
-                    <p style="margin:0 0 8px 0; font-size:0.86rem; line-height:1.5;">
-                        Scan this QR with your <strong>eSewa app</strong> and include your <strong>Name, Class, Username, and Gmail</strong> in the payment remarks.
-                    </p>
-                    <div class="checkout-remarks-preview" id="checkoutRemarksPreview"></div>
-                    <button type="button" class="btn btn-secondary" onclick="copyPaymentRemarks()" style="padding:7px 12px; font-size:0.8rem; margin-top:8px;">
-                        <i class="fa-regular fa-copy"></i> Copy Payment Remarks
+            <!-- STEP 1: SCAN QR & PAY -->
+            <div id="checkoutStep1Pane">
+                <div class="checkout-qr-tabs" role="tablist">
+                    <button type="button" class="checkout-qr-tab active" id="qrTabEsewa" role="tab" aria-selected="true" onclick="switchCheckoutQrTab('esewa')">
+                        <i class="fa-solid fa-qrcode" aria-hidden="true"></i> eSewa QR
+                    </button>
+                    <button type="button" class="checkout-qr-tab" id="qrTabBank" role="tab" aria-selected="false" onclick="switchCheckoutQrTab('bank')">
+                        <i class="fa-solid fa-building-columns" aria-hidden="true"></i> Fonepay / Bank QR
                     </button>
                 </div>
-            </div>
 
-            <div class="modal-field" style="margin-top:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                    <label for="checkoutTransactionId" style="margin:0;">eSewa Transaction ID</label>
-                    <small id="checkoutServerOrderBadge" style="font-size:0.75rem; color:var(--text-secondary);"></small>
+                <div class="checkout-qr-stage">
+                    <img id="checkoutActiveQrImg" src="images/payment_qr_esewa.jpg" alt="Payment QR Code" onerror="this.style.display='none'">
+                    <div id="checkoutQrCaption" style="font-size:0.78rem; color:#52525c; margin-top:8px; font-weight:600;">
+                        eSewa · Bishnu Prasad Gautam (9866064252)
+                    </div>
                 </div>
-                <input type="text" id="checkoutTransactionId" class="modal-input" placeholder="e.g. 0A9B8C7D">
-            </div>
 
-            <div id="checkoutStatusBanner" class="auth-inline-alert" style="display:none; margin-bottom:12px;"></div>
+                <div class="checkout-order-id-bar">
+                    <div>
+                        <div style="font-size:0.7rem; text-transform:uppercase; color:var(--text-secondary);">Paste this Order ID in Remarks</div>
+                        <code id="checkoutShortOrderId" style="font-size:0.94rem; font-weight:700; color:var(--text-primary);">Generating...</code>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="copyCheckoutOrderId()" style="padding:6px 11px; font-size:0.78rem;">
+                        <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy Order ID
+                    </button>
+                </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px; margin-top:14px;">
-                <button type="button" id="btnCheckoutWhatsappConfirm" class="btn btn-primary" onclick="submitStaticEsewaPayment()" style="justify-content:center; padding:11px 16px; font-size:0.92rem;">
-                    <i class="fa-solid fa-lock" aria-hidden="true" style="margin-right:6px;"></i> Pay Now &amp; Confirm via eSewa / WhatsApp
+                <!-- Optional Promo Code -->
+                <div style="display:flex; gap:8px; margin-bottom:12px;">
+                    <input type="text" id="checkoutPromoInput" class="modal-input" placeholder="Promo code (optional)" style="flex:1; padding:8px 11px; font-size:0.84rem; text-transform:uppercase;">
+                    <button type="button" id="btnApplyPromo" class="btn btn-secondary" onclick="applyCheckoutPromoCode()" style="padding:8px 14px; font-size:0.82rem; white-space:nowrap;">Apply</button>
+                </div>
+                <div id="checkoutPromoFeedback" style="display:none; font-size:0.78rem; margin:-6px 0 10px;"></div>
+
+                <button type="button" class="btn btn-primary" onclick="goToCheckoutStep(2)" style="width:100%; justify-content:center; padding:11px 16px; font-size:0.92rem;">
+                    I Have Paid &mdash; Enter Transaction Code &rarr;
                 </button>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button type="button" id="btnCheckoutCheckPending" class="btn btn-secondary" onclick="checkActiveCheckoutPaymentStatus()" style="flex:1; justify-content:center; padding:9px 12px; font-size:0.82rem;">
-                        <i class="fa-solid fa-rotate" aria-hidden="true" style="margin-right:5px;"></i> Check Pending Status
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="closeCheckoutModal()" style="justify-content:center; padding:9px 16px; font-size:0.84rem;">
-                        Cancel
-                    </button>
+            </div>
+
+            <!-- STEP 2: ENTER TRANSACTION CODE -->
+            <div id="checkoutStep2Pane" style="display:none;">
+                <div id="checkoutStep2Error" class="auth-inline-alert" role="alert" style="display:none; margin-bottom:10px;"></div>
+
+                <form id="checkoutProofForm" onsubmit="submitCheckoutPaymentProof(event)">
+                    <div class="modal-field">
+                        <label for="checkoutTransactionId">Transaction Code / Reference ID <span style="color:#dc2626;">*</span></label>
+                        <input type="text" id="checkoutTransactionId" class="modal-input" placeholder="e.g. 0A9B8C7D (from payment receipt)" minlength="4" maxlength="50" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+                        <small style="font-size:0.74rem; color:var(--text-secondary);">4–50 characters, found on your eSewa / Fonepay / Bank receipt.</small>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="checkoutWalletSelect">Payment Method Used</label>
+                        <select id="checkoutWalletSelect" class="modal-input" required>
+                            <option value="eSewa">eSewa</option>
+                            <option value="Fonepay / Mobile Banking">Fonepay / Mobile Banking</option>
+                            <option value="Khalti">Khalti</option>
+                            <option value="ConnectIPS">ConnectIPS</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="checkoutSenderInfo">Sender Name / Phone Number (optional)</label>
+                        <input type="text" id="checkoutSenderInfo" class="modal-input" placeholder="Helpful if a parent paid from their account" maxlength="100">
+                    </div>
+
+                    <div style="display:flex; gap:8px; margin-top:14px;">
+                        <button type="button" class="btn btn-secondary" onclick="goToCheckoutStep(1)" style="padding:10px 14px; font-size:0.86rem;">
+                            &larr; Back
+                        </button>
+                        <button type="submit" id="btnCheckoutSubmitProof" class="btn btn-primary" style="flex:1; justify-content:center; padding:11px 16px; font-size:0.9rem;">
+                            Save &amp; Prepare WhatsApp Message &rarr;
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- STEP 3: SEND READY-MADE WHATSAPP MESSAGE -->
+            <div id="checkoutStep3Pane" style="display:none;">
+                <div style="padding:11px 14px; border-radius:10px; background:rgba(22,163,74,0.12); border:1px solid #16a34a; color:#15803d; font-size:0.84rem; font-weight:600; margin-bottom:12px;">
+                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i> Order Saved! Now send this ready-made WhatsApp message for fast verification.
+                </div>
+
+                <label for="checkoutWaMessagePreview" style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-secondary); margin-bottom:5px;">Auto-Generated WhatsApp Message Preview</label>
+                <textarea id="checkoutWaMessagePreview" class="checkout-wa-preview" readonly></textarea>
+
+                <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+                    <a id="btnOpenWhatsappSend" href="#" target="_blank" rel="noopener" class="btn btn-primary" style="justify-content:center; padding:11px 16px; font-size:0.92rem; text-decoration:none; background:#16a34a !important; border-color:#16a34a !important; color:#ffffff !important;">
+                        <i class="fa-brands fa-whatsapp" aria-hidden="true" style="font-size:1.1rem;"></i> Open WhatsApp &amp; Send Message
+                    </a>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button type="button" class="btn btn-secondary" onclick="copyCheckoutWhatsappMessage()" style="flex:1; justify-content:center; padding:9px 12px; font-size:0.82rem;">
+                            <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy Message
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="closeCheckoutModal(); openStudentProfileModal();" style="flex:1; justify-content:center; padding:9px 12px; font-size:0.82rem;">
+                            View My Payment Status
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            <div id="checkoutStatusBanner" class="auth-inline-alert" style="display:none; margin-top:12px;"></div>
         </div>
     </div>
 
@@ -715,16 +802,24 @@
         </div>
     </div>
 
-    <!-- My Plan, Profile & Payment History Modal -->
+    <!-- My Plan, Receipts & Payment History Modal -->
     <div class="modal-backdrop" id="studentProfileModal" role="dialog" aria-modal="true">
-        <div class="modal-card" style="max-width: 640px; padding: 26px;">
-            <button class="btn-modal-dismiss" onclick="closeStudentProfileModal()"><i class="fa-solid fa-xmark"></i></button>
-            <span class="modal-head-tag" style="margin-bottom:8px; display:inline-block;">My Plan &amp; Account</span>
-            <h3 style="font-size:1.22rem; font-weight:700; margin:0 0 6px 0;">My Plan, Expiry &amp; Payment History</h3>
-            <p style="font-size:0.86rem; color:var(--text-secondary); margin:0 0 16px 0;">
-                View your active plan, expiry date, and verified payment records, or check a pending payment without paying again.
+        <div class="modal-card" style="max-width: 680px; padding: 24px;">
+            <button type="button" class="btn-modal-dismiss" onclick="closeStudentProfileModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <span class="modal-head-tag" style="margin-bottom:8px; display:inline-block;">My Plan &amp; Receipts</span>
+            <h3 style="font-size:1.22rem; font-weight:700; margin:0 0 6px 0;">My Plan, Billing &amp; Verified Receipts</h3>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin:0 0 14px 0;">
+                View your active membership, expiry date, payment statuses, and printable verified receipts.
             </p>
             <div id="studentProfileModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Printable Verified Payment Receipt Modal -->
+    <div class="modal-backdrop" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptModalTitle">
+        <div class="modal-card" style="max-width: 520px; padding: 26px;">
+            <button type="button" class="btn-modal-dismiss" onclick="closeReceiptModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <div id="receiptModalBody"></div>
         </div>
     </div>
 

@@ -4877,19 +4877,43 @@ async function loadAdminPayments() {
 
 let adminPaymentSearchQuery = '';
 let adminPaymentStatusFilter = 'all';
+let adminPaymentPlanFilter = 'all';
+let adminPaymentClassFilter = 'all';
+let adminPaymentMethodFilter = 'all';
+
+function adminCopyText(txt, label = 'Copied') {
+    if (!txt) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(() => showAdminToast(`${label}: ${txt}`)).catch(() => {});
+    }
+}
+
+function getFriendlyAdminPlanName(planKey) {
+    const p = String(planKey || 'free').toLowerCase();
+    const cfgName = ADMIN_STATE?.plansConfig?.[p]?.name;
+    if (cfgName && cfgName.toLowerCase() !== 'gold' && cfgName.toLowerCase() !== 'diamond') return cfgName;
+    if (p === 'diamond') return 'Topper';
+    if (p === 'gold') return 'Padandas';
+    return 'Free';
+}
 
 function renderPaymentsTab() {
     const mount = document.getElementById('paymentsAdminMount');
     const badge = document.getElementById('paymentsPendingBadge');
-    const list = Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : [];
-    const pendingCount = list.filter(p => {
+    const allRaw = Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : [];
+    // Show submitted orders (exclude abandoned 'created' orders with no txCode unless user searches for them)
+    const list = allRaw.filter(p => p && (p.status !== 'created' || Boolean(p.txCode || p.transactionId)));
+
+    const pendingQueue = list.filter(p => {
         const st = normalizeAdminPayStatus(p.status);
         return st === 'pending' || st === 'awaiting_confirmation';
-    }).length;
+    });
+    const verifiedList = list.filter(p => normalizeAdminPayStatus(p.status) === 'paid');
+    const rejectedList = list.filter(p => normalizeAdminPayStatus(p.status) === 'failed');
 
     if (badge) {
-        badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
-        badge.textContent = String(pendingCount);
+        badge.style.display = pendingQueue.length > 0 ? 'inline-block' : 'none';
+        badge.textContent = String(pendingQueue.length);
     }
     if (!mount) return;
 
@@ -4897,113 +4921,203 @@ function renderPaymentsTab() {
     if (existingSearch) adminPaymentSearchQuery = existingSearch.value;
     const existingFilter = document.getElementById('paymentStatusFilter');
     if (existingFilter) adminPaymentStatusFilter = existingFilter.value;
+    const existingPlan = document.getElementById('paymentPlanFilter');
+    if (existingPlan) adminPaymentPlanFilter = existingPlan.value;
+    const existingClass = document.getElementById('paymentClassFilter');
+    if (existingClass) adminPaymentClassFilter = existingClass.value;
+    const existingMethod = document.getElementById('paymentMethodFilter');
+    if (existingMethod) adminPaymentMethodFilter = existingMethod.value;
+
+    // Live KPI calculations
+    const totalVerifiedRevenue = verifiedList.reduce((sum, p) => sum + (Number(p.finalAmount ?? p.expectedAmount) || 0), 0);
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayRevenue = verifiedList
+        .filter(p => String(p.verifiedAt || p.reviewedAt || p.updatedAt || p.createdAt || '').slice(0, 10) === todayStr)
+        .reduce((sum, p) => sum + (Number(p.finalAmount ?? p.expectedAmount) || 0), 0);
+    const accounts = ADMIN_ROSTER?.accounts || [];
+    const padandasCount = accounts.filter(a => String(a.plan || '').toLowerCase() === 'gold').length;
+    const topperCount = accounts.filter(a => String(a.plan || '').toLowerCase() === 'diamond').length;
 
     const q = String(adminPaymentSearchQuery || '').trim().toLowerCase();
     const stFilter = String(adminPaymentStatusFilter || 'all').toLowerCase();
+    const plFilter = String(adminPaymentPlanFilter || 'all').toLowerCase();
+    const clFilter = String(adminPaymentClassFilter || 'all').toLowerCase();
+    const mtFilter = String(adminPaymentMethodFilter || 'all').toLowerCase();
 
-    const filtered = list.filter(p => {
+    const matchesFilters = (p) => {
         const normSt = normalizeAdminPayStatus(p.status);
         if (stFilter === 'pending' && normSt !== 'pending' && normSt !== 'awaiting_confirmation') return false;
         if (stFilter === 'paid' && normSt !== 'paid') return false;
         if (stFilter === 'failed' && normSt !== 'failed') return false;
         if (stFilter === 'refunded' && normSt !== 'refunded') return false;
+        if (plFilter !== 'all' && String(p.planKey || p.planId || '').toLowerCase() !== plFilter) return false;
+        if (clFilter !== 'all' && String(p.classKey || '').toLowerCase() !== clFilter) return false;
+        if (mtFilter !== 'all' && !String(p.wallet || p.method || '').toLowerCase().includes(mtFilter)) return false;
         if (!q) return true;
-        const hay = `${p.fullName || ''} ${p.username || ''} ${p.email || ''} ${p.userId || ''} ${p.orderId || ''} ${p.id || ''} ${p.transactionId || ''} ${p.planName || ''}`.toLowerCase();
+        const hay = `${p.studentName || p.fullName || ''} ${p.username || ''} ${p.email || ''} ${p.userId || ''} ${p.orderId || ''} ${p.id || ''} ${p.txCode || p.transactionId || ''} ${p.planLabel || p.planName || ''} ${p.senderInfo || ''}`.toLowerCase();
         return hay.includes(q);
-    });
+    };
 
-    const paidCount = list.filter(p => normalizeAdminPayStatus(p.status) === 'paid').length;
-    const failedCount = list.filter(p => normalizeAdminPayStatus(p.status) === 'failed').length;
-
+    const filtered = list.filter(matchesFilters);
     const hadFocus = document.activeElement && document.activeElement.id === 'paymentSearchInput';
     const selStart = hadFocus ? document.activeElement.selectionStart : null;
 
+    const renderPaymentRow = (p) => {
+        const normSt = normalizeAdminPayStatus(p.status);
+        const isPendingOrAwaiting = normSt === 'pending' || normSt === 'awaiting_confirmation';
+        const oid = p.orderId || p.id;
+        const tx = p.txCode || p.transactionId || '';
+        const planLbl = p.planLabel || getFriendlyAdminPlanName(p.planKey || p.planId);
+        const expLabel = p.expiresAt ? new Date(p.expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+        const amtLabel = p.amount || `Rs. ${Number(p.finalAmount ?? p.expectedAmount ?? 0).toLocaleString()}`;
+        return `
+            <tr>
+                <td>
+                    <strong>${escapeHtml(p.studentName || p.fullName || 'Student')}</strong><br>
+                    <small style="color:var(--adm-text-muted);">${escapeHtml(p.email)} (@${escapeHtml(p.username || '')})</small><br>
+                    <small style="color:var(--adm-text-muted);">${escapeHtml(p.className || p.classKey || '')}${p.senderInfo ? ` · Sender: ${escapeHtml(p.senderInfo)}` : ''}</small>
+                </td>
+                <td>
+                    <strong>${escapeHtml(planLbl)}</strong>${p.isUpgrade ? ' <span class="adm-status-pill open" style="font-size:0.65rem;">Upgrade</span>' : ''}<br>
+                    <strong>${escapeHtml(amtLabel)}</strong>${p.promoCode ? ` <small style="color:#16a34a;">(${escapeHtml(p.promoCode)})</small>` : ''}<br>
+                    <code style="font-size:0.72rem;">${escapeHtml(oid)}</code>
+                    ${expLabel ? `<div style="font-size:0.71rem; color:#16a34a;">Exp: ${escapeHtml(expLabel)}</div>` : ''}
+                </td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <code style="font-weight:700; font-size:0.82rem; padding:2px 6px; border-radius:6px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">${escapeHtml(tx || 'Not provided')}</code>
+                        ${tx ? `<button type="button" class="btn-topbar" style="padding:2px 6px; font-size:0.7rem;" onclick="adminCopyText('${escapeHtml(tx)}', 'Tx Code')" title="Copy Transaction Code">Copy</button>` : ''}
+                    </div>
+                    <small style="color:var(--adm-text-muted);">${escapeHtml(p.wallet || p.method || 'eSewa')}</small>
+                </td>
+                <td>
+                    <small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small>
+                </td>
+                <td>
+                    ${formatAdminPayStatusPill(normSt)}
+                    ${p.rejectionReason ? `<div style="font-size:0.72rem; color:#dc2626; margin-top:3px;">${escapeHtml(p.rejectionReason)}</div>` : ''}
+                </td>
+                <td>
+                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                        ${normSt !== 'paid' ? `
+                            <button type="button" class="btn-adm-dark" style="padding:5px 9px; font-size:0.75rem;" onclick="handleAdminApproveOrder('${escapeHtml(oid)}')">Approve &amp; Unlock</button>
+                        ` : ''}
+                        ${isPendingOrAwaiting ? `
+                            <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.75rem; color:#dc2626;" onclick="handleAdminRejectOrder('${escapeHtml(oid)}')">Reject</button>
+                        ` : ''}
+                        <button type="button" class="btn-topbar" style="padding:5px 8px; font-size:0.75rem;" onclick="openAdminWhatsappReply('${escapeHtml(oid)}')" title="WhatsApp reply or copy confirmation"><i class="fa-brands fa-whatsapp"></i></button>
+                        ${normSt === 'paid' ? `
+                            <button type="button" class="btn-topbar" style="padding:5px 8px; font-size:0.75rem;" onclick="handleAdminRefundPayment('${escapeHtml(p.id)}')">Refund</button>
+                        ` : ''}
+                        <button type="button" class="btn-topbar danger" style="padding:5px 8px; font-size:0.75rem;" onclick="handleAdminDeletePayment('${escapeHtml(p.id)}')">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    };
+
     mount.innerHTML = `
-        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
-            <input type="search" id="paymentSearchInput" class="adm-input" style="flex:1; min-width:220px;"
-                placeholder="Search by student, username, Gmail, order ID, or txn ref..."
+        <!-- Live KPI Summary Cards -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(165px, 1fr)); gap:12px; margin-bottom:18px;">
+            <div style="padding:14px 16px; border-radius:12px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
+                <div style="font-size:0.72rem; text-transform:uppercase; color:var(--adm-text-muted); font-weight:600;">Total Verified Revenue</div>
+                <div style="font-size:1.3rem; font-weight:700; color:#16a34a; margin-top:4px;">Rs. ${totalVerifiedRevenue.toLocaleString()}</div>
+                <div style="font-size:0.75rem; color:var(--adm-text-muted);">Today: Rs. ${todayRevenue.toLocaleString()}</div>
+            </div>
+            <div style="padding:14px 16px; border-radius:12px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
+                <div style="font-size:0.72rem; text-transform:uppercase; color:var(--adm-text-muted); font-weight:600;">Verified Paid Students</div>
+                <div style="font-size:1.3rem; font-weight:700; margin-top:4px;">${padandasCount + topperCount}</div>
+                <div style="font-size:0.75rem; color:var(--adm-text-muted);">Padandas: <strong>${padandasCount}</strong> &middot; Topper: <strong>${topperCount}</strong></div>
+            </div>
+            <div style="padding:14px 16px; border-radius:12px; background:${pendingQueue.length > 0 ? 'rgba(217,119,6,0.1)' : 'var(--adm-bg-subtle)'}; border:1px solid ${pendingQueue.length > 0 ? '#d97706' : 'var(--adm-border)'};">
+                <div style="font-size:0.72rem; text-transform:uppercase; color:var(--adm-text-muted); font-weight:600;">Pending Verification</div>
+                <div style="font-size:1.3rem; font-weight:700; color:${pendingQueue.length > 0 ? '#d97706' : 'inherit'}; margin-top:4px;">${pendingQueue.length}</div>
+                <div style="font-size:0.75rem; color:var(--adm-text-muted);">Priority queue below</div>
+            </div>
+            <div style="padding:14px 16px; border-radius:12px; background:var(--adm-bg-subtle); border:1px solid var(--adm-border);">
+                <div style="font-size:0.72rem; text-transform:uppercase; color:var(--adm-text-muted); font-weight:600;">Verified / Rejected Orders</div>
+                <div style="font-size:1.3rem; font-weight:700; margin-top:4px;">${verifiedList.length} / ${rejectedList.length}</div>
+                <div style="font-size:0.75rem; color:var(--adm-text-muted);">Total orders: ${list.length}</div>
+            </div>
+        </div>
+
+        <!-- Pending Verification Queue (Top Priority) -->
+        ${pendingQueue.length > 0 ? `
+            <div style="margin-bottom:20px; padding:14px; border-radius:12px; border:1px solid #d97706; background:rgba(217,119,6,0.06);">
+                <h3 style="margin:0 0 10px 0; font-size:0.96rem; color:#b45309;">Pending Verification Queue (${pendingQueue.length})</h3>
+                <div class="adm-table-wrap">
+                    <table class="adm-table">
+                        <thead>
+                            <tr>
+                                <th>Student &amp; Class</th>
+                                <th>Order &amp; Plan</th>
+                                <th>Transaction Code &amp; Wallet</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>${pendingQueue.map(renderPaymentRow).join('')}</tbody>
+                    </table>
+                </div>
+            </div>
+        ` : ''}
+
+        <!-- Search & Filters -->
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
+            <input type="search" id="paymentSearchInput" class="adm-input" style="flex:1; min-width:210px;"
+                placeholder="Search Tx Code, Order ID, Name, Username, or Email..."
                 value="${escapeHtml(adminPaymentSearchQuery)}"
                 oninput="adminPaymentSearchQuery = this.value; renderPaymentsTab();">
             <select id="paymentStatusFilter" class="adm-select compact" onchange="adminPaymentStatusFilter = this.value; renderPaymentsTab();">
-                <option value="all" ${stFilter === 'all' ? 'selected' : ''}>All Payments (${list.length})</option>
-                <option value="pending" ${stFilter === 'pending' ? 'selected' : ''}>Pending (${pendingCount})</option>
-                <option value="paid" ${stFilter === 'paid' ? 'selected' : ''}>Confirmed (${paidCount})</option>
-                <option value="failed" ${stFilter === 'failed' ? 'selected' : ''}>Unsuccessful (${failedCount})</option>
+                <option value="all" ${stFilter === 'all' ? 'selected' : ''}>All Statuses</option>
+                <option value="pending" ${stFilter === 'pending' ? 'selected' : ''}>Pending (${pendingQueue.length})</option>
+                <option value="paid" ${stFilter === 'paid' ? 'selected' : ''}>Verified (${verifiedList.length})</option>
+                <option value="failed" ${stFilter === 'failed' ? 'selected' : ''}>Rejected (${rejectedList.length})</option>
                 <option value="refunded" ${stFilter === 'refunded' ? 'selected' : ''}>Refunded</option>
             </select>
+            <select id="paymentPlanFilter" class="adm-select compact" onchange="adminPaymentPlanFilter = this.value; renderPaymentsTab();">
+                <option value="all" ${plFilter === 'all' ? 'selected' : ''}>All Plans</option>
+                <option value="gold" ${plFilter === 'gold' ? 'selected' : ''}>Padandas</option>
+                <option value="diamond" ${plFilter === 'diamond' ? 'selected' : ''}>Topper</option>
+            </select>
+            <select id="paymentClassFilter" class="adm-select compact" onchange="adminPaymentClassFilter = this.value; renderPaymentsTab();">
+                <option value="all" ${clFilter === 'all' ? 'selected' : ''}>All Classes</option>
+                <option value="class-12" ${clFilter === 'class-12' ? 'selected' : ''}>Class 12</option>
+                <option value="class-11" ${clFilter === 'class-11' ? 'selected' : ''}>Class 11</option>
+                <option value="class-10" ${clFilter === 'class-10' ? 'selected' : ''}>Class 10</option>
+                <option value="after-12" ${clFilter === 'after-12' ? 'selected' : ''}>Entrance Prep</option>
+            </select>
+            <select id="paymentMethodFilter" class="adm-select compact" onchange="adminPaymentMethodFilter = this.value; renderPaymentsTab();">
+                <option value="all" ${mtFilter === 'all' ? 'selected' : ''}>All Methods</option>
+                <option value="esewa" ${mtFilter === 'esewa' ? 'selected' : ''}>eSewa</option>
+                <option value="fonepay" ${mtFilter === 'fonepay' ? 'selected' : ''}>Fonepay / Bank</option>
+                <option value="khalti" ${mtFilter === 'khalti' ? 'selected' : ''}>Khalti</option>
+                <option value="connectips" ${mtFilter === 'connectips' ? 'selected' : ''}>ConnectIPS</option>
+            </select>
         </div>
-        <div style="font-size:0.82rem; color:var(--adm-text-muted); margin-bottom:10px;">
-            Showing <strong>${filtered.length}</strong> of <strong>${list.length}</strong> payment records &middot;
-            Confirmed: <strong>${paidCount}</strong> &middot; Pending: <strong>${pendingCount}</strong> &middot; Unsuccessful: <strong>${failedCount}</strong>
-        </div>
+
+        <h3 style="margin:0 0 8px 0; font-size:0.94rem;">All Transactions Ledger (${filtered.length} of ${list.length})</h3>
         ${filtered.length === 0 ? `
             <div style="padding:24px; text-align:center; color:var(--adm-text-muted); border:1px dashed var(--adm-border); border-radius:10px;">
-                ${list.length === 0 ? 'No plan purchases submitted yet.' : 'No payment records match your search/filter.'}
+                ${list.length === 0 ? 'No submitted payment orders yet.' : 'No payment records match your filters.'}
             </div>
         ` : `
-        <div class="adm-table-wrap">
-            <table class="adm-table">
-                <thead>
-                    <tr>
-                        <th>Student &amp; Member ID</th>
-                        <th>Class</th>
-                        <th>Order, Plan &amp; Expiry</th>
-                        <th>eSewa Txn ID</th>
-                        <th>Submitted / Updated</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${filtered.map(p => {
-                        const normSt = normalizeAdminPayStatus(p.status);
-                        const isPendingOrAwaiting = normSt === 'pending' || normSt === 'awaiting_confirmation';
-                        const expLabel = p.expiresAt ? new Date(p.expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
-                        return `
-                            <tr>
-                                <td>
-                                    <strong>${escapeHtml(p.fullName)}</strong><br>
-                                    <small style="color:var(--adm-text-muted);">${escapeHtml(p.email)} (@${escapeHtml(p.username)})</small><br>
-                                    <code style="font-size:0.7rem; color:var(--adm-text-muted);">${escapeHtml(p.userId || '')}</code>
-                                </td>
-                                <td>${escapeHtml(p.className || p.classKey)}</td>
-                                <td>
-                                    <strong>${escapeHtml(p.planName)}</strong> (${escapeHtml(p.amount)})<br>
-                                    <code style="font-size:0.72rem;">${escapeHtml(p.orderId || p.id)}</code>
-                                    ${expLabel ? `<div style="font-size:0.72rem; color:#16a34a; margin-top:2px;">Expires: ${escapeHtml(expLabel)}</div>` : ''}
-                                </td>
-                                <td><code>${escapeHtml(p.transactionId || 'Not provided')}</code></td>
-                                <td>
-                                    <small>${p.createdAt ? escapeHtml(new Date(p.createdAt).toLocaleString()) : '—'}</small>
-                                    ${p.lastProviderCheckAt ? `<br><small style="color:var(--adm-text-muted);">Provider check: ${formatRelativeOrLocalTime(p.lastProviderCheckAt)}</small>` : ''}
-                                </td>
-                                <td>${formatAdminPayStatusPill(normSt)}</td>
-                                <td>
-                                    <div style="display:flex; flex-direction:column; gap:6px;">
-                                        ${isPendingOrAwaiting ? `
-                                            <input type="text" class="adm-input" id="payNote-${escapeHtml(p.id)}" placeholder="Verification note..." style="min-width:150px; padding:5px 8px; font-size:0.78rem;">
-                                        ` : (p.adminNote ? `<small style="color:var(--adm-text-muted);">${escapeHtml(p.adminNote)}</small>` : '')}
-                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                            ${normSt !== 'paid' ? `
-                                                <button type="button" class="btn-adm-dark" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', true)">Verify &amp; Activate</button>
-                                            ` : ''}
-                                            ${isPendingOrAwaiting ? `
-                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminCheckProviderStatus('${escapeHtml(p.id)}')" title="Check transaction status against eSewa provider">Check Provider</button>
-                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem; color:#dc2626;" onclick="handleAdminPaymentDecision('${escapeHtml(p.id)}', false)">Mark Unsuccessful</button>
-                                            ` : ''}
-                                            ${normSt === 'paid' ? `
-                                                <button type="button" class="btn-topbar" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminRefundPayment('${escapeHtml(p.id)}')">Refund</button>
-                                            ` : ''}
-                                            <button type="button" class="btn-topbar danger" style="padding:5px 9px; font-size:0.76rem;" onclick="handleAdminDeletePayment('${escapeHtml(p.id)}')">Delete</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    }).join('')}
-                </tbody>
-            </table>
-        </div>
+            <div class="adm-table-wrap" style="max-height:460px; overflow-y:auto;">
+                <table class="adm-table">
+                    <thead>
+                        <tr>
+                            <th>Student &amp; Class</th>
+                            <th>Order &amp; Plan</th>
+                            <th>Transaction Code &amp; Wallet</th>
+                            <th>Submitted</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${filtered.map(renderPaymentRow).join('')}</tbody>
+                </table>
+            </div>
         `}
     `;
 
@@ -5016,6 +5130,113 @@ function renderPaymentsTab() {
             }
         }
     }
+}
+
+async function handleAdminApproveOrder(orderId) {
+    if (!orderId) return;
+    setSaveStatus('Approving...');
+    try {
+        const res = await fetch(`/api/admin/payments/${encodeURIComponent(orderId)}/approve`, {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({ action: 'ADMIN_APPROVE_ORDER', orderId })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Approval failed');
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        setSaveStatus('Saved', true);
+        showAdminToast(json.message || 'Order approved and plan unlocked!');
+        broadcastUpdate('PERMISSIONS_UPDATE');
+        await pollAdminLiveUpdates(true);
+    } catch (err) {
+        setSaveStatus('Error');
+        showAdminToast(err.message || 'Could not approve order.', 'error');
+    }
+}
+
+async function handleAdminRejectOrder(orderId) {
+    if (!orderId) return;
+    const reason = prompt('Enter rejection reason for the student (e.g. "Transaction code not found", "Amount mismatch"):', 'Transaction code not found');
+    if (reason === null) return;
+    const cleanReason = String(reason || '').trim() || 'Payment verification failed.';
+    setSaveStatus('Rejecting...');
+    try {
+        const res = await fetch(`/api/admin/payments/${encodeURIComponent(orderId)}/reject`, {
+            method: 'POST',
+            headers: getAdminHeaders(),
+            body: JSON.stringify({ action: 'ADMIN_REJECT_ORDER', orderId, rejectionReason: cleanReason })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || 'Rejection failed');
+        if (Array.isArray(json.payments)) ADMIN_PAYMENTS = json.payments;
+        setSaveStatus('Saved', true);
+        showAdminToast(json.message || 'Order rejected.');
+        broadcastUpdate('PAYMENT_UPDATED');
+        await pollAdminLiveUpdates(true);
+    } catch (err) {
+        setSaveStatus('Error');
+        showAdminToast(err.message || 'Could not reject order.', 'error');
+    }
+}
+
+function openAdminWhatsappReply(orderId) {
+    const p = (ADMIN_PAYMENTS || []).find(x => x.orderId === orderId || x.id === orderId);
+    if (!p) return;
+    const planLbl = p.planLabel || getFriendlyAdminPlanName(p.planKey || p.planId);
+    const st = normalizeAdminPayStatus(p.status);
+    const msg = st === 'paid'
+        ? `Namaste ${p.studentName || p.fullName || 'Student'}, your BPG EDUCARE payment (${p.orderId || p.id}, ${p.amount}) is VERIFIED! Your ${planLbl} plan is now active. Happy studying!`
+        : (st === 'failed'
+            ? `Namaste ${p.studentName || p.fullName || 'Student'}, your BPG EDUCARE order (${p.orderId || p.id}) could not be verified: ${p.rejectionReason || 'Please recheck your transaction code'}. Please resubmit from the website.`
+            : `Namaste ${p.studentName || p.fullName || 'Student'}, we received your BPG EDUCARE payment order (${p.orderId || p.id}, Tx: ${p.txCode || p.transactionId || 'N/A'}) and are verifying it shortly.`);
+    const phoneDigits = String(p.senderInfo || '').replace(/[^\d]/g, '');
+    if (phoneDigits.length >= 10) {
+        const cleanPhone = phoneDigits.length === 10 ? `977${phoneDigits}` : phoneDigits;
+        window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+    } else {
+        adminCopyText(msg, 'WhatsApp reply copied');
+    }
+}
+
+function exportPaymentsCsv() {
+    const list = (Array.isArray(ADMIN_PAYMENTS) ? ADMIN_PAYMENTS : []).filter(p => p && p.status !== 'created');
+    if (list.length === 0) {
+        showAdminToast('No payment records to export.', 'error');
+        return;
+    }
+    const headers = ['OrderID', 'StudentName', 'Username', 'Email', 'Class', 'Plan', 'IsUpgrade', 'BaseAmount', 'Discount', 'PromoCode', 'FinalAmount', 'Wallet', 'TxCode', 'SenderInfo', 'Status', 'RejectionReason', 'VerifiedBy', 'VerifiedAt', 'CreatedAt'];
+    const rows = list.map(p => [
+        p.orderId || p.id || '',
+        p.studentName || p.fullName || '',
+        p.username || '',
+        p.email || '',
+        p.className || p.classKey || '',
+        p.planLabel || getFriendlyAdminPlanName(p.planKey || p.planId),
+        p.isUpgrade ? 'YES' : 'NO',
+        p.baseAmount ?? p.expectedAmount ?? '',
+        p.discountAmount ?? 0,
+        p.promoCode || '',
+        p.finalAmount ?? p.expectedAmount ?? '',
+        p.wallet || p.method || 'eSewa',
+        p.txCode || p.transactionId || '',
+        p.senderInfo || '',
+        normalizeAdminPayStatus(p.status).toUpperCase(),
+        p.rejectionReason || '',
+        p.verifiedBy || '',
+        p.verifiedAt || p.reviewedAt || '',
+        p.createdAt || ''
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bpg-educare-payments-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showAdminToast('Exported payment ledger CSV.');
 }
 
 async function handleAdminReconcilePayments() {
@@ -5637,15 +5858,26 @@ function renderSiteSettings() {
     const mount = document.getElementById('siteSettingsMount');
     if (!mount || !ADMIN_STATE) return;
     const s = ADMIN_STATE.siteSettings || {};
+    const promoLines = (Array.isArray(s.promoCodes) ? s.promoCodes : [])
+        .map(p => `${p.code}:${p.type || 'flat'}:${p.value || 0}:${p.planKey || 'all'}:${p.active === false ? 'off' : 'on'}`)
+        .join('\n');
     mount.innerHTML = `
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:14px;">
             <div>
                 <label class="adm-label">WhatsApp Number (with country code)</label>
                 <input type="text" id="setWhatsappNumber" class="adm-input" value="${escapeHtml(s.whatsappNumber || '9779866064252')}" placeholder="9779866064252">
             </div>
             <div>
                 <label class="adm-label">eSewa QR Image URL / Path</label>
-                <input type="text" id="setEsewaQrUrl" class="adm-input" value="${escapeHtml(s.esewaQrUrl || 'images/payment_qr.png')}" placeholder="images/payment_qr.png">
+                <input type="text" id="setEsewaQrUrl" class="adm-input" value="${escapeHtml(s.esewaQrUrl || 'images/payment_qr_esewa.jpg')}" placeholder="images/payment_qr_esewa.jpg">
+            </div>
+            <div>
+                <label class="adm-label">Bank / Fonepay QR Image URL / Path</label>
+                <input type="text" id="setBankQrUrl" class="adm-input" value="${escapeHtml(s.bankQrUrl !== undefined ? s.bankQrUrl : 'images/payment_qr_bank.jpg')}" placeholder="images/payment_qr_bank.jpg">
+            </div>
+            <div>
+                <label class="adm-label">Bank / Fonepay Label</label>
+                <input type="text" id="setBankName" class="adm-input" value="${escapeHtml(s.bankName || 'Prime Commercial Bank Ltd. (Fonepay)')}">
             </div>
             <div>
                 <label class="adm-label">eSewa Merchant Name</label>
@@ -5656,16 +5888,44 @@ function renderSiteSettings() {
                 <input type="text" id="setGoogleClientId" class="adm-input" value="${escapeHtml(s.googleClientId || '')}" placeholder="12345-abc.apps.googleusercontent.com">
             </div>
         </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start;">
+            <div>
+                <label class="adm-label">Promo Codes (one per line: CODE:flat|percent:AMOUNT:all|gold|diamond:on|off)</label>
+                <textarea id="setPromoCodesText" class="adm-input" rows="3" placeholder="NEB200:flat:200:all:on&#10;TOPPER10:percent:10:diamond:on">${escapeHtml(promoLines)}</textarea>
+            </div>
+            <div style="padding:12px 14px; border-radius:10px; border:1px solid var(--adm-border); background:var(--adm-bg-subtle);">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:600; font-size:0.86rem;">
+                    <input type="checkbox" id="setSingleDeviceSession" ${s.singleDeviceSession !== false ? 'checked' : ''}>
+                    Enforce Single-Device Session (blocks account sharing)
+                </label>
+                <p style="margin:6px 0 0; font-size:0.78rem; color:var(--adm-text-muted);">When enabled, signing in on a new phone/browser invalidates the older session immediately.</p>
+            </div>
+        </div>
     `;
 }
 
 async function saveSiteSettings() {
     const whatsappNumber = (document.getElementById('setWhatsappNumber')?.value || '').replace(/[^\d]/g, '') || '9779866064252';
-    const esewaQrUrl = document.getElementById('setEsewaQrUrl')?.value.trim() || 'images/payment_qr.png';
+    const esewaQrUrl = document.getElementById('setEsewaQrUrl')?.value.trim() || 'images/payment_qr_esewa.jpg';
+    const bankQrUrl = (document.getElementById('setBankQrUrl')?.value || '').trim();
+    const bankName = document.getElementById('setBankName')?.value.trim() || 'Prime Commercial Bank Ltd. (Fonepay)';
     const esewaMerchantName = document.getElementById('setEsewaMerchant')?.value.trim() || 'BPG EDUCARE';
     const googleClientId = document.getElementById('setGoogleClientId')?.value.trim() || '';
+    const singleDeviceSession = document.getElementById('setSingleDeviceSession')?.checked !== false;
+    const rawPromos = String(document.getElementById('setPromoCodesText')?.value || '').split('\n');
+    const promoCodes = rawPromos.map(line => line.trim()).filter(Boolean).map(line => {
+        const [code, type, val, planKey, active] = line.split(':').map(x => String(x || '').trim());
+        return {
+            code: code.toUpperCase(),
+            type: type === 'percent' ? 'percent' : 'flat',
+            value: Math.max(0, Number(val) || 0),
+            planKey: ['gold', 'diamond'].includes((planKey || '').toLowerCase()) ? planKey.toLowerCase() : 'all',
+            active: (active || 'on').toLowerCase() !== 'off'
+        };
+    }).filter(p => p.code && p.value > 0);
+
     await persistAcademyState({
-        siteSettings: { whatsappNumber, esewaQrUrl, esewaMerchantName, googleClientId }
+        siteSettings: { whatsappNumber, esewaQrUrl, bankQrUrl, bankName, esewaMerchantName, googleClientId, singleDeviceSession, promoCodes }
     }, 'Site settings saved.');
 }
 
