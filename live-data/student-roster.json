@@ -1,6 +1,6 @@
 {
-  "revision": 425,
-  "lastUpdated": "2026-11-27T16:43:54.981Z",
+  "revision": 426,
+  "lastUpdated": "2026-11-27T16:43:58.268Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1004,11 +1004,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_73762dbfe33de94c430943ac",
       "lastLoginAt": "2026-11-27T16:29:41.339Z",
-      "lastActiveAt": "2026-11-27T16:43:54.980Z",
-      "currentSection": "Viewing CLASS-12 Lesson",
+      "lastActiveAt": "2026-11-27T16:43:58.268Z",
+      "currentSection": "Viewing CLASS-12 PDF",
       "deviceInfo": "Chrome on Windows",
       "ipAddress": "27.34.72.129",
       "activityLog": [
+        {
+          "at": "2026-11-27T16:43:58.268Z",
+          "section": "Viewing CLASS-12 PDF",
+          "device": "Chrome on Windows",
+          "ip": "27.34.72.129"
+        },
         {
           "at": "2026-11-27T16:43:54.980Z",
           "section": "Viewing CLASS-12 Lesson",
