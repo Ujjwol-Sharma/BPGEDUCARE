@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T16:28:01.522Z",
+  "lastUpdated": "2026-11-27T16:42:37.309Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3220,7 +3220,20 @@
     "minAuthVersion": 2,
     "promoCodes": []
   },
-  "notifications": [],
+  "notifications": [
+    {
+      "id": "notif_1795797749481",
+      "title": "📢 *Important Notice — BPG EDUCARE*",
+      "body": "Dear Students,\nWe have upgraded our security system on www.bpgeducare.com. All users are requested to complete a quick one-time verification:\n1️⃣ Log in again using your *same username*\n2️⃣ Complete *6-digit Email OTP verification* (required for both Gmail & Google Sign-In users)\n3️⃣ Tick & accept our updated *Terms & Conditions and Privacy Policy*\n✅ Your account, class, and paid *Padandas / Topper* plan are 100% safe.\nNeed help? Message us on WhatsApp: 9866064252\n—Technical Team BPG EDUCARE",
+      "category": "Announcement",
+      "scope": "sitewide",
+      "published": true,
+      "publishStatus": "published",
+      "publishAt": "",
+      "createdAt": "2026-11-27T16:42:29.481Z",
+      "updatedAt": "2026-11-27T16:42:29.481Z"
+    }
+  ],
   "chatbotFaqs": [
     {
       "id": "faq_1795618720244",
@@ -4818,7 +4831,7 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 272,
+  "revision": 273,
   "explicitDeleteUploadId": "lpdf_1795573857054_0",
   "posts": [],
   "adminUsers": []
