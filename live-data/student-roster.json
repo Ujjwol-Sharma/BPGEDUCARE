@@ -1,6 +1,6 @@
 {
-  "revision": 500,
-  "lastUpdated": "2026-11-27T17:41:23.630Z",
+  "revision": 501,
+  "lastUpdated": "2026-11-27T17:41:29.799Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1020,11 +1020,18 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_1c18f6be80f8a554dadaf060",
       "lastLoginAt": "2026-11-27T17:41:23.574Z",
-      "lastActiveAt": "2026-11-27T17:41:23.574Z",
-      "currentSection": "",
+      "lastActiveAt": "2026-11-27T17:41:29.798Z",
+      "currentSection": "Grade XI Mathematics · notes",
       "deviceInfo": "Chrome on macOS",
       "ipAddress": "104.28.240.25",
-      "activityLog": [],
+      "activityLog": [
+        {
+          "at": "2026-11-27T17:41:29.798Z",
+          "section": "Grade XI Mathematics · notes",
+          "device": "Chrome on macOS",
+          "ip": "104.28.240.25"
+        }
+      ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
       "updatedAt": "2026-11-27T17:41:23.630Z",
