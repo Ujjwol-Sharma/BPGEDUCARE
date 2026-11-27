@@ -1,6 +1,6 @@
 {
-  "revision": 480,
-  "lastUpdated": "2026-11-27T17:09:45.421Z",
+  "revision": 481,
+  "lastUpdated": "2026-11-27T17:10:49.437Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -4417,11 +4417,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_71340de38160fe66b34a6b6d",
       "lastLoginAt": "2026-11-27T16:46:48.911Z",
-      "lastActiveAt": "2026-11-27T17:09:45.421Z",
-      "currentSection": "Viewing CLASS-12 Lesson",
+      "lastActiveAt": "2026-11-27T17:10:49.437Z",
+      "currentSection": "Grade XII Mathematics · notes",
       "deviceInfo": "Chrome on Android",
       "ipAddress": "27.34.32.120",
       "activityLog": [
+        {
+          "at": "2026-11-27T17:10:49.437Z",
+          "section": "Grade XII Mathematics · notes",
+          "device": "Chrome on Android",
+          "ip": "27.34.32.120"
+        },
         {
           "at": "2026-11-27T17:08:50.021Z",
           "section": "Viewing CLASS-12 Lesson",
@@ -4533,12 +4539,6 @@
         {
           "at": "2026-11-27T17:00:24.655Z",
           "section": "Grade XII Mathematics · mocktests",
-          "device": "Chrome on Android",
-          "ip": "27.34.32.120"
-        },
-        {
-          "at": "2026-11-27T17:00:24.026Z",
-          "section": "Grade XII Mathematics · notes",
           "device": "Chrome on Android",
           "ip": "27.34.32.120"
         }
