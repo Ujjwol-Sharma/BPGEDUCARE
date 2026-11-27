@@ -1,6 +1,6 @@
 {
-  "revision": 380,
-  "lastUpdated": "2026-11-27T15:38:29.047Z",
+  "revision": 381,
+  "lastUpdated": "2026-11-27T15:38:34.520Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793914520_gisk",
+      "timestamp": "2026-11-27T15:38:34.520Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Creative Chess Club: payment ORD-1795793355983-BD0A1F marked FAILED"
+    },
     {
       "id": "raud_1795793909047_vizh",
       "timestamp": "2026-11-27T15:38:29.047Z",
@@ -962,15 +971,6 @@
       "actor": "Bishal Karki (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795695590566_479p",
-      "timestamp": "2026-11-26T12:19:50.566Z",
-      "userId": "usr_e73d14f7d391",
-      "email": "celestialdusk07@gmail.com",
-      "actor": "1 2 3 (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
@@ -1219,9 +1219,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:38:29.047Z",
+      "updatedAt": "2026-11-27T15:38:34.520Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795793914520_ar2z",
+          "timestamp": "2026-11-27T15:38:34.520Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795793355983-BD0A1F marked FAILED (Payment verification failed or transaction code not found.)"
+        },
         {
           "id": "aud_1795793909047_ek0p",
           "timestamp": "2026-11-27T15:38:29.047Z",
