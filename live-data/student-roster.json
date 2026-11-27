@@ -1,6 +1,6 @@
 {
-  "revision": 290,
-  "lastUpdated": "2026-11-26T23:48:08.566Z",
+  "revision": 291,
+  "lastUpdated": "2026-11-27T01:16:55.785Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795742215785_02mg",
+      "timestamp": "2026-11-27T01:16:55.785Z",
+      "userId": "usr_950e7a880fa7",
+      "email": "rupbahadurgurung89@gmail.com",
+      "actor": "Sahima gurung (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795736867635_0bki",
       "timestamp": "2026-11-26T23:47:47.635Z",
@@ -962,18 +971,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_PLAN_CHANGE",
       "details": "Rohan Sharma: plan changed from DIAMOND to FREE"
-    },
-    {
-      "id": "raud_1795629213412_u0tt",
-      "timestamp": "2026-11-25T17:53:33.412Z",
-      "userId": "usr_6cb3f51630c9",
-      "email": "utsavsharma647@gmail.com",
-      "actor": "utsav sharma (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_950e7a880fa7",
+      "name": "Sahima gurung",
+      "username": "rupbahadurgurung89",
+      "email": "rupbahadurgurung89@gmail.com",
+      "canonicalEmail": "rupbahadurgurung89@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T01:16:55.725Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_950e7a880fa77af4",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$ff9df570c051b0c8ae5b1e6278dba31a$12f66a12d64f6243151097ea8a871835af516ccac874e488fb2c3f55ff35e25983e86a23b736c49fc523491a254c55374d5ee3564ad8c291cb85692aed8511ad",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T01:16:55.785Z",
+      "lastModifiedBy": "Sahima gurung (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795742215785_mrh6",
+          "timestamp": "2026-11-27T01:16:55.785Z",
+          "actor": "Sahima gurung (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_8560191f6da3",
       "name": "Sahara Chhetri",
