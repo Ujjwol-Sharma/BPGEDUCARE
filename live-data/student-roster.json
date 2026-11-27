@@ -1,6 +1,6 @@
 {
-  "revision": 445,
-  "lastUpdated": "2026-11-27T16:48:10.152Z",
+  "revision": 446,
+  "lastUpdated": "2026-11-27T16:48:29.728Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -4417,11 +4417,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_71340de38160fe66b34a6b6d",
       "lastLoginAt": "2026-11-27T16:46:48.911Z",
-      "lastActiveAt": "2026-11-27T16:48:10.152Z",
-      "currentSection": "Grade XII Mathematics · syllabus",
+      "lastActiveAt": "2026-11-27T16:48:29.727Z",
+      "currentSection": "Grade XII Mathematics · mocktests",
       "deviceInfo": "Chrome on Android",
       "ipAddress": "27.34.32.120",
       "activityLog": [
+        {
+          "at": "2026-11-27T16:48:29.727Z",
+          "section": "Grade XII Mathematics · mocktests",
+          "device": "Chrome on Android",
+          "ip": "27.34.32.120"
+        },
         {
           "at": "2026-11-27T16:48:10.152Z",
           "section": "Grade XII Mathematics · syllabus",
