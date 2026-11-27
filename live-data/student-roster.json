@@ -1,6 +1,6 @@
 {
   "revision": 318,
-  "lastUpdated": "2026-11-27T11:02:39.361Z",
+  "lastUpdated": "2026-11-27T11:02:38.058Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -73,13 +73,13 @@
   ],
   "auditLog": [
     {
-      "id": "raud_1795777359361_l7fu",
-      "timestamp": "2026-11-27T11:02:39.361Z",
-      "userId": "usr_c8cdbe5a4b5a",
-      "email": "sonish.diyali.cs@gmail.com",
+      "id": "raud_1795777358058_lmhd",
+      "timestamp": "2026-11-27T11:02:38.058Z",
+      "userId": "usr_9850039770ec",
+      "email": "rupeshbhandari071@gmail.com",
       "actor": "Admin Console",
       "action": "PAYMENT_FAILED",
-      "details": "Sonish Diyali: payment ORD-1795698975189-827F77 marked FAILED"
+      "details": "Rupesh Bhandari: payment ORD-1795699830157-910540 marked FAILED"
     },
     {
       "id": "raud_1795777356214_miy8",
@@ -2896,7 +2896,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "failed",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T12:17:53.333Z",
       "verificationMethod": "google_oauth",
@@ -2910,16 +2910,9 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-27T11:02:39.360Z",
-      "lastModifiedBy": "Admin Console",
+      "updatedAt": "2026-11-26T13:16:15.190Z",
+      "lastModifiedBy": "Sonish Diyali (Student)",
       "auditLog": [
-        {
-          "id": "aud_1795777359361_qwfc",
-          "timestamp": "2026-11-27T11:02:39.360Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795698975189-827F77 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
         {
           "id": "aud_1795698975190_ef4j",
           "timestamp": "2026-11-26T13:16:15.190Z",
@@ -3183,9 +3176,16 @@
       "passkey": "scrypt$c99bcff13c16df50d4ba0ac38a032cae$49b43b9035dcc1dc5a92fbe42a8c8699d5916d822c31128809ff2840b9b63fa8635772eda1c23759fb50e4f8c16d8730099fa87e5a0f106d4bd79362bdb6f2e5",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-27T11:02:30.621Z",
+      "updatedAt": "2026-11-27T11:02:38.058Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777358058_r6pj",
+          "timestamp": "2026-11-27T11:02:38.058Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795699830157-910540 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795777350621_w8po",
           "timestamp": "2026-11-27T11:02:30.621Z",
