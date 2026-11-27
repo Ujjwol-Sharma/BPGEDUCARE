@@ -1,6 +1,6 @@
 {
-  "revision": 292,
-  "lastUpdated": "2026-11-27T01:22:51.566Z",
+  "revision": 293,
+  "lastUpdated": "2026-11-27T01:40:58.550Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795743658550_0gfo",
+      "timestamp": "2026-11-27T01:40:58.550Z",
+      "userId": "usr_dd922bb65199",
+      "email": "suryanshkc123@gmail.com",
+      "actor": "Suryansh (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795742571566_bzhx",
       "timestamp": "2026-11-27T01:22:51.566Z",
@@ -962,18 +971,45 @@
       "actor": "Admin Console",
       "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
       "details": "Creative Chess Club: GOLD activated via verified payment (ORD-1795625777877-D76F26)"
-    },
-    {
-      "id": "raud_1795629722449_uuor",
-      "timestamp": "2026-11-25T18:02:02.449Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-      "details": "Creative Chess Club: DIAMOND activated via verified payment (ORD-1795629710591-0A1AE1)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_dd922bb65199",
+      "name": "Suryansh",
+      "username": "suryanshkc123",
+      "email": "suryanshkc123@gmail.com",
+      "canonicalEmail": "suryanshkc123@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T01:40:58.485Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_dd922bb65199e02c",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$4f1c98aeffa58c7474d2fda81312e12e$bf8a127198b963ab41f8f8079dfe5ef347d5e53bb8ee1957b52678815d0c5416e2de888d3a2096950a4b8485a15947b55eaee5e787319d681cda70a294e7d75f",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T01:40:58.550Z",
+      "lastModifiedBy": "Suryansh (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795743658550_eaci",
+          "timestamp": "2026-11-27T01:40:58.550Z",
+          "actor": "Suryansh (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_29247965f07e",
       "name": "Suraj Paudel",
