@@ -1,6 +1,6 @@
 {
-  "revision": 391,
-  "lastUpdated": "2026-11-27T16:27:15.213Z",
+  "revision": 392,
+  "lastUpdated": "2026-11-27T16:27:22.468Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1060,11 +1060,18 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_cd7e4ec56f579ca46fe498aa",
       "lastLoginAt": "2026-11-27T16:27:15.213Z",
-      "lastActiveAt": "2026-11-27T16:27:15.213Z",
-      "currentSection": "Signed in (Class 12)",
+      "lastActiveAt": "2026-11-27T16:27:22.467Z",
+      "currentSection": "Grade XII Mathematics · mocktests",
       "deviceInfo": "Chrome on macOS",
       "ipAddress": "27.34.73.64",
-      "activityLog": [],
+      "activityLog": [
+        {
+          "at": "2026-11-27T16:27:22.467Z",
+          "section": "Grade XII Mathematics · mocktests",
+          "device": "Chrome on macOS",
+          "ip": "27.34.73.64"
+        }
+      ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
       "updatedAt": "2026-11-27T15:38:26.959Z",
