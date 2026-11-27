@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T16:27:12.633Z",
+  "lastUpdated": "2026-11-27T16:27:38.521Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3609,6 +3609,44 @@
   ],
   "payments": [
     {
+      "id": "pay_1795796858521_jjnv",
+      "orderId": "BPG-2026-00105",
+      "userId": "usr_25e888886ae4",
+      "studentName": "Creative Chess Club",
+      "fullName": "Creative Chess Club",
+      "username": "prachan",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planKey": "diamond",
+      "planId": "diamond",
+      "planLabel": "Topper",
+      "planName": "Topper",
+      "isUpgrade": false,
+      "baseAmount": 2999,
+      "discountAmount": 0,
+      "promoCode": "",
+      "finalAmount": 2999,
+      "expectedAmount": 2999,
+      "amount": "Rs. 2,999",
+      "currency": "NPR",
+      "wallet": "eSewa",
+      "method": "eSewa",
+      "txCode": "",
+      "transactionId": "",
+      "senderInfo": "",
+      "orderSignature": "775e21d632a2d81ee2b328faf3ee03e3d760c85a36b3a9f1d1721df576c0a681",
+      "status": "created",
+      "rejectionReason": "",
+      "verifiedBy": "",
+      "verifiedAt": "",
+      "adminNote": "Order created on server; awaiting QR payment and transaction code.",
+      "createdAt": "2026-11-27T16:27:38.521Z",
+      "updatedAt": "2026-11-27T16:27:38.521Z",
+      "reviewedAt": ""
+    },
+    {
       "id": "pay_1795796832633_zaam",
       "orderId": "BPG-2026-00104",
       "userId": "usr_25e888886ae4",
@@ -4776,7 +4814,7 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 269,
+  "revision": 270,
   "explicitDeleteUploadId": "lpdf_1795573857054_0",
   "posts": [],
   "adminUsers": []
