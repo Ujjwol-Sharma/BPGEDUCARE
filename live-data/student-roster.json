@@ -1,6 +1,6 @@
 {
-  "revision": 302,
-  "lastUpdated": "2026-11-27T02:25:55.724Z",
+  "revision": 303,
+  "lastUpdated": "2026-11-27T02:28:19.126Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795746499126_g1lo",
+      "timestamp": "2026-11-27T02:28:19.126Z",
+      "userId": "usr_2e57cd27d3d8",
+      "email": "ganeshsharma0224@gmail.com",
+      "actor": "Ganesh Sharma (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795746281424_b0an",
       "timestamp": "2026-11-27T02:24:41.424Z",
@@ -962,15 +971,6 @@
       "actor": "UJJWOL SHARMA (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · DIAMOND)"
-    },
-    {
-      "id": "raud_1795656891383_2wuo",
-      "timestamp": "2026-11-26T01:34:51.383Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "UJJWOL SHARMA (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1421,9 +1421,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T16:15:50.584Z",
-      "lastModifiedBy": "Ganesh Sharma (Google Sign-Up)",
+      "updatedAt": "2026-11-27T02:28:19.126Z",
+      "lastModifiedBy": "Ganesh Sharma (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795746499126_58zg",
+          "timestamp": "2026-11-27T02:28:19.126Z",
+          "actor": "Ganesh Sharma (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795709750584_zgp9",
           "timestamp": "2026-11-26T16:15:50.584Z",
