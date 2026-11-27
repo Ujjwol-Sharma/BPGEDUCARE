@@ -1,6 +1,6 @@
 {
-  "revision": 350,
-  "lastUpdated": "2026-11-27T15:06:48.417Z",
+  "revision": 351,
+  "lastUpdated": "2026-11-27T15:14:31.034Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795792471034_2z01",
+      "timestamp": "2026-11-27T15:14:31.034Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Creative Chess Club (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795791944697_w4eg",
       "timestamp": "2026-11-27T15:05:44.697Z",
@@ -962,15 +971,6 @@
       "actor": "Rupesh Bhandari (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795667409449_pqro",
-      "timestamp": "2026-11-26T04:30:09.449Z",
-      "userId": "usr_328a96817608",
-      "email": "deepsonsee@gmail.com",
-      "actor": "Deepson Thapa (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1106,9 +1106,16 @@
       "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:06:48.417Z",
-      "lastModifiedBy": "Creative Chess Club (Student)",
+      "updatedAt": "2026-11-27T15:14:31.034Z",
+      "lastModifiedBy": "Creative Chess Club (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795792471034_kxw3",
+          "timestamp": "2026-11-27T15:14:31.034Z",
+          "actor": "Creative Chess Club (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795792008417_i6kp",
           "timestamp": "2026-11-27T15:06:48.417Z",
