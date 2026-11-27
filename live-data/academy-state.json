@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:38:34.519Z",
+  "lastUpdated": "2026-11-27T16:27:12.633Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -2923,10 +2923,6 @@
     }
   },
   "sectionLocks": {
-    "class-10": {
-      "locked": true,
-      "reason": "Temporarily unavailable"
-    },
     "class-11": {
       "locked": false,
       "reason": ""
@@ -2936,8 +2932,8 @@
       "reason": ""
     },
     "after-12": {
-      "locked": true,
-      "reason": "Temporarily unavailable"
+      "locked": false,
+      "reason": ""
     }
   },
   "plansConfig": {
@@ -3221,6 +3217,7 @@
     "esewaMerchantName": "BPG EDUCARE",
     "googleClientId": "",
     "singleDeviceSession": true,
+    "minAuthVersion": 2,
     "promoCodes": []
   },
   "notifications": [],
@@ -3611,6 +3608,44 @@
     }
   ],
   "payments": [
+    {
+      "id": "pay_1795796832633_zaam",
+      "orderId": "BPG-2026-00104",
+      "userId": "usr_25e888886ae4",
+      "studentName": "Creative Chess Club",
+      "fullName": "Creative Chess Club",
+      "username": "prachan",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planKey": "gold",
+      "planId": "gold",
+      "planLabel": "Padandas",
+      "planName": "Padandas",
+      "isUpgrade": false,
+      "baseAmount": 1999,
+      "discountAmount": 0,
+      "promoCode": "",
+      "finalAmount": 1999,
+      "expectedAmount": 1999,
+      "amount": "Rs. 1,999",
+      "currency": "NPR",
+      "wallet": "eSewa",
+      "method": "eSewa",
+      "txCode": "",
+      "transactionId": "",
+      "senderInfo": "",
+      "orderSignature": "489ddbe565b98c3abdf7f1a0273e53f2887ba26843f5fa158f1753e0b4a31438",
+      "status": "created",
+      "rejectionReason": "",
+      "verifiedBy": "",
+      "verifiedAt": "",
+      "adminNote": "Order created on server; awaiting QR payment and transaction code.",
+      "createdAt": "2026-11-27T16:27:12.633Z",
+      "updatedAt": "2026-11-27T16:27:12.633Z",
+      "reviewedAt": ""
+    },
     {
       "id": "pay_1795793812509_4u1v",
       "orderId": "BPG-2026-00103",
@@ -4741,6 +4776,8 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 268,
-  "explicitDeleteUploadId": "lpdf_1795573857054_0"
+  "revision": 269,
+  "explicitDeleteUploadId": "lpdf_1795573857054_0",
+  "posts": [],
+  "adminUsers": []
 }
