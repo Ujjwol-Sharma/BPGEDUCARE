@@ -1,6 +1,6 @@
 {
-  "revision": 313,
-  "lastUpdated": "2026-11-27T11:02:30.621Z",
+  "revision": 314,
+  "lastUpdated": "2026-11-27T11:02:31.216Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777351216_k1oq",
+      "timestamp": "2026-11-27T11:02:31.216Z",
+      "userId": "usr_219268db8c0d",
+      "email": "spandan.pkr@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Spandan Gorkhali: payment ORD-1795701894581-E03223 marked FAILED"
+    },
     {
       "id": "raud_1795777350621_xk0f",
       "timestamp": "2026-11-27T11:02:30.621Z",
@@ -962,15 +971,6 @@
       "actor": "Safal Thapa (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795660175635_nnqv",
-      "timestamp": "2026-11-26T02:29:35.635Z",
-      "userId": "usr_11828397bfa7",
-      "email": "paudelruben04@gmail.com",
-      "actor": "Ruben Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 11 · FREE)"
     }
   ],
   "accounts": [
@@ -5552,7 +5552,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T12:23:55.353Z",
       "verificationMethod": "google_oauth",
@@ -5563,9 +5563,16 @@
       "passkey": "scrypt$3712dcc866d423c4f91dd98536fad283$c1ff33719f3cff2b934260cca9a45f4b5b31c6b09f2630e8b70296d49b67964be91299ac1f261b0666c3ebd97d715e34b8790761fbb0ab77157737bb718d1ff2",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T14:04:54.582Z",
-      "lastModifiedBy": "Spandan Gorkhali (Student)",
+      "updatedAt": "2026-11-27T11:02:31.216Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777351216_uo2g",
+          "timestamp": "2026-11-27T11:02:31.216Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795701894581-E03223 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795701894582_f6ny",
           "timestamp": "2026-11-26T14:04:54.582Z",
