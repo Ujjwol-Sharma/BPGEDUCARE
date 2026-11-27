@@ -1,6 +1,6 @@
 {
-  "revision": 291,
-  "lastUpdated": "2026-11-27T01:16:55.785Z",
+  "revision": 292,
+  "lastUpdated": "2026-11-27T01:22:51.566Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795742571566_bzhx",
+      "timestamp": "2026-11-27T01:22:51.566Z",
+      "userId": "usr_29247965f07e",
+      "email": "suraj0paudel20@gmail.com",
+      "actor": "Suraj Paudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795742215785_02mg",
       "timestamp": "2026-11-27T01:16:55.785Z",
@@ -962,18 +971,45 @@
       "actor": "Admin Console",
       "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
       "details": "Creative Chess Club: DIAMOND activated via verified payment (ORD-1795629710591-0A1AE1)"
-    },
-    {
-      "id": "raud_1795629716203_y2qb",
-      "timestamp": "2026-11-25T18:01:56.203Z",
-      "userId": "usr_ab78663f0a4c",
-      "email": "rohan.sharma@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_PLAN_CHANGE",
-      "details": "Rohan Sharma: plan changed from DIAMOND to FREE"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_29247965f07e",
+      "name": "Suraj Paudel",
+      "username": "suraj0paudel20",
+      "email": "suraj0paudel20@gmail.com",
+      "canonicalEmail": "suraj0paudel20@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T01:22:51.507Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_29247965f07e362b",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$bfd71b61486a038347caa1e4c489c8dd$75f1bced649ff99b97f8e22bc7f407d26214befd531a2ccabd562795de13a1b78ad5c0cd4cc0575a39a41b5ffc0508ecac0bc8ecd60207ed787e4cb7ec1c09e4",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T01:22:51.566Z",
+      "lastModifiedBy": "Suraj Paudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795742571566_twr2",
+          "timestamp": "2026-11-27T01:22:51.566Z",
+          "actor": "Suraj Paudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_950e7a880fa7",
       "name": "Sahima gurung",
