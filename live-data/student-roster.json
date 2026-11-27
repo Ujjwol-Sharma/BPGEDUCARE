@@ -1,6 +1,6 @@
 {
-  "revision": 343,
-  "lastUpdated": "2026-11-27T14:08:30.864Z",
+  "revision": 344,
+  "lastUpdated": "2026-11-27T14:36:41.805Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795790201805_d0v6",
+      "timestamp": "2026-11-27T14:36:41.805Z",
+      "userId": "usr_203abefa9959",
+      "email": "lcsaugat369@gmail.com",
+      "actor": "Saugat LC (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795788510864_rban",
       "timestamp": "2026-11-27T14:08:30.864Z",
@@ -962,18 +971,45 @@
       "actor": "safdfafadwd (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795666304247_w6ks",
-      "timestamp": "2026-11-26T04:11:44.247Z",
-      "userId": "usr_5c5a56496063",
-      "email": "rampdojha@gmail.com",
-      "actor": "Ram Prasad Ojha (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_203abefa9959",
+      "name": "Saugat LC",
+      "username": "lcsaugat369",
+      "email": "lcsaugat369@gmail.com",
+      "canonicalEmail": "lcsaugat369@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T14:36:41.728Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_203abefa9959e105",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$6c708d5f1562e7f1236a1d09c569d51e$46030e1b0c905e76dea4eb1b6cf8049d064531d761525357fe676bf7347196932568cf6d6cde8844738e1a1bce380fac97a14023be50ce0ed69d1586652befd7",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T14:36:41.805Z",
+      "lastModifiedBy": "Saugat LC (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795790201805_tsd6",
+          "timestamp": "2026-11-27T14:36:41.805Z",
+          "actor": "Saugat LC (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_054d86b7afab",
       "name": "subarna acharya",
