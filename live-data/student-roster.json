@@ -1,6 +1,6 @@
 {
-  "revision": 307,
-  "lastUpdated": "2026-11-27T10:59:21.188Z",
+  "revision": 308,
+  "lastUpdated": "2026-11-27T11:02:02.730Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777322730_nted",
+      "timestamp": "2026-11-27T11:02:02.730Z",
+      "userId": "usr_cfe03652d5e2",
+      "email": "neerjbhattarai625@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "NIraj Bhattarai: payment ORD-1795775080365-DDCDCD marked FAILED"
+    },
     {
       "id": "raud_1795777161188_60am",
       "timestamp": "2026-11-27T10:59:21.188Z",
@@ -962,15 +971,6 @@
       "actor": "Kritan Bastola (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795659449811_lny3",
-      "timestamp": "2026-11-26T02:17:29.811Z",
-      "userId": "usr_4eb8560d0956",
-      "email": "prashillamichhane123@gmail.com",
-      "actor": "Prashil Lamichhane (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
@@ -987,7 +987,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-27T10:23:23.597Z",
       "verificationMethod": "google_oauth",
@@ -998,9 +998,16 @@
       "passkey": "scrypt$005b70a6722f3051388f2f5112ece6d8$c3706bd03309e0e89bf910a65a6c7076678f9f43dac14ec77c76d061c1f59f3b0e09376979cfcfe3bf03437f647f3a89476283fc33da991257a5e21aa5626306",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T10:24:40.366Z",
-      "lastModifiedBy": "NIraj Bhattarai (Student)",
+      "updatedAt": "2026-11-27T11:02:02.730Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777322730_pv82",
+          "timestamp": "2026-11-27T11:02:02.730Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795775080365-DDCDCD marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795775080366_ulnv",
           "timestamp": "2026-11-27T10:24:40.366Z",
