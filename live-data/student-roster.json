@@ -1,6 +1,6 @@
 {
-  "revision": 355,
-  "lastUpdated": "2026-11-27T15:18:02.659Z",
+  "revision": 356,
+  "lastUpdated": "2026-11-27T15:18:04.343Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795792684343_hmyb",
+      "timestamp": "2026-11-27T15:18:04.343Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+      "details": "Creative Chess Club: GOLD active via verified payment (ORD-1795792008416-F4CCC5)"
+    },
     {
       "id": "raud_1795792682659_jeih",
       "timestamp": "2026-11-27T15:18:02.659Z",
@@ -962,15 +971,6 @@
       "actor": "Sudarshan (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795693088669_74hz",
-      "timestamp": "2026-11-26T11:38:08.669Z",
-      "userId": "usr_b96fbb0877b4",
-      "email": "gautamparshav6@gmail.com",
-      "actor": "Sahaj (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1090,12 +1090,12 @@
       "canonicalEmail": "creativechessclub01@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "free",
-      "planExpiresAt": "",
-      "planExplicitlySet": false,
+      "plan": "gold",
+      "planExpiresAt": "2027-11-27T15:18:04.343Z",
+      "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "paid",
       "emailVerified": true,
       "verifiedAt": "2026-11-27T11:20:21.931Z",
       "verificationMethod": "google_oauth",
@@ -1106,9 +1106,16 @@
       "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:18:02.659Z",
+      "updatedAt": "2026-11-27T15:18:04.343Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795792684343_xbji",
+          "timestamp": "2026-11-27T15:18:04.343Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
+          "details": "Order ORD-1795792008416-F4CCC5 (Txn N/A, NPR 1999) confirmed PAID. Plan FREE -> GOLD (expires 2027-11-27)"
+        },
         {
           "id": "aud_1795792682659_6smq",
           "timestamp": "2026-11-27T15:18:02.659Z",
