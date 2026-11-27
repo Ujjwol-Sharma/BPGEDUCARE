@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:34:46.513Z",
+  "lastUpdated": "2026-11-27T15:34:51.889Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3223,18 +3223,7 @@
     "singleDeviceSession": true,
     "promoCodes": []
   },
-  "notifications": [
-    {
-      "id": "notif_mock_live_mt_1795626947423",
-      "title": "Mock Test Now Live: Opening Mock Test",
-      "body": "Your scheduled Class 12 mock test (15 min, 11 questions) is now open.",
-      "category": "Exam Update",
-      "scope": "class-12",
-      "published": true,
-      "createdAt": "2026-11-26T02:20:00.000Z",
-      "updatedAt": "2026-11-26T02:21:05.393Z"
-    }
-  ],
+  "notifications": [],
   "chatbotFaqs": [
     {
       "id": "faq_1795618720244",
@@ -4674,6 +4663,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 256,
+  "revision": 259,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
