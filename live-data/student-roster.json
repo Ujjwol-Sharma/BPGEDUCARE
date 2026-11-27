@@ -1,6 +1,6 @@
 {
-  "revision": 435,
-  "lastUpdated": "2026-11-27T16:47:10.422Z",
+  "revision": 436,
+  "lastUpdated": "2026-11-27T16:47:13.338Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -4417,11 +4417,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_71340de38160fe66b34a6b6d",
       "lastLoginAt": "2026-11-27T16:46:48.911Z",
-      "lastActiveAt": "2026-11-27T16:47:10.422Z",
-      "currentSection": "Grade XII Mathematics · syllabus",
+      "lastActiveAt": "2026-11-27T16:47:13.338Z",
+      "currentSection": "Grade XII Mathematics · notes",
       "deviceInfo": "Chrome on Android",
       "ipAddress": "27.34.32.120",
       "activityLog": [
+        {
+          "at": "2026-11-27T16:47:13.338Z",
+          "section": "Grade XII Mathematics · notes",
+          "device": "Chrome on Android",
+          "ip": "27.34.32.120"
+        },
         {
           "at": "2026-11-27T16:47:10.422Z",
           "section": "Grade XII Mathematics · syllabus",
