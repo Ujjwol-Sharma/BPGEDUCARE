@@ -1,6 +1,6 @@
 {
-  "revision": 381,
-  "lastUpdated": "2026-11-27T15:38:34.520Z",
+  "revision": 382,
+  "lastUpdated": "2026-11-27T15:38:46.296Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793926295_v89d",
+      "timestamp": "2026-11-27T15:38:46.295Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Creative Chess Club (creativechessclub01@gmail.com)"
+    },
     {
       "id": "raud_1795793914520_gisk",
       "timestamp": "2026-11-27T15:38:34.520Z",
@@ -962,15 +971,6 @@
       "actor": "Sonish Diyali (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795695830366_olom",
-      "timestamp": "2026-11-26T12:23:50.366Z",
-      "userId": "usr_1e8bfafb5695",
-      "email": "bishalkarkiii19@gmail.com",
-      "actor": "Bishal Karki (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1183,189 +1183,6 @@
           "id": "aud_1795778997060_xd29",
           "timestamp": "2026-11-27T11:29:57.059Z",
           "actor": "Aryan Giri (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_25e888886ae4",
-      "name": "Creative Chess Club",
-      "username": "creativechessclub01",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExpiresAt": "2027-11-27T15:18:04.343Z",
-      "planExplicitlySet": true,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-27T11:20:21.931Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_25e888886ae4fdd5",
-      "avatarUrl": "",
-      "hasPassword": true,
-      "passkey": "scrypt$0fca9d82c852fbf9ac8aac1307905497$cf96c7553ad4e310c96ec4ebd98cd5ad44544e7834d66b87ccb8694b61661ff188b4e39a3317472f9225e7d6bcbc708d5780d218ed389981a7f2b262aa47a11c",
-      "activeSessionId": "sid_5b515517e13f6310fab7488b",
-      "lastLoginAt": "2026-11-27T15:38:19.207Z",
-      "lastActiveAt": "2026-11-27T15:38:19.207Z",
-      "deviceInfo": "Chrome on Windows",
-      "readNotificationIds": [
-        "notif_mock_live_mt_1795626947423",
-        "notif_1795630727465"
-      ],
-      "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:38:34.520Z",
-      "lastModifiedBy": "Admin Console",
-      "auditLog": [
-        {
-          "id": "aud_1795793914520_ar2z",
-          "timestamp": "2026-11-27T15:38:34.520Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795793355983-BD0A1F marked FAILED (Payment verification failed or transaction code not found.)"
-        },
-        {
-          "id": "aud_1795793909047_ek0p",
-          "timestamp": "2026-11-27T15:38:29.047Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order BPG-2026-00101 marked FAILED (Payment verification failed or transaction code not found.)"
-        },
-        {
-          "id": "aud_1795793893973_edbj",
-          "timestamp": "2026-11-27T15:38:13.973Z",
-          "actor": "Admin Console",
-          "action": "ADMIN_PLAN_CHANGE",
-          "details": "Changed plan from GOLD to FREE"
-        },
-        {
-          "id": "aud_1795793766197_m83k",
-          "timestamp": "2026-11-27T15:36:06.197Z",
-          "actor": "Creative Chess Club (Password Reset)",
-          "action": "PASSWORD_RESET",
-          "details": "Reset password via verified 6-digit email code"
-        },
-        {
-          "id": "aud_1795793637594_d5o0",
-          "timestamp": "2026-11-27T15:33:57.594Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PROOF_SUBMITTED",
-          "details": "Order BPG-2026-00101 (Padandas, Rs. 1,999, eSewa, TxCode FDSFDSFDSF) submitted for verification"
-        },
-        {
-          "id": "aud_1795793355984_woxn",
-          "timestamp": "2026-11-27T15:29:15.984Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795793355983-BD0A1F (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795792703156_to4u",
-          "timestamp": "2026-11-27T15:18:23.156Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795792008416-F4CCC5 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795792701519_yxkd",
-          "timestamp": "2026-11-27T15:18:21.519Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795792476576-A01990 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795792684343_xbji",
-          "timestamp": "2026-11-27T15:18:04.343Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-          "details": "Order ORD-1795792008416-F4CCC5 (Txn N/A, NPR 1999) confirmed PAID. Plan FREE -> GOLD (expires 2027-11-27)"
-        },
-        {
-          "id": "aud_1795792682659_6smq",
-          "timestamp": "2026-11-27T15:18:02.659Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795792476576-A01990 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795792681992_b757",
-          "timestamp": "2026-11-27T15:18:01.992Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795792661918-BDDE23 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795792661919_i6gy",
-          "timestamp": "2026-11-27T15:17:41.919Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795792661918-BDDE23 (Padandas, NPR 1999) is pending"
-        },
-        {
-          "id": "aud_1795792476577_uofe",
-          "timestamp": "2026-11-27T15:14:36.577Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795792476576-A01990 (Padandas, NPR 1999) is pending"
-        },
-        {
-          "id": "aud_1795792471034_kxw3",
-          "timestamp": "2026-11-27T15:14:31.034Z",
-          "actor": "Creative Chess Club (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795792008417_i6kp",
-          "timestamp": "2026-11-27T15:06:48.417Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795792008416-F4CCC5 (Padandas, NPR 1999) is pending"
-        },
-        {
-          "id": "aud_1795791234855_xc3a",
-          "timestamp": "2026-11-27T14:53:54.855Z",
-          "actor": "Admin Console",
-          "action": "PAYMENT_FAILED",
-          "details": "Order ORD-1795778511241-290A32 marked FAILED (Payment verification failed or rejected by Admin.)"
-        },
-        {
-          "id": "aud_1795791205381_clml",
-          "timestamp": "2026-11-27T14:53:25.381Z",
-          "actor": "Creative Chess Club (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795778531406_kvu1",
-          "timestamp": "2026-11-27T11:22:11.406Z",
-          "actor": "Creative Chess Club (Status Check)",
-          "action": "PAYMENT_AWAITING_CONFIRMATION",
-          "details": "Order ORD-1795778511241-290A32 (Padandas, NPR 1999) is awaiting confirmation"
-        },
-        {
-          "id": "aud_1795778511242_xjqt",
-          "timestamp": "2026-11-27T11:21:51.242Z",
-          "actor": "Creative Chess Club (Student)",
-          "action": "PAYMENT_PENDING",
-          "details": "Order ORD-1795778511241-290A32 (Padandas, NPR 1999) is pending"
-        },
-        {
-          "id": "aud_1795778505633_a83e",
-          "timestamp": "2026-11-27T11:21:45.633Z",
-          "actor": "Creative Chess Club (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795778421985_l3vj",
-          "timestamp": "2026-11-27T11:20:21.985Z",
-          "actor": "Creative Chess Club (Google Sign-Up)",
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
