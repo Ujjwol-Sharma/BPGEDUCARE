@@ -1,6 +1,6 @@
 {
-  "revision": 376,
-  "lastUpdated": "2026-11-27T15:37:51.581Z",
+  "revision": 377,
+  "lastUpdated": "2026-11-27T15:38:13.973Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793893973_sepy",
+      "timestamp": "2026-11-27T15:38:13.973Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_PLAN_CHANGE",
+      "details": "Creative Chess Club: plan changed from GOLD to FREE"
+    },
     {
       "id": "raud_1795793797790_vuqs",
       "timestamp": "2026-11-27T15:36:37.790Z",
@@ -962,15 +971,6 @@
       "actor": "Adarsh Kunwar (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795695520409_on5d",
-      "timestamp": "2026-11-26T12:18:40.409Z",
-      "userId": "usr_6b225f8eefb7",
-      "email": "pbidhan158@gmail.com",
-      "actor": "Bidhan Parajuli (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1189,12 +1189,12 @@
       "canonicalEmail": "creativechessclub01@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "gold",
+      "plan": "free",
       "planExpiresAt": "2027-11-27T15:18:04.343Z",
       "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "paid",
+      "paymentStatus": "none",
       "emailVerified": true,
       "verifiedAt": "2026-11-27T11:20:21.931Z",
       "verificationMethod": "google_oauth",
@@ -1212,9 +1212,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:36:06.197Z",
-      "lastModifiedBy": "Creative Chess Club (Password Reset)",
+      "updatedAt": "2026-11-27T15:38:13.973Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795793893973_edbj",
+          "timestamp": "2026-11-27T15:38:13.973Z",
+          "actor": "Admin Console",
+          "action": "ADMIN_PLAN_CHANGE",
+          "details": "Changed plan from GOLD to FREE"
+        },
         {
           "id": "aud_1795793766197_m83k",
           "timestamp": "2026-11-27T15:36:06.197Z",
