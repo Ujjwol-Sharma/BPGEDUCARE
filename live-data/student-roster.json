@@ -1,6 +1,6 @@
 {
-  "revision": 484,
-  "lastUpdated": "2026-11-27T17:26:00.952Z",
+  "revision": 485,
+  "lastUpdated": "2026-11-27T17:29:46.811Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795800586811_81wl",
+      "timestamp": "2026-11-27T17:29:46.811Z",
+      "userId": "usr_7deaad37efc0",
+      "email": "bloodk395@gmail.com",
+      "actor": "king blood (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (IOE)"
+    },
     {
       "id": "raud_1795797905298_3r1o",
       "timestamp": "2026-11-27T16:45:05.298Z",
@@ -962,18 +971,58 @@
       "actor": "Saksham poudel (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795699873981_zrub",
-      "timestamp": "2026-11-26T13:31:13.981Z",
-      "userId": "usr_219268db8c0d",
-      "email": "spandan.pkr@gmail.com",
-      "actor": "Spandan Gorkhali (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_7deaad37efc0",
+      "name": "king blood",
+      "username": "king",
+      "email": "bloodk395@gmail.com",
+      "canonicalEmail": "bloodk395@gmail.com",
+      "grade": "IOE",
+      "classKey": "after-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T17:29:46.750Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$0df222db7ceb500007517d20879356cd$ee9dde350be2aabef3cf54e78eddd7fc46496d4b53ba26e22b241c2726adaf35f9ac17fb95ac764b866f99bf36164acbe31bc5513c1c4f1e91a6c55aa11f431f",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-27T17:29:46.750Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_b70f2d2953d3621e8c5dd610",
+      "lastLoginAt": "2026-11-27T17:29:46.750Z",
+      "lastActiveAt": "2026-11-27T17:29:46.750Z",
+      "currentSection": "",
+      "deviceInfo": "Safari on iPhone",
+      "ipAddress": "104.28.240.25",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T17:29:46.811Z",
+      "lastModifiedBy": "king blood (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795800586811_4dng",
+          "timestamp": "2026-11-27T17:29:46.811Z",
+          "actor": "king blood (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in IOE"
+        }
+      ]
+    },
     {
       "userId": "usr_25e888886ae4",
       "name": "Creative Chess Club",
