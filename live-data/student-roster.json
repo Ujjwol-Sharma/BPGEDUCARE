@@ -1,6 +1,6 @@
 {
-  "revision": 412,
-  "lastUpdated": "2026-11-27T16:29:46.169Z",
+  "revision": 413,
+  "lastUpdated": "2026-11-27T16:30:05.801Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1132,11 +1132,11 @@
       "termsAcceptedAt": "2026-11-27T16:26:27.858Z",
       "ioeAccess": false,
       "mustChangePassword": false,
-      "activeSessionId": "sid_cd7e4ec56f579ca46fe498aa",
-      "lastLoginAt": "2026-11-27T16:27:15.213Z",
-      "lastActiveAt": "2026-11-27T16:27:32.736Z",
+      "activeSessionId": "sid_5b467b35e9cfb0d6be279fe0",
+      "lastLoginAt": "2026-11-27T16:30:05.801Z",
+      "lastActiveAt": "2026-11-27T16:30:05.801Z",
       "currentSection": "Grade XII Mathematics · notes",
-      "deviceInfo": "Chrome on macOS",
+      "deviceInfo": "Chrome on iPhone",
       "ipAddress": "27.34.73.64",
       "activityLog": [
         {
