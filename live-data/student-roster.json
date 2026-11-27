@@ -1,6 +1,6 @@
 {
-  "revision": 429,
-  "lastUpdated": "2026-11-27T16:45:05.298Z",
+  "revision": 430,
+  "lastUpdated": "2026-11-27T16:45:42.520Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1004,7 +1004,7 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_73762dbfe33de94c430943ac",
       "lastLoginAt": "2026-11-27T16:29:41.339Z",
-      "lastActiveAt": "2026-11-27T16:44:46.077Z",
+      "lastActiveAt": "2026-11-27T16:45:42.519Z",
       "currentSection": "Grade XII Mathematics · notes",
       "deviceInfo": "Chrome on Windows",
       "ipAddress": "27.34.72.129",
