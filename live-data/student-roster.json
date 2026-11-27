@@ -1,6 +1,6 @@
 {
-  "revision": 431,
-  "lastUpdated": "2026-11-27T16:45:43.824Z",
+  "revision": 432,
+  "lastUpdated": "2026-11-27T16:46:33.694Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -4410,9 +4410,9 @@
       "hasPassword": true,
       "passkey": "scrypt$06fee78dc33809d02d279842c2b2dd45$222cf9a181fc6232621e3d8897f85d77e26f19c80a5b21f3e49a2182397917a802e88f7be79976c03998a9d8a9513c52201179f9384810575ce7f6f2690c57c5",
       "otpVerified": false,
-      "termsAccepted": false,
-      "termsVersion": "",
-      "termsAcceptedAt": "",
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-27T16:46:33.694Z",
       "ioeAccess": false,
       "mustChangePassword": false,
       "activeSessionId": "",
