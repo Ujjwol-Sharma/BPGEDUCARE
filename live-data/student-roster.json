@@ -1,6 +1,6 @@
 {
-  "revision": 341,
-  "lastUpdated": "2026-11-27T11:29:57.060Z",
+  "revision": 342,
+  "lastUpdated": "2026-11-27T13:38:10.689Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795786690689_lefi",
+      "timestamp": "2026-11-27T13:38:10.689Z",
+      "userId": "usr_054d86b7afab",
+      "email": "subarnaacharya92@gmail.com",
+      "actor": "subarna acharya (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795778997060_gd01",
       "timestamp": "2026-11-27T11:29:57.060Z",
@@ -962,18 +971,45 @@
       "actor": "safdfafadwd (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795665782548_czjo",
-      "timestamp": "2026-11-26T04:03:02.548Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_054d86b7afab",
+      "name": "subarna acharya",
+      "username": "subarnaacharya92",
+      "email": "subarnaacharya92@gmail.com",
+      "canonicalEmail": "subarnaacharya92@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T13:38:10.623Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_054d86b7afabe419",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$57e2dbe2f0faa920efdaafaa87f1ea32$cff60c0c2d367f9b2219c68e70d8a369f95cbff0a7a3f45d3909bf053ded0b3f76ab82e33e98d6e335b557b3ed708612d2c88c633760cdc05ee93325fdb9954f",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T13:38:10.689Z",
+      "lastModifiedBy": "subarna acharya (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795786690689_k2oz",
+          "timestamp": "2026-11-27T13:38:10.689Z",
+          "actor": "subarna acharya (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_048bdacd393a",
       "name": "Aryan Giri",
