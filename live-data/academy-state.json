@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T17:26:14.947Z",
+  "lastUpdated": "2026-11-27T17:30:26.442Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3622,6 +3622,44 @@
   ],
   "payments": [
     {
+      "id": "pay_1795800626442_56ly",
+      "orderId": "BPG-2026-00108",
+      "userId": "usr_7deaad37efc0",
+      "studentName": "king blood",
+      "fullName": "king blood",
+      "username": "king",
+      "email": "bloodk395@gmail.com",
+      "canonicalEmail": "bloodk395@gmail.com",
+      "classKey": "after-12",
+      "className": "IOE",
+      "planKey": "diamond",
+      "planId": "diamond",
+      "planLabel": "Topper",
+      "planName": "Topper",
+      "isUpgrade": false,
+      "baseAmount": 2999,
+      "discountAmount": 0,
+      "promoCode": "",
+      "finalAmount": 2999,
+      "expectedAmount": 2999,
+      "amount": "Rs. 2,999",
+      "currency": "NPR",
+      "wallet": "eSewa",
+      "method": "eSewa",
+      "txCode": "",
+      "transactionId": "",
+      "senderInfo": "",
+      "orderSignature": "37a923b66842c8e6df465d12603770f30ccea3479d670f500b59930550aab0f2",
+      "status": "created",
+      "rejectionReason": "",
+      "verifiedBy": "",
+      "verifiedAt": "",
+      "adminNote": "Order created on server; awaiting QR payment and transaction code.",
+      "createdAt": "2026-11-27T17:30:26.442Z",
+      "updatedAt": "2026-11-27T17:30:26.442Z",
+      "reviewedAt": ""
+    },
+    {
       "id": "pay_1795800374947_m9d6",
       "orderId": "BPG-2026-00107",
       "userId": "usr_9f75addac06c",
@@ -4907,7 +4945,7 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 275,
+  "revision": 276,
   "explicitDeleteUploadId": "lpdf_1795573857054_0",
   "posts": [],
   "adminUsers": []
