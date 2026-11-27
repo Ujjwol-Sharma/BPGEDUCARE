@@ -1,6 +1,6 @@
 {
-  "revision": 361,
-  "lastUpdated": "2026-11-27T15:25:25.262Z",
+  "revision": 362,
+  "lastUpdated": "2026-11-27T15:26:01.632Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793161632_a0r8",
+      "timestamp": "2026-11-27T15:26:01.632Z",
+      "userId": "usr_03976352f8cf",
+      "email": "shloknepaldon12@gmail.com",
+      "actor": "shlok (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795792703156_swdk",
       "timestamp": "2026-11-27T15:18:23.156Z",
@@ -962,18 +971,45 @@
       "actor": "Ganesh Poudel (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795695137496_6aen",
-      "timestamp": "2026-11-26T12:12:17.496Z",
-      "userId": "usr_3519767fb6a8",
-      "email": "adhmayank3@gmail.com",
-      "actor": "Mayank Adhikari (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_03976352f8cf",
+      "name": "shlok",
+      "username": "shloknepaldon12",
+      "email": "shloknepaldon12@gmail.com",
+      "canonicalEmail": "shloknepaldon12@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T15:26:01.577Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_03976352f8cfccfb",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$2e528c565c087100fb6ca6d469a9656a$fa6c900becac44451110134b00650faa0be7aa99372e2474345e550c27cb337c104145e870dfce80763cc94a6a9f2c380d130a6aae18b4ec008cedaa9fbab9b9",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T15:26:01.632Z",
+      "lastModifiedBy": "shlok (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795793161632_zpyh",
+          "timestamp": "2026-11-27T15:26:01.632Z",
+          "actor": "shlok (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_203abefa9959",
       "name": "Saugat LC",
