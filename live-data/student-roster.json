@@ -1,6 +1,6 @@
 {
-  "revision": 382,
-  "lastUpdated": "2026-11-27T15:38:46.296Z",
+  "revision": 383,
+  "lastUpdated": "2026-11-27T15:38:51.321Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795793931321_o53g",
+      "timestamp": "2026-11-27T15:38:51.321Z",
+      "userId": "usr_358b294bfb3b",
+      "email": "bishnupdgautam2@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_DELETED_STUDENT",
+      "details": "Deleted student account Binisa Gautam (bishnupdgautam2@gmail.com)"
+    },
     {
       "id": "raud_1795793926295_v89d",
       "timestamp": "2026-11-27T15:38:46.295Z",
@@ -962,15 +971,6 @@
       "actor": "Ashim Gautam (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795695855351_n1hc",
-      "timestamp": "2026-11-26T12:24:15.351Z",
-      "userId": "usr_c8cdbe5a4b5a",
-      "email": "sonish.diyali.cs@gmail.com",
-      "actor": "Sonish Diyali (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
@@ -6376,81 +6376,6 @@
           "id": "aud_1795575851507_fdfn",
           "timestamp": "2026-11-25T03:04:11.507Z",
           "actor": "Prashil Lamichhane (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        }
-      ]
-    },
-    {
-      "userId": "usr_358b294bfb3b",
-      "name": "Binisa Gautam",
-      "username": "bishnupdgautam2",
-      "email": "bishnupdgautam2@gmail.com",
-      "canonicalEmail": "bishnupdgautam2@gmail.com",
-      "grade": "Class 12",
-      "classKey": "class-12",
-      "plan": "free",
-      "planExpiresAt": "",
-      "planExplicitlySet": false,
-      "legacyAccess": false,
-      "accountStatus": "active",
-      "paymentStatus": "none",
-      "emailVerified": true,
-      "verifiedAt": "2026-11-25T02:40:45.343Z",
-      "verificationMethod": "google_oauth",
-      "googleLinked": true,
-      "googleSub": "gsub_358b294bfb3b5ca4",
-      "avatarUrl": "",
-      "hasPassword": false,
-      "passkey": "scrypt$4988442cf5fa84c2942eb6d96688f534$b1240f527d2bf00f3f78dde20ec2b184afd856d725476e50c85732112c8e8b9bc81419ff9bce7eb655617f1ca41eed2b0a8bab5c3e9bc510dae6ab02ce8c4814",
-      "activeSessionId": "",
-      "lastLoginAt": "",
-      "lastActiveAt": "",
-      "deviceInfo": "",
-      "readNotificationIds": [],
-      "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T17:19:28.650Z",
-      "lastModifiedBy": "Binisa Gautam (Google Sign-In)",
-      "auditLog": [
-        {
-          "id": "aud_1795627168650_ms3h",
-          "timestamp": "2026-11-25T17:19:28.650Z",
-          "actor": "Binisa Gautam (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795624892733_gbzw",
-          "timestamp": "2026-11-25T16:41:32.733Z",
-          "actor": "Binisa Gautam (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795574626563_u6e9",
-          "timestamp": "2026-11-25T02:43:46.563Z",
-          "actor": "Binisa Gautam (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795574445407_yazo",
-          "timestamp": "2026-11-25T02:40:45.407Z",
-          "actor": "Binisa Gautam (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
-        },
-        {
-          "id": "aud_1795574626563_u6e9",
-          "timestamp": "2026-11-25T02:43:46.563Z",
-          "actor": "Binisa Gautam (Google Sign-In)",
-          "action": "GOOGLE_SIGN_IN",
-          "details": "Signed in with Google and linked to existing member record"
-        },
-        {
-          "id": "aud_1795574445407_yazo",
-          "timestamp": "2026-11-25T02:40:45.407Z",
-          "actor": "Binisa Gautam (Google Sign-Up)",
           "action": "ACCOUNT_CREATED",
           "details": "Created account via Google Sign-Up in Class 12"
         }
