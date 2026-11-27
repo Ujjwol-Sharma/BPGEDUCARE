@@ -1,6 +1,6 @@
 {
-  "revision": 345,
-  "lastUpdated": "2026-11-27T14:53:25.381Z",
+  "revision": 346,
+  "lastUpdated": "2026-11-27T14:53:54.855Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795791234855_usuy",
+      "timestamp": "2026-11-27T14:53:54.855Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Creative Chess Club: payment ORD-1795778511241-290A32 marked FAILED"
+    },
     {
       "id": "raud_1795791205381_7ffp",
       "timestamp": "2026-11-27T14:53:25.381Z",
@@ -962,15 +971,6 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795666886154_red3",
-      "timestamp": "2026-11-26T04:21:26.154Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
@@ -1106,9 +1106,16 @@
       "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T14:53:25.381Z",
-      "lastModifiedBy": "Creative Chess Club (Google Sign-In)",
+      "updatedAt": "2026-11-27T14:53:54.855Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795791234855_xc3a",
+          "timestamp": "2026-11-27T14:53:54.855Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795778511241-290A32 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795791205381_clml",
           "timestamp": "2026-11-27T14:53:25.381Z",
