@@ -1,6 +1,6 @@
 {
-  "revision": 365,
-  "lastUpdated": "2026-11-27T15:33:57.594Z",
+  "revision": 366,
+  "lastUpdated": "2026-11-27T15:35:02.414Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1156,7 +1156,7 @@
       "avatarUrl": "",
       "hasPassword": false,
       "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
-      "activeSessionId": "",
+      "activeSessionId": "revoked_sid_ae9c62c0d452d7e361c4a45f",
       "lastLoginAt": "",
       "lastActiveAt": "",
       "deviceInfo": "",
