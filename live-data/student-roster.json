@@ -1,6 +1,6 @@
 {
-  "revision": 369,
-  "lastUpdated": "2026-11-27T15:36:37.790Z",
+  "revision": 370,
+  "lastUpdated": "2026-11-27T15:37:07.101Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1196,7 +1196,7 @@
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$0fca9d82c852fbf9ac8aac1307905497$cf96c7553ad4e310c96ec4ebd98cd5ad44544e7834d66b87ccb8694b61661ff188b4e39a3317472f9225e7d6bcbc708d5780d218ed389981a7f2b262aa47a11c",
-      "activeSessionId": "sid_54f0d591e3e6819a98422186",
+      "activeSessionId": "revoked_sid_0a1e2369cac5a24464cc7015",
       "lastLoginAt": "2026-11-27T15:36:06.197Z",
       "lastActiveAt": "2026-11-27T15:36:06.197Z",
       "deviceInfo": "Chrome on Windows",
