@@ -1,6 +1,6 @@
 {
-  "revision": 497,
-  "lastUpdated": "2026-11-27T17:38:11.510Z",
+  "revision": 498,
+  "lastUpdated": "2026-11-27T17:39:24.781Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1011,18 +1011,18 @@
       "googleSub": "",
       "avatarUrl": "",
       "hasPassword": true,
-      "passkey": "scrypt$0df222db7ceb500007517d20879356cd$ee9dde350be2aabef3cf54e78eddd7fc46496d4b53ba26e22b241c2726adaf35f9ac17fb95ac764b866f99bf36164acbe31bc5513c1c4f1e91a6c55aa11f431f",
+      "passkey": "scrypt$0922e70a235e45e0807414c9fe4c8139$907b9cdd5e8174dbbc3ddeadc03b59072ce8abd2917fe779d5f76869760e5105e769f8b77d4fa44cea763b479f4063e0c44ea411f519d50f1c9c2cc994c896b0",
       "otpVerified": true,
       "termsAccepted": true,
       "termsVersion": "2026-11-27",
       "termsAcceptedAt": "2026-11-27T17:29:46.750Z",
       "ioeAccess": false,
       "mustChangePassword": false,
-      "activeSessionId": "revoked_sid_a1e0071ea2d69ff9c393fcba",
-      "lastLoginAt": "2026-11-27T17:29:46.750Z",
-      "lastActiveAt": "2026-11-27T17:30:47.078Z",
+      "activeSessionId": "sid_3a8d512438281eb5353f5466",
+      "lastLoginAt": "2026-11-27T17:39:24.781Z",
+      "lastActiveAt": "2026-11-27T17:39:24.781Z",
       "currentSection": "IOE (Entrance Prep) Mathematics · notes",
-      "deviceInfo": "Safari on iPhone",
+      "deviceInfo": "Chrome on macOS",
       "ipAddress": "104.28.240.25",
       "activityLog": [
         {
@@ -1082,9 +1082,16 @@
       ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T17:38:00.183Z",
-      "lastModifiedBy": "king blood (Student)",
+      "updatedAt": "2026-11-27T17:39:24.781Z",
+      "lastModifiedBy": "king blood (Password Reset)",
       "auditLog": [
+        {
+          "id": "aud_1795801164781_qh31",
+          "timestamp": "2026-11-27T17:39:24.781Z",
+          "actor": "king blood (Password Reset)",
+          "action": "PASSWORD_RESET",
+          "details": "Reset password via verified 6-digit email code"
+        },
         {
           "id": "aud_1795801080183_o8l9",
           "timestamp": "2026-11-27T17:38:00.183Z",
