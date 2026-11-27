@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:05:44.697Z",
+  "lastUpdated": "2026-11-27T15:05:46.696Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3654,33 +3654,6 @@
       "verifiedBy": "Admin Console"
     },
     {
-      "id": "pay_1795778511242_nn9x",
-      "orderId": "ORD-1795778511241-290A32",
-      "userId": "usr_25e888886ae4",
-      "fullName": "Creative Chess Club",
-      "username": "creativechessclub01",
-      "email": "creativechessclub01@gmail.com",
-      "canonicalEmail": "creativechessclub01@gmail.com",
-      "classKey": "class-12",
-      "className": "Class 12",
-      "planId": "gold",
-      "planName": "Padandas",
-      "amount": "Rs. 1,999",
-      "expectedAmount": 1999,
-      "currency": "NPR",
-      "transactionId": "",
-      "orderSignature": "173087841932237e422768471b6e80ab7104a5e0f36767509f62c06806478e9a",
-      "method": "esewa_qr",
-      "status": "failed",
-      "adminNote": "Payment verification failed or rejected by Admin.",
-      "createdAt": "2026-11-27T11:21:51.242Z",
-      "updatedAt": "2026-11-27T14:53:54.855Z",
-      "reviewedAt": "2026-11-27T14:53:54.855Z",
-      "lastProviderCheckAt": "2026-11-27T11:22:11.405Z",
-      "lastProviderStatus": "NOT_FOUND",
-      "verifiedBy": "Admin Console"
-    },
-    {
       "id": "pay_1795775080365_rzn1",
       "orderId": "ORD-1795775080365-DDCDCD",
       "userId": "usr_cfe03652d5e2",
@@ -4566,6 +4539,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 242,
+  "revision": 243,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
