@@ -1,7 +1,23 @@
 {
-  "revision": 495,
-  "lastUpdated": "2026-11-27T17:34:10.266Z",
+  "revision": 496,
+  "lastUpdated": "2026-11-27T17:38:00.183Z",
   "classSwitchRequests": [
+    {
+      "id": "csr_1795801080183_u2qa",
+      "userId": "usr_7deaad37efc0",
+      "studentName": "king blood",
+      "email": "bloodk395@gmail.com",
+      "canonicalEmail": "bloodk395@gmail.com",
+      "currentClassKey": "after-12",
+      "currentGrade": "IOE",
+      "requestedClassKey": "class-11",
+      "requestedGrade": "Class 11",
+      "reason": "",
+      "status": "pending",
+      "adminNote": "",
+      "submittedAt": "2026-11-27T17:38:00.183Z",
+      "reviewedAt": ""
+    },
     {
       "id": "csr_1795660679383_722e",
       "userId": "usr_11828397bfa7",
@@ -72,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795801080183_xq2o",
+      "timestamp": "2026-11-27T17:38:00.183Z",
+      "userId": "usr_7deaad37efc0",
+      "email": "bloodk395@gmail.com",
+      "actor": "king blood (Student)",
+      "action": "CLASS_SWITCH_REQUESTED",
+      "details": "Requested switch from IOE to Class 11"
+    },
     {
       "id": "raud_1795800586811_81wl",
       "timestamp": "2026-11-27T17:29:46.811Z",
@@ -962,15 +987,6 @@
       "actor": "Sambridhi Poudel (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795700032098_24ks",
-      "timestamp": "2026-11-26T13:33:52.098Z",
-      "userId": "usr_30107fabf8ce",
-      "email": "saksham.co.pou@gmail.com",
-      "actor": "Saksham poudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1066,9 +1082,16 @@
       ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T17:29:46.811Z",
-      "lastModifiedBy": "king blood (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-27T17:38:00.183Z",
+      "lastModifiedBy": "king blood (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795801080183_o8l9",
+          "timestamp": "2026-11-27T17:38:00.183Z",
+          "actor": "king blood (Student)",
+          "action": "CLASS_SWITCH_REQUESTED",
+          "details": "Requested switch from IOE to Class 11"
+        },
         {
           "id": "aud_1795800586811_4dng",
           "timestamp": "2026-11-27T17:29:46.811Z",
