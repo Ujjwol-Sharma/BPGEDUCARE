@@ -1,6 +1,6 @@
 {
-  "revision": 420,
-  "lastUpdated": "2026-11-27T16:31:21.616Z",
+  "revision": 419,
+  "lastUpdated": "2026-11-27T16:31:20.446Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1134,17 +1134,11 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_5b467b35e9cfb0d6be279fe0",
       "lastLoginAt": "2026-11-27T16:30:05.801Z",
-      "lastActiveAt": "2026-11-27T16:31:21.616Z",
-      "currentSection": "Grade XII Mathematics · live",
+      "lastActiveAt": "2026-11-27T16:31:20.446Z",
+      "currentSection": "Grade XII Mathematics · syllabus",
       "deviceInfo": "Chrome on iPhone",
       "ipAddress": "27.34.73.64",
       "activityLog": [
-        {
-          "at": "2026-11-27T16:31:21.616Z",
-          "section": "Grade XII Mathematics · live",
-          "device": "Chrome on iPhone",
-          "ip": "27.34.73.64"
-        },
         {
           "at": "2026-11-27T16:31:20.446Z",
           "section": "Grade XII Mathematics · syllabus",
