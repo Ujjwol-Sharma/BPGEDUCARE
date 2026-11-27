@@ -1,6 +1,6 @@
 {
-  "revision": 336,
-  "lastUpdated": "2026-11-27T11:15:46.549Z",
+  "revision": 337,
+  "lastUpdated": "2026-11-27T11:20:21.985Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795778421985_g5e4",
+      "timestamp": "2026-11-27T11:20:21.985Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Creative Chess Club (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795778146549_x0wb",
       "timestamp": "2026-11-27T11:15:46.549Z",
@@ -962,18 +971,45 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795665451674_owiu",
-      "timestamp": "2026-11-26T03:57:31.674Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_25e888886ae4",
+      "name": "Creative Chess Club",
+      "username": "creativechessclub01",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T11:20:21.931Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_25e888886ae4fdd5",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T11:20:21.985Z",
+      "lastModifiedBy": "Creative Chess Club (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795778421985_l3vj",
+          "timestamp": "2026-11-27T11:20:21.985Z",
+          "actor": "Creative Chess Club (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_cfe03652d5e2",
       "name": "NIraj Bhattarai",
