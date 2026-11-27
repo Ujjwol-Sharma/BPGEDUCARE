@@ -1,6 +1,6 @@
 {
-  "revision": 303,
-  "lastUpdated": "2026-11-27T02:28:19.126Z",
+  "revision": 304,
+  "lastUpdated": "2026-11-27T03:12:01.132Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795749121132_w325",
+      "timestamp": "2026-11-27T03:12:01.132Z",
+      "userId": "usr_437be9c554cc",
+      "email": "abhimanyupoudel24@gmail.com",
+      "actor": "Abhimanyu Poudel (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (After 12 Entrance)"
+    },
     {
       "id": "raud_1795746499126_g1lo",
       "timestamp": "2026-11-27T02:28:19.126Z",
@@ -962,18 +971,45 @@
       "actor": "UJJWOL SHARMA (Email OTP Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795657336087_6vf2",
-      "timestamp": "2026-11-26T01:42:16.087Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "UJJWOL SHARMA (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · DIAMOND)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_437be9c554cc",
+      "name": "Abhimanyu Poudel",
+      "username": "abhimanyupoudel24",
+      "email": "abhimanyupoudel24@gmail.com",
+      "canonicalEmail": "abhimanyupoudel24@gmail.com",
+      "grade": "After 12 Entrance",
+      "classKey": "after-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T03:12:01.067Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_437be9c554ccd182",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$09d0bff884914ff809941c57e5f2e56d$2ac3393fda2ca33f9d4acb9132abda27cf9dabbea1a4859cd65cee2730468e539c2ca865eb51d74a1ab4b634f3d800d25f01bc089aa4fcc1fa70cfeaf2abbf33",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T03:12:01.132Z",
+      "lastModifiedBy": "Abhimanyu Poudel (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795749121132_exsn",
+          "timestamp": "2026-11-27T03:12:01.132Z",
+          "actor": "Abhimanyu Poudel (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in After 12 Entrance"
+        }
+      ]
+    },
     {
       "userId": "usr_adaee21c929a",
       "name": "owlxlite",
