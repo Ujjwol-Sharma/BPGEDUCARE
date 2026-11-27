@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:29:15.983Z",
+  "lastUpdated": "2026-11-27T15:33:32.518Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3215,9 +3215,13 @@
   },
   "siteSettings": {
     "whatsappNumber": "9779866064252",
-    "esewaQrUrl": "images/payment_qr.png",
+    "esewaQrUrl": "images/payment_qr_esewa.jpg",
+    "bankQrUrl": "images/payment_qr_bank.jpg",
+    "bankName": "Prime Commercial Bank Ltd. (Fonepay)",
     "esewaMerchantName": "BPG EDUCARE",
-    "googleClientId": ""
+    "googleClientId": "",
+    "singleDeviceSession": true,
+    "promoCodes": []
   },
   "notifications": [
     {
@@ -3628,6 +3632,44 @@
     }
   ],
   "payments": [
+    {
+      "id": "pay_1795793612518_u1lv",
+      "orderId": "BPG-2026-00101",
+      "userId": "usr_25e888886ae4",
+      "studentName": "Creative Chess Club",
+      "fullName": "Creative Chess Club",
+      "username": "creativechessclub01",
+      "email": "creativechessclub01@gmail.com",
+      "canonicalEmail": "creativechessclub01@gmail.com",
+      "classKey": "class-12",
+      "className": "Class 12",
+      "planKey": "gold",
+      "planId": "gold",
+      "planLabel": "Padandas",
+      "planName": "Padandas",
+      "isUpgrade": false,
+      "baseAmount": 1999,
+      "discountAmount": 0,
+      "promoCode": "",
+      "finalAmount": 1999,
+      "expectedAmount": 1999,
+      "amount": "Rs. 1,999",
+      "currency": "NPR",
+      "wallet": "eSewa",
+      "method": "eSewa",
+      "txCode": "",
+      "transactionId": "",
+      "senderInfo": "",
+      "orderSignature": "0b73df2ead8313a2ef4f370c16b3eeb65f355d5051deb0fc9b09c23a61e4b525",
+      "status": "created",
+      "rejectionReason": "",
+      "verifiedBy": "",
+      "verifiedAt": "",
+      "adminNote": "Order created on server; awaiting QR payment and transaction code.",
+      "createdAt": "2026-11-27T15:33:32.518Z",
+      "updatedAt": "2026-11-27T15:33:32.518Z",
+      "reviewedAt": ""
+    },
     {
       "id": "pay_1795793355983_3hli",
       "orderId": "ORD-1795793355983-BD0A1F",
@@ -4642,6 +4684,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 252,
+  "revision": 253,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
