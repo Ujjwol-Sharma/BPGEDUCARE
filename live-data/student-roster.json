@@ -1,6 +1,6 @@
 {
-  "revision": 319,
-  "lastUpdated": "2026-11-27T11:02:53.062Z",
+  "revision": 322,
+  "lastUpdated": "2026-11-27T11:02:56.701Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,33 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777376701_3g80",
+      "timestamp": "2026-11-27T11:02:56.701Z",
+      "userId": "usr_35b207967208",
+      "email": "poudlearadhya@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Aradhya Paudel: payment ORD-1795666951486-FC0F91 marked FAILED"
+    },
+    {
+      "id": "raud_1795777375939_myj2",
+      "timestamp": "2026-11-27T11:02:55.939Z",
+      "userId": "usr_d6872f7a8cbc",
+      "email": "bishalchhetri0099@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Bishal chhetri: payment ORD-1795692273368-6E8BC5 marked FAILED"
+    },
+    {
+      "id": "raud_1795777375158_0gna",
+      "timestamp": "2026-11-27T11:02:55.158Z",
+      "userId": "usr_6b739595b4d1",
+      "email": "gautamashim123410@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Ashim Gautam: payment ORD-1795696143949-68829E marked FAILED"
+    },
     {
       "id": "raud_1795777373062_ptr9",
       "timestamp": "2026-11-27T11:02:53.062Z",
@@ -944,33 +971,6 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795660617405_cupb",
-      "timestamp": "2026-11-26T02:36:57.405Z",
-      "userId": "usr_aba8f2cb0d91",
-      "email": "mriduljungpande0095@gmail.com",
-      "actor": "Mridul Jung Pande (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (After 12 Entrance · FREE)"
-    },
-    {
-      "id": "raud_1795660603501_a1gi",
-      "timestamp": "2026-11-26T02:36:43.501Z",
-      "userId": "usr_5d7f21afd1ca",
-      "email": "poudlearadhaya@gmail.com",
-      "actor": "Amrit (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795660584733_9zt9",
-      "timestamp": "2026-11-26T02:36:24.733Z",
-      "userId": "usr_974c713f29dd",
-      "email": "intumintuchintu76@gmail.com",
-      "actor": "UJJWOL SHARMA (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · DIAMOND)"
     }
   ],
   "accounts": [
@@ -2669,7 +2669,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T12:26:12.997Z",
       "verificationMethod": "google_oauth",
@@ -2680,9 +2680,16 @@
       "passkey": "scrypt$bf04e377be31353faf4a9a54725e7c43$8841a0a4fa81c7f28cc1aad20590c90df1ae5fad2fa9ea52c039078e9075e6c981829fe5301e9c6f42706185eceb2cab90d47dfa6a881496ade7d9833e4f99bb",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T12:29:03.950Z",
-      "lastModifiedBy": "Ashim Gautam (Student)",
+      "updatedAt": "2026-11-27T11:02:55.158Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777375158_ch4n",
+          "timestamp": "2026-11-27T11:02:55.158Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795696143949-68829E marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795696143950_z5fj",
           "timestamp": "2026-11-26T12:29:03.950Z",
@@ -4195,9 +4202,16 @@
       "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-27T11:02:33.183Z",
+      "updatedAt": "2026-11-27T11:02:55.939Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777375939_blln",
+          "timestamp": "2026-11-27T11:02:55.939Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795692273368-6E8BC5 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795777353183_zidd",
           "timestamp": "2026-11-27T11:02:33.183Z",
@@ -5165,7 +5179,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T12:35:36.543Z",
       "verificationMethod": "google_oauth",
@@ -5176,9 +5190,16 @@
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T04:22:31.487Z",
-      "lastModifiedBy": "Aradhya Paudel (Student)",
+      "updatedAt": "2026-11-27T11:02:56.701Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777376701_t0u6",
+          "timestamp": "2026-11-27T11:02:56.701Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795666951486-FC0F91 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795666951487_7ytv",
           "timestamp": "2026-11-26T04:22:31.487Z",
@@ -5346,13 +5367,6 @@
           "actor": "Aradhya Paudel (Student)",
           "action": "PAYMENT_PENDING",
           "details": "Order ORD-1795610268743-FADADC (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795610136601_dhup",
-          "timestamp": "2026-11-25T12:35:36.601Z",
-          "actor": "Aradhya Paudel (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
         }
       ]
     },

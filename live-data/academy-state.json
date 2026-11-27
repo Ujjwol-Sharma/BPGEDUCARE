@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T11:02:53.062Z",
+  "lastUpdated": "2026-11-27T11:02:56.701Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3946,11 +3946,12 @@
       "transactionId": "",
       "orderSignature": "71c0d985f96b196e0d3871e60ab81dcf5fe901056fe38e722803a69e87b6d330",
       "method": "esewa_qr",
-      "status": "pending",
-      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "status": "failed",
+      "adminNote": "Payment verification failed or rejected by Admin.",
       "createdAt": "2026-11-26T12:29:03.949Z",
-      "updatedAt": "2026-11-26T12:29:03.950Z",
-      "reviewedAt": ""
+      "updatedAt": "2026-11-27T11:02:55.158Z",
+      "reviewedAt": "2026-11-27T11:02:55.158Z",
+      "verifiedBy": "Admin Console"
     },
     {
       "id": "pay_1795692273369_l2o8",
@@ -3970,11 +3971,12 @@
       "transactionId": "",
       "orderSignature": "77e870d3290d97385d42673f885c0e506e840f0305e4b86b247505133473c561",
       "method": "esewa_qr",
-      "status": "pending",
-      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "status": "failed",
+      "adminNote": "Payment verification failed or rejected by Admin.",
       "createdAt": "2026-11-26T11:24:33.369Z",
-      "updatedAt": "2026-11-26T11:24:33.369Z",
-      "reviewedAt": ""
+      "updatedAt": "2026-11-27T11:02:55.939Z",
+      "reviewedAt": "2026-11-27T11:02:55.939Z",
+      "verifiedBy": "Admin Console"
     },
     {
       "id": "pay_1795666951487_651l",
@@ -3994,11 +3996,12 @@
       "transactionId": "",
       "orderSignature": "c4900524f5d514e6a1a7fc4297fa0473630f891f9b895b0302482c63761bd68e",
       "method": "esewa_qr",
-      "status": "pending",
-      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "status": "failed",
+      "adminNote": "Payment verification failed or rejected by Admin.",
       "createdAt": "2026-11-26T04:22:31.487Z",
-      "updatedAt": "2026-11-26T04:22:31.487Z",
-      "reviewedAt": ""
+      "updatedAt": "2026-11-27T11:02:56.701Z",
+      "reviewedAt": "2026-11-27T11:02:56.701Z",
+      "verifiedBy": "Admin Console"
     },
     {
       "id": "pay_1795666502647_4djw",
@@ -4497,6 +4500,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 220,
+  "revision": 223,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
