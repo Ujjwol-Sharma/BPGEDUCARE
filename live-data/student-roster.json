@@ -1,6 +1,6 @@
 {
-  "revision": 401,
-  "lastUpdated": "2026-11-27T16:27:37.100Z",
+  "revision": 402,
+  "lastUpdated": "2026-11-27T16:28:00.431Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795796880431_yg2i",
+      "timestamp": "2026-11-27T16:28:00.431Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Admin Console",
+      "action": "ADMIN_PLAN_CHANGE",
+      "details": "Creative Chess Club: plan changed from FREE to DIAMOND"
+    },
     {
       "id": "raud_1795794001194_4umv",
       "timestamp": "2026-11-27T15:40:01.194Z",
@@ -962,15 +971,6 @@
       "actor": "Aadarsha Adhikari (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795696531613_pmlx",
-      "timestamp": "2026-11-26T12:35:31.613Z",
-      "userId": "usr_264e52740ee1",
-      "email": "karnathapa517@gmail.com",
-      "actor": "Ishan Thapa (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
@@ -982,12 +982,12 @@
       "canonicalEmail": "creativechessclub01@gmail.com",
       "grade": "Class 12",
       "classKey": "class-12",
-      "plan": "free",
+      "plan": "diamond",
       "planExpiresAt": "",
-      "planExplicitlySet": false,
+      "planExplicitlySet": true,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "paid",
       "emailVerified": true,
       "verifiedAt": "2026-11-27T15:40:01.109Z",
       "verificationMethod": "email_otp",
@@ -1036,9 +1036,16 @@
       ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:40:01.194Z",
-      "lastModifiedBy": "Creative Chess Club (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-27T16:28:00.431Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795796880431_c1qe",
+          "timestamp": "2026-11-27T16:28:00.431Z",
+          "actor": "Admin Console",
+          "action": "ADMIN_PLAN_CHANGE",
+          "details": "Changed plan from FREE to DIAMOND"
+        },
         {
           "id": "aud_1795794001194_326j",
           "timestamp": "2026-11-27T15:40:01.194Z",
