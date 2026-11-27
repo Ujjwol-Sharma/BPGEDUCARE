@@ -1,6 +1,6 @@
 {
-  "revision": 333,
-  "lastUpdated": "2026-11-27T11:12:06.856Z",
+  "revision": 334,
+  "lastUpdated": "2026-11-27T11:13:21.285Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795778001285_snjl",
+      "timestamp": "2026-11-27T11:13:21.285Z",
+      "userId": "usr_d6872f7a8cbc",
+      "email": "bishalchhetri0099@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Bishal chhetri: payment ORD-1795624835330-0A0C50 marked FAILED"
+    },
     {
       "id": "raud_1795777904563_wgpn",
       "timestamp": "2026-11-27T11:11:44.563Z",
@@ -962,15 +971,6 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795662652326_hf5o",
-      "timestamp": "2026-11-26T03:10:52.326Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_DELETED_STUDENT",
-      "details": "Deleted student account Creative Chess Club (creativechessclub01@gmail.com)"
     }
   ],
   "accounts": [
@@ -4230,9 +4230,16 @@
       "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-27T11:11:32.884Z",
+      "updatedAt": "2026-11-27T11:13:21.285Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795778001285_d0jf",
+          "timestamp": "2026-11-27T11:13:21.285Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795624835330-0A0C50 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795777892884_4bqb",
           "timestamp": "2026-11-27T11:11:32.884Z",
