@@ -1,6 +1,6 @@
 {
-  "revision": 310,
-  "lastUpdated": "2026-11-27T11:02:20.387Z",
+  "revision": 311,
+  "lastUpdated": "2026-11-27T11:02:23.225Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777343225_mw75",
+      "timestamp": "2026-11-27T11:02:23.225Z",
+      "userId": "usr_5a4912d722d0",
+      "email": "sambegsapakota11@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Sambeg Sapakota: payment ORD-1795703963326-E48D20 marked FAILED"
+    },
     {
       "id": "raud_1795777340387_ihym",
       "timestamp": "2026-11-27T11:02:20.387Z",
@@ -962,15 +971,6 @@
       "actor": "Ruben Paudel (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 11)"
-    },
-    {
-      "id": "raud_1795660152006_5cas",
-      "timestamp": "2026-11-26T02:29:12.006Z",
-      "userId": "usr_513884c40f22",
-      "email": "rshashwot@gmail.com",
-      "actor": "Shashwot Regmi (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -1963,7 +1963,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T14:32:47.287Z",
       "verificationMethod": "google_oauth",
@@ -1976,9 +1976,16 @@
         "notif_mock_live_mt_1795626947423"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T14:39:23.326Z",
-      "lastModifiedBy": "Sambeg Sapakota (Student)",
+      "updatedAt": "2026-11-27T11:02:23.225Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777343225_qkrt",
+          "timestamp": "2026-11-27T11:02:23.225Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795703963326-E48D20 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795703963326_yqch",
           "timestamp": "2026-11-26T14:39:23.326Z",
