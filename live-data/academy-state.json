@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T15:33:57.593Z",
+  "lastUpdated": "2026-11-27T15:34:44.937Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -3225,16 +3225,6 @@
   },
   "notifications": [
     {
-      "id": "notif_mock_live_mt_1795626947423",
-      "title": "Mock Test Now Live: Opening Mock Test",
-      "body": "Your scheduled Class 12 mock test (15 min, 11 questions) is now open.",
-      "category": "Exam Update",
-      "scope": "class-12",
-      "published": true,
-      "createdAt": "2026-11-26T02:20:00.000Z",
-      "updatedAt": "2026-11-26T02:21:05.393Z"
-    },
-    {
       "id": "notif_1795630727465",
       "title": "Opening Ceremony - 7:00 AM Onwards 🎉",
       "body": "Join us for the Official Website Opening Ceremony of BPG EDUCARE from 7:00 AM onwards at Galaxy Party Palace, 17 Birauta, Pokhara, Gandaki Province 33700. Don't miss the live launch & giveaway competition!",
@@ -4684,6 +4674,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 254,
+  "revision": 255,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
