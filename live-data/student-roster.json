@@ -1,6 +1,6 @@
 {
-  "revision": 314,
-  "lastUpdated": "2026-11-27T11:02:31.216Z",
+  "revision": 317,
+  "lastUpdated": "2026-11-27T11:02:36.214Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,33 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777356214_miy8",
+      "timestamp": "2026-11-27T11:02:36.214Z",
+      "userId": "usr_30107fabf8ce",
+      "email": "saksham.co.pou@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Saksham poudel: payment ORD-1795700051438-DFCAB5 marked FAILED"
+    },
+    {
+      "id": "raud_1795777354687_qcws",
+      "timestamp": "2026-11-27T11:02:34.687Z",
+      "userId": "usr_0edbe94bc081",
+      "email": "rebikathapa2009@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Rebika Thapa: payment ORD-1795700772678-DE8FBB marked FAILED"
+    },
+    {
+      "id": "raud_1795777353183_tqjn",
+      "timestamp": "2026-11-27T11:02:33.183Z",
+      "userId": "usr_d6872f7a8cbc",
+      "email": "bishalchhetri0099@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Bishal chhetri: payment ORD-1795701118073-A996D7 marked FAILED"
+    },
     {
       "id": "raud_1795777351216_k1oq",
       "timestamp": "2026-11-27T11:02:31.216Z",
@@ -942,33 +969,6 @@
       "userId": "usr_fcfe40b5444e",
       "email": "muktirampoudel123@gmail.com",
       "actor": "Muktiram Poudel (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795660497195_fe3l",
-      "timestamp": "2026-11-26T02:34:57.195Z",
-      "userId": "usr_1034c714c4cd",
-      "email": "sharmabiswash84@gmail.com",
-      "actor": "Biswash sharma (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795660287068_o2jh",
-      "timestamp": "2026-11-26T02:31:27.068Z",
-      "userId": "usr_c0891c66477b",
-      "email": "koiralasudarshan3@gmail.com",
-      "actor": "Sudarshan Koirala (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
-    },
-    {
-      "id": "raud_1795660207299_1v57",
-      "timestamp": "2026-11-26T02:30:07.299Z",
-      "userId": "usr_f644dfd69005",
-      "email": "sadisht412@gmail.com",
-      "actor": "Safal Thapa (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
     }
@@ -2349,7 +2349,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T13:36:20.861Z",
       "verificationMethod": "google_oauth",
@@ -2362,9 +2362,16 @@
         "notif_mock_live_mt_1795626947423"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T13:46:12.679Z",
-      "lastModifiedBy": "Rebika Thapa (Student)",
+      "updatedAt": "2026-11-27T11:02:34.687Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777354687_hzxg",
+          "timestamp": "2026-11-27T11:02:34.687Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795700772678-DE8FBB marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795700772679_0ubt",
           "timestamp": "2026-11-26T13:46:12.679Z",
@@ -2466,7 +2473,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T13:33:52.043Z",
       "verificationMethod": "google_oauth",
@@ -2479,9 +2486,16 @@
         "notif_mock_live_mt_1795626947423"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T13:34:11.439Z",
-      "lastModifiedBy": "Saksham poudel (Student)",
+      "updatedAt": "2026-11-27T11:02:36.214Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777356214_cilj",
+          "timestamp": "2026-11-27T11:02:36.214Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795700051438-DFCAB5 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795700051439_4f88",
           "timestamp": "2026-11-26T13:34:11.439Z",
@@ -4156,7 +4170,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T16:39:29.989Z",
       "verificationMethod": "google_oauth",
@@ -4167,9 +4181,16 @@
       "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T13:51:58.074Z",
-      "lastModifiedBy": "Bishal chhetri (Student)",
+      "updatedAt": "2026-11-27T11:02:33.183Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777353183_zidd",
+          "timestamp": "2026-11-27T11:02:33.183Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795701118073-A996D7 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795701118074_guyd",
           "timestamp": "2026-11-26T13:51:58.074Z",
