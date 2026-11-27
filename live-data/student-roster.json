@@ -1,6 +1,6 @@
 {
-  "revision": 334,
-  "lastUpdated": "2026-11-27T11:13:21.285Z",
+  "revision": 335,
+  "lastUpdated": "2026-11-27T11:13:22.989Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795778002989_ig7p",
+      "timestamp": "2026-11-27T11:13:22.989Z",
+      "userId": "usr_32c1a5fb30c2",
+      "email": "subedimanjul25@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Manjul Subedi: payment ORD-1795610829916-3D9F45 marked FAILED"
+    },
     {
       "id": "raud_1795778001285_snjl",
       "timestamp": "2026-11-27T11:13:21.285Z",
@@ -957,15 +966,6 @@
     {
       "id": "raud_1795664867105_030j",
       "timestamp": "2026-11-26T03:47:47.105Z",
-      "userId": "usr_35b207967208",
-      "email": "poudlearadhya@gmail.com",
-      "actor": "Aradhya Paudel (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795664773332_s1yx",
-      "timestamp": "2026-11-26T03:46:13.332Z",
       "userId": "usr_35b207967208",
       "email": "poudlearadhya@gmail.com",
       "actor": "Aradhya Paudel (Google Sign-In)",
@@ -5157,7 +5157,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "awaiting_confirmation",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T12:45:19.877Z",
       "verificationMethod": "email_otp",
@@ -5168,9 +5168,16 @@
       "passkey": "scrypt$732606f01916b3e2230f4bc9e33f6714$f051b2551784fd90b13a316289fdd6393bcbb4615a2014494c79523c3da2f2d9002cd9f090c714496891c3a2c5934da5787f3ff6accbfba435e8c990cf33bb88",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-25T13:38:23.119Z",
-      "lastModifiedBy": "Admin Console (Provider Status Check)",
+      "updatedAt": "2026-11-27T11:13:22.989Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795778002989_kwaz",
+          "timestamp": "2026-11-27T11:13:22.989Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795610829916-3D9F45 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795613903119_ns9u",
           "timestamp": "2026-11-25T13:38:23.119Z",
