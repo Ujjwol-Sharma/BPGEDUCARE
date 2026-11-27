@@ -1,6 +1,6 @@
 {
-  "revision": 340,
-  "lastUpdated": "2026-11-27T11:22:11.406Z",
+  "revision": 341,
+  "lastUpdated": "2026-11-27T11:29:57.060Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795778997060_gd01",
+      "timestamp": "2026-11-27T11:29:57.060Z",
+      "userId": "usr_048bdacd393a",
+      "email": "giriaryan2525@gmail.com",
+      "actor": "Aryan Giri (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 12)"
+    },
     {
       "id": "raud_1795778505633_76jh",
       "timestamp": "2026-11-27T11:21:45.633Z",
@@ -962,18 +971,45 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795665645495_dp9g",
-      "timestamp": "2026-11-26T04:00:45.495Z",
-      "userId": "usr_10d588688c4c",
-      "email": "poudelaradhya@gmail.com",
-      "actor": "safdfafadwd (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_048bdacd393a",
+      "name": "Aryan Giri",
+      "username": "giriaryan2525",
+      "email": "giriaryan2525@gmail.com",
+      "canonicalEmail": "giriaryan2525@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T11:29:57.004Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_048bdacd393a89cc",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$7a946829e0273c58cf661baa8a9be7dd$66c7f184de53f4d3c216ad1c8bef351e8bfcd8f285dea44c9325aec18bf414d9c475c3488871933a665e7d6048b279014bac7b3aa81ef1918139d7541ac3a05d",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T11:29:57.059Z",
+      "lastModifiedBy": "Aryan Giri (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795778997060_xd29",
+          "timestamp": "2026-11-27T11:29:57.059Z",
+          "actor": "Aryan Giri (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_25e888886ae4",
       "name": "Creative Chess Club",
