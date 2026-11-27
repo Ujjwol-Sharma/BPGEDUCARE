@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-27T11:10:54.428Z",
+  "lastUpdated": "2026-11-27T11:10:57.658Z",
   "faculty": {
     "name": "Bishnu Prasad Gautam",
     "nickname": "(BPG Sir)",
@@ -4021,11 +4021,12 @@
       "transactionId": "",
       "orderSignature": "83395400821377b251077191d9ebf24ffba1f19c002b7653543cf877f70be89f",
       "method": "esewa_qr",
-      "status": "pending",
-      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "status": "failed",
+      "adminNote": "Payment verification failed or rejected by Admin.",
       "createdAt": "2026-11-26T04:15:02.647Z",
-      "updatedAt": "2026-11-26T04:15:02.647Z",
-      "reviewedAt": ""
+      "updatedAt": "2026-11-27T11:10:55.306Z",
+      "reviewedAt": "2026-11-27T11:10:55.306Z",
+      "verifiedBy": "Admin Console"
     },
     {
       "id": "pay_1795666368386_7qlz",
@@ -4045,11 +4046,12 @@
       "transactionId": "",
       "orderSignature": "e5ebdc474854b27730f8c949dcd6cfd9723e72334b15be1b5333bf7154d516ca",
       "method": "esewa_qr",
-      "status": "pending",
-      "adminNote": "Order created on server; awaiting eSewa payment.",
+      "status": "failed",
+      "adminNote": "Payment verification failed or rejected by Admin.",
       "createdAt": "2026-11-26T04:12:48.386Z",
-      "updatedAt": "2026-11-26T04:12:48.387Z",
-      "reviewedAt": ""
+      "updatedAt": "2026-11-27T11:10:57.658Z",
+      "reviewedAt": "2026-11-27T11:10:57.658Z",
+      "verifiedBy": "Admin Console"
     },
     {
       "id": "pay_1795665827537_z09m",
@@ -4500,6 +4502,6 @@
       "verifiedBy": "Admin Console"
     }
   ],
-  "revision": 223,
+  "revision": 225,
   "explicitDeleteUploadId": "lpdf_1795573857054_0"
 }
