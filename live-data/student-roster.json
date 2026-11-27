@@ -1,6 +1,6 @@
 {
-  "revision": 295,
-  "lastUpdated": "2026-11-27T02:01:56.878Z",
+  "revision": 296,
+  "lastUpdated": "2026-11-27T02:03:30.199Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795745010199_f4n5",
+      "timestamp": "2026-11-27T02:03:30.199Z",
+      "userId": "usr_e404ccf56231",
+      "email": "himanshikarki07@gmail.com",
+      "actor": "Himanshi Karki (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795743658550_0gfo",
       "timestamp": "2026-11-27T01:40:58.550Z",
@@ -962,18 +971,45 @@
       "actor": "Admin Console",
       "action": "ADMIN_CREATED_STUDENT",
       "details": "Added Live Verify Student (Class 12 · DIAMOND)"
-    },
-    {
-      "id": "raud_1795629785601_d4yi",
-      "timestamp": "2026-11-25T18:03:05.601Z",
-      "userId": "usr_25e888886ae4",
-      "email": "creativechessclub01@gmail.com",
-      "actor": "Admin Console",
-      "action": "PAYMENT_CONFIRMED_PLAN_ACTIVATED",
-      "details": "Creative Chess Club: GOLD activated via verified payment (ORD-1795625777877-D76F26)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_e404ccf56231",
+      "name": "Himanshi Karki",
+      "username": "himanshi_11",
+      "email": "himanshikarki07@gmail.com",
+      "canonicalEmail": "himanshikarki07@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T02:03:30.141Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$957ab4f1592b049d3de7e7110c1d8c29$c88d40b1ed3580fa3e79634ac8f47c568ae59d850f07d239087a9b754105114210072535163d97839264ba31f852fc34e449bd736426fd59d33204aff445047c",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T02:03:30.199Z",
+      "lastModifiedBy": "Himanshi Karki (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795745010199_1vy9",
+          "timestamp": "2026-11-27T02:03:30.199Z",
+          "actor": "Himanshi Karki (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_dd922bb65199",
       "name": "Suryansh",
