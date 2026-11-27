@@ -1,6 +1,6 @@
 {
-  "revision": 320,
-  "lastUpdated": "2026-11-27T11:02:55.158Z",
+  "revision": 321,
+  "lastUpdated": "2026-11-27T11:10:53.378Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777853378_kss5",
+      "timestamp": "2026-11-27T11:10:53.378Z",
+      "userId": "usr_d6872f7a8cbc",
+      "email": "bishalchhetri0099@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Bishal chhetri: payment ORD-1795692273368-6E8BC5 marked FAILED"
+    },
     {
       "id": "raud_1795777375158_0gna",
       "timestamp": "2026-11-27T11:02:55.158Z",
@@ -962,15 +971,6 @@
       "actor": "Mridul Jung Pande (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (After 12 Entrance · FREE)"
-    },
-    {
-      "id": "raud_1795660603501_a1gi",
-      "timestamp": "2026-11-26T02:36:43.501Z",
-      "userId": "usr_5d7f21afd1ca",
-      "email": "poudlearadhaya@gmail.com",
-      "actor": "Amrit (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -4202,9 +4202,16 @@
       "passkey": "scrypt$43aa7956b5b74e8813d72d0298f3a502$770158318c8dda66b3798e7c74dd45e1916074dd08cc01a7bea75eec6c176b91aa52d91301b46d269e9f68a0092a1f52289753055f636dca48b2b4aa846badaa",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-27T11:02:33.183Z",
+      "updatedAt": "2026-11-27T11:10:53.378Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777853378_qngb",
+          "timestamp": "2026-11-27T11:10:53.378Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795692273368-6E8BC5 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795777353183_zidd",
           "timestamp": "2026-11-27T11:02:33.183Z",
