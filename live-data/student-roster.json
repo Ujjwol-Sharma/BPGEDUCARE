@@ -1,6 +1,6 @@
 {
-  "revision": 305,
-  "lastUpdated": "2026-11-27T10:23:23.657Z",
+  "revision": 306,
+  "lastUpdated": "2026-11-27T10:24:40.366Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -987,7 +987,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-27T10:23:23.597Z",
       "verificationMethod": "google_oauth",
@@ -998,9 +998,16 @@
       "passkey": "scrypt$005b70a6722f3051388f2f5112ece6d8$c3706bd03309e0e89bf910a65a6c7076678f9f43dac14ec77c76d061c1f59f3b0e09376979cfcfe3bf03437f647f3a89476283fc33da991257a5e21aa5626306",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T10:23:23.657Z",
-      "lastModifiedBy": "NIraj Bhattarai (Google Sign-Up)",
+      "updatedAt": "2026-11-27T10:24:40.366Z",
+      "lastModifiedBy": "NIraj Bhattarai (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795775080366_ulnv",
+          "timestamp": "2026-11-27T10:24:40.366Z",
+          "actor": "NIraj Bhattarai (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795775080365-DDCDCD (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795775003657_9tbm",
           "timestamp": "2026-11-27T10:23:23.657Z",
