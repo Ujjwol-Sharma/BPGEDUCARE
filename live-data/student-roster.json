@@ -1,6 +1,6 @@
 {
-  "revision": 318,
-  "lastUpdated": "2026-11-27T11:02:38.058Z",
+  "revision": 319,
+  "lastUpdated": "2026-11-27T11:02:53.062Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777373062_ptr9",
+      "timestamp": "2026-11-27T11:02:53.062Z",
+      "userId": "usr_c8cdbe5a4b5a",
+      "email": "sonish.diyali.cs@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Sonish Diyali: payment ORD-1795698975189-827F77 marked FAILED"
+    },
     {
       "id": "raud_1795777358058_lmhd",
       "timestamp": "2026-11-27T11:02:38.058Z",
@@ -962,15 +971,6 @@
       "actor": "UJJWOL SHARMA (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · DIAMOND)"
-    },
-    {
-      "id": "raud_1795660550144_v615",
-      "timestamp": "2026-11-26T02:35:50.144Z",
-      "userId": "usr_a2139cc0df00",
-      "email": "sanketbaral26@gmail.com",
-      "actor": "Sanket Baral (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 11)"
     }
   ],
   "accounts": [
@@ -2896,7 +2896,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-26T12:17:53.333Z",
       "verificationMethod": "google_oauth",
@@ -2910,9 +2910,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T13:16:15.190Z",
-      "lastModifiedBy": "Sonish Diyali (Student)",
+      "updatedAt": "2026-11-27T11:02:53.062Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777373062_86sv",
+          "timestamp": "2026-11-27T11:02:53.062Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795698975189-827F77 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795698975190_ef4j",
           "timestamp": "2026-11-26T13:16:15.190Z",
