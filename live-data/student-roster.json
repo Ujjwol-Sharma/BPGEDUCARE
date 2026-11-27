@@ -1,6 +1,6 @@
 {
-  "revision": 321,
-  "lastUpdated": "2026-11-27T11:10:53.378Z",
+  "revision": 322,
+  "lastUpdated": "2026-11-27T11:10:54.428Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777854428_t3v4",
+      "timestamp": "2026-11-27T11:10:54.428Z",
+      "userId": "usr_35b207967208",
+      "email": "poudlearadhya@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "Aradhya Paudel: payment ORD-1795666951486-FC0F91 marked FAILED"
+    },
     {
       "id": "raud_1795777853378_kss5",
       "timestamp": "2026-11-27T11:10:53.378Z",
@@ -962,15 +971,6 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795660617405_cupb",
-      "timestamp": "2026-11-26T02:36:57.405Z",
-      "userId": "usr_aba8f2cb0d91",
-      "email": "mriduljungpande0095@gmail.com",
-      "actor": "Mridul Jung Pande (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (After 12 Entrance · FREE)"
     }
   ],
   "accounts": [
@@ -5179,7 +5179,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "pending",
+      "paymentStatus": "failed",
       "emailVerified": true,
       "verifiedAt": "2026-11-25T12:35:36.543Z",
       "verificationMethod": "google_oauth",
@@ -5190,9 +5190,16 @@
       "passkey": "scrypt$3d173d80c22f9acbd172af0e83fad1f3$61a98795226636614b4563ec7663d2eb22efac6b0cce4caa760f3c8e507a86eb07072b1f671c07b04e1e69ca41a31b59a1e589a22e6ec4302923a46b44df7eac",
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
-      "updatedAt": "2026-11-26T04:22:31.487Z",
-      "lastModifiedBy": "Aradhya Paudel (Student)",
+      "updatedAt": "2026-11-27T11:10:54.428Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777854428_4ebm",
+          "timestamp": "2026-11-27T11:10:54.428Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795666951486-FC0F91 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795666951487_7ytv",
           "timestamp": "2026-11-26T04:22:31.487Z",
@@ -5360,13 +5367,6 @@
           "actor": "Aradhya Paudel (Student)",
           "action": "PAYMENT_PENDING",
           "details": "Order ORD-1795610268743-FADADC (Topper, NPR 2999) is pending"
-        },
-        {
-          "id": "aud_1795610136601_dhup",
-          "timestamp": "2026-11-25T12:35:36.601Z",
-          "actor": "Aradhya Paudel (Google Sign-Up)",
-          "action": "ACCOUNT_CREATED",
-          "details": "Created account via Google Sign-Up in Class 12"
         }
       ]
     },
