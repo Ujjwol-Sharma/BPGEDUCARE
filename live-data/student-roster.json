@@ -1,6 +1,6 @@
 {
-  "revision": 344,
-  "lastUpdated": "2026-11-27T14:36:41.805Z",
+  "revision": 345,
+  "lastUpdated": "2026-11-27T14:53:25.381Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795791205381_7ffp",
+      "timestamp": "2026-11-27T14:53:25.381Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Creative Chess Club (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 12 · FREE)"
+    },
     {
       "id": "raud_1795790201805_d0v6",
       "timestamp": "2026-11-27T14:36:41.805Z",
@@ -962,15 +971,6 @@
       "actor": "Aradhya Paudel (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795666636816_3xa2",
-      "timestamp": "2026-11-26T04:17:16.816Z",
-      "userId": "usr_10d588688c4c",
-      "email": "poudelaradhya@gmail.com",
-      "actor": "safdfafadwd (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · FREE)"
     }
   ],
   "accounts": [
@@ -1106,9 +1106,16 @@
       "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T11:22:11.406Z",
-      "lastModifiedBy": "Creative Chess Club (Status Check)",
+      "updatedAt": "2026-11-27T14:53:25.381Z",
+      "lastModifiedBy": "Creative Chess Club (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795791205381_clml",
+          "timestamp": "2026-11-27T14:53:25.381Z",
+          "actor": "Creative Chess Club (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795778531406_kvu1",
           "timestamp": "2026-11-27T11:22:11.406Z",
