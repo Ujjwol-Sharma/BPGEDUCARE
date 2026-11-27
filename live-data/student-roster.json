@@ -1,6 +1,6 @@
 {
-  "revision": 491,
-  "lastUpdated": "2026-11-27T17:30:43.603Z",
+  "revision": 493,
+  "lastUpdated": "2026-11-27T17:30:45.729Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1004,11 +1004,23 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_b70f2d2953d3621e8c5dd610",
       "lastLoginAt": "2026-11-27T17:29:46.750Z",
-      "lastActiveAt": "2026-11-27T17:30:43.603Z",
-      "currentSection": "IOE (Entrance Prep) Mathematics · live",
+      "lastActiveAt": "2026-11-27T17:30:45.729Z",
+      "currentSection": "IOE (Entrance Prep) Mathematics · mocktests",
       "deviceInfo": "Safari on iPhone",
       "ipAddress": "104.28.240.25",
       "activityLog": [
+        {
+          "at": "2026-11-27T17:30:45.729Z",
+          "section": "IOE (Entrance Prep) Mathematics · mocktests",
+          "device": "Safari on iPhone",
+          "ip": "104.28.240.25"
+        },
+        {
+          "at": "2026-11-27T17:30:45.130Z",
+          "section": "IOE (Entrance Prep) Mathematics · syllabus",
+          "device": "Safari on iPhone",
+          "ip": "104.28.240.25"
+        },
         {
           "at": "2026-11-27T17:30:43.603Z",
           "section": "IOE (Entrance Prep) Mathematics · live",
