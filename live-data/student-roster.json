@@ -1,6 +1,6 @@
 {
-  "revision": 367,
-  "lastUpdated": "2026-11-27T15:35:51.101Z",
+  "revision": 368,
+  "lastUpdated": "2026-11-27T15:36:06.197Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1154,20 +1154,27 @@
       "googleLinked": true,
       "googleSub": "gsub_25e888886ae4fdd5",
       "avatarUrl": "",
-      "hasPassword": false,
-      "passkey": "scrypt$23c66e4287175a31c9aef1f4d40f3281$efe689492246a36ee3519a7f3469c6fab99df083bcaa8a6f6f4bcae1714d53b4b42f0503d04e0ae40ffebede39b43c0d534efcac91e31afeaec534c76f837244",
-      "activeSessionId": "revoked_sid_ae9c62c0d452d7e361c4a45f",
-      "lastLoginAt": "",
-      "lastActiveAt": "",
-      "deviceInfo": "",
+      "hasPassword": true,
+      "passkey": "scrypt$0fca9d82c852fbf9ac8aac1307905497$cf96c7553ad4e310c96ec4ebd98cd5ad44544e7834d66b87ccb8694b61661ff188b4e39a3317472f9225e7d6bcbc708d5780d218ed389981a7f2b262aa47a11c",
+      "activeSessionId": "sid_54f0d591e3e6819a98422186",
+      "lastLoginAt": "2026-11-27T15:36:06.197Z",
+      "lastActiveAt": "2026-11-27T15:36:06.197Z",
+      "deviceInfo": "Chrome on Windows",
       "readNotificationIds": [
         "notif_mock_live_mt_1795626947423",
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:33:57.594Z",
-      "lastModifiedBy": "Creative Chess Club (Student)",
+      "updatedAt": "2026-11-27T15:36:06.197Z",
+      "lastModifiedBy": "Creative Chess Club (Password Reset)",
       "auditLog": [
+        {
+          "id": "aud_1795793766197_m83k",
+          "timestamp": "2026-11-27T15:36:06.197Z",
+          "actor": "Creative Chess Club (Password Reset)",
+          "action": "PASSWORD_RESET",
+          "details": "Reset password via verified 6-digit email code"
+        },
         {
           "id": "aud_1795793637594_d5o0",
           "timestamp": "2026-11-27T15:33:57.594Z",
