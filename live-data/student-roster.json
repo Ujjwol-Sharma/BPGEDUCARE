@@ -1,6 +1,6 @@
 {
-  "revision": 327,
-  "lastUpdated": "2026-11-27T11:11:32.884Z",
+  "revision": 328,
+  "lastUpdated": "2026-11-27T11:11:40.659Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795777900659_5vqi",
+      "timestamp": "2026-11-27T11:11:40.659Z",
+      "userId": "usr_10d588688c4c",
+      "email": "poudelaradhya@gmail.com",
+      "actor": "Admin Console",
+      "action": "PAYMENT_FAILED",
+      "details": "safdfafadwd: payment ORD-1795665827536-9AE5E4 marked FAILED"
+    },
     {
       "id": "raud_1795777892884_4mbb",
       "timestamp": "2026-11-27T11:11:32.884Z",
@@ -962,15 +971,6 @@
       "actor": "Sumit Acharya (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · FREE)"
-    },
-    {
-      "id": "raud_1795661165553_zgwq",
-      "timestamp": "2026-11-26T02:46:05.553Z",
-      "userId": "usr_b2d7c9b1c76d",
-      "email": "prashillamichhane@gmail.com",
-      "actor": "Prashil Lamichhane (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -3350,9 +3350,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-27T11:10:57.658Z",
+      "updatedAt": "2026-11-27T11:11:40.659Z",
       "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795777900659_dydb",
+          "timestamp": "2026-11-27T11:11:40.659Z",
+          "actor": "Admin Console",
+          "action": "PAYMENT_FAILED",
+          "details": "Order ORD-1795665827536-9AE5E4 marked FAILED (Payment verification failed or rejected by Admin.)"
+        },
         {
           "id": "aud_1795777857658_xlz6",
           "timestamp": "2026-11-27T11:10:57.658Z",
