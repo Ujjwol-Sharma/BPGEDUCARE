@@ -1,6 +1,6 @@
 {
-  "revision": 377,
-  "lastUpdated": "2026-11-27T15:38:13.973Z",
+  "revision": 378,
+  "lastUpdated": "2026-11-27T15:38:19.208Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1203,9 +1203,9 @@
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$0fca9d82c852fbf9ac8aac1307905497$cf96c7553ad4e310c96ec4ebd98cd5ad44544e7834d66b87ccb8694b61661ff188b4e39a3317472f9225e7d6bcbc708d5780d218ed389981a7f2b262aa47a11c",
-      "activeSessionId": "sid_a0b40a9f1623b79b62e02ca1",
-      "lastLoginAt": "2026-11-27T15:37:51.580Z",
-      "lastActiveAt": "2026-11-27T15:37:51.580Z",
+      "activeSessionId": "sid_5b515517e13f6310fab7488b",
+      "lastLoginAt": "2026-11-27T15:38:19.207Z",
+      "lastActiveAt": "2026-11-27T15:38:19.207Z",
       "deviceInfo": "Chrome on Windows",
       "readNotificationIds": [
         "notif_mock_live_mt_1795626947423",
