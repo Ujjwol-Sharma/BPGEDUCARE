@@ -1,6 +1,6 @@
 {
-  "revision": 296,
-  "lastUpdated": "2026-11-27T02:03:30.199Z",
+  "revision": 297,
+  "lastUpdated": "2026-11-27T02:03:56.605Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795745036605_cz5q",
+      "timestamp": "2026-11-27T02:03:56.605Z",
+      "userId": "usr_7a2bd34269c2",
+      "email": "gautamsubrat1@gmail.com",
+      "actor": "SUBRAT GAUTAM (Google Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Google Sign-Up (Class 11)"
+    },
     {
       "id": "raud_1795745010199_f4n5",
       "timestamp": "2026-11-27T02:03:30.199Z",
@@ -962,18 +971,45 @@
       "actor": "Live Verify Student (Google Sign-In)",
       "action": "GOOGLE_SIGN_IN",
       "details": "Signed in with Google (Class 12 · DIAMOND)"
-    },
-    {
-      "id": "raud_1795630161377_35sv",
-      "timestamp": "2026-11-25T18:09:21.377Z",
-      "userId": "usr_b312fe6586f8",
-      "email": "bpg.verify.mwwfu3hj@gmail.com",
-      "actor": "Admin Console",
-      "action": "ADMIN_CREATED_STUDENT",
-      "details": "Added Live Verify Student (Class 12 · DIAMOND)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_7a2bd34269c2",
+      "name": "SUBRAT GAUTAM",
+      "username": "gautamsubrat1",
+      "email": "gautamsubrat1@gmail.com",
+      "canonicalEmail": "gautamsubrat1@gmail.com",
+      "grade": "Class 11",
+      "classKey": "class-11",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-27T02:03:56.534Z",
+      "verificationMethod": "google_oauth",
+      "googleLinked": true,
+      "googleSub": "gsub_7a2bd34269c2b619",
+      "avatarUrl": "",
+      "hasPassword": false,
+      "passkey": "scrypt$2b9916247a0fbab16db5f5ac36981827$36ba17ab7a3b53e7273c083484d92812f9e4404a9169aa8c045e93b8f50cce08f78335e6936b8e8f5680228a3c9c77c31763b805ac7f1b2935774f0a7f5c3206",
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T02:03:56.605Z",
+      "lastModifiedBy": "SUBRAT GAUTAM (Google Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795745036605_hph3",
+          "timestamp": "2026-11-27T02:03:56.605Z",
+          "actor": "SUBRAT GAUTAM (Google Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Created account via Google Sign-Up in Class 11"
+        }
+      ]
+    },
     {
       "userId": "usr_e404ccf56231",
       "name": "Himanshi Karki",
