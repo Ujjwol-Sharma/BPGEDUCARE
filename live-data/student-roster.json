@@ -1,6 +1,6 @@
 {
-  "revision": 362,
-  "lastUpdated": "2026-11-27T15:26:01.632Z",
+  "revision": 363,
+  "lastUpdated": "2026-11-27T15:29:15.984Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1145,9 +1145,16 @@
         "notif_1795630727465"
       ],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T15:18:23.156Z",
-      "lastModifiedBy": "Admin Console",
+      "updatedAt": "2026-11-27T15:29:15.984Z",
+      "lastModifiedBy": "Creative Chess Club (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795793355984_woxn",
+          "timestamp": "2026-11-27T15:29:15.984Z",
+          "actor": "Creative Chess Club (Student)",
+          "action": "PAYMENT_PENDING",
+          "details": "Order ORD-1795793355983-BD0A1F (Topper, NPR 2999) is pending"
+        },
         {
           "id": "aud_1795792703156_to4u",
           "timestamp": "2026-11-27T15:18:23.156Z",
