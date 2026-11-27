@@ -1,6 +1,6 @@
 {
-  "revision": 426,
-  "lastUpdated": "2026-11-27T16:43:58.268Z",
+  "revision": 427,
+  "lastUpdated": "2026-11-27T16:44:39.258Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795797879258_p5ib",
+      "timestamp": "2026-11-27T16:44:39.258Z",
+      "userId": "usr_25e888886ae4",
+      "email": "creativechessclub01@gmail.com",
+      "actor": "Super Admin",
+      "action": "SUPER_ADMIN_UPDATE",
+      "details": "OTP Verified: No"
+    },
     {
       "id": "raud_1795796881522_s7b3",
       "timestamp": "2026-11-27T16:28:01.522Z",
@@ -962,15 +971,6 @@
       "actor": "Agrim Pahari (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 11)"
-    },
-    {
-      "id": "raud_1795698665244_4j8c",
-      "timestamp": "2026-11-26T13:11:05.244Z",
-      "userId": "usr_562af9e6cdb1",
-      "email": "manojthapaa076@gmail.com",
-      "actor": "Manoj Thapa (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
@@ -996,7 +996,7 @@
       "avatarUrl": "",
       "hasPassword": true,
       "passkey": "scrypt$7664d876bb1e24e530d4cfb3f5605232$30908210dd57286a604916735c367f78acd154378d632b0028d5920da1104e81fdaf06b6e6b3289cfe0a225bea8a24599785389c1c2a489ae8e78af41d6c5ce7",
-      "otpVerified": true,
+      "otpVerified": false,
       "termsAccepted": true,
       "termsVersion": "2026-11-27",
       "termsAcceptedAt": "2026-11-27T16:26:25.875Z",
@@ -1090,9 +1090,16 @@
       ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T16:28:01.522Z",
-      "lastModifiedBy": "Admin Console",
+      "updatedAt": "2026-11-27T16:44:39.258Z",
+      "lastModifiedBy": "Super Admin",
       "auditLog": [
+        {
+          "id": "aud_1795797879258_ukti",
+          "timestamp": "2026-11-27T16:44:39.258Z",
+          "actor": "Super Admin",
+          "action": "SUPER_ADMIN_UPDATE",
+          "details": "OTP Verified: No"
+        },
         {
           "id": "aud_1795796881522_7c96",
           "timestamp": "2026-11-27T16:28:01.522Z",
