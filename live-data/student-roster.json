@@ -1,6 +1,6 @@
 {
-  "revision": 495,
-  "lastUpdated": "2026-11-27T17:30:48.562Z",
+  "revision": 494,
+  "lastUpdated": "2026-11-27T17:30:47.078Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -1004,17 +1004,11 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_b70f2d2953d3621e8c5dd610",
       "lastLoginAt": "2026-11-27T17:29:46.750Z",
-      "lastActiveAt": "2026-11-27T17:30:48.562Z",
-      "currentSection": "Viewing AFTER-12 Lesson",
+      "lastActiveAt": "2026-11-27T17:30:47.078Z",
+      "currentSection": "IOE (Entrance Prep) Mathematics · notes",
       "deviceInfo": "Safari on iPhone",
       "ipAddress": "104.28.240.25",
       "activityLog": [
-        {
-          "at": "2026-11-27T17:30:48.562Z",
-          "section": "Viewing AFTER-12 Lesson",
-          "device": "Safari on iPhone",
-          "ip": "104.28.240.25"
-        },
         {
           "at": "2026-11-27T17:30:47.078Z",
           "section": "IOE (Entrance Prep) Mathematics · notes",
