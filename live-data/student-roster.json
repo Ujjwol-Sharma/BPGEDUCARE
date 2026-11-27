@@ -1,6 +1,6 @@
 {
-  "revision": 297,
-  "lastUpdated": "2026-11-27T02:03:56.605Z",
+  "revision": 298,
+  "lastUpdated": "2026-11-27T02:13:37.901Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795660679383_722e",
@@ -72,6 +72,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795745617901_yi0v",
+      "timestamp": "2026-11-27T02:13:37.901Z",
+      "userId": "usr_131d502f669b",
+      "email": "shubhampoudel2010@gmail.com",
+      "actor": "Shubham (Google Sign-In)",
+      "action": "GOOGLE_SIGN_IN",
+      "details": "Signed in with Google (Class 11 · FREE)"
+    },
     {
       "id": "raud_1795745036605_cz5q",
       "timestamp": "2026-11-27T02:03:56.605Z",
@@ -962,15 +971,6 @@
       "actor": "Admin Console",
       "action": "ADMIN_DELETED_STUDENT",
       "details": "Deleted student account Live Verify Student (bpg.verify.mwwfu3hj@gmail.com)"
-    },
-    {
-      "id": "raud_1795630166748_sotu",
-      "timestamp": "2026-11-25T18:09:26.748Z",
-      "userId": "usr_b312fe6586f8",
-      "email": "bpg.verify.mwwfu3hj@gmail.com",
-      "actor": "Live Verify Student (Google Sign-In)",
-      "action": "GOOGLE_SIGN_IN",
-      "details": "Signed in with Google (Class 12 · DIAMOND)"
     }
   ],
   "accounts": [
@@ -1777,9 +1777,16 @@
       "passkey": "scrypt$7ae0f5f4c6733acb912100c249ced08d$06b6d9d2389a39a5a3e604bd3acfcb956a07be369ca36f131600a9369a81df9622c8b8b6147bbdcaa81d80698915b479f05015103c71c8e6f86645fd122c6fdf",
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-26T14:33:31.635Z",
-      "lastModifiedBy": "Shubham (Google Sign-Up)",
+      "updatedAt": "2026-11-27T02:13:37.901Z",
+      "lastModifiedBy": "Shubham (Google Sign-In)",
       "auditLog": [
+        {
+          "id": "aud_1795745617901_mfyt",
+          "timestamp": "2026-11-27T02:13:37.901Z",
+          "actor": "Shubham (Google Sign-In)",
+          "action": "GOOGLE_SIGN_IN",
+          "details": "Signed in with Google and linked to existing member record"
+        },
         {
           "id": "aud_1795703611635_5yjv",
           "timestamp": "2026-11-26T14:33:31.635Z",
