@@ -1,6 +1,6 @@
 {
-  "revision": 599,
-  "lastUpdated": "2026-11-28T13:45:06.883Z",
+  "revision": 600,
+  "lastUpdated": "2026-11-28T13:45:14.299Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1020,11 +1020,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_512289416d5f50f24f89dc07",
       "lastLoginAt": "2026-11-28T13:45:01.846Z",
-      "lastActiveAt": "2026-11-28T13:45:06.882Z",
-      "currentSection": "Grade XII Mathematics · notes",
+      "lastActiveAt": "2026-11-28T13:45:14.298Z",
+      "currentSection": "Grade XII Mathematics · mocktests",
       "deviceInfo": "Safari on iPhone",
       "ipAddress": "113.199.233.88",
       "activityLog": [
+        {
+          "at": "2026-11-28T13:45:14.298Z",
+          "section": "Grade XII Mathematics · mocktests",
+          "device": "Safari on iPhone",
+          "ip": "113.199.233.88"
+        },
         {
           "at": "2026-11-28T13:45:06.882Z",
           "section": "Grade XII Mathematics · notes",
