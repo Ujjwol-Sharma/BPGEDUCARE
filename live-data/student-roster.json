@@ -1,6 +1,6 @@
 {
-  "revision": 548,
-  "lastUpdated": "2026-11-28T05:40:51.149Z",
+  "revision": 549,
+  "lastUpdated": "2026-11-28T07:28:46.134Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795850926133_2f93",
+      "timestamp": "2026-11-28T07:28:46.133Z",
+      "userId": "usr_4b66f443bc20",
+      "email": "dipsonchhetri596@gmail.com",
+      "actor": "Dipson cheetri (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795844071778_e72b",
       "timestamp": "2026-11-28T05:34:31.778Z",
@@ -978,18 +987,58 @@
       "actor": "Asbin Marasini (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795700636395_kf8a",
-      "timestamp": "2026-11-26T13:43:56.395Z",
-      "userId": "usr_a3c0711da8c2",
-      "email": "simrandhunganaa@gmail.com",
-      "actor": "Simran (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_4b66f443bc20",
+      "name": "Dipson cheetri",
+      "username": "dipson",
+      "email": "dipsonchhetri596@gmail.com",
+      "canonicalEmail": "dipsonchhetri596@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T07:28:46.075Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$f16b142387046c4aa3f833a89f419f0e$518c4fd6c6779e5487ecc80d16d66dc495870fafe5ec21ec210747a257ee36360be82e6c737d8f17edea3ad9736ca61edbbcda76d533825c502403fa27c05e7f",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T07:28:46.075Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_749674cff407104e81f3289f",
+      "lastLoginAt": "2026-11-28T07:28:46.075Z",
+      "lastActiveAt": "2026-11-28T07:28:46.075Z",
+      "currentSection": "",
+      "deviceInfo": "Safari on iPhone",
+      "ipAddress": "103.124.99.229",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T07:28:46.133Z",
+      "lastModifiedBy": "Dipson cheetri (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795850926133_wflf",
+          "timestamp": "2026-11-28T07:28:46.133Z",
+          "actor": "Dipson cheetri (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_394c220070b1",
       "name": "Aviyan Baral",
