@@ -1,6 +1,6 @@
 {
-  "revision": 572,
-  "lastUpdated": "2026-11-28T12:18:55.965Z",
+  "revision": 573,
+  "lastUpdated": "2026-11-28T12:19:16.386Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -3039,7 +3039,8 @@
       ],
       "readNotificationIds": [
         "notif_1795630727465",
-        "notif_mock_live_mt_1795626947423"
+        "notif_mock_live_mt_1795626947423",
+        "notif_1795797749481"
       ],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-28T12:18:45.081Z",
