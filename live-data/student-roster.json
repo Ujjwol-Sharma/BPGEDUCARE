@@ -1,6 +1,6 @@
 {
-  "revision": 508,
-  "lastUpdated": "2026-11-28T03:28:36.265Z",
+  "revision": 509,
+  "lastUpdated": "2026-11-28T03:28:40.144Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1020,11 +1020,18 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_e0700eb63bd7c6ec1670bd25",
       "lastLoginAt": "2026-11-28T03:28:36.200Z",
-      "lastActiveAt": "2026-11-28T03:28:36.200Z",
-      "currentSection": "",
+      "lastActiveAt": "2026-11-28T03:28:40.143Z",
+      "currentSection": "IOE (Entrance Prep) Mathematics · notes",
       "deviceInfo": "Chrome on macOS",
       "ipAddress": "173.91.129.83",
-      "activityLog": [],
+      "activityLog": [
+        {
+          "at": "2026-11-28T03:28:40.143Z",
+          "section": "IOE (Entrance Prep) Mathematics · notes",
+          "device": "Chrome on macOS",
+          "ip": "173.91.129.83"
+        }
+      ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-28",
       "updatedAt": "2026-11-28T03:28:36.265Z",
