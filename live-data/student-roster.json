@@ -1,6 +1,6 @@
 {
-  "revision": 597,
-  "lastUpdated": "2026-11-28T13:06:28.124Z",
+  "revision": 598,
+  "lastUpdated": "2026-11-28T13:45:01.917Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795873501917_ufj2",
+      "timestamp": "2026-11-28T13:45:01.917Z",
+      "userId": "usr_b6ecedc3642d",
+      "email": "dhakalanish601@gmail.com",
+      "actor": "Anish Dhakal (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795865518828_tbfv",
       "timestamp": "2026-11-28T11:31:58.828Z",
@@ -978,18 +987,58 @@
       "actor": "Addin Baral (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (After 12 Entrance)"
-    },
-    {
-      "id": "raud_1795701580584_3x3v",
-      "timestamp": "2026-11-26T13:59:40.584Z",
-      "userId": "usr_7bfbdd0aed3c",
-      "email": "ziaparajuli@gmail.com",
-      "actor": "ziaparajuli@gmail.com (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_b6ecedc3642d",
+      "name": "Anish Dhakal",
+      "username": "anish",
+      "email": "dhakalanish601@gmail.com",
+      "canonicalEmail": "dhakalanish601@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T13:45:01.846Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$c604b4e9f7432d077d215edb810d77c0$ed8184c91a1a738f08e0df7f80790303457e914a1d91716cd4f05ae8642bbc97cbb4256c1e0bf357480bb60b87929fd6a9bc396c92da248eaf40a00cb6bd1f27",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T13:45:01.846Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_512289416d5f50f24f89dc07",
+      "lastLoginAt": "2026-11-28T13:45:01.846Z",
+      "lastActiveAt": "2026-11-28T13:45:01.846Z",
+      "currentSection": "",
+      "deviceInfo": "Safari on iPhone",
+      "ipAddress": "113.199.233.88",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T13:45:01.916Z",
+      "lastModifiedBy": "Anish Dhakal (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795873501916_2gn5",
+          "timestamp": "2026-11-28T13:45:01.916Z",
+          "actor": "Anish Dhakal (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_8a301e482de2",
       "name": "suhana sapkota",
