@@ -1,6 +1,6 @@
 {
-  "revision": 517,
-  "lastUpdated": "2026-11-28T03:29:59.082Z",
+  "revision": 518,
+  "lastUpdated": "2026-11-28T03:31:13.520Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1018,7 +1018,7 @@
       "termsAcceptedAt": "2026-11-28T03:28:36.200Z",
       "ioeAccess": false,
       "mustChangePassword": false,
-      "activeSessionId": "sid_e0700eb63bd7c6ec1670bd25",
+      "activeSessionId": "revoked_sid_eca97dd00ba2567359ccdf8f",
       "lastLoginAt": "2026-11-28T03:28:36.200Z",
       "lastActiveAt": "2026-11-28T03:29:59.082Z",
       "currentSection": "Viewing AFTER-12 Lesson",
