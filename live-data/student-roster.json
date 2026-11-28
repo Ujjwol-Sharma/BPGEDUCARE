@@ -1,6 +1,6 @@
 {
-  "revision": 513,
-  "lastUpdated": "2026-11-28T03:28:54.174Z",
+  "revision": 514,
+  "lastUpdated": "2026-11-28T03:29:12.316Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1478,11 +1478,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_5b467b35e9cfb0d6be279fe0",
       "lastLoginAt": "2026-11-27T16:30:05.801Z",
-      "lastActiveAt": "2026-11-27T16:31:35.322Z",
-      "currentSection": "Viewing CLASS-12 PDF",
+      "lastActiveAt": "2026-11-28T03:29:12.316Z",
+      "currentSection": "Grade XII Mathematics · notes",
       "deviceInfo": "Chrome on iPhone",
-      "ipAddress": "27.34.73.64",
+      "ipAddress": "27.34.73.17",
       "activityLog": [
+        {
+          "at": "2026-11-28T03:29:12.316Z",
+          "section": "Grade XII Mathematics · notes",
+          "device": "Chrome on iPhone",
+          "ip": "27.34.73.17"
+        },
         {
           "at": "2026-11-27T16:31:35.322Z",
           "section": "Viewing CLASS-12 PDF",
