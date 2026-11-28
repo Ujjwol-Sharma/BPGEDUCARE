@@ -1,6 +1,6 @@
 {
-  "revision": 570,
-  "lastUpdated": "2026-11-28T11:32:15.361Z",
+  "revision": 571,
+  "lastUpdated": "2026-11-28T12:18:45.082Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -3015,29 +3015,36 @@
       "googleLinked": true,
       "googleSub": "gsub_2e57cd27d3d8df5c",
       "avatarUrl": "",
-      "hasPassword": false,
-      "passkey": "scrypt$881fed229d7e8b50c9744056037e0753$6cd385bbc791af6d892ded6cd939d803447cc29809a4efb740c542286a0f2ba9083fc89bb24a43a748ada61af7398060e4f72e65daf37ecabeeb3a12ea85209b",
-      "otpVerified": false,
-      "termsAccepted": false,
-      "termsVersion": "",
-      "termsAcceptedAt": "",
+      "hasPassword": true,
+      "passkey": "scrypt$6b60c94b2c0ad1eb852f48e07ac391b7$ca6b1cb51460b11ab666f2ccb63d8df634a605a41870e4bce7099e03d2dfea9545902db0aeea614e0f393e55057373ee7bdf312c5ce4963912ee2c607b603f68",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T12:18:45.081Z",
       "ioeAccess": false,
       "mustChangePassword": false,
-      "activeSessionId": "",
-      "lastLoginAt": "",
-      "lastActiveAt": "",
+      "activeSessionId": "sid_480e920caeb235d6379cfe21",
+      "lastLoginAt": "2026-11-28T12:18:45.081Z",
+      "lastActiveAt": "2026-11-28T12:18:45.081Z",
       "currentSection": "",
-      "deviceInfo": "",
-      "ipAddress": "",
+      "deviceInfo": "Chrome on Windows",
+      "ipAddress": "160.250.254.83",
       "activityLog": [],
       "readNotificationIds": [
         "notif_1795630727465",
         "notif_mock_live_mt_1795626947423"
       ],
       "joinedAt": "2026-11-26",
-      "updatedAt": "2026-11-27T15:05:44.697Z",
-      "lastModifiedBy": "Admin Console",
+      "updatedAt": "2026-11-28T12:18:45.081Z",
+      "lastModifiedBy": "Ganesh Sharma (Password Reset)",
       "auditLog": [
+        {
+          "id": "aud_1795868325081_lmm3",
+          "timestamp": "2026-11-28T12:18:45.081Z",
+          "actor": "Ganesh Sharma (Password Reset)",
+          "action": "PASSWORD_RESET",
+          "details": "Reset password via verified 6-digit email code"
+        },
         {
           "id": "aud_1795791944697_6knv",
           "timestamp": "2026-11-27T15:05:44.697Z",
