@@ -1,6 +1,6 @@
 {
-  "revision": 566,
-  "lastUpdated": "2026-11-28T10:02:20.693Z",
+  "revision": 567,
+  "lastUpdated": "2026-11-28T11:31:58.828Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795865518828_tbfv",
+      "timestamp": "2026-11-28T11:31:58.828Z",
+      "userId": "usr_8a301e482de2",
+      "email": "sonakshisapkota340@gmail.com",
+      "actor": "suhana sapkota (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795858547637_0xi9",
       "timestamp": "2026-11-28T09:35:47.637Z",
@@ -978,18 +987,58 @@
       "actor": "ziaparajuli@gmail.com (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795701161539_ks4f",
-      "timestamp": "2026-11-26T13:52:41.539Z",
-      "userId": "usr_1bbeffd36c10",
-      "email": "sudeepsubedi3456@gmail.com",
-      "actor": "Sudeep Subedi (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_8a301e482de2",
+      "name": "suhana sapkota",
+      "username": "sonakshi",
+      "email": "sonakshisapkota340@gmail.com",
+      "canonicalEmail": "sonakshisapkota340@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T11:31:58.765Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$9fe47cc94b729478d77b74f23132f10c$7b04af173dd8ac5e197066b145158e8c632fbced82bce910cd5daa64f6142961bce4dd75664681b55022d0ec0be9c7acb9ef751b4f07081a8ba681ea7ede018b",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T11:31:58.765Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_084b2024279e6057b2b166c4",
+      "lastLoginAt": "2026-11-28T11:31:58.765Z",
+      "lastActiveAt": "2026-11-28T11:31:58.765Z",
+      "currentSection": "",
+      "deviceInfo": "Safari on macOS",
+      "ipAddress": "27.34.72.209",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T11:31:58.827Z",
+      "lastModifiedBy": "suhana sapkota (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795865518827_0p04",
+          "timestamp": "2026-11-28T11:31:58.827Z",
+          "actor": "suhana sapkota (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_0aa0aaeac7db",
       "name": "Sagar Ranabhat",
