@@ -1,6 +1,6 @@
 {
-  "revision": 510,
-  "lastUpdated": "2026-11-28T03:28:49.805Z",
+  "revision": 511,
+  "lastUpdated": "2026-11-28T03:28:51.070Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1020,11 +1020,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_e0700eb63bd7c6ec1670bd25",
       "lastLoginAt": "2026-11-28T03:28:36.200Z",
-      "lastActiveAt": "2026-11-28T03:28:49.805Z",
-      "currentSection": "IOE (Entrance Prep) Mathematics · mocktests",
+      "lastActiveAt": "2026-11-28T03:28:51.070Z",
+      "currentSection": "IOE (Entrance Prep) Mathematics · syllabus",
       "deviceInfo": "Chrome on macOS",
       "ipAddress": "173.91.129.83",
       "activityLog": [
+        {
+          "at": "2026-11-28T03:28:51.070Z",
+          "section": "IOE (Entrance Prep) Mathematics · syllabus",
+          "device": "Chrome on macOS",
+          "ip": "173.91.129.83"
+        },
         {
           "at": "2026-11-28T03:28:49.805Z",
           "section": "IOE (Entrance Prep) Mathematics · mocktests",
