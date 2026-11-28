@@ -1,6 +1,6 @@
 {
-  "revision": 585,
-  "lastUpdated": "2026-11-28T12:48:52.040Z",
+  "revision": 586,
+  "lastUpdated": "2026-11-28T12:48:56.380Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -8474,11 +8474,18 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_385b715c7654daeb08e2a2ae",
       "lastLoginAt": "2026-11-28T12:48:52.040Z",
-      "lastActiveAt": "2026-11-28T12:48:52.040Z",
-      "currentSection": "",
+      "lastActiveAt": "2026-11-28T12:48:56.379Z",
+      "currentSection": "Grade XII Mathematics · notes",
       "deviceInfo": "Edge on Windows",
       "ipAddress": "150.107.107.17",
-      "activityLog": [],
+      "activityLog": [
+        {
+          "at": "2026-11-28T12:48:56.379Z",
+          "section": "Grade XII Mathematics · notes",
+          "device": "Edge on Windows",
+          "ip": "150.107.107.17"
+        }
+      ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-25",
       "updatedAt": "2026-11-25T12:19:35.280Z",
