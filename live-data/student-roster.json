@@ -1,6 +1,6 @@
 {
-  "revision": 535,
-  "lastUpdated": "2026-11-28T05:35:48.541Z",
+  "revision": 536,
+  "lastUpdated": "2026-11-28T05:35:58.869Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1020,11 +1020,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_7c16b09d3cf944006ac1602f",
       "lastLoginAt": "2026-11-28T05:34:31.718Z",
-      "lastActiveAt": "2026-11-28T05:35:48.541Z",
-      "currentSection": "IOE (Entrance Prep) Mathematics · notes",
+      "lastActiveAt": "2026-11-28T05:35:58.869Z",
+      "currentSection": "Grade XII Mathematics · live",
       "deviceInfo": "Chrome on Android",
       "ipAddress": "27.34.73.34",
       "activityLog": [
+        {
+          "at": "2026-11-28T05:35:58.869Z",
+          "section": "Grade XII Mathematics · live",
+          "device": "Chrome on Android",
+          "ip": "27.34.73.34"
+        },
         {
           "at": "2026-11-28T05:35:48.541Z",
           "section": "IOE (Entrance Prep) Mathematics · notes",
