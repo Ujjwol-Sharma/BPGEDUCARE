@@ -1,6 +1,6 @@
 {
-  "revision": 555,
-  "lastUpdated": "2026-11-28T07:34:48.538Z",
+  "revision": 556,
+  "lastUpdated": "2026-11-28T09:35:47.637Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795858547637_0xi9",
+      "timestamp": "2026-11-28T09:35:47.637Z",
+      "userId": "usr_0aa0aaeac7db",
+      "email": "ranabhatsagar206@gmail.com",
+      "actor": "Sagar Ranabhat (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795850926133_2f93",
       "timestamp": "2026-11-28T07:28:46.133Z",
@@ -978,18 +987,58 @@
       "actor": "Sudeep Subedi (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795700722168_01m1",
-      "timestamp": "2026-11-26T13:45:22.168Z",
-      "userId": "usr_2266f373ef4f",
-      "email": "marasiniasbin098@gmail.com",
-      "actor": "Asbin Marasini (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_0aa0aaeac7db",
+      "name": "Sagar Ranabhat",
+      "username": "sagar123",
+      "email": "ranabhatsagar206@gmail.com",
+      "canonicalEmail": "ranabhatsagar206@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T09:35:47.572Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$8b0903b9b8be5f7aa79f940a497eed3f$5beed60c7efe9985fb9967bdae408b4b145f5f77e3b6185da43b4f03a6ee754bbee9e3231869561c55381415656a274fdf199d4a5086f5294f3bff1010ecb9ff",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T09:35:47.572Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_0030ff772756fd832282586a",
+      "lastLoginAt": "2026-11-28T09:35:47.572Z",
+      "lastActiveAt": "2026-11-28T09:35:47.572Z",
+      "currentSection": "",
+      "deviceInfo": "Chrome on Android",
+      "ipAddress": "27.34.72.226",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T09:35:47.637Z",
+      "lastModifiedBy": "Sagar Ranabhat (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795858547637_iq94",
+          "timestamp": "2026-11-28T09:35:47.637Z",
+          "actor": "Sagar Ranabhat (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_4b66f443bc20",
       "name": "Dipson cheetri",
