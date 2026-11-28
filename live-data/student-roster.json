@@ -1,6 +1,6 @@
 {
-  "revision": 561,
-  "lastUpdated": "2026-11-28T10:01:07.922Z",
+  "revision": 562,
+  "lastUpdated": "2026-11-28T10:01:41.016Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -5930,11 +5930,18 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_d5cbc95486d3ee778f6575d6",
       "lastLoginAt": "2026-11-28T10:01:07.922Z",
-      "lastActiveAt": "2026-11-28T10:01:07.922Z",
-      "currentSection": "",
+      "lastActiveAt": "2026-11-28T10:01:41.015Z",
+      "currentSection": "Grade XII Mathematics · notes",
       "deviceInfo": "Chrome on Android",
       "ipAddress": "103.124.99.232",
-      "activityLog": [],
+      "activityLog": [
+        {
+          "at": "2026-11-28T10:01:41.015Z",
+          "section": "Grade XII Mathematics · notes",
+          "device": "Chrome on Android",
+          "ip": "103.124.99.232"
+        }
+      ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-26",
       "updatedAt": "2026-11-26T02:34:57.195Z",
