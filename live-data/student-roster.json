@@ -1,6 +1,6 @@
 {
-  "revision": 595,
-  "lastUpdated": "2026-11-28T12:50:21.921Z",
+  "revision": 596,
+  "lastUpdated": "2026-11-28T12:50:33.067Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -8474,11 +8474,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_385b715c7654daeb08e2a2ae",
       "lastLoginAt": "2026-11-28T12:48:52.040Z",
-      "lastActiveAt": "2026-11-28T12:50:21.921Z",
-      "currentSection": "Grade XII Mathematics · notes",
+      "lastActiveAt": "2026-11-28T12:50:33.067Z",
+      "currentSection": "IOE (Entrance Prep) Mathematics · notes",
       "deviceInfo": "Edge on Windows",
       "ipAddress": "150.107.107.17",
       "activityLog": [
+        {
+          "at": "2026-11-28T12:50:33.067Z",
+          "section": "IOE (Entrance Prep) Mathematics · notes",
+          "device": "Edge on Windows",
+          "ip": "150.107.107.17"
+        },
         {
           "at": "2026-11-28T12:50:21.921Z",
           "section": "Grade XII Mathematics · notes",
