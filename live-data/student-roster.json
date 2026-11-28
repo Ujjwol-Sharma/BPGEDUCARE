@@ -1,6 +1,6 @@
 {
-  "revision": 624,
-  "lastUpdated": "2026-11-28T15:05:40.823Z",
+  "revision": 625,
+  "lastUpdated": "2026-11-28T15:06:47.851Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -13,10 +13,11 @@
       "requestedClassKey": "class-11",
       "requestedGrade": "Class 11",
       "reason": "",
-      "status": "pending",
+      "status": "approved",
       "adminNote": "",
       "submittedAt": "2026-11-27T17:38:00.183Z",
-      "reviewedAt": ""
+      "reviewedAt": "2026-11-28T15:06:47.851Z",
+      "reviewedBy": "Admin Console"
     },
     {
       "id": "csr_1795660679383_722e",
@@ -88,6 +89,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795878407851_gtbo",
+      "timestamp": "2026-11-28T15:06:47.851Z",
+      "userId": "usr_7deaad37efc0",
+      "email": "bloodk395@gmail.com",
+      "actor": "Admin Console",
+      "action": "CLASS_SWITCH_APPROVED",
+      "details": "king blood: switch approved IOE -> Class 11"
+    },
     {
       "id": "raud_1795877846929_o67t",
       "timestamp": "2026-11-28T14:57:26.929Z",
@@ -976,15 +986,6 @@
       "userId": "usr_9d8cd15a8dc7",
       "email": "janusgurung@gmail.com",
       "actor": "Janus gurung (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795702176101_3zsf",
-      "timestamp": "2026-11-26T14:09:36.101Z",
-      "userId": "usr_377c5d16701c",
-      "email": "jeffreyepstein100000@gmail.com",
-      "actor": "Jeffrey Epstein (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
     }
@@ -1903,8 +1904,8 @@
       "username": "king",
       "email": "bloodk395@gmail.com",
       "canonicalEmail": "bloodk395@gmail.com",
-      "grade": "IOE",
-      "classKey": "after-12",
+      "grade": "Class 11",
+      "classKey": "class-11",
       "plan": "free",
       "planExpiresAt": "",
       "planExplicitlySet": false,
@@ -1989,9 +1990,16 @@
       ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-27",
-      "updatedAt": "2026-11-27T17:39:24.781Z",
-      "lastModifiedBy": "king blood (Password Reset)",
+      "updatedAt": "2026-11-28T15:06:47.851Z",
+      "lastModifiedBy": "Admin Console",
       "auditLog": [
+        {
+          "id": "aud_1795878407851_mth4",
+          "timestamp": "2026-11-28T15:06:47.851Z",
+          "actor": "Admin Console",
+          "action": "CLASS_SWITCH_APPROVED",
+          "details": "Approved class switch from IOE to Class 11"
+        },
         {
           "id": "aud_1795801164781_qh31",
           "timestamp": "2026-11-27T17:39:24.781Z",
