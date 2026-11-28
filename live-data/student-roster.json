@@ -1,6 +1,6 @@
 {
-  "revision": 507,
-  "lastUpdated": "2026-11-27T17:42:00.890Z",
+  "revision": 508,
+  "lastUpdated": "2026-11-28T03:28:36.265Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795836516265_rw2i",
+      "timestamp": "2026-11-28T03:28:36.265Z",
+      "userId": "usr_a6e69bf3f811",
+      "email": "sundarusa2025@gmail.com",
+      "actor": "Sundar Raj Shrma (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (IOE)"
+    },
     {
       "id": "raud_1795801283630_mv3g",
       "timestamp": "2026-11-27T17:41:23.630Z",
@@ -978,18 +987,58 @@
       "actor": "Rebika Thapa (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795700170999_zslh",
-      "timestamp": "2026-11-26T13:36:10.999Z",
-      "userId": "usr_b2fb0af9ffea",
-      "email": "skim64085@gmail.com",
-      "actor": "Sahara Chhetri (Email OTP Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Email OTP (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_a6e69bf3f811",
+      "name": "Sundar Raj Shrma",
+      "username": "sundarusa29",
+      "email": "sundarusa2025@gmail.com",
+      "canonicalEmail": "sundarusa2025@gmail.com",
+      "grade": "IOE",
+      "classKey": "after-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T03:28:36.200Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$19e332d61e8fa9d593e795513bd597ba$f867837a3d94f5306c2280a2e85e8b78568455bafe994072dd4562bcb943a037642fa872056523bed5bebe14520b330404b00d54b0e2c072505cc6ad264f7138",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T03:28:36.200Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_e0700eb63bd7c6ec1670bd25",
+      "lastLoginAt": "2026-11-28T03:28:36.200Z",
+      "lastActiveAt": "2026-11-28T03:28:36.200Z",
+      "currentSection": "",
+      "deviceInfo": "Chrome on macOS",
+      "ipAddress": "173.91.129.83",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T03:28:36.265Z",
+      "lastModifiedBy": "Sundar Raj Shrma (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795836516265_l3tc",
+          "timestamp": "2026-11-28T03:28:36.265Z",
+          "actor": "Sundar Raj Shrma (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in IOE"
+        }
+      ]
+    },
     {
       "userId": "usr_5ead3f5bedea",
       "name": "study",
