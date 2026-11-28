@@ -1,6 +1,6 @@
 {
-  "revision": 601,
-  "lastUpdated": "2026-11-28T13:50:25.688Z",
+  "revision": 602,
+  "lastUpdated": "2026-11-28T14:57:26.929Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795877846929_o67t",
+      "timestamp": "2026-11-28T14:57:26.929Z",
+      "userId": "usr_cf95f2af83fc",
+      "email": "subedisushanta10@gmail.com",
+      "actor": "Sushanta Subedi (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795873501917_ufj2",
       "timestamp": "2026-11-28T13:45:01.917Z",
@@ -978,18 +987,58 @@
       "actor": "Jeffrey Epstein (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795701760318_xswr",
-      "timestamp": "2026-11-26T14:02:40.318Z",
-      "userId": "usr_cc8662c3221b",
-      "email": "addinbrl1946@gmail.com",
-      "actor": "Addin Baral (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (After 12 Entrance)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_cf95f2af83fc",
+      "name": "Sushanta Subedi",
+      "username": "sushantasubedi",
+      "email": "subedisushanta10@gmail.com",
+      "canonicalEmail": "subedisushanta10@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T14:57:26.857Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$bee5306dfc35967fb839611f05bee97f$a32dce62608e6c51e2514812c9fb8ee288797196e38f09e3cd8f18c8e8b1dde84d0ecfaf23eca23cdb47fab9548dba5c46d7db2f8788f4a3f538a8958cdfcd1e",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T14:57:26.857Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_59e4190f002fec961667d995",
+      "lastLoginAt": "2026-11-28T14:57:26.857Z",
+      "lastActiveAt": "2026-11-28T14:57:26.857Z",
+      "currentSection": "",
+      "deviceInfo": "Chrome on Android",
+      "ipAddress": "103.129.134.197",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T14:57:26.929Z",
+      "lastModifiedBy": "Sushanta Subedi (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795877846929_2obm",
+          "timestamp": "2026-11-28T14:57:26.929Z",
+          "actor": "Sushanta Subedi (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_b6ecedc3642d",
       "name": "Anish Dhakal",
