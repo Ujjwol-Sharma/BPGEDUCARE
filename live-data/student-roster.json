@@ -1,6 +1,6 @@
 {
-  "revision": 518,
-  "lastUpdated": "2026-11-28T03:31:13.520Z",
+  "revision": 519,
+  "lastUpdated": "2026-11-28T03:35:05.655Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1604,7 +1604,9 @@
           "ip": "27.34.73.64"
         }
       ],
-      "readNotificationIds": [],
+      "readNotificationIds": [
+        "notif_1795797749481"
+      ],
       "joinedAt": "2026-11-27",
       "updatedAt": "2026-11-27T15:38:26.959Z",
       "lastModifiedBy": "Admin Console",
