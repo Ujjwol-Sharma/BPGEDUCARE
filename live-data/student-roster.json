@@ -1,6 +1,6 @@
 {
-  "revision": 525,
-  "lastUpdated": "2026-11-28T04:11:00.221Z",
+  "revision": 526,
+  "lastUpdated": "2026-11-28T05:34:31.778Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795844071778_e72b",
+      "timestamp": "2026-11-28T05:34:31.778Z",
+      "userId": "usr_394c220070b1",
+      "email": "aviyanbaral@gmail.com",
+      "actor": "Aviyan Baral (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795838980805_n3xw",
       "timestamp": "2026-11-28T04:09:40.805Z",
@@ -978,18 +987,58 @@
       "actor": "Simran (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 12)"
-    },
-    {
-      "id": "raud_1795700484554_kek6",
-      "timestamp": "2026-11-26T13:41:24.554Z",
-      "userId": "usr_53ff89ad5788",
-      "email": "prashantasubedi1721@gmail.com",
-      "actor": "Prashanta Subedi (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 11)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_394c220070b1",
+      "name": "Aviyan Baral",
+      "username": "avi",
+      "email": "aviyanbaral@gmail.com",
+      "canonicalEmail": "aviyanbaral@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T05:34:31.718Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$7dca71082733f016e758068d948bc2ed$af0ff5f8447692033cfbdc504d6b5edc17b83ef43c5c073ca75e01ea206078d1fc3f9190cc27eb38030ae24d00fef081de97b657fdc22054a4b9cf1ecbf25738",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T05:34:31.718Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_7c16b09d3cf944006ac1602f",
+      "lastLoginAt": "2026-11-28T05:34:31.718Z",
+      "lastActiveAt": "2026-11-28T05:34:31.718Z",
+      "currentSection": "",
+      "deviceInfo": "Chrome on Android",
+      "ipAddress": "27.34.73.34",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T05:34:31.778Z",
+      "lastModifiedBy": "Aviyan Baral (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795844071778_p0pw",
+          "timestamp": "2026-11-28T05:34:31.778Z",
+          "actor": "Aviyan Baral (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_13be52489947",
       "name": "Supriya Kafle",
