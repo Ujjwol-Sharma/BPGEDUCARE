@@ -1,6 +1,6 @@
 {
-  "revision": 600,
-  "lastUpdated": "2026-11-28T13:45:14.299Z",
+  "revision": 601,
+  "lastUpdated": "2026-11-28T13:50:25.688Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1003,7 +1003,7 @@
       "planExplicitlySet": false,
       "legacyAccess": false,
       "accountStatus": "active",
-      "paymentStatus": "none",
+      "paymentStatus": "pending",
       "emailVerified": true,
       "verifiedAt": "2026-11-28T13:45:01.846Z",
       "verificationMethod": "email_otp",
@@ -1040,9 +1040,16 @@
       ],
       "readNotificationIds": [],
       "joinedAt": "2026-11-28",
-      "updatedAt": "2026-11-28T13:45:01.916Z",
-      "lastModifiedBy": "Anish Dhakal (Email OTP Sign-Up)",
+      "updatedAt": "2026-11-28T13:50:25.688Z",
+      "lastModifiedBy": "Anish Dhakal (Student)",
       "auditLog": [
+        {
+          "id": "aud_1795873825688_0pjf",
+          "timestamp": "2026-11-28T13:50:25.688Z",
+          "actor": "Anish Dhakal (Student)",
+          "action": "PAYMENT_PROOF_SUBMITTED",
+          "details": "Order BPG-2026-00112 (Topper, Rs. 2,999, Fonepay / Mobile Banking, TxCode BHJJBH) submitted for verification"
+        },
         {
           "id": "aud_1795873501916_2gn5",
           "timestamp": "2026-11-28T13:45:01.916Z",
