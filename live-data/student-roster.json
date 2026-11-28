@@ -1,6 +1,6 @@
 {
-  "revision": 519,
-  "lastUpdated": "2026-11-28T03:35:05.655Z",
+  "revision": 520,
+  "lastUpdated": "2026-11-28T04:09:40.805Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -88,6 +88,15 @@
     }
   ],
   "auditLog": [
+    {
+      "id": "raud_1795838980805_n3xw",
+      "timestamp": "2026-11-28T04:09:40.805Z",
+      "userId": "usr_13be52489947",
+      "email": "supriyakafle405@gmail.com",
+      "actor": "Supriya Kafle (Email OTP Sign-Up)",
+      "action": "ACCOUNT_CREATED",
+      "details": "Registered via Email OTP (Class 12)"
+    },
     {
       "id": "raud_1795836516265_rw2i",
       "timestamp": "2026-11-28T03:28:36.265Z",
@@ -978,18 +987,58 @@
       "actor": "Prashanta Subedi (Google Sign-Up)",
       "action": "ACCOUNT_CREATED",
       "details": "Registered via Google Sign-Up (Class 11)"
-    },
-    {
-      "id": "raud_1795700180927_td3v",
-      "timestamp": "2026-11-26T13:36:20.927Z",
-      "userId": "usr_0edbe94bc081",
-      "email": "rebikathapa2009@gmail.com",
-      "actor": "Rebika Thapa (Google Sign-Up)",
-      "action": "ACCOUNT_CREATED",
-      "details": "Registered via Google Sign-Up (Class 12)"
     }
   ],
   "accounts": [
+    {
+      "userId": "usr_13be52489947",
+      "name": "Supriya Kafle",
+      "username": "supriya",
+      "email": "supriyakafle405@gmail.com",
+      "canonicalEmail": "supriyakafle405@gmail.com",
+      "grade": "Class 12",
+      "classKey": "class-12",
+      "plan": "free",
+      "planExpiresAt": "",
+      "planExplicitlySet": false,
+      "legacyAccess": false,
+      "accountStatus": "active",
+      "paymentStatus": "none",
+      "emailVerified": true,
+      "verifiedAt": "2026-11-28T04:09:40.726Z",
+      "verificationMethod": "email_otp",
+      "googleLinked": false,
+      "googleSub": "",
+      "avatarUrl": "",
+      "hasPassword": true,
+      "passkey": "scrypt$185b8f4498b5d833d7d54578bd7413fd$4622fb24008e690a6f915d9f1e13d731cc6804154ecbac94f85e64da23e9a1152e9fa037d2a51fbc7034e4589b290d3c9e4da7e94505823ce5e059b4fb4010bc",
+      "otpVerified": true,
+      "termsAccepted": true,
+      "termsVersion": "2026-11-27",
+      "termsAcceptedAt": "2026-11-28T04:09:40.726Z",
+      "ioeAccess": false,
+      "mustChangePassword": false,
+      "activeSessionId": "sid_bb921b156be3d222d60a3b87",
+      "lastLoginAt": "2026-11-28T04:09:40.726Z",
+      "lastActiveAt": "2026-11-28T04:09:40.726Z",
+      "currentSection": "",
+      "deviceInfo": "Chrome on Windows",
+      "ipAddress": "49.244.32.44",
+      "activityLog": [],
+      "readNotificationIds": [],
+      "joinedAt": "2026-11-28",
+      "updatedAt": "2026-11-28T04:09:40.804Z",
+      "lastModifiedBy": "Supriya Kafle (Email OTP Sign-Up)",
+      "auditLog": [
+        {
+          "id": "aud_1795838980805_7bqb",
+          "timestamp": "2026-11-28T04:09:40.804Z",
+          "actor": "Supriya Kafle (Email OTP Sign-Up)",
+          "action": "ACCOUNT_CREATED",
+          "details": "Verified email via 6-digit OTP and enrolled in Class 12"
+        }
+      ]
+    },
     {
       "userId": "usr_a6e69bf3f811",
       "name": "Sundar Raj Shrma",
