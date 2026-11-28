@@ -1,6 +1,6 @@
 {
-  "revision": 613,
-  "lastUpdated": "2026-11-28T15:01:28.872Z",
+  "revision": 614,
+  "lastUpdated": "2026-11-28T15:03:03.479Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1020,7 +1020,7 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_59e4190f002fec961667d995",
       "lastLoginAt": "2026-11-28T14:57:26.857Z",
-      "lastActiveAt": "2026-11-28T15:01:28.872Z",
+      "lastActiveAt": "2026-11-28T15:03:03.479Z",
       "currentSection": "Viewing CLASS-12 PDF",
       "deviceInfo": "Chrome on Linux",
       "ipAddress": "103.129.134.197",
