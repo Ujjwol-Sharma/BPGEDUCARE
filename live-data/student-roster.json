@@ -1,6 +1,6 @@
 {
-  "revision": 569,
-  "lastUpdated": "2026-11-28T11:32:07.511Z",
+  "revision": 570,
+  "lastUpdated": "2026-11-28T11:32:15.361Z",
   "classSwitchRequests": [
     {
       "id": "csr_1795801080183_u2qa",
@@ -1020,11 +1020,17 @@
       "mustChangePassword": false,
       "activeSessionId": "sid_084b2024279e6057b2b166c4",
       "lastLoginAt": "2026-11-28T11:31:58.765Z",
-      "lastActiveAt": "2026-11-28T11:32:07.511Z",
-      "currentSection": "Viewing CLASS-12 Lesson",
+      "lastActiveAt": "2026-11-28T11:32:15.361Z",
+      "currentSection": "Viewing CLASS-12 PDF",
       "deviceInfo": "Safari on macOS",
       "ipAddress": "27.34.72.209",
       "activityLog": [
+        {
+          "at": "2026-11-28T11:32:15.361Z",
+          "section": "Viewing CLASS-12 PDF",
+          "device": "Safari on macOS",
+          "ip": "27.34.72.209"
+        },
         {
           "at": "2026-11-28T11:32:07.511Z",
           "section": "Viewing CLASS-12 Lesson",
